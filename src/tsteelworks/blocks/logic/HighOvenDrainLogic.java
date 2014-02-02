@@ -13,191 +13,169 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.util.IFacingLogic;
-import tsteelworks.TSteelworks;
 
-public class HighOvenDrainLogic extends MultiServantLogic implements IFluidHandler, IFacingLogic {
-    byte direction;
 
-    public boolean canUpdate ()
-    {
-        return false;
-    }
-    
-    @Override
-    public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
-    {
-        if (hasValidMaster() && resource != null && canFill(from, resource.getFluid()))
-        {
-            if (doFill)
-            {
-            	int mx = getMasterPosition().x;
-            	int my = getMasterPosition().y;
-            	int mz = getMasterPosition().z;
-                HighOvenLogic steelforge = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-                return steelforge.fill(resource, doFill);
-            }
-            else
-            {
-                return resource.amount;
-            }
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    
-    @Override
-    public FluidStack drain (ForgeDirection from, int maxDrain, boolean doDrain)
-    {
-    	TSteelworks.logger.info("Valid master?: " + hasValidMaster());
-    	TSteelworks.logger.info("Can Drain?: " + canDrain(from, null));
-        if (hasValidMaster() && canDrain(from, null))
-        {
-        	
-        	int mx = getMasterPosition().x;
-        	int my = getMasterPosition().y;
-        	int mz = getMasterPosition().z;
-            HighOvenLogic steelforge = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            return steelforge.drain(maxDrain, doDrain);
-        }
-        else
-        {
-            return null;
-        }
-    }
-    
-    @Override
-    public FluidStack drain (ForgeDirection from, FluidStack resource, boolean doDrain)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
+public class HighOvenDrainLogic extends MultiServantLogic implements IFluidHandler, IFacingLogic
+{
+	byte	direction;
 
-    @Override
-    public boolean canFill (ForgeDirection from, Fluid fluid)
-    {
-        return true;
-        //return from == getForgeDirection();//.getOpposite();
-    }
-    
-    @Override
-    public boolean canDrain (ForgeDirection from, Fluid fluid)
-    {
-        // Check that the drain is coming from the from the front of the block 
-        // and that the fluid to be drained is in the smeltery.
-        boolean containsFluid = fluid == null;
-        if (fluid != null)
-        {
-        	int mx = getMasterPosition().x;
-        	int my = getMasterPosition().y;
-        	int mz = getMasterPosition().z;
-            HighOvenLogic steelforge = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            for (FluidStack fstack : steelforge.moltenMetal)
-            {
-                if (fstack.fluidID == fluid.getID())
-                {
-                    containsFluid = true;
-                    break;
-                }
-            }
-        }
-        //return from == getForgeDirection().getOpposite() && containsFluid;
-        return containsFluid;
-    }
-    
-    @Override
-    public FluidTankInfo[] getTankInfo (ForgeDirection from)
-    {
-        if (hasValidMaster() && (from == getForgeDirection() || from == getForgeDirection().getOpposite() || from == ForgeDirection.UNKNOWN))
-        {
-        	
-        	int mx = getMasterPosition().x;
-        	int my = getMasterPosition().y;
-        	int mz = getMasterPosition().z;
-            HighOvenLogic steelforge = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            //return steelforge.getMultiTankInfo();
-            
-            return new FluidTankInfo[] { steelforge.getInfo() };
-        }
-        return null;
-    }
-    
-    @Override
-    public byte getRenderDirection ()
-    {
-        return direction;
-    }
+	@Override
+	public boolean canUpdate ()
+	{
+		return false;
+	}
 
-    @Override
-    public ForgeDirection getForgeDirection ()
-    {
-        return ForgeDirection.VALID_DIRECTIONS[direction];
-    }
+	@Override
+	public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
+	{
+		if (hasValidMaster() && (resource != null) && canFill(from, resource.getFluid()))
+		{
+			if (doFill)
+			{
+				final int mx = getMasterPosition().x;
+				final int my = getMasterPosition().y;
+				final int mz = getMasterPosition().z;
+				final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+				return highoven.fill(resource, doFill);
+			}
+			else return resource.amount;
+		}
+		else return 0;
+	}
 
-    @Override
-    public void setDirection (int side)
-    {
+	@Override
+	public FluidStack drain (ForgeDirection from, int maxDrain, boolean doDrain)
+	{
+		if (hasValidMaster() && canDrain(from, null))
+		{
+			final int mx = getMasterPosition().x;
+			final int my = getMasterPosition().y;
+			final int mz = getMasterPosition().z;
+			final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+			return highoven.drain(maxDrain, doDrain);
+		}
+		else return null;
+	}
 
-    }
-    
-    @Override
-    public void setDirection (float yaw, float pitch, EntityLivingBase player)
-    {
-        if (pitch > 45)
-            direction = 1;
-        else if (pitch < -45)
-            direction = 0;
-        else
-        {
-            int facing = MathHelper.floor_double((double) (yaw / 360) + 0.5D) & 3;
-            switch (facing)
-            {
-            case 0:
-                direction = 2;
-                break;
+	@Override
+	public FluidStack drain (ForgeDirection from, FluidStack resource, boolean doDrain)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-            case 1:
-                direction = 5;
-                break;
+	@Override
+	public boolean canFill (ForgeDirection from, Fluid fluid)
+	{
+		return true;
+	}
 
-            case 2:
-                direction = 3;
-                break;
+	@Override
+	public boolean canDrain (ForgeDirection from, Fluid fluid)
+	{
+		// Check that the drain is coming from the from the front of the block
+		// and that the fluid to be drained is in the smeltery.
+		boolean containsFluid = fluid == null;
+		if (fluid != null)
+		{
+			final int mx = getMasterPosition().x;
+			final int my = getMasterPosition().y;
+			final int mz = getMasterPosition().z;
+			final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+			for (final FluidStack fstack : highoven.moltenMetal)
+				if (fstack.fluidID == fluid.getID())
+				{
+					containsFluid = true;
+					break;
+				}
+		}
+		return containsFluid;
+	}
 
-            case 3:
-                direction = 4;
-                break;
-            }
-        }
-    }
-    
-    public void readFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
-        direction = tags.getByte("Direction");
-    }
+	@Override
+	public FluidTankInfo[] getTankInfo (ForgeDirection from)
+	{
+		if (hasValidMaster()
+				&& ((from == getForgeDirection()) || (from == getForgeDirection().getOpposite()) || (from == ForgeDirection.UNKNOWN)))
+		{
+			final int mx = getMasterPosition().x;
+			final int my = getMasterPosition().y;
+			final int mz = getMasterPosition().z;
+			final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+			return new FluidTankInfo[] { highoven.getInfo() };
+		}
+		return null;
+	}
 
-    @Override
-    public void writeToNBT (NBTTagCompound tags)
-    {
-        super.writeToNBT(tags);
-        tags.setByte("Direction", direction);
-    }
+	@Override
+	public byte getRenderDirection ()
+	{
+		return direction;
+	}
 
-    /* Packets */
-    @Override
-    public Packet getDescriptionPacket ()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-    }
+	@Override
+	public ForgeDirection getForgeDirection ()
+	{
+		return ForgeDirection.VALID_DIRECTIONS[direction];
+	}
 
-    @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
-    {
-        readFromNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-    }
+	@Override
+	public void setDirection (int side)
+	{}
+
+	@Override
+	public void setDirection (float yaw, float pitch, EntityLivingBase player)
+	{
+		if (pitch > 45) direction = 1;
+		else if (pitch < -45) direction = 0;
+		else
+		{
+			final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
+			switch (facing)
+			{
+				case 0:
+					direction = 2;
+					break;
+				case 1:
+					direction = 5;
+					break;
+				case 2:
+					direction = 3;
+					break;
+				case 3:
+					direction = 4;
+					break;
+			}
+		}
+	}
+
+	@Override
+	public void readFromNBT (NBTTagCompound tags)
+	{
+		super.readFromNBT(tags);
+		direction = tags.getByte("Direction");
+	}
+
+	@Override
+	public void writeToNBT (NBTTagCompound tags)
+	{
+		super.writeToNBT(tags);
+		tags.setByte("Direction", direction);
+	}
+
+	/* Packets */
+	@Override
+	public Packet getDescriptionPacket ()
+	{
+		final NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+	}
+
+	@Override
+	public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.data);
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+	}
 }

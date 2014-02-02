@@ -6,35 +6,24 @@ import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.common.TSCommonProxy;
 
-/**
- * Tinkers' Steelworks
- * 
- * TSteelworks
- * 
- * TCSA_ClientProxy
- * 
- * @author Toops
- * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
- * 
- */
 
-public class TSClientProxy extends TSCommonProxy {
-
+public class TSClientProxy extends TSCommonProxy
+{
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
-			int x, int y, int z) {
-		if (ID == highOvenGuiID)
-			return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
+	public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
+	{
+		if (ID == highOvenGuiID) return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z),
+				world, x, y, z);
 		return null;
 	}
 
 	@Override
-	public void registerRenderers() {
+	public void registerRenderers ()
+	{
 		// Stub: For rendering entities, etc
 	}
 
 	@Override
-	public void registerSounds() {
-
-	}
+	public void registerSounds ()
+	{}
 }

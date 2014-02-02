@@ -1,6 +1,6 @@
 itemGroup.TSteelworks=TSteelworks
 
-crafters.Steelforge=High Oven
+crafters.HighOven=High Oven
 
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
 item.tsteelworks.Materials.MonoatomicGoldIngot.name=Monoatomic Gold Ingot
@@ -23,14 +23,14 @@ item.tsteelworks.exoShoesSteel.name=Reinforced Exo-Shoes
 tile.metal.molten.monoatomicgold.name=Molten Monoatomic Gold
 fluid.monoatomicgold.molten=Molten Monoatomic Gold
 
-Steelforge.HighOven.name=High Oven
-Steelforge.Drain.name=High Oven Drain
-Steelforge.Brick.name=Scorched Bricks
+HighOven.Controller.name=High Oven Controller
+HighOven.Drain.name=High Oven Drain
+HighOven.Brick.name=Scorched Bricks
 
 StorageMetals.MonoatomicGold.name=Block of Monoatomic Gold
 
-steelforge.highoven.tooltip=High Oven controller
-steelforge.drain.tooltip1=Works both as input and output for
-steelforge.drain.tooltip2=fluids in the High Oven
-steelforge.brick.tooltip1=High Oven structure block
-steelforge.brick.tooltip2=(Safe for decoration)
+highoven.highoven.tooltip=Can't forget this!
+highoven.drain.tooltip1=Works both as input and output for
+highoven.drain.tooltip2=fluids in the High Oven
+highoven.brick.tooltip1=High Oven structure block
+highoven.brick.tooltip2=(Safe for decoration)
