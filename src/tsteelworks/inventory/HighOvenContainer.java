@@ -6,6 +6,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import tconstruct.inventory.ActiveContainer;
 import tconstruct.inventory.ActiveSlot;
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 
 
@@ -14,13 +15,11 @@ public class HighOvenContainer extends ActiveContainer
 	public HighOvenLogic	logic;
 	public InventoryPlayer	playerInv;
 	public int				fuel	= 0;
-	int						slotRow;
 
 	public HighOvenContainer (InventoryPlayer inventoryplayer, HighOvenLogic highoven)
 	{
 		logic = highoven;
 		playerInv = inventoryplayer;
-		slotRow = 0;
 		/* HighOven inventory */
 		for (int y = 0; y < highoven.layers; y++)
 			for (int x = 0; x < 1; x++)
@@ -60,6 +59,7 @@ public class HighOvenContainer extends ActiveContainer
 		{
 			final ItemStack slotStack = slot.getStack();
 			stack = slotStack.copy();
+			TSteelworks.logger.info("Size: " + logic.getSizeInventory());
 			if (slotID < logic.getSizeInventory())
 			{
 				if (!mergeItemStack(slotStack, logic.getSizeInventory(), inventorySlots.size(), true)) return null;
@@ -74,18 +74,19 @@ public class HighOvenContainer extends ActiveContainer
 	@Override
 	protected boolean mergeItemStack (ItemStack inputStack, int startSlot, int endSlot, boolean flag)
 	{
-		// TConstruct.logger.info("Merge");
 		boolean merged = false;
 		int slotPos = startSlot;
 		if (flag) slotPos = endSlot - 1;
 		Slot slot;
 		ItemStack slotStack;
-		if (inputStack.isStackable() && (startSlot >= logic.getSizeInventory())) while ((inputStack.stackSize > 0)
+		if (inputStack.isStackable()) while ((inputStack.stackSize > 0)
 				&& ((!flag && (slotPos < endSlot)) || (flag && (slotPos >= startSlot))))
 		{
 			slot = (Slot) inventorySlots.get(slotPos);
 			slotStack = slot.getStack();
-			if ((slotStack != null) && ItemStack.areItemStacksEqual(inputStack, slotStack) && !inputStack.getHasSubtypes())
+			if ((slotStack != null) && (slotStack.itemID == inputStack.itemID)
+					&& (!inputStack.getHasSubtypes() || (inputStack.getItemDamage() == slotStack.getItemDamage()))
+					&& ItemStack.areItemStackTagsEqual(inputStack, slotStack))
 			{
 				final int totalSize = slotStack.stackSize + inputStack.stackSize;
 				if (totalSize <= inputStack.getMaxStackSize())
@@ -106,29 +107,6 @@ public class HighOvenContainer extends ActiveContainer
 			if (flag) --slotPos;
 			else ++slotPos;
 		}
-		/*
-		 * if (inputStack.isStackable() && startSlot >=
-		 * logic.getSizeInventory()) { while (inputStack.stackSize > 0 && (!flag
-		 * && slotPos < endSlot || flag && slotPos >= startSlot)) { slot =
-		 * (Slot) this.inventorySlots.get(slotPos); slotStack = slot.getStack();
-		 * // If item is in slot, itemid is same as input?, item has no //
-		 * metadata or same metadata as input, and slot tags are same if
-		 * (slotStack != null && slotStack.itemID == inputStack.itemID &&
-		 * (!inputStack.getHasSubtypes() || inputStack .getItemDamage() ==
-		 * slotStack.getItemDamage()) &&
-		 * ItemStack.areItemStackTagsEqual(inputStack, slotStack)) { int l =
-		 * slotStack.stackSize + inputStack.stackSize;
-		 * 
-		 * if (l <= inputStack.getMaxStackSize()) { inputStack.stackSize = 0;
-		 * slotStack.stackSize = l; slot.onSlotChanged(); merged = true; } else
-		 * if (slotStack.stackSize < inputStack .getMaxStackSize()) {
-		 * inputStack.stackSize -= inputStack.getMaxStackSize() -
-		 * slotStack.stackSize; slotStack.stackSize =
-		 * inputStack.getMaxStackSize(); slot.onSlotChanged(); merged = true; }
-		 * }
-		 * 
-		 * if (flag) { --slotPos; } else { ++slotPos; } } }
-		 */
 		if (inputStack.stackSize > 0)
 		{
 			if (flag) slotPos = endSlot - 1;
@@ -139,10 +117,9 @@ public class HighOvenContainer extends ActiveContainer
 				slotStack = slot.getStack();
 				if (slotStack == null)
 				{
-					// TSteelworks.logger.info("FIRING!");
 					slot.putStack(inputStack.copy());
 					slot.onSlotChanged();
-					inputStack.stackSize -= 1;
+					inputStack.stackSize = 0;
 					merged = true;
 					break;
 				}

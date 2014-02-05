@@ -193,25 +193,25 @@ public class TSContent
 	{
 		TSRecipes.castTableScorchedBrick();
 		TSRecipes.castTableMonoatomicGold();
+		
 	}
 
 	private void addRecipesForBasinCasting ()
 	{
 		TSRecipes.castBasinScorchedBrickBlock();
+		//TSRecipes.castBasinMonoatomicGold();
 	}
 
 	void addRecipesForHighOven ()
 	{
-		HighOvenSmelting.addMelting(Block.oreIron, 0, 600, new FluidStack(TContent.moltenSteelFluid,
-				TConstruct.ingotLiquidValue / 2));
-		HighOvenSmelting.addMelting(TContent.oreGravel, 0, 600, new FluidStack(TContent.moltenSteelFluid,
-				TConstruct.ingotLiquidValue / 2));
-		HighOvenSmelting.addMelting(FluidType.Steel, TConstructRegistry.getItemStack("oreberryIron"), -300,
-				TConstruct.nuggetLiquidValue / 2);
+		TSRecipes.highOvenSteel();
+		//TSRecipes.highOvenMonoatomicGold();
 	}
 
 	void addRecipesForSmeltery ()
-	{}
+	{
+		//TSRecipes.smelteryMonoatomicGold();
+	}
 
 	void addRecipesForChisel ()
 	{}
@@ -222,7 +222,7 @@ public class TSContent
 	void addRecipesForCraftingTable ()
 	{
 		TSRecipes.craftTableHighOvenComponents();
-		TSRecipes.craftTableMonoatomicGold();
+		//TSRecipes.craftTableMonoatomicGold();
 		if (ConfigCore.hardcoreFlintAndSteel) TSRecipes.changeFlintAndSteelRecipe();
 		if (ConfigCore.enableSteelArmor) TSRecipes.craftTableSteelArmor();
 	}

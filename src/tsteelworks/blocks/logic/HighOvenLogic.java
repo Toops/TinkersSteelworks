@@ -341,7 +341,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
 				{
 					l.amount += liquid.amount;
 					added = true;
-				}
+				} else return false;
 				if (l.amount <= 0)
 				{
 					moltenMetal.remove(l);
@@ -501,12 +501,12 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
 
 	/**
 	 * Get (& Set) Inventory slot stack limit Returns the maximum stack size for
-	 * a inventory slot. Seems to always be 64, possibly will be extended.
+	 * a inventory slot.
 	 */
 	@Override
 	public int getInventoryStackLimit ()
 	{
-		return 27;
+		return 64;
 	}
 
 	/**
