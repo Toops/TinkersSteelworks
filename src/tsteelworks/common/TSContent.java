@@ -175,58 +175,26 @@ public class TSContent
 
 	void addCraftingRecipes ()
 	{
-		addRecipesForToolBuilder();
-		addRecipesForTableCasting();
-		addRecipesForBasinCasting();
-		addRecipesForHighOven();
-		addRecipesForSmeltery();
-		addRecipesForChisel();
-		addRecipesForFurnace();
-		addRecipesForCraftingTable();
-		addRecipesForDryingRack();
-	}
-
-	private void addRecipesForToolBuilder ()
-	{}
-
-	private void addRecipesForTableCasting ()
-	{
+		// -- Crafting Table
+		// --------------------
+		TSRecipes.craftTableHighOvenComponents();
+		TSRecipes.craftTableMonoatomicGold();
+		if (ConfigCore.enableSteelArmor) TSRecipes.craftTableSteelArmor();
+		if (ConfigCore.hardcoreFlintAndSteel) TSRecipes.changeFlintAndSteelRecipe();
+		// -- Smeltery
+		// --------------------
+		TSRecipes.smelteryMonoatomicGold();
+		// -- High Oven
+		// --------------------
+		TSRecipes.highOvenSteel();
+		TSRecipes.highOvenMonoatomicGold();
+		// -- Casting Basin
+		// --------------------
+		TSRecipes.castBasinScorchedBrickBlock();
+		TSRecipes.castBasinMonoatomicGold();
+		// -- Casting Table
+		// --------------------
 		TSRecipes.castTableScorchedBrick();
 		TSRecipes.castTableMonoatomicGold();
-		
 	}
-
-	private void addRecipesForBasinCasting ()
-	{
-		TSRecipes.castBasinScorchedBrickBlock();
-		//TSRecipes.castBasinMonoatomicGold();
-	}
-
-	void addRecipesForHighOven ()
-	{
-		TSRecipes.highOvenSteel();
-		//TSRecipes.highOvenMonoatomicGold();
-	}
-
-	void addRecipesForSmeltery ()
-	{
-		//TSRecipes.smelteryMonoatomicGold();
-	}
-
-	void addRecipesForChisel ()
-	{}
-
-	void addRecipesForFurnace ()
-	{}
-
-	void addRecipesForCraftingTable ()
-	{
-		TSRecipes.craftTableHighOvenComponents();
-		//TSRecipes.craftTableMonoatomicGold();
-		if (ConfigCore.hardcoreFlintAndSteel) TSRecipes.changeFlintAndSteelRecipe();
-		if (ConfigCore.enableSteelArmor) TSRecipes.craftTableSteelArmor();
-	}
-
-	void addRecipesForDryingRack ()
-	{}
 }

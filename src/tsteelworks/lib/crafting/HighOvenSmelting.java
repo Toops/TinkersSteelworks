@@ -76,6 +76,86 @@ public class HighOvenSmelting
 	}
 
 	/**
+	 * Adds a mapping between FluidType and ItemStack
+	 * 
+	 * @author samtrion
+	 * @param type
+	 *            Type of Fluid
+	 * @param input
+	 *            The item to liquify
+	 * @param temperatureDifference
+	 *            Difference between FluidType BaseTemperature
+	 * @param fluidAmount
+	 *            Amount of Fluid
+	 */
+	public static void addMelting (FluidType type, ItemStack input, int temperatureDifference, int fluidAmount)
+	{
+		int temp = type.baseTemperature + temperatureDifference;
+		if (temp <= 20) temp = type.baseTemperature;
+		addMelting(input, type.renderBlockID, type.renderMeta, type.baseTemperature + temperatureDifference, new FluidStack(
+				type.fluid, fluidAmount));
+	}
+	
+	/**
+	 * Adds a mapping between FluidType and ItemStack
+	 * 
+	 * @author samtrion
+	 * @param type
+	 *            Type of Fluid
+	 * @param input
+	 *            The item to liquify
+	 * @param temperatureDifference
+	 *            Difference between FluidType BaseTemperature
+	 * @param fluidAmount
+	 *            Amount of Fluid
+	 */
+	public static void addMelting (TSFluidType type, ItemStack input, int temperatureDifference, int fluidAmount)
+	{
+		int temp = type.baseTemperature + temperatureDifference;
+		if (temp <= 20) temp = type.baseTemperature;
+		addMelting(input, type.renderBlockID, type.renderMeta, type.baseTemperature + temperatureDifference, new FluidStack(
+				type.fluid, fluidAmount));
+	}
+	
+	/**
+	 * Adds all Items to the Smeltery based on the oreDictionary Name
+	 * 
+	 * @author samtrion
+	 * @param oreName
+	 *            oreDictionary name e.g. oreIron
+	 * @param type
+	 *            Type of Fluid
+	 * @param temperatureDifference
+	 *            Difference between FluidType BaseTemperature
+	 * @param fluidAmount
+	 *            Amount of Fluid
+	 */
+	public static void addDictionaryMelting (String oreName, FluidType type, int temperatureDifference, int fluidAmount)
+	{
+		for (final ItemStack is : OreDictionary.getOres(oreName))
+			addMelting(type, is, temperatureDifference, fluidAmount);
+	}
+	
+	/**
+	 * Adds all Items to the Smeltery based on the oreDictionary Name
+	 * 
+	 * @author samtrion
+	 * @param oreName
+	 *            oreDictionary name e.g. oreIron
+	 * @param type
+	 *            Type of Fluid
+	 * @param temperatureDifference
+	 *            Difference between FluidType BaseTemperature
+	 * @param fluidAmount
+	 *            Amount of Fluid
+	 */
+	public static void addDictionaryMelting (String oreName, TSFluidType type, int temperatureDifference, int fluidAmount)
+	{
+		for (final ItemStack is : OreDictionary.getOres(oreName))
+			addMelting(type, is, temperatureDifference, fluidAmount);
+	}
+	
+	/**
 	 * Used to get the resulting temperature from a source ItemStack
 	 * 
 	 * @param item
@@ -149,45 +229,5 @@ public class HighOvenSmelting
 	public static HashMap<List<Integer>, ItemStack> getRenderIndex ()
 	{
 		return instance.renderIndex;
-	}
-
-	/**
-	 * Adds a mapping between FluidType and ItemStack
-	 * 
-	 * @author samtrion
-	 * @param type
-	 *            Type of Fluid
-	 * @param input
-	 *            The item to liquify
-	 * @param temperatureDifference
-	 *            Difference between FluidType BaseTemperature
-	 * @param fluidAmount
-	 *            Amount of Fluid
-	 */
-	public static void addMelting (FluidType type, ItemStack input, int temperatureDifference, int fluidAmount)
-	{
-		int temp = type.baseTemperature + temperatureDifference;
-		if (temp <= 20) temp = type.baseTemperature;
-		addMelting(input, type.renderBlockID, type.renderMeta, type.baseTemperature + temperatureDifference, new FluidStack(
-				type.fluid, fluidAmount));
-	}
-
-	/**
-	 * Adds all Items to the Smeltery based on the oreDictionary Name
-	 * 
-	 * @author samtrion
-	 * @param oreName
-	 *            oreDictionary name e.g. oreIron
-	 * @param type
-	 *            Type of Fluid
-	 * @param temperatureDifference
-	 *            Difference between FluidType BaseTemperature
-	 * @param fluidAmount
-	 *            Amount of Fluid
-	 */
-	public static void addDictionaryMelting (String oreName, FluidType type, int temperatureDifference, int fluidAmount)
-	{
-		for (final ItemStack is : OreDictionary.getOres(oreName))
-			addMelting(type, is, temperatureDifference, fluidAmount);
 	}
 }

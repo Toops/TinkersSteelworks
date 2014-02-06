@@ -188,7 +188,6 @@ public class HighOvenGui extends NewContainerGui
 		}
 	}
 
-	@SuppressWarnings ({ "rawtypes", "unchecked" })
 	protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
 	{
 		zLevel = 100;
@@ -199,7 +198,6 @@ public class HighOvenGui extends NewContainerGui
 		zLevel = 0;
 	}
 
-	@SuppressWarnings ({ "rawtypes", "unchecked" })
 	public List getLiquidTooltip (FluidStack liquid, boolean par2)
 	{
 		final ArrayList list = new ArrayList();
@@ -230,7 +228,6 @@ public class HighOvenGui extends NewContainerGui
 		return list;
 	}
 
-	@SuppressWarnings ({ "rawtypes" })
 	protected void drawToolTip (List par1List, int par2, int par3)
 	{
 		if (!par1List.isEmpty())
@@ -290,7 +287,6 @@ public class HighOvenGui extends NewContainerGui
 		tessellator.draw();
 	}
 
-	@SuppressWarnings ("static-access")
 	@Override
 	public void mouseClicked (int mouseX, int mouseY, int mouseButton)
 	{
