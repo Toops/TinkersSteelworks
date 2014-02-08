@@ -21,12 +21,9 @@ public class TSRecipes
     /*
      * Common Patterns
      */
-    static String[] patBlock    =
-                                { "###", "###", "###" };
-    static String[] patHollow   =
-                                { "###", "# #", "###" };
-    static String[] patSurround =
-                                { "###", "#m#", "###" };
+    static String[] patBlock    = { "###", "###", "###" };
+    static String[] patHollow   = { "###", "# #", "###" };
+    static String[] patSurround = { "###", "#m#", "###" };
 
     // ---- CRAFTING TABLE
     // --------------------------------------------------------------------------
@@ -39,14 +36,14 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.metalBlock, 1, 0), patBlock, '#',
                                new ItemStack(TSContent.materials, 1, 1));
         // Craft ingots from block
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 1), "m", 'm', new ItemStack(TSContent.metalBlock,
-                                                                                                 1, 0));
+        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 1), "m", 'm',
+                               new ItemStack(TSContent.metalBlock, 1, 0));
         // Craft ingot from nuggets
         GameRegistry.addRecipe(new ItemStack(TSContent.materials, 1, 1), patBlock, '#',
                                new ItemStack(TSContent.materials, 1, 2));
         // Craft nuggets from ingot
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 2), "m", 'm', new ItemStack(TSContent.materials,
-                                                                                                 1, 1));
+        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 2), "m", 'm',
+                               new ItemStack(TSContent.materials, 1, 1));
     }
 
     /**
@@ -54,14 +51,14 @@ public class TSRecipes
      */
     public static void craftTableSteelArmor ()
     {
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[]
-        { "sss", "s s", 's', TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[]
-        { "s s", "sss", "sss", 's', TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[]
-        { "sss", "s s", "s s", 's', TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[]
-        { "s s", "s s", 's', TConstructRegistry.getItemStack("ingotSteel") }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { "sss", "s s", 's',
+            TConstructRegistry.getItemStack("ingotSteel") }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { "s s", "sss", "sss", 's',
+            TConstructRegistry.getItemStack("ingotSteel") }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { "sss", "s s", "s s", 's',
+            TConstructRegistry.getItemStack("ingotSteel") }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { "s s", "s s", 's',
+            TConstructRegistry.getItemStack("ingotSteel") }));
     }
 
     /**
@@ -94,12 +91,12 @@ public class TSRecipes
      */
     public static void smelteryMonoatomicGold ()
     {
-        Smeltery.addMelting(TSContent.metalBlock, 0, 100, new FluidStack(TSContent.fluids[0],
-                                                                         TConstruct.blockLiquidValue));
+        Smeltery.addMelting(TSContent.metalBlock, 0, 100,
+                            new FluidStack(TSContent.fluids[0], TConstruct.blockLiquidValue));
         Smeltery.addMelting(new ItemStack(TSContent.materials, 1, 1), 100,
-                            new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.ingotLiquidValue));
+                            new FluidStack(TSContent.fluids[0], TConstruct.ingotLiquidValue));
         Smeltery.addMelting(new ItemStack(TSContent.materials, 1, 2), 100,
-                            new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.nuggetLiquidValue));
+                            new FluidStack(TSContent.fluids[0], TConstruct.nuggetLiquidValue));
     }
 
     // ---- HIGH OVEN
@@ -152,12 +149,10 @@ public class TSRecipes
     public static void castTableMonoatomicGold ()
     {
         final ItemStack monoGoldBucket = new ItemStack(TSContent.buckets, 1, 0);
-        final FluidStack monoGoldFillBucket = new FluidStack(TSContent.moltenMonoatomicGoldFluid,
-                                                             FluidContainerRegistry.BUCKET_VOLUME);
+        final FluidStack monoGoldFillBucket = new FluidStack(TSContent.fluids[0], FluidContainerRegistry.BUCKET_VOLUME);
         final ItemStack emptyBucket = new ItemStack(Item.bucketEmpty);
         final ItemStack monoGoldIngot = new ItemStack(TSContent.materials, 1, 1);
-        final FluidStack monoGoldFillIngot = new FluidStack(TSContent.moltenMonoatomicGoldFluid,
-                                                            TConstruct.ingotLiquidValue);
+        final FluidStack monoGoldFillIngot = new FluidStack(TSContent.fluids[0], TConstruct.ingotLiquidValue);
         final ItemStack cast = new ItemStack(TContent.metalPattern, 1, 0);
 
         TConstruct.tableCasting.addCastingRecipe(monoGoldBucket, monoGoldFillBucket, emptyBucket, true, 10);
@@ -183,8 +178,8 @@ public class TSRecipes
     public static void castBasinMonoatomicGold ()
     {
         final ItemStack is = new ItemStack(TSContent.metalBlock, 1, 0);
-        final FluidStack fs = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.blockLiquidValue);
+        final FluidStack fs = new FluidStack(TSContent.fluids[0], TConstruct.blockLiquidValue);
         TConstruct.basinCasting.addCastingRecipe(is, fs, 100);
-        TConstruct.basinCasting.addCastingRecipe(is, fs, null, true, 100); // gold
+        TConstruct.basinCasting.addCastingRecipe(is, fs, null, true, 100);
     }
 }

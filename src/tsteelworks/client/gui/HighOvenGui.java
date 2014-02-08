@@ -102,10 +102,8 @@ public class HighOvenGui extends NewContainerGui
         }
     }
 
-    private static final ResourceLocation background     = new ResourceLocation("tsteelworks",
-                                                                                "textures/gui/container/highoven.png");
-    private static final ResourceLocation backgroundSide = new ResourceLocation("tsteelworks",
-                                                                                "textures/gui/container/highovenside.png");
+    private static final ResourceLocation background     = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
+    private static final ResourceLocation backgroundSide = new ResourceLocation("tsteelworks", "textures/gui/highovenside.png");
 
     @Override
     protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)

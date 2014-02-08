@@ -142,15 +142,12 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                                 itemSize = stack.stackSize;
                             }
                             stack.stackSize -= itemSize;
-                            final EntityItem entityitem = new EntityItem(worldObj, xCoord + jumpX + offsetX, yCoord +
-                                                                                                             jumpY,
-                                                                         zCoord + jumpZ + offsetZ,
-                                                                         new ItemStack(stack.itemID, itemSize,
-                                                                                       stack.getItemDamage()));
+                            final EntityItem entityitem = 
+                                new EntityItem(worldObj, xCoord + jumpX + offsetX, yCoord + jumpY, zCoord + jumpZ + offsetZ, 
+                                               new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
                             if (stack.hasTagCompound())
                             {
-                                entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound()
-                                                                                                .copy());
+                                entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
                             }
                             final float offset = 0.05F;
                             entityitem.motionX = (float) rand.nextGaussian() * offset;
@@ -1097,13 +1094,11 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         int[] center = new int[3];
         if (centerPos == null)
         {
-            center = new int[]
-            { xCoord, yCoord, zCoord };
+            center = new int[] { xCoord, yCoord, zCoord };
         }
         else
         {
-            center = new int[]
-            { centerPos.x, centerPos.y, centerPos.z };
+            center = new int[] { centerPos.x, centerPos.y, centerPos.z };
         }
         tags.setIntArray("CenterPos", center);
         tags.setByte("Direction", direction);

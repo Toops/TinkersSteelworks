@@ -22,8 +22,6 @@ public class TSMaterialItem extends TSCraftingItem
         return names;
     }
 
-    static String[] materialNames    = new String[]
-                                     { "ScorchedBrick", "MonoatomicGoldIngot", "MonoatomicGoldNugget" };
-    static String[] craftingTextures = new String[]
-                                     { "scorchedbrick", "monoatomicgoldingot", "nugget_monoatomicgold" };
+    static String[] materialNames    = new String[] { "ScorchedBrick", "MonoatomicGoldIngot", "MonoatomicGoldNugget" };
+    static String[] craftingTextures = new String[] { "scorchedbrick", "monoatomicgoldingot", "nugget_monoatomicgold" };
 }

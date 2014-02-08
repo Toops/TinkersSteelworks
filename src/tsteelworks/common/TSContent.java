@@ -29,8 +29,8 @@ import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.TSMetalPattern;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.items.blocks.TSMetalItemBlock;
+import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
-import tsteelworks.lib.config.ConfigCore;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TSContent
@@ -60,7 +60,7 @@ public class TSContent
     // -------------------------------------------------------------------------
     public static Material          liquidMetal;
     public static Fluid             moltenMonoatomicGoldFluid;
-    public static Block             moltenMonoatomicGoldBlock;
+    public static Block             moltenMonoatomicGold;
 
     /**
      * Content Constructor
@@ -168,14 +168,14 @@ public class TSContent
         {
             moltenMonoatomicGoldFluid = FluidRegistry.getFluid("monoatomicgold.molten");
         }
-        moltenMonoatomicGoldBlock = new TSBaseFluid(ConfigCore.moltenMonoatomicGold, moltenMonoatomicGoldFluid,
+        moltenMonoatomicGold = new TSBaseFluid(ConfigCore.moltenMonoatomicGold, moltenMonoatomicGoldFluid,
                                                     Material.lava, "liquid_monoatomicgold").setUnlocalizedName("metal.molten.monoatomicgold")
                                                                                            .setLightValue(0.6f)
                                                                                            .setLightOpacity(15);
-        GameRegistry.registerBlock(moltenMonoatomicGoldBlock, "metal.molten.monoatomicgold");
+        GameRegistry.registerBlock(moltenMonoatomicGold, "metal.molten.monoatomicgold");
         fluids[0] = moltenMonoatomicGoldFluid;
-        fluidBlocks[0] = moltenMonoatomicGoldBlock;
-        moltenMonoatomicGoldFluid.setBlockID(moltenMonoatomicGoldBlock).setLuminosity(12).setDensity(0)
+        fluidBlocks[0] = moltenMonoatomicGold;
+        moltenMonoatomicGoldFluid.setBlockID(moltenMonoatomicGold).setLuminosity(12).setDensity(1000)
                                  .setViscosity(1000).setTemperature(1300);
         FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenMonoatomicGoldFluid,
                                                                                             1000),

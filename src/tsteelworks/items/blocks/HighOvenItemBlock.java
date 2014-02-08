@@ -12,8 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class HighOvenItemBlock extends ItemBlock
 {
-    public static final String blockType[] =
-                                           { "Controller", "Drain", "Brick" };
+    public static final String blockType[] = { "Controller", "Drain", "Brick" };
 
     public HighOvenItemBlock (int id)
     {

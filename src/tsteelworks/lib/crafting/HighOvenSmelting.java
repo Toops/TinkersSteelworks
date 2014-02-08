@@ -73,9 +73,8 @@ public class HighOvenSmelting
     {
         instance.smeltingList.put(Arrays.asList(input.itemID, input.getItemDamage()), liquid);
         instance.temperatureList.put(Arrays.asList(input.itemID, input.getItemDamage()), temperature);
-        instance.renderIndex.put(Arrays.asList(input.itemID, input.getItemDamage()), new ItemStack(blockID,
-                                                                                                   input.stackSize,
-                                                                                                   metadata));
+        instance.renderIndex.put(Arrays.asList(input.itemID, input.getItemDamage()),
+                                 new ItemStack(blockID, input.stackSize, metadata));
     }
 
     /**
@@ -140,7 +139,7 @@ public class HighOvenSmelting
      *            Amount of Fluid
      */
     public static void
-            addDictionaryMelting (String oreName, FluidType type, int temperatureDifference, int fluidAmount)
+        addDictionaryMelting (String oreName, FluidType type, int temperatureDifference, int fluidAmount)
     {
         for (final ItemStack is : OreDictionary.getOres(oreName))
         {

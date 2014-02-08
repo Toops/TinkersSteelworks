@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.BlockFluidFinite;
 import tconstruct.items.FilledBucket;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
+import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -53,8 +54,6 @@ public class TSFilledBucket extends FilledBucket
         }
     }
 
-    @SuppressWarnings (
-    { "unchecked", "rawtypes" })
     @Override
     public void getSubItems (int id, CreativeTabs tab, List list)
     {
@@ -71,7 +70,7 @@ public class TSFilledBucket extends FilledBucket
         icons = new Icon[textureNames.length];
         for (int i = 0; i < icons.length; ++i)
         {
-            icons[i] = iconRegister.registerIcon("tsteelworks:materials/bucket_" + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(Repo.textureDir + "materials/bucket_" + textureNames[i]);
         }
     }
 

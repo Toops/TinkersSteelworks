@@ -21,6 +21,7 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 
 public class HighOvenBlock extends InventoryBlock
@@ -159,8 +160,9 @@ public class HighOvenBlock extends InventoryBlock
     @Override
     public String[] getTextureNames ()
     {
-        final String[] textureNames =
-        { "scorchedbrick", "highoven_inactive", "highoven_active", "drain_out", "drain_basin" };
+        // TODO: Moar textures
+        final String[] textureNames = { "highoven_side", "highoven_inactive", "highoven_active", "drain_side", "drain_out",
+            "drain_basin", "scorchedbrick" };
         if (!texturePrefix.equals(""))
         {
             for (int i = 0; i < textureNames.length; i++)
@@ -180,8 +182,9 @@ public class HighOvenBlock extends InventoryBlock
             return icons[sideTex + (meta * 3)];
         }
         else
-            if (meta == 2) return icons[0];
-        return icons[0];
+            if (meta == 2) return icons[6];
+        //return icons[3 + meta]; 
+        return icons[6];
     }
 
     @Override
@@ -206,12 +209,12 @@ public class HighOvenBlock extends InventoryBlock
             if (meta == 1)
             {
                 if (side == direction)
-                    return icons[4];
+                    return icons[5];
                 else
                     if ((side / 2) == (direction / 2))
-                        return icons[3];
+                        return icons[4];
                     else
-                        return icons[0];
+                        return icons[3];
             }
             else
                 if (meta == 2) return icons[0];
@@ -225,7 +228,7 @@ public class HighOvenBlock extends InventoryBlock
         icons = new Icon[textureNames.length];
         for (int i = 0; i < icons.length; ++i)
         {
-            icons[i] = iconRegister.registerIcon("tsteelworks:" + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
         }
     }
 

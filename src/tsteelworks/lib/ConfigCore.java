@@ -1,4 +1,4 @@
-package tsteelworks.lib.config;
+package tsteelworks.lib;
 
 import java.io.File;
 
@@ -19,8 +19,7 @@ public class ConfigCore
         /*
          * Block IDs Range: 3400~3499 Item IDs Range 14500~14599
          */
-        materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)")
-                          .getInt(14500);
+        materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)").getInt(14500);
         metalPattern = config.getItem("Items", "Metal Pattern ID", 14502, "Casting Table Pattern").getInt(14502);
         buckets = config.getItem("Items", "Filled Buckets ID", 14511, "Patterns and Misc").getInt(14511);
         enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enable steel armor").getBoolean(true);
@@ -28,18 +27,14 @@ public class ConfigCore
         steelChestplate = config.getItem("Equipables", "Steel Chestplate", 14513).getInt(14513);
         steelLeggings = config.getItem("Equipables", "Steel Leggings", 14514).getInt(14514);
         steelBoots = config.getItem("Equipables", "Steel Boots", 14515).getInt(14515);
-        enableExoSteelArmor = config.get("Equipables", "Steel ExoSuit Enabler", true, "Enable steel exo-suit")
-                                    .getBoolean(true);
+        enableExoSteelArmor = config.get("Equipables", "Steel ExoSuit Enabler", true, "Enable steel exo-suit").getBoolean(true);
         exoGogglesSteel = config.getItem("Equipables", "Steel ExoSuit Helmet", 14516).getInt(14512);
         exoChestSteel = config.getItem("Equipables", "Steel ExoSuit Chestplate", 14517).getInt(14513);
         exoPantsSteel = config.getItem("Equipables", "Steel ExoSuit Leggings", 14518).getInt(14514);
         exoShoesSteel = config.getItem("Equipables", "Steel ExoSuit Boots", 14519).getInt(14515);
-        highoven = config.getBlock("Blocks", "High Oven Blocks ID", 3400, "High Oven Blocks (Scorched Bricks, etc)")
-                         .getInt(3400);
-        metalBlock = config.getBlock("Blocks", "Metal Blocks ID", 3401, "Metal Blocks (Monoatomic Gold Block, etc)")
-                           .getInt(3401);
-        moltenMonoatomicGold = config.getBlock("Blocks", "Molten Monoatomic Gold ID", 3411, "Liquid Blocks")
-                                     .getInt(3411);
+        highoven = config.getBlock("Blocks", "High Oven Blocks ID", 3400, "High Oven Blocks (Scorched Bricks, etc)").getInt(3400);
+        metalBlock = config.getBlock("Blocks", "Metal Blocks ID", 3401, "Metal Blocks (Monoatomic Gold Block, etc)").getInt(3401);
+        moltenMonoatomicGold = config.getBlock("Blocks", "Molten Monoatomic Gold ID", 3411, "Liquid Blocks").getInt(3411);
         /*
          * Difficulty Changes
          */
@@ -49,14 +44,11 @@ public class ConfigCore
          * Vanilla Furnace Steel Smelting
          */
         enableFurnaceSteelSmelting = config.get("Vanilla Furnace", "Vanilla Furnace Steel Smelting", false,
-                                                "Enable vanilla furnaces to smelt steel from iron tsteelworks.items.")
-                                           .getBoolean(false);
+                                                "Enable vanilla furnaces to smelt steel from iron tsteelworks.items.").getBoolean(false);
         furnaceSteelConversionRate = config.get("Vanilla Furnace", "Vanilla Furnace Steel Yield", 1,
-                                                "Number of nuggets/ingots returned from cooking ingots/tsteelworks.blocks.")
-                                           .getInt(1);
+                                                "Number of nuggets/ingots returned from cooking ingots/tsteelworks.blocks.").getInt(1);
         hardcoreSteelConversion = config.get("Vanilla Furnace", "Vanilla Hardcore Setting", false,
-                                             "Smelting an iron block results in nuggets instead of ingots.")
-                                        .getBoolean(false);
+                                             "Smelting an iron block results in nuggets instead of ingots.").getBoolean(false);
         /*
          * Save the configuration file
          */

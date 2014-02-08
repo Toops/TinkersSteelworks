@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import tconstruct.library.armor.ArmorCore;
 import tconstruct.library.armor.EnumArmorPart;
+import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 
 public class TSExoArmor extends ArmorCore
@@ -32,16 +33,15 @@ public class TSExoArmor extends ArmorCore
     @Override
     public void registerIcons (IconRegister par1IconRegister)
     {
-        itemIcon = par1IconRegister.registerIcon("tsteelworks:armor/" +
-                                                 textureName +
-                                                 "_steel_" +
-                                                 (armorType == 0 ? "helmet" : armorType == 1 ? "chestplate" : armorType == 2 ? "leggings" : armorType == 3 ? "boots" : "helmet"));
+        itemIcon = par1IconRegister.registerIcon(Repo.textureDir + "armor/" + textureName + "_steel_" +
+                                                 (armorType == 0 ? "helmet" : armorType == 1 ? "chestplate" : armorType == 2 ? 
+                                                 "leggings" : armorType == 3 ? "boots" : "helmet"));
     }
 
     @Override
     public String getArmorTexture (ItemStack stack, Entity entity, int slot, int layer)
     {
-        return "tsteelworks:textures/armor/" + textureName + "_" + layer + ".png";
+        return Repo.textureDir + "textures/armor/" + textureName + "_" + layer + ".png";
     }
 
     @Override

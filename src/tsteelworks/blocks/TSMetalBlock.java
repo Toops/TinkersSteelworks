@@ -6,8 +6,7 @@ import net.minecraft.world.World;
 
 public class TSMetalBlock extends TSBaseBlock
 {
-    static String[] metalTypes = new String[]
-                               { "compressed_monoatomicgold" };
+    static String[] metalTypes = new String[] { "compressed_monoatomicgold" };
 
     public TSMetalBlock (int id, Material material, float hardness)
     {

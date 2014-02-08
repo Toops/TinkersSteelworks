@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import tconstruct.items.Pattern;
+import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -27,7 +28,7 @@ public class TSMetalPattern extends Pattern
         for (int i = 0; i < icons.length; ++i)
             if (!(textureNames[i].equals("")))
             {
-                icons[i] = iconRegister.registerIcon("tsteelworks:" + folder + textureNames[i]);
+                icons[i] = iconRegister.registerIcon(Repo.textureDir + folder + textureNames[i]);
             }
     }
 
@@ -46,8 +47,7 @@ public class TSMetalPattern extends Pattern
         return names;
     }
 
-    private static final String[] patternName = new String[]
-                                              { "chainlink" };
+    private static final String[] patternName = new String[] { "chainlink" };
 
     @Override
     public void getSubItems (int id, CreativeTabs tab, List list)

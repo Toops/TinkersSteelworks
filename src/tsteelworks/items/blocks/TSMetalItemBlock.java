@@ -10,8 +10,7 @@ import tconstruct.items.blocks.MetalItemBlock;
 
 public class TSMetalItemBlock extends MetalItemBlock
 {
-    public static final String blockType[] =
-                                           { "MonoatomicGold" };
+    public static final String blockType[] = { "MonoatomicGold" };
 
     public TSMetalItemBlock (int id)
     {

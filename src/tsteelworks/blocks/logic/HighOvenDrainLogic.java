@@ -104,8 +104,7 @@ public class HighOvenDrainLogic extends MultiServantLogic implements IFluidHandl
             final int my = getMasterPosition().y;
             final int mz = getMasterPosition().z;
             final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            return new FluidTankInfo[]
-            { highoven.getInfo() };
+            return new FluidTankInfo[] { highoven.getInfo() };
         }
         return null;
     }
