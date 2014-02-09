@@ -2,7 +2,6 @@ package tsteelworks;
 
 import java.util.logging.Logger;
 
-import net.minecraftforge.common.MinecraftForge;
 import tconstruct.TConstruct;
 import tconstruct.library.util.TabTools;
 import tsteelworks.common.TSCommonProxy;
@@ -10,7 +9,6 @@ import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
-import tsteelworks.util.TSEventHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -69,9 +67,6 @@ public class TSteelworks
         ConfigCore.initProps(event.getSuggestedConfigurationFile());
         TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
         content = new TSContent();
-        events = new TSEventHandler();
-        MinecraftForge.EVENT_BUS.register(events);
-        content.oreRegistry();
         proxy.registerRenderers();
         proxy.registerSounds();
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
@@ -100,5 +95,4 @@ public class TSteelworks
     {}
 
     public static TSContent      content;
-    public static TSEventHandler events;
 }
