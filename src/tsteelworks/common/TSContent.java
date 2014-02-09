@@ -14,19 +14,30 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.TConstruct;
 import tconstruct.blocks.logic.MultiServantLogic;
+import tconstruct.common.TContent;
+import tconstruct.items.Pattern;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.FluidType;
 import tconstruct.library.armor.EnumArmorPart;
+import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.PatternBuilder;
+import tconstruct.library.crafting.Smeltery;
+import tconstruct.library.util.IPattern;
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.TSBaseFluid;
 import tsteelworks.blocks.TSMetalBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.items.Ring;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSExoArmor;
 import tsteelworks.items.TSFilledBucket;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.TSMetalPattern;
+import tsteelworks.items.TSWoodPattern;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.items.blocks.TSMetalItemBlock;
 import tsteelworks.lib.ConfigCore;
@@ -38,9 +49,11 @@ public class TSContent
     // ---- ITEMS
     // --------------------------------------------------------------------------
     public static Item buckets;
-    public static Item materials;
-    public static Item woodPattern;
-    public static Item metalPattern;
+    public static Item materialsTS;
+    public static Item woodPatternTS;
+    public static Item metalPatternTS;
+    
+    public static Item ring;
     // Armor - Basic
     public static Item helmetSteel;
     public static Item chestplateSteel;
@@ -55,10 +68,10 @@ public class TSContent
     // ---- BLOCKS
     // -------------------------------------------------------------------------
     public static Block highoven;
-    public static Block metalBlock;
+    public static Block metalBlockTS;
     // ---- FLUIDS
     // -------------------------------------------------------------------------
-    public static Material liquidMetal;
+    public static Material liquidMetalTS;
     public static Fluid moltenMonoatomicGoldFluid;
     public static Block moltenMonoatomicGold;
 
@@ -98,23 +111,52 @@ public class TSContent
      */
     void registerItems ()
     {
-        materials = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
-        metalPattern = new TSMetalPattern(ConfigCore.metalPattern, "cast_", "materials/").setUnlocalizedName("tsteelworks.MetalPattern");
+        materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
+        woodPatternTS = new TSWoodPattern(ConfigCore.woodPattern, "pattern_", "materials/").setUnlocalizedName("tsteelworks.WoodPattern");
+        metalPatternTS = new TSMetalPattern(ConfigCore.metalPattern, "cast_", "materials/").setUnlocalizedName("tsteelworks.MetalPattern");
         buckets = new TSFilledBucket(ConfigCore.buckets);
-        GameRegistry.registerItem(materials, "Materials");
+        
+        GameRegistry.registerItem(materialsTS, "Materials");
         GameRegistry.registerItem(buckets, "buckets");
-        GameRegistry.registerItem(metalPattern, "metalPattern");
-        final String[] materialStrings = { "scorchedBrick", "ingotMonoatomicGold", "nuggetMonoatomicGold" };
-        final String[] patternTypes = { "chainlink" };
-        for (int i = 0; i < materialStrings.length; i++)
-        {
-            TSteelworksRegistry.addItemStackToDirectory(materialStrings[i], new ItemStack(materials, 1, i));
-            //TConstructRegistry.addItemStackToDirectory(materialStrings[i], new ItemStack(materials, 1, i));
-        }
+        GameRegistry.registerItem(woodPatternTS, "woodPatternTS");
+        GameRegistry.registerItem(metalPatternTS, "metalPatternTS");
+        
+        TConstructRegistry.addItemToDirectory("woodPatternTS", woodPatternTS);
+        TConstructRegistry.addItemToDirectory("metalPatternTS", metalPatternTS);
+        
+        // --- Patterns & Casts
+        final String[] patternTypes = { "ring" };
+        
         for (int i = 0; i < patternTypes.length; i++)
         {
-            TSteelworksRegistry.addItemStackToDirectory(patternTypes[i] + "Cast", new ItemStack(metalPattern, 1, i));
+            TConstructRegistry.addItemStackToDirectory(patternTypes[i] + "Pattern", new ItemStack(woodPatternTS, 1, i));
         }
+        
+        for (int i = 0; i < patternTypes.length; i++)
+        {
+            TConstructRegistry.addItemStackToDirectory(patternTypes[i] + "Cast", new ItemStack(metalPatternTS, 1, i));
+        }
+        
+        // --- Tool Parts
+        ring = new Ring(ConfigCore.ring).setUnlocalizedName("tsteelworks.Ring");
+
+        Item[] toolParts = { ring };
+        String[] toolPartStrings = { "ring" };
+        
+        for (int i = 0; i < toolParts.length; i++)
+        {
+            GameRegistry.registerItem(toolParts[i], toolPartStrings[i]); 
+            TConstructRegistry.addItemToDirectory(toolPartStrings[i], toolParts[i]);
+        }
+        
+        // --- Materials
+        final String[] materialStrings = { "scorchedBrick", "ingotMonoatomicGold", "nuggetMonoatomicGold" };
+        
+        for (int i = 0; i < materialStrings.length; i++)
+        {
+            TSteelworksRegistry.addItemStackToDirectory(materialStrings[i], new ItemStack(materialsTS, 1, i));
+        }
+        
         if (ConfigCore.enableSteelArmor)
         {
             // TODO: Change properties
@@ -149,9 +191,9 @@ public class TSContent
         GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
         GameRegistry.registerTileEntity(MultiServantLogic.class, "TSteelworks.Servants");
         // Metal Blocks
-        metalBlock = new TSMetalBlock(ConfigCore.metalBlock, Material.iron, 10.0F).setUnlocalizedName("tsteelworks.metalblock");
-        metalBlock.stepSound = Block.soundMetalFootstep;
-        GameRegistry.registerBlock(metalBlock, TSMetalItemBlock.class, "MetalBlock");
+        metalBlockTS = new TSMetalBlock(ConfigCore.metalBlock, Material.iron, 10.0F).setUnlocalizedName("tsteelworks.metalblock");
+        metalBlockTS.stepSound = Block.soundMetalFootstep;
+        GameRegistry.registerBlock(metalBlockTS, TSMetalItemBlock.class, "MetalBlock");
     }
 
     /**
@@ -159,7 +201,7 @@ public class TSContent
      */
     void registerFluids ()
     {
-        liquidMetal = new MaterialLiquid(MapColor.tntColor);
+        liquidMetalTS = new MaterialLiquid(MapColor.tntColor);
         // Monoatomic Gold
         moltenMonoatomicGoldFluid = new Fluid("monoatomicgold.molten");
         if (!FluidRegistry.registerFluid(moltenMonoatomicGoldFluid))
@@ -177,10 +219,11 @@ public class TSContent
 
     /**
      * Register Materials
-     * Used for registering tool materials.
+     * Used for registering tool materialsTS.
      */
     void registerMaterials ()
     {
+        PatternBuilder.instance.addToolPattern((IPattern) woodPatternTS);
     }
 
     /**
@@ -188,16 +231,23 @@ public class TSContent
      */
     public void oreRegistry ()
     {
-        OreDictionary.registerOre("ingotMonoatomicGold", new ItemStack(materials, 1, 1));
-        OreDictionary.registerOre("nuggetMonoatomicGold", new ItemStack(materials, 1, 2));
-        OreDictionary.registerOre("blockMonoatomicGold", new ItemStack(metalBlock, 1, 0));
+        OreDictionary.registerOre("ingotMonoatomicGold", new ItemStack(materialsTS, 1, 1));
+        OreDictionary.registerOre("nuggetMonoatomicGold", new ItemStack(materialsTS, 1, 2));
+        OreDictionary.registerOre("blockMonoatomicGold", new ItemStack(metalBlockTS, 1, 0));
     }
 
+    public static Item[] patternOutputs;
+    public static FluidStack[] liquids;
+    
     /**
      * Make TSRecipes add all crafting recipes
      */
     void addCraftingRecipes ()
     {
+        // TODO: Move to TSRecipes
+        addPartMapping(); 
+        addRecipesForTableCasting();
+        // ---
         TSRecipes.addRecipesSteelMaterial();
         if (ConfigCore.enableMonoatomicGold)
             TSRecipes.addRecipesMonoatomicGoldMaterial();
@@ -206,5 +256,50 @@ public class TSContent
         TSRecipes.addRecipesSteelArmor();
         if (ConfigCore.hardcoreFlintAndSteel)
             TSRecipes.changeRecipeFlintAndSteel();
+    }
+    
+    private void addPartMapping ()
+    {
+        /* Tools */
+        patternOutputs = new Item[] { ring };
+
+        for (int mat = 0; mat < 1; mat++)
+        {
+            for (int meta = 0; meta < patternOutputs.length; meta++)
+            {
+                if (patternOutputs[meta] != null)
+                        TConstructRegistry.addPartMapping(woodPatternTS.itemID, meta, mat, new ItemStack(patternOutputs[meta], 1, mat));
+            }
+        }
+    }
+    
+    private void addRecipesForTableCasting ()
+    {
+        patternOutputs = new Item[] { ring };
+        LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
+        liquids = new FluidStack[] { new FluidStack(TContent.moltenIronFluid, 1) };
+        int[] liquidDamage = new int[] { 1 }; //ItemStack damage value
+        int fluidAmount = 0;
+        Fluid fs = null;
+
+        for (int iter = 0; iter < patternOutputs.length; iter++)
+        {
+            if (patternOutputs[iter] != null)
+            {
+                ItemStack cast = new ItemStack(metalPatternTS, 1, iter + 1);
+
+                tableCasting.addCastingRecipe(cast, new FluidStack(TContent.moltenAlubrassFluid, TConstruct.ingotLiquidValue), new ItemStack(patternOutputs[iter], 1, Short.MAX_VALUE), false, 50);
+                tableCasting.addCastingRecipe(cast, new FluidStack(TContent.moltenGoldFluid, TConstruct.ingotLiquidValue * 2), new ItemStack(patternOutputs[iter], 1, Short.MAX_VALUE), false, 50);
+
+                for (int iterTwo = 0; iterTwo < liquids.length; iterTwo++)
+                {
+                    fs = liquids[iterTwo].getFluid();
+                    fluidAmount = ((IPattern) metalPatternTS).getPatternCost(cast) * TConstruct.ingotLiquidValue / 2;
+                    ItemStack metalCast = new ItemStack(patternOutputs[iter], 1, liquidDamage[iterTwo]);
+                    tableCasting.addCastingRecipe(metalCast, new FluidStack(fs, fluidAmount), cast, 50);
+                    //Smeltery.addMelting(FluidType.getFluidType(fs), metalCast, 0, fluidAmount);
+                }
+            }
+        }
     }
 }

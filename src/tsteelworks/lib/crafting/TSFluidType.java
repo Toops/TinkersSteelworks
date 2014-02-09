@@ -12,7 +12,7 @@ import tsteelworks.common.TSContent;
 public enum TSFluidType
 {
     /** Monoatomic Gold Smelting **/
-    MonoatomicGold(TSContent.metalBlock.blockID, 0, 700, TSContent.moltenMonoatomicGoldFluid, false);
+    MonoatomicGold(TSContent.metalBlockTS.blockID, 0, 700, TSContent.moltenMonoatomicGoldFluid, false);
 
     /*
      * Public Variables

@@ -25,11 +25,11 @@ public class TSCraftingItem extends Item
     public TSCraftingItem (int id, String[] names, String[] tex, String folder)
     {
         super(id);
-        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        setMaxDamage(0);
-        setHasSubtypes(true);
-        textureNames = tex;
-        unlocalizedNames = names;
+        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+        this.setMaxDamage(0);
+        this.setHasSubtypes(true);
+        this.textureNames = tex;
+        this.unlocalizedNames = names;
         this.folder = folder;
     }
 

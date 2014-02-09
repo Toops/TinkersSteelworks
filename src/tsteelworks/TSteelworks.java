@@ -24,7 +24,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks
- * Based heavily on preestablished code by SlimeKnigths (https://github.com/SlimeKnights)
+ * Based heavily on preestablished code by SlimeKnights (https://github.com/SlimeKnights)
+ * 
  * TSteelworks
  * 
  * @author Toops

@@ -42,7 +42,7 @@ public class TSRecipes
         LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();
         LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
         
-        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materials, 1, 0);
+        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
         final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
         
         final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, TConstruct.chunkLiquidValue / 4);
@@ -58,7 +58,7 @@ public class TSRecipes
     public static void addRecipesSteelMaterial ()
     {
         final FluidType fluidTypeSteel = FluidType.Steel;
-        
+        // TODO: Figure out why TConstruct.xxxLiquidValue is doubling?
         // Add smelting of steel (ores only!) to High Oven. Uses Forge's OreDictionary (mostly)
         // Generic Ore Support
         HighOvenSmelting.addDictionaryMelting("oreIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
@@ -87,9 +87,9 @@ public class TSRecipes
         final ItemStack bucketEmpty = new ItemStack(Item.bucketEmpty);
         final ItemStack bucketMonoGold = new ItemStack(TSContent.buckets, 1, 0);
         
-        final ItemStack nuggetMonoGold = new ItemStack(TSContent.materials, 1, 2);
-        final ItemStack ingotMonoGold = new ItemStack(TSContent.materials, 1, 1);
-        final ItemStack blockMonoGold = new ItemStack(TSContent.metalBlock, 1, 0);
+        final ItemStack nuggetMonoGold = new ItemStack(TSContent.materialsTS, 1, 2);
+        final ItemStack ingotMonoGold = new ItemStack(TSContent.materialsTS, 1, 1);
+        final ItemStack blockMonoGold = new ItemStack(TSContent.metalBlockTS, 1, 0);
                 
         final FluidStack fluidMonoGoldNugget = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.nuggetLiquidValue / 2);
         final FluidStack fluidMonoGoldIngot = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.ingotLiquidValue / 2);
@@ -97,9 +97,9 @@ public class TSRecipes
         final FluidStack fluidMonoGoldBucket = new FluidStack(TSContent.moltenMonoatomicGoldFluid, FluidContainerRegistry.BUCKET_VOLUME);
         
         GameRegistry.addRecipe(blockMonoGold, patBlock, '#', ingotMonoGold);
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 1), "b", 'b', blockMonoGold);
+        GameRegistry.addRecipe(new ItemStack(TSContent.materialsTS, 9, 1), "b", 'b', blockMonoGold);
         GameRegistry.addRecipe(ingotMonoGold, patBlock, '#', nuggetMonoGold);
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 2), "i", 'i', ingotMonoGold);
+        GameRegistry.addRecipe(new ItemStack(TSContent.materialsTS, 9, 2), "i", 'i', ingotMonoGold);
         
         tableCasting.addCastingRecipe(bucketMonoGold, fluidMonoGoldBucket, bucketEmpty, true, 10);
         tableCasting.addCastingRecipe(ingotMonoGold, fluidMonoGoldIngot, cast, 80);      
@@ -116,7 +116,7 @@ public class TSRecipes
      */
     public static void addRecipesHighOvenComponents ()
     {
-        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materials, 1, 0);
+        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 2), "bb", "bb", 'b', itemScorchedBrick);

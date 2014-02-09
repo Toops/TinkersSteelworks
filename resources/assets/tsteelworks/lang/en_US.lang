@@ -6,7 +6,11 @@ item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
 item.tsteelworks.Materials.MonoatomicGoldIngot.name=Monoatomic Gold Ingot
 item.tsteelworks.Materials.MonoatomicGoldNugget.name=Monoatomic Gold Nugget
 
-item.tsteelworks.MetalPattern.chainlink.name=Chain Link Cast
+item.tsteelworks.WoodPattern.ring.name=Ring Pattern
+item.tsteelworks.MetalPattern.ring.name=Ring Cast
+
+item.tsteelworks.Ring.wood.name=Wooden Ring
+item.tsteelworks.Ring.iron.name=Iron Ring
 
 item.tsteelworks.bucket.MonoatomicGold.name=Molten Monoatomic Gold Bucket
 

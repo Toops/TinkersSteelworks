@@ -12,24 +12,11 @@ import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TSMetalPattern extends Pattern
+public class TSMetalPattern extends TSWoodPattern
 {
     public TSMetalPattern (int id, String patternType, String folder)
     {
         super(id, patternName, getPatternNames(patternType), folder);
-        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-    }
-
-    @Override
-    @SideOnly (Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
-    {
-        icons = new Icon[textureNames.length];
-        for (int i = 0; i < icons.length; ++i)
-            if (!(textureNames[i].equals("")))
-            {
-                icons[i] = iconRegister.registerIcon(Repo.textureDir + folder + textureNames[i]);
-            }
     }
 
     protected static String[] getPatternNames (String partType)
@@ -47,7 +34,7 @@ public class TSMetalPattern extends Pattern
         return names;
     }
 
-    private static final String[] patternName = new String[] { "chainlink" };
+    private static final String[] patternName = new String[] { "ring" };
 
     @Override
     public void getSubItems (int id, CreativeTabs tab, List list)
@@ -57,18 +44,5 @@ public class TSMetalPattern extends Pattern
             {
                 list.add(new ItemStack(id, 1, i));
             }
-    }
-
-    // 2 for full material, 1 for half.
-    @Override
-    public int getPatternCost (ItemStack pattern)
-    {
-        switch (pattern.getItemDamage())
-        {
-            case 0:
-                return 1;
-            default:
-                return 0;
-        }
     }
 }
