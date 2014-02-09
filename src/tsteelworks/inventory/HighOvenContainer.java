@@ -72,7 +72,6 @@ public class HighOvenContainer extends ActiveContainer
         {
             final ItemStack slotStack = slot.getStack();
             stack = slotStack.copy();
-            TSteelworks.logger.info("Size: " + logic.getSizeInventory());
             if (slotID < logic.getSizeInventory())
             {
                 if (!mergeItemStack(slotStack, logic.getSizeInventory(), inventorySlots.size(), true)) return null;

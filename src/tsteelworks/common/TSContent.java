@@ -37,35 +37,35 @@ public class TSContent
 {
     // ---- ITEMS
     // --------------------------------------------------------------------------
-    public static Item              buckets;
-    public static Item              materials;
-    public static Item              woodPattern;
-    public static Item              metalPattern;
+    public static Item buckets;
+    public static Item materials;
+    public static Item woodPattern;
+    public static Item metalPattern;
     // Armor - Basic
-    public static Item              helmetSteel;
-    public static Item              chestplateSteel;
-    public static Item              leggingsSteel;
-    public static Item              bootsSteel;
+    public static Item helmetSteel;
+    public static Item chestplateSteel;
+    public static Item leggingsSteel;
+    public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     // Armor - Exosuit
-    public static Item              exoGogglesSteel;
-    public static Item              exoChestSteel;
-    public static Item              exoPantsSteel;
-    public static Item              exoShoesSteel;
+    public static Item exoGogglesSteel;
+    public static Item exoChestSteel;
+    public static Item exoPantsSteel;
+    public static Item exoShoesSteel;
     // ---- BLOCKS
     // -------------------------------------------------------------------------
-    public static Block             highoven;
-    public static Block             metalBlock;
+    public static Block highoven;
+    public static Block metalBlock;
     // ---- FLUIDS
     // -------------------------------------------------------------------------
-    public static Material          liquidMetal;
-    public static Fluid             moltenMonoatomicGoldFluid;
-    public static Block             moltenMonoatomicGold;
+    public static Material liquidMetal;
+    public static Fluid moltenMonoatomicGoldFluid;
+    public static Block moltenMonoatomicGold;
 
     /**
      * Content Constructor
      */
-    public TSContent ()
+    public TSContent()
     {
         registerItems();
         registerBlocks();
@@ -86,7 +86,7 @@ public class TSContent
     /**
      * Fluids array
      */
-    public static Fluid[] fluids      = new Fluid[1];
+    public static Fluid[] fluids = new Fluid[1];
 
     /**
      * Fluid blocks array
@@ -104,13 +104,12 @@ public class TSContent
         GameRegistry.registerItem(materials, "Materials");
         GameRegistry.registerItem(buckets, "buckets");
         GameRegistry.registerItem(metalPattern, "metalPattern");
-        final String[] materialStrings =
-        { "scorchedBrick", "ingotMonoatomicGold", "nuggetMonoatomicGold" };
-        final String[] patternTypes =
-        { "chainlink" };
+        final String[] materialStrings = { "scorchedBrick", "ingotMonoatomicGold", "nuggetMonoatomicGold" };
+        final String[] patternTypes = { "chainlink" };
         for (int i = 0; i < materialStrings.length; i++)
         {
             TSteelworksRegistry.addItemStackToDirectory(materialStrings[i], new ItemStack(materials, 1, i));
+            //TConstructRegistry.addItemStackToDirectory(materialStrings[i], new ItemStack(materials, 1, i));
         }
         for (int i = 0; i < patternTypes.length; i++)
         {
@@ -119,8 +118,7 @@ public class TSContent
         if (ConfigCore.enableSteelArmor)
         {
             // TODO: Change properties
-            materialSteel = EnumHelper.addArmorMaterial("STEEL", 2, new int[]
-            { 1, 2, 2, 1 }, 3);
+            materialSteel = EnumHelper.addArmorMaterial("STEEL", 2, new int[] { 1, 2, 2, 1 }, 3);
             helmetSteel = new TSArmorBasic(ConfigCore.steelHelmet, materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
             chestplateSteel = new TSArmorBasic(ConfigCore.steelChestplate, materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
             leggingsSteel = new TSArmorBasic(ConfigCore.steelLeggings, materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
@@ -168,19 +166,13 @@ public class TSContent
         {
             moltenMonoatomicGoldFluid = FluidRegistry.getFluid("monoatomicgold.molten");
         }
-        moltenMonoatomicGold = new TSBaseFluid(ConfigCore.moltenMonoatomicGold, moltenMonoatomicGoldFluid,
-                                                    Material.lava, "liquid_monoatomicgold").setUnlocalizedName("metal.molten.monoatomicgold")
-                                                                                           .setLightValue(0.6f)
-                                                                                           .setLightOpacity(15);
+        moltenMonoatomicGold = new TSBaseFluid(ConfigCore.moltenMonoatomicGold, moltenMonoatomicGoldFluid, Material.lava, "liquid_monoatomicgold").setUnlocalizedName("metal.molten.monoatomicgold")
+                .setLightValue(0.6f).setLightOpacity(15);
         GameRegistry.registerBlock(moltenMonoatomicGold, "metal.molten.monoatomicgold");
         fluids[0] = moltenMonoatomicGoldFluid;
         fluidBlocks[0] = moltenMonoatomicGold;
-        moltenMonoatomicGoldFluid.setBlockID(moltenMonoatomicGold).setLuminosity(12).setDensity(1000)
-                                 .setViscosity(1000).setTemperature(1300);
-        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenMonoatomicGoldFluid,
-                                                                                            1000),
-                                                                             new ItemStack(buckets, 1, 0),
-                                                                             new ItemStack(Item.bucketEmpty)));
+        moltenMonoatomicGoldFluid.setBlockID(moltenMonoatomicGold).setLuminosity(12).setDensity(1000).setViscosity(1000).setTemperature(1300);
+        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenMonoatomicGoldFluid, 1000), new ItemStack(buckets, 1, 0), new ItemStack(Item.bucketEmpty)));
     }
 
     /**
@@ -188,7 +180,8 @@ public class TSContent
      * Used for registering tool materials.
      */
     void registerMaterials ()
-    {}
+    {
+    }
 
     /**
      * Register items in the OreDictionary
@@ -205,32 +198,13 @@ public class TSContent
      */
     void addCraftingRecipes ()
     {
-        // -- Crafting Table
-        // --------------------
-        TSRecipes.craftTableHighOvenComponents();
-        TSRecipes.craftTableMonoatomicGold();
-        if (ConfigCore.enableSteelArmor)
-        {
-            TSRecipes.craftTableSteelArmor();
-        }
+        TSRecipes.addRecipesSteelMaterial();
+        if (ConfigCore.enableMonoatomicGold)
+            TSRecipes.addRecipesMonoatomicGoldMaterial();
+        TSRecipes.addRecipesScorchedBrickMaterial();
+        TSRecipes.addRecipesHighOvenComponents();
+        TSRecipes.addRecipesSteelArmor();
         if (ConfigCore.hardcoreFlintAndSteel)
-        {
-            TSRecipes.changeFlintAndSteelRecipe();
-        }
-        // -- Smeltery
-        // --------------------
-        TSRecipes.smelteryMonoatomicGold();
-        // -- High Oven
-        // --------------------
-        TSRecipes.highOvenSteel();
-        TSRecipes.highOvenMonoatomicGold();
-        // -- Casting Basin
-        // --------------------
-        TSRecipes.castBasinScorchedBrickBlock();
-        TSRecipes.castBasinMonoatomicGold();
-        // -- Casting Table
-        // --------------------
-        TSRecipes.castTableScorchedBrick();
-        TSRecipes.castTableMonoatomicGold();
+            TSRecipes.changeRecipeFlintAndSteel();
     }
 }

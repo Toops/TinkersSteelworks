@@ -1,17 +1,22 @@
 package tsteelworks.common;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.util.RecipeRemover;
+import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.HighOvenSmelting;
 import tsteelworks.lib.crafting.TSFluidType;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,162 +29,122 @@ public class TSRecipes
     static String[] patBlock    = { "###", "###", "###" };
     static String[] patHollow   = { "###", "# #", "###" };
     static String[] patSurround = { "###", "#m#", "###" };
-
-    // ---- CRAFTING TABLE
-    // --------------------------------------------------------------------------
+    static String[] patHead     = { "###", "# #" };
+    static String[] patChest    = { "# #", "###", "###" };
+    static String[] patLegs     = { "###", "# #", "# #" };
+    static String[] patBoots     = { "# #", "# #" };
+    
     /**
-     * Craft monoatomic gold materials (blocks, ingots, nuggets)
+     * Scorched brick recipes
      */
-    public static void craftTableMonoatomicGold ()
+    public static void addRecipesScorchedBrickMaterial ()
     {
-        // Craft block from ingots
-        GameRegistry.addRecipe(new ItemStack(TSContent.metalBlock, 1, 0), patBlock, '#',
-                               new ItemStack(TSContent.materials, 1, 1));
-        // Craft ingots from block
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 1), "m", 'm',
-                               new ItemStack(TSContent.metalBlock, 1, 0));
-        // Craft ingot from nuggets
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 1, 1), patBlock, '#',
-                               new ItemStack(TSContent.materials, 1, 2));
-        // Craft nuggets from ingot
-        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 2), "m", 'm',
-                               new ItemStack(TSContent.materials, 1, 1));
+        LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();
+        LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
+        
+        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materials, 1, 0);
+        final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
+        
+        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, TConstruct.chunkLiquidValue / 4);
+        final FluidStack fluidStoneChunk = new FluidStack(TContent.moltenStoneFluid, TConstruct.chunkLiquidValue);
+        
+        tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
+        basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
     }
-
+    
     /**
-     * Craft steel armor
+     * Steel Recipes
      */
-    public static void craftTableSteelArmor ()
+    public static void addRecipesSteelMaterial ()
     {
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { "sss", "s s", 's',
-            TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { "s s", "sss", "sss", 's',
-            TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { "sss", "s s", "s s", 's',
-            TConstructRegistry.getItemStack("ingotSteel") }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { "s s", "s s", 's',
-            TConstructRegistry.getItemStack("ingotSteel") }));
+        final FluidType fluidTypeSteel = FluidType.Steel;
+        
+        // Add smelting of steel (ores only!) to High Oven. Uses Forge's OreDictionary (mostly)
+        // Generic Ore Support
+        HighOvenSmelting.addDictionaryMelting("oreIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        // Dusts Support (Thermal Expansion, etc)
+        HighOvenSmelting.addDictionaryMelting("dustIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        // Factorization support
+        HighOvenSmelting.addDictionaryMelting("crystallineIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        // NetherOres support
+        HighOvenSmelting.addDictionaryMelting("oreNetherIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        // OreBerry Support
+        HighOvenSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
+                                    TConstruct.nuggetLiquidValue / 2);
     }
-
+    
     /**
-     * Craft highoven (high oven) components
+     * Monoatomic gold recipes
      */
-    public static void craftTableHighOvenComponents ()
+    public static void addRecipesMonoatomicGoldMaterial ()
     {
-        // High Oven Components Recipes
-        final ItemStack brick = new ItemStack(TSContent.materials, 1, 0);
-        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', brick); // Controller
-        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', brick); // Drain
-        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 2), "bb", "bb", 'b', brick); // Bricks
+        LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();
+        LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
+        
+        final TSFluidType fluidTypeMonoGold = TSFluidType.MonoatomicGold;
+        
+        final ItemStack cast = new ItemStack(TContent.metalPattern, 1, 0);
+        final ItemStack bucketEmpty = new ItemStack(Item.bucketEmpty);
+        final ItemStack bucketMonoGold = new ItemStack(TSContent.buckets, 1, 0);
+        
+        final ItemStack nuggetMonoGold = new ItemStack(TSContent.materials, 1, 2);
+        final ItemStack ingotMonoGold = new ItemStack(TSContent.materials, 1, 1);
+        final ItemStack blockMonoGold = new ItemStack(TSContent.metalBlock, 1, 0);
+                
+        final FluidStack fluidMonoGoldNugget = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.nuggetLiquidValue / 2);
+        final FluidStack fluidMonoGoldIngot = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.ingotLiquidValue / 2);
+        final FluidStack fluidMonoGoldBlock = new FluidStack(TSContent.moltenMonoatomicGoldFluid, TConstruct.blockLiquidValue / 2);
+        final FluidStack fluidMonoGoldBucket = new FluidStack(TSContent.moltenMonoatomicGoldFluid, FluidContainerRegistry.BUCKET_VOLUME);
+        
+        GameRegistry.addRecipe(blockMonoGold, patBlock, '#', ingotMonoGold);
+        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 1), "b", 'b', blockMonoGold);
+        GameRegistry.addRecipe(ingotMonoGold, patBlock, '#', nuggetMonoGold);
+        GameRegistry.addRecipe(new ItemStack(TSContent.materials, 9, 2), "i", 'i', ingotMonoGold);
+        
+        tableCasting.addCastingRecipe(bucketMonoGold, fluidMonoGoldBucket, bucketEmpty, true, 10);
+        tableCasting.addCastingRecipe(ingotMonoGold, fluidMonoGoldIngot, cast, 80);      
+        basinCasting.addCastingRecipe(blockMonoGold, fluidMonoGoldBlock, null, true, 100);
+        
+        HighOvenSmelting.addDictionaryMelting("oreGold", fluidTypeMonoGold, -500, TConstruct.ingotLiquidValue / 2);
+        Smeltery.addMelting(nuggetMonoGold, 100, fluidMonoGoldNugget);
+        Smeltery.addMelting(ingotMonoGold, 100, fluidMonoGoldIngot);
+        Smeltery.addMelting(blockMonoGold, 100, fluidMonoGoldBlock);
     }
-
+    
+    /**
+     * High oven component recipes
+     */
+    public static void addRecipesHighOvenComponents ()
+    {
+        final ItemStack itemScorchedBrick = new ItemStack(TSContent.materials, 1, 0);
+        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
+        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
+        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 2), "bb", "bb", 'b', itemScorchedBrick);
+    }
+    
+    /**
+     * Steel armor recipes
+     */
+    public static void addRecipesSteelArmor ()
+    {
+        if (ConfigCore.enableSteelArmor) 
+        {
+            ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
+            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { patHead, '#', ingotSteel }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { patChest, '#', ingotSteel }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { patLegs, '#', ingotSteel }));
+            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
+        }
+    }
+    
     /**
      * Change flint & steel recipe to use steel
      */
-    public static void changeFlintAndSteelRecipe ()
+    public static void changeRecipeFlintAndSteel ()
     {
         // Thanks, TConstruct RecipeRemover!
         RecipeRemover.removeShapedRecipe(new ItemStack(Item.flintAndSteel));
         GameRegistry.addRecipe(new ItemStack(Item.flintAndSteel), "s ", " f", 's',
                                TConstructRegistry.getItemStack("ingotSteel"), 'f', new ItemStack(Item.flint));
-    }
-
-    // ---- SMELTERY
-    // --------------------------------------------------------------------------
-    /**
-     * Add smelting of Monoatomic Gold to TConstruct Smeltery
-     */
-    public static void smelteryMonoatomicGold ()
-    {
-        Smeltery.addMelting(TSContent.metalBlock, 0, 100,
-                            new FluidStack(TSContent.fluids[0], TConstruct.blockLiquidValue));
-        Smeltery.addMelting(new ItemStack(TSContent.materials, 1, 1), 100,
-                            new FluidStack(TSContent.fluids[0], TConstruct.ingotLiquidValue));
-        Smeltery.addMelting(new ItemStack(TSContent.materials, 1, 2), 100,
-                            new FluidStack(TSContent.fluids[0], TConstruct.nuggetLiquidValue));
-    }
-
-    // ---- HIGH OVEN
-    // --------------------------------------------------------------------------
-    /**
-     * Add smelting of steel (ores only!) to High Oven
-     * Uses Forge's OreDictionary (mostly)
-     */
-    public static void highOvenSteel ()
-    {
-        final FluidType type = FluidType.Steel;
-        // Generic Ore Support
-        HighOvenSmelting.addDictionaryMelting("oreIron", type, 0, TConstruct.ingotLiquidValue / 2);
-        // Dusts Support (Thermal Expansion, etc)
-        HighOvenSmelting.addDictionaryMelting("dustIron", type, 0, TConstruct.ingotLiquidValue / 2);
-        // Factorization support
-        HighOvenSmelting.addDictionaryMelting("crystallineIron", type, 0, TConstruct.ingotLiquidValue / 2);
-        // NetherOres support
-        HighOvenSmelting.addDictionaryMelting("oreNetherIron", type, 0, TConstruct.ingotLiquidValue / 2);
-        // OreBerry Support
-        HighOvenSmelting.addMelting(type, TConstructRegistry.getItemStack("oreberryIron"), 0,
-                                    TConstruct.nuggetLiquidValue / 2);
-    }
-
-    /**
-     * Add smelting of monoatomic gold to High Oven
-     * Uses Forge's OreDictionary
-     */
-    public static void highOvenMonoatomicGold ()
-    {
-        final TSFluidType type = TSFluidType.MonoatomicGold;
-        HighOvenSmelting.addDictionaryMelting("oreGold", type, 0, TConstruct.ingotLiquidValue / 2);
-    }
-
-    // ---- CASTING TABLE
-    // --------------------------------------------------------------------------
-    /**
-     * Cast scorched brick item from standard brick item
-     */
-    public static void castTableScorchedBrick ()
-    {
-        final ItemStack scorchedBrick = new ItemStack(TSContent.materials, 1, 0);
-        final FluidStack stoneCastBrick = new FluidStack(TContent.moltenStoneFluid, TConstruct.chunkLiquidValue / 4);
-        TConstruct.tableCasting.addCastingRecipe(scorchedBrick, stoneCastBrick, new ItemStack(Item.brick), true, 50);
-    }
-
-    /**
-     * Cast monoatomic gold to bucket
-     */
-    public static void castTableMonoatomicGold ()
-    {
-        final ItemStack monoGoldBucket = new ItemStack(TSContent.buckets, 1, 0);
-        final FluidStack monoGoldFillBucket = new FluidStack(TSContent.fluids[0], FluidContainerRegistry.BUCKET_VOLUME);
-        final ItemStack emptyBucket = new ItemStack(Item.bucketEmpty);
-        final ItemStack monoGoldIngot = new ItemStack(TSContent.materials, 1, 1);
-        final FluidStack monoGoldFillIngot = new FluidStack(TSContent.fluids[0], TConstruct.ingotLiquidValue);
-        final ItemStack cast = new ItemStack(TContent.metalPattern, 1, 0);
-
-        TConstruct.tableCasting.addCastingRecipe(monoGoldBucket, monoGoldFillBucket, emptyBucket, true, 10);
-        TConstruct.tableCasting.addCastingRecipe(monoGoldIngot, monoGoldFillIngot, cast, 80);
-    }
-
-    // ---- CASTING BASIN
-    // --------------------------------------------------------------------------
-    /**
-     * Cast scorched brick block from standard brick block and stone fluid
-     */
-    public static void castBasinScorchedBrickBlock ()
-    {
-        final ItemStack scorchedBrickBlock = new ItemStack(TSContent.highoven, 1, 2);
-        final FluidStack stoneCastBrick = new FluidStack(TContent.moltenStoneFluid, TConstruct.chunkLiquidValue);
-        TConstruct.basinCasting.addCastingRecipe(scorchedBrickBlock, stoneCastBrick, new ItemStack(Block.brick), true,
-                                                 100);
-    }
-
-    /**
-     * Cast monoatomic gold block from fluid
-     */
-    public static void castBasinMonoatomicGold ()
-    {
-        final ItemStack is = new ItemStack(TSContent.metalBlock, 1, 0);
-        final FluidStack fs = new FluidStack(TSContent.fluids[0], TConstruct.blockLiquidValue);
-        TConstruct.basinCasting.addCastingRecipe(is, fs, 100);
-        TConstruct.basinCasting.addCastingRecipe(is, fs, null, true, 100);
     }
 }

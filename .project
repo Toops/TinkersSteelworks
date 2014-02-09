@@ -3,6 +3,7 @@
 	<name>TinkersSteelworks</name>
 	<comment></comment>
 	<projects>
+		<project>TinkersConstruct</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
