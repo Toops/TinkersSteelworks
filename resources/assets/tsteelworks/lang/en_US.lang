@@ -1,6 +1,9 @@
 itemGroup.TSteelworks=TSteelworks
 
 crafters.HighOven=High Oven
+gui.highoven.oxidizer=Oxidizer
+gui.highoven.reducer=Reducer
+gui.highoven.purifier=Purifier
 
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
 item.tsteelworks.Materials.MonoatomicGoldIngot.name=Monoatomic Gold Ingot

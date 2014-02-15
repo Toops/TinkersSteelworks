@@ -19,26 +19,30 @@ public class HighOvenContainer extends ActiveContainer
     {
         logic = highoven;
         playerInv = inventoryplayer;
-        /* HighOven inventory */
+        
+        /* HighOven Misc inventory */
+        addSlotToContainer(new Slot(highoven, 0, 198, 16)); // oxidizer
+        addSlotToContainer(new Slot(highoven, 1, 198, 34)); // reducer
+        addSlotToContainer(new Slot(highoven, 2, 198, 52)); // purifier
+        
+        /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
         {
-            for (int x = 0; x < 1; x++)
-            {
-                addDualSlotToContainer(new ActiveSlot(highoven, x + y, 64, 8 + (y * 18), y < 8));
-            }
+            addDualSlotToContainer(new ActiveSlot(highoven, 3 + y, 28, 7 + (y * 18), y < 8));
         }
+        
         /* Player inventory */
         for (int column = 0; column < 3; column++)
         {
             for (int row = 0; row < 9; row++)
             {
-                addSlotToContainer(new Slot(inventoryplayer, row + (column * 9) + 9, 90 + (row * 18),
+                addSlotToContainer(new Slot(inventoryplayer, row + (column * 9) + 9, 54 + (row * 18),
                                             84 + (column * 18)));
             }
         }
         for (int column = 0; column < 9; column++)
         {
-            addSlotToContainer(new Slot(inventoryplayer, column, 90 + (column * 18), 142));
+            addSlotToContainer(new Slot(inventoryplayer, column, 54 + (column * 18), 142));
         }
     }
 
@@ -72,6 +76,10 @@ public class HighOvenContainer extends ActiveContainer
         {
             final ItemStack slotStack = slot.getStack();
             stack = slotStack.copy();
+//            if (slotID > logic.layers)
+//            {
+//                return null;
+//            }
             if (slotID < logic.getSizeInventory())
             {
                 if (!mergeItemStack(slotStack, logic.getSizeInventory(), inventorySlots.size(), true)) return null;

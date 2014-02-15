@@ -66,10 +66,10 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public HighOvenLogic ()
     {
-        super(0);
+        super(3);
         lavaTanks = new ArrayList<CoordTuple>();
-        activeTemps = new int[0];
-        meltingTemps = new int[0];
+        activeTemps = new int[3];
+        meltingTemps = new int[3];
     }
 
     /* ==================== Layers ==================== */
@@ -88,29 +88,33 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             layers = lay;
             maxLiquid = 20000 * lay;
             final int[] tempActive = activeTemps;
-            activeTemps = new int[lay];
+            activeTemps = new int[3 + lay];
             final int activeLength = tempActive.length > activeTemps.length ? activeTemps.length : tempActive.length;
             System.arraycopy(tempActive, 0, activeTemps, 0, activeLength);
             final int[] tempMelting = meltingTemps;
-            meltingTemps = new int[lay];
+            meltingTemps = new int[3 + lay];
             final int meltingLength = tempMelting.length > meltingTemps.length ? meltingTemps.length : tempMelting.length;
             System.arraycopy(tempMelting, 0, meltingTemps, 0, meltingLength);
             final ItemStack[] tempInv = inventory;
-            inventory = new ItemStack[lay];
+            inventory = new ItemStack[3 + lay];
             final int invLength = tempInv.length > inventory.length ? inventory.length : tempInv.length;
             System.arraycopy(tempInv, 0, inventory, 0, invLength);
             if ((activeTemps.length > 0) && (activeTemps.length > tempActive.length))
             {
                 for (int i = tempActive.length; i < activeTemps.length; i++)
                 {
+                    if (!this.isValidOreSlot(i)) continue;
                     activeTemps[i] = 20;
                     meltingTemps[i] = 20;
                 }
             }
+            /*
             if (tempInv.length > inventory.length)
             {
-                for (int i = inventory.length; i < tempInv.length; i++)
+                for (int i = inventory.length - 3; i < tempInv.length; i++)
                 {
+                    if (i >= inventory.length) break;
+                    //if (i == oxidizerSlotID || i == reducerSlotID || i == purifierSlotID) break;
                     final ItemStack stack = tempInv[i];
                     if (stack != null)
                     {
@@ -158,6 +162,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                     }
                 }
             }
+            */
         }
     }
 
@@ -258,7 +263,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public int getTempForSlot (int slot)
     {
-        return activeTemps[slot];
+        return (this.isValidOreSlot(slot)) ? activeTemps[slot] : 0;
     }
 
     /**
@@ -269,9 +274,13 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public int getMeltingPointForSlot (int slot)
     {
-        return meltingTemps[slot];
+        return (this.isValidOreSlot(slot)) ? meltingTemps[slot] : 0;
     }
 
+    public boolean isValidOreSlot (int slot)
+    {
+        return (slot > 2);
+    }
     /* ==================== Updating ==================== */
     /**
      * Update Tile Entity
@@ -318,8 +327,9 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         if (useTime > 0)
         {
             boolean hasUse = false;
-            for (int i = 0; i < layers; i++)
-                if ((meltingTemps[i] > 20) && isStackInSlot(i))
+            for (int i = 0; i < layers + 3; i++)
+                
+                if (this.isValidOreSlot(i) && (meltingTemps[i] > 20) && isStackInSlot(i))
                 {
                     hasUse = true;
                     if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
@@ -348,7 +358,8 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                 }
                 else
                 {
-                    activeTemps[i] = 20;
+                    if (this.isValidOreSlot(i)) 
+                        activeTemps[i] = 20;
                 }
             inUse = hasUse;
         }
@@ -411,9 +422,10 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     void updateTemperatures ()
     {
         inUse = true;
-        for (int i = 0; i < layers; i++)
+        for (int i = 0; i < layers + 3; i++)
         {
-            meltingTemps[i] = HighOvenSmelting.getLiquifyTemperature(inventory[i]);
+            if (!this.isValidOreSlot(i)) continue;
+            meltingTemps[i] = HighOvenSmelting.instance.getLiquifyTemperature(inventory[i]);
         }
     }
 
@@ -554,7 +566,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public FluidStack getResultFor (ItemStack stack)
     {
-        return HighOvenSmelting.getSmelteryResult(stack);
+        return HighOvenSmelting.instance.getSmelteryResult(stack);
     }
 
     /**
@@ -1053,7 +1065,10 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public void readFromNBT (NBTTagCompound tags)
     {
         layers = tags.getInteger("Layers");
-        inventory = new ItemStack[layers];
+        //oxidizerSlotID = tags.getInteger("Oxidizer");
+        //reducerSlotID = tags.getInteger("Reducer");
+        //purifierSlotID = tags.getInteger("Purifier");
+        inventory = new ItemStack[3 + layers];
         super.readFromNBT(tags);
         internalTemp = tags.getInteger("InternalTemp");
         inUse = tags.getBoolean("InUse");
@@ -1106,6 +1121,9 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);
         tags.setInteger("Layers", layers);
+        //tags.setInteger("Oxidizer", oxidizerSlotID);
+        //tags.setInteger("Reducer", reducerSlotID);
+        //tags.setInteger("Purifier", purifierSlotID);
         tags.setIntArray("MeltingTemps", meltingTemps);
         tags.setIntArray("ActiveTemps", activeTemps);
         final NBTTagList taglist = new NBTTagList();
@@ -1136,7 +1154,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         needsUpdate = true;
     }
 
-    // --- Not sure why we have to override these exactly, but whatever...
     @Override
     public int getSizeInventory ()
     {
@@ -1221,8 +1238,8 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
         if (slot < getSizeInventory())
-            if ((inventory[slot] == null) ||
-                ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())) return true;
+            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())) 
+                return true;
         return false;
     }
 }

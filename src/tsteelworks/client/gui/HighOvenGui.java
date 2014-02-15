@@ -57,10 +57,23 @@ public class HighOvenGui extends NewContainerGui
     @Override
     protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY)
     {
-        fontRenderer.drawString(StatCollector.translateToLocal("crafters.HighOven"), 86, 5, 0x404040);
-        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 90, (ySize - 96) + 2, 0x404040);
+        // High Oven Caption
+        String hoCaption = StatCollector.translateToLocal("crafters.HighOven");
+        String oxiCaption = StatCollector.translateToLocal("gui.highoven.oxidizer");
+        String redCaption = StatCollector.translateToLocal("gui.highoven.reducer");
+        String purCaption = StatCollector.translateToLocal("gui.highoven.purifier");
+        
+        fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2, 5, 0x404040);
+        
+        fontRenderer.drawString(oxiCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(oxiCaption) / 2 + 48, 20, 0x404040);
+        fontRenderer.drawString(redCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(redCaption) / 2 + 48, 38, 0x404040);
+        fontRenderer.drawString(purCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(purCaption) / 2 + 48, 56, 0x404040);
+        
+        // Player Inventory Caption
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 56, (ySize - 96) + 2, 0x404040);
+        
         int base = 0;
-        final int cornerX = ((width - xSize) / 2) + 36;
+        final int cornerX = ((width - xSize) / 2);// + 36;
         final int cornerY = (height - ySize) / 2;
         for (final FluidStack liquid : logic.moltenMetal)
         {
@@ -110,7 +123,7 @@ public class HighOvenGui extends NewContainerGui
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
-        final int cornerX = ((width - xSize) / 2) + 36;
+        final int cornerX = ((width - xSize) / 2);// + 36;
         final int cornerY = (height - ySize) / 2;
         drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
         // Fuel - Lava
@@ -185,14 +198,14 @@ public class HighOvenGui extends NewContainerGui
             drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 0, 115, 36, 7);
         }
         // Temperatures
-        for (int iter = 0; iter < slotSize; iter++)
+        for (int iter = 0; iter < slotSize + 3; iter++)
         {
             final int slotTemp = logic.getTempForSlot(iter + slotPos) - 20;
             final int maxTemp = logic.getMeltingPointForSlot(iter + slotPos) - 20;
             if ((slotTemp > 0) && (maxTemp > 0))
             {
                 final int size = ((16 * slotTemp) / maxTemp) + 1;
-                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + (iter * 18) + 16) - size, 36, (15 + 16) - size, 5,
+                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter-3) * 18) + 16) - size, 36, (15 + 16) - size, 5,
                                       size);
             }
         }
@@ -271,7 +284,7 @@ public class HighOvenGui extends NewContainerGui
                     k = l;
                 }
             }
-            int i1 = par2 + 12;
+            int i1 = par2 - 22;
             int j1 = par3 - 12;
             int k1 = 8;
             if (par1List.size() > 1)
