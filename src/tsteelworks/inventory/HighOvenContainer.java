@@ -24,11 +24,11 @@ public class HighOvenContainer extends ActiveContainer
         addSlotToContainer(new Slot(highoven, 0, 198, 16)); // oxidizer
         addSlotToContainer(new Slot(highoven, 1, 198, 34)); // reducer
         addSlotToContainer(new Slot(highoven, 2, 198, 52)); // purifier
-        
+        addSlotToContainer(new Slot(highoven, 3, 198, 0)); // fuel        
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
         {
-            addDualSlotToContainer(new ActiveSlot(highoven, 3 + y, 28, 7 + (y * 18), y < 8));
+            addDualSlotToContainer(new ActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 8));
         }
         
         /* Player inventory */

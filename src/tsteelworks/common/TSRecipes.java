@@ -65,6 +65,10 @@ public class TSRecipes
         // OreBerry Support
         HighOvenSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
                                     TConstruct.nuggetLiquidValue / 2);
+        
+        HighOvenSmelting.addAdditive(0, new ItemStack(Item.gunpowder), 1);
+        HighOvenSmelting.addAdditive(1, new ItemStack(Item.redstone), 1);
+        HighOvenSmelting.addAdditive(2, new ItemStack(Block.sand), 2);
     }
     
     /**

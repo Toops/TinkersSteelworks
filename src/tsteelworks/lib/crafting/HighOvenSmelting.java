@@ -19,7 +19,36 @@ public class HighOvenSmelting
     private final HashMap<List<Integer>, FluidStack> smeltingList    = new HashMap<List<Integer>, FluidStack>();
     private final HashMap<List<Integer>, Integer>    temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<List<Integer>, ItemStack>  renderIndex     = new HashMap<List<Integer>, ItemStack>();
+    private final HashMap<List<Integer>, Integer>    additivesList   = new HashMap<List<Integer>, Integer>();
 
+    /*
+     * Additive Types
+     *  0 : oxidizer
+     *  1 : reducer
+     *  2 : purifier
+     */
+    public static void addAdditive (int type, ItemStack input, int consume)
+    {
+        instance.additivesList.put(Arrays.asList(type, input.itemID, input.getItemDamage()), consume);
+    }
+    
+    /**
+     * @return The entire additives list
+     */
+    public static HashMap<List<Integer>, Integer> getAdditivesList ()
+    {
+        return instance.additivesList;
+    }
+    
+    public static Integer getAdditiveUsage (int type, ItemStack item)
+    {
+        final Integer consume = instance.additivesList.get(Arrays.asList(type, item.itemID, item.getItemDamage()));
+        if (consume == null)
+            return 1;
+        else
+            return consume;
+    }
+    
     /**
      * Adds mappings between an itemstack and an output liquid.
      * 
@@ -180,7 +209,7 @@ public class HighOvenSmelting
         if (stack == null) return null;
         return stack.copy();
     }
-
+    
     /**
      * Used to get the block to render
      * 

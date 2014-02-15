@@ -198,14 +198,14 @@ public class HighOvenGui extends NewContainerGui
             drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 0, 115, 36, 7);
         }
         // Temperatures
-        for (int iter = 0; iter < slotSize + 3; iter++)
+        for (int iter = 0; iter < slotSize + 4; iter++)
         {
             final int slotTemp = logic.getTempForSlot(iter + slotPos) - 20;
             final int maxTemp = logic.getMeltingPointForSlot(iter + slotPos) - 20;
             if ((slotTemp > 0) && (maxTemp > 0))
             {
                 final int size = ((16 * slotTemp) / maxTemp) + 1;
-                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter-3) * 18) + 16) - size, 36, (15 + 16) - size, 5,
+                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter-4) * 18) + 16) - size, 36, (15 + 16) - size, 5,
                                       size);
             }
         }
