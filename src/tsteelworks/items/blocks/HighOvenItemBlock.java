@@ -12,7 +12,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class HighOvenItemBlock extends ItemBlock
 {
-    public static final String blockType[] = { "Controller", "Drain", "Brick" };
+    public static final String blockType[] = { "Controller", "Drain", "Brick", "Furnace", "Stone", 
+        "Cobblestone", "Paver", "Brick.Cracked", "Road", "Brick.Fancy", "Brick.Square" };
 
     public HighOvenItemBlock (int id)
     {
@@ -47,11 +48,12 @@ public class HighOvenItemBlock extends ItemBlock
                 list.add(StatCollector.translateToLocal("highoven.drain.tooltip1"));
                 list.add(StatCollector.translateToLocal("highoven.drain.tooltip2"));
                 break;
-            case 2:
-                list.add(StatCollector.translateToLocal("highoven.brick.tooltip1"));
-                list.add(StatCollector.translateToLocal("highoven.brick.tooltip2"));
+            case 3:
+                list.add(StatCollector.translateToLocal("highoven.furnace.tooltip"));
                 break;
             default:
+                list.add(StatCollector.translateToLocal("highoven.brick.tooltip1"));
+                list.add(StatCollector.translateToLocal("highoven.brick.tooltip2"));
                 break;
         }
     }

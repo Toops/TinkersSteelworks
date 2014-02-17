@@ -8,10 +8,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.util.RecipeRemover;
-import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.HighOvenSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -44,6 +44,8 @@ public class TSRecipes
         
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
+        
+
     }
     
     /**
@@ -66,9 +68,9 @@ public class TSRecipes
         HighOvenSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
                                     TConstruct.nuggetLiquidValue / 2);
         
-        HighOvenSmelting.addAdditive(0, new ItemStack(Item.gunpowder), 1);
-        HighOvenSmelting.addAdditive(1, new ItemStack(Item.redstone), 1);
-        HighOvenSmelting.addAdditive(2, new ItemStack(Block.sand), 2);
+        HighOvenSmelting.addAdditive(0, new ItemStack(Item.gunpowder), 1, 33);
+        HighOvenSmelting.addAdditive(1, new ItemStack(Item.redstone), 1, 33);
+        HighOvenSmelting.addAdditive(2, new ItemStack(Block.sand), 2, 15);
     }
     
     /**
@@ -76,10 +78,19 @@ public class TSRecipes
      */
     public static void addRecipesHighOvenComponents ()
     {
+        Detailing chiseling = TConstructRegistry.getChiselDetailing();
         final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 2), "bb", "bb", 'b', itemScorchedBrick);
+        
+        chiseling.addDetailing(TSContent.highoven, 4, TSContent.highoven, 6, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 6, TSContent.highoven, 11, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 11, TSContent.highoven, 2, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 2, TSContent.highoven, 8, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 8, TSContent.highoven, 9, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 9, TSContent.highoven, 10, TContent.chisel);
+        chiseling.addDetailing(TSContent.highoven, 10, TSContent.highoven, 4, TContent.chisel);
     }
     
     /**
@@ -87,14 +98,11 @@ public class TSRecipes
      */
     public static void addRecipesSteelArmor ()
     {
-        if (ConfigCore.enableSteelArmor) 
-        {
-            ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
-            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { patHead, '#', ingotSteel }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { patChest, '#', ingotSteel }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { patLegs, '#', ingotSteel }));
-            GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
-        }
+        ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { patHead, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { patChest, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { patLegs, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
     }
     
     /**
@@ -102,9 +110,29 @@ public class TSRecipes
      */
     public static void changeRecipeFlintAndSteel ()
     {
-        // Thanks, TConstruct RecipeRemover!
         RecipeRemover.removeShapedRecipe(new ItemStack(Item.flintAndSteel));
-        GameRegistry.addRecipe(new ItemStack(Item.flintAndSteel), "s ", " f", 's',
-                               TConstructRegistry.getItemStack("ingotSteel"), 'f', new ItemStack(Item.flint));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Item.flintAndSteel), "s ", " f", 
+                                's', "ingotSteel", 
+                                'f', new ItemStack(Item.flint)));
+    }
+    
+    public static void changeRecipeAnvil ()
+    {
+        RecipeRemover.removeShapedRecipe(new ItemStack(Block.anvil));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.anvil), "bbb", " i ", "iii", 
+                                'i', "ingotSteel", 
+                                'b', "blockSteel"));
+    }
+    
+    public static void changeRecipePiston ()
+    {
+        final ItemStack rod = new ItemStack(TContent.toughRod, 1, 2);
+        RecipeRemover.removeAnyRecipe(new ItemStack(Block.pistonBase));
+        // TODO: Figure out wtf is wrong with this.
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonBase), "WWW", "CTC", "CRC", 
+            'C', Block.cobblestone, //"blockCobble", 
+            'T', rod, 
+            'R', Item.redstone, //"dustRedstone", 
+            'W', "plankWood"));
     }
 }

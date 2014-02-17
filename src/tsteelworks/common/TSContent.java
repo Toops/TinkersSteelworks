@@ -5,14 +5,13 @@ import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.armor.EnumArmorPart;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.items.TSArmorBasic;
-import tsteelworks.items.TSExoArmor;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.lib.ConfigCore;
@@ -27,10 +26,6 @@ public class TSContent
     public static Item leggingsSteel;
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
-    public static Item exoGogglesSteel;
-    public static Item exoChestSteel;
-    public static Item exoPantsSteel;
-    public static Item exoShoesSteel;
     public static Block highoven;
 
     /**
@@ -40,6 +35,7 @@ public class TSContent
     {
         registerItems();
         registerBlocks();
+        oreRegistry();
         addCraftingRecipes();
         setupCreativeTabs();
     }
@@ -63,8 +59,7 @@ public class TSContent
         
         if (ConfigCore.enableSteelArmor)
         {
-            // TODO: Change properties
-            materialSteel = EnumHelper.addArmorMaterial("STEEL", 2, new int[] { 1, 2, 2, 1 }, 3);
+            materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[] { 3, 7, 5, 3 }, 10);
             helmetSteel = new TSArmorBasic(ConfigCore.steelHelmet, materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
             chestplateSteel = new TSArmorBasic(ConfigCore.steelChestplate, materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
             leggingsSteel = new TSArmorBasic(ConfigCore.steelLeggings, materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
@@ -73,13 +68,6 @@ public class TSContent
             GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
             GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
             GameRegistry.registerItem(bootsSteel, "bootsSteel");
-        }
-        if (ConfigCore.enableExoSteelArmor)
-        {
-            exoGogglesSteel = new TSExoArmor(ConfigCore.exoGogglesSteel, EnumArmorPart.HELMET, "exosuit").setUnlocalizedName("tsteelworks.exoGogglesSteel");
-            exoChestSteel = new TSExoArmor(ConfigCore.exoChestSteel, EnumArmorPart.CHEST, "exosuit").setUnlocalizedName("tsteelworks.exoChestSteel");
-            exoPantsSteel = new TSExoArmor(ConfigCore.exoPantsSteel, EnumArmorPart.PANTS, "exosuit").setUnlocalizedName("tsteelworks.exoPantsSteel");
-            exoShoesSteel = new TSExoArmor(ConfigCore.exoShoesSteel, EnumArmorPart.SHOES, "exosuit").setUnlocalizedName("tsteelworks.exoShoesSteel");
         }
     }
 
@@ -95,6 +83,21 @@ public class TSContent
         GameRegistry.registerTileEntity(MultiServantLogic.class, "TSteelworks.Servants");
     }
     
+    void oreRegistry ()
+    {
+        ensureOreIsRegistered("blockCobble", new ItemStack(Block.cobblestone));
+        ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
+    }
+    
+    void ensureOreIsRegistered (String oreName, ItemStack is)
+    {
+        int oreId = OreDictionary.getOreID(is);
+        if (oreId == -1)
+        {
+            OreDictionary.registerOre(oreName, is);
+        }
+    }
+    
     /**
      * Make TSRecipes add all crafting recipes
      */
@@ -103,8 +106,18 @@ public class TSContent
         TSRecipes.addRecipesSteelMaterial();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();
-        TSRecipes.addRecipesSteelArmor();
+        changeCraftingRecipes();
+    }
+    
+    public void changeCraftingRecipes ()
+    {
+        if (ConfigCore.enableSteelArmor)
+            TSRecipes.addRecipesSteelArmor();
+        if (ConfigCore.hardcorePiston)
+            TSRecipes.changeRecipePiston();
         if (ConfigCore.hardcoreFlintAndSteel)
             TSRecipes.changeRecipeFlintAndSteel();
+        if (ConfigCore.hardcoreAnvil)
+            TSRecipes.changeRecipeAnvil();        
     }
 }

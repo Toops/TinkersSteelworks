@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
+import tsteelworks.TSteelworks;
 
 public class HighOvenSmelting
 {
@@ -19,7 +20,7 @@ public class HighOvenSmelting
     private final HashMap<List<Integer>, FluidStack> smeltingList    = new HashMap<List<Integer>, FluidStack>();
     private final HashMap<List<Integer>, Integer>    temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<List<Integer>, ItemStack>  renderIndex     = new HashMap<List<Integer>, ItemStack>();
-    private final HashMap<List<Integer>, Integer>    additivesList   = new HashMap<List<Integer>, Integer>();
+    private final HashMap<Integer, List<Integer>>    additivesList   = new HashMap<Integer, List<Integer>>();
 
     /*
      * Additive Types
@@ -27,28 +28,38 @@ public class HighOvenSmelting
      *  1 : reducer
      *  2 : purifier
      */
-    public static void addAdditive (int type, ItemStack input, int consume)
+    public static void addAdditive (int type, ItemStack input, int consume, int chance)
     {
-        instance.additivesList.put(Arrays.asList(type, input.itemID, input.getItemDamage()), consume);
+        instance.additivesList.put(type, Arrays.asList(input.itemID, input.getItemDamage(), consume, chance));
     }
     
     /**
      * @return The entire additives list
      */
-    public static HashMap<List<Integer>, Integer> getAdditivesList ()
+    public static HashMap<Integer, List<Integer>> getAdditivesList ()
     {
         return instance.additivesList;
     }
     
     public static Integer getAdditiveUsage (int type, ItemStack item)
     {
-        final Integer consume = instance.additivesList.get(Arrays.asList(type, item.itemID, item.getItemDamage()));
+        final List<Integer> list = instance.additivesList.get(type);
+        final Integer consume = list.get(2);
         if (consume == null)
             return 1;
         else
+            
             return consume;
     }
-    
+    public static Integer getAdditiveUsageChance (int type, ItemStack item)
+    {
+        final List<Integer> list = instance.additivesList.get(type);
+        final Integer chance = list.get(3);
+        if (chance == null)
+            return 1;
+        else
+            return chance;
+    }
     /**
      * Adds mappings between an itemstack and an output liquid.
      * 

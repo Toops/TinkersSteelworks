@@ -24,11 +24,11 @@ public class HighOvenContainer extends ActiveContainer
         addSlotToContainer(new Slot(highoven, 0, 198, 16)); // oxidizer
         addSlotToContainer(new Slot(highoven, 1, 198, 34)); // reducer
         addSlotToContainer(new Slot(highoven, 2, 198, 52)); // purifier
-        addSlotToContainer(new Slot(highoven, 3, 198, 0)); // fuel        
+        addSlotToContainer(new Slot(highoven, 3, 55, 52)); // fuel        
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
         {
-            addDualSlotToContainer(new ActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 8));
+            addDualSlotToContainer(new ActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 6));
         }
         
         /* Player inventory */
@@ -76,10 +76,7 @@ public class HighOvenContainer extends ActiveContainer
         {
             final ItemStack slotStack = slot.getStack();
             stack = slotStack.copy();
-//            if (slotID > logic.layers)
-//            {
-//                return null;
-//            }
+
             if (slotID < logic.getSizeInventory())
             {
                 if (!mergeItemStack(slotStack, logic.getSizeInventory(), inventorySlots.size(), true)) return null;

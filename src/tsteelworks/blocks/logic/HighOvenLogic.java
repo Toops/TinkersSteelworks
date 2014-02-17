@@ -33,6 +33,7 @@ import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.crafting.HighOvenSmelting;
@@ -45,11 +46,12 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     byte                         direction;
     int                          internalTemp;
     public int                   useTime;
+    
     public int                   fuelGague;
     public int                   fuelAmount;
+    public int                   fuelScale = 200;
+    
     boolean                      inUse;
-    ArrayList<CoordTuple>        lavaTanks;
-    CoordTuple                   activeLavaTank;
     public CoordTuple            centerPos;
     public int[]                 activeTemps;
     public int[]                 meltingTemps;
@@ -68,7 +70,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public HighOvenLogic ()
     {
         super(4);
-        lavaTanks = new ArrayList<CoordTuple>();
+        //lavaTanks = new ArrayList<CoordTuple>();
         activeTemps = new int[4];
         meltingTemps = new int[4];
     }
@@ -113,6 +115,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     }
 
     /* ==================== Misc ==================== */
+    
     @Override
     public String getDefaultName ()
     {
@@ -165,7 +168,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     @Override
     public boolean getActive ()
     {
-        return validStructure;
+        return validStructure && isBurning();
     }
 
     @Override
@@ -175,66 +178,46 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    /**
-     * Get fuel gauge scaled for display
-     * 
-     * @param scale
-     * @return scaled value
-     */
-    public int getScaledFuelGague (int scale)
+    @Override
+    public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
-        int ret = (fuelGague * scale) / 52;
-        if (ret < 1)
-        {
-            ret = 1;
-        }
-        return ret;
-    }
-
-    /**
-     * Get internal temperature for smelting
-     * 
-     * @return internal temperature value
-     */
-    public int getInternalTemperature ()
-    {
-        return internalTemp;
-    }
-
-    /**
-     * Get current temperature for slot
-     * 
-     * @param slot
-     * @return
-     */
-    public int getTempForSlot (int slot)
-    {
-        return (this.validOreSlot(slot)) ? activeTemps[slot] : 0;
-    }
-
-    /**
-     * Get melting point for item in slot
-     * 
-     * @param slot
-     * @return
-     */
-    public int getMeltingPointForSlot (int slot)
-    {
-        return (this.validOreSlot(slot)) ? meltingTemps[slot] : 0;
-    }
-
-    /**
-     * Determine is slot is valid for 'ore' processing
-     * 
-     * @param slot
-     * @return True if slot is valid
-     */
-    public boolean validOreSlot (int slot)
-    {
-        return (slot > 3);
+        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+            return false;
+        else
+            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
     
-    /* ==================== Updating ==================== */
+    /* ==================== Additive Materials ==================== */
+    
+    public boolean validAdditives () 
+    {
+        return (this.hasAdditive(0) && this.hasAdditive(1) && this.hasAdditive(2));
+    }
+    
+    public boolean hasAdditive(int slot)
+    {
+        ItemStack stack = this.inventory[slot];
+        return (stack != null && HighOvenSmelting.getAdditiveUsage(slot, stack) <= stack.stackSize);
+    }
+    
+    /**
+     * Remove additive materials by preset chance and amount
+     */
+    void removeAdditives ()
+    {
+        Random rand1 = new Random();
+        Random rand2 = new Random();
+        Random rand3 = new Random();
+        if (HighOvenSmelting.getAdditiveUsageChance(0, inventory[0]) < rand1.nextInt(100) )
+            inventory[0].stackSize -= HighOvenSmelting.getAdditiveUsage(0, inventory[0]);
+        if (HighOvenSmelting.getAdditiveUsageChance(1, inventory[1]) < rand2.nextInt(100) )
+            inventory[1].stackSize -= HighOvenSmelting.getAdditiveUsage(1, inventory[1]);
+        if (HighOvenSmelting.getAdditiveUsageChance(2, inventory[2]) < rand3.nextInt(100) )
+            inventory[2].stackSize -= HighOvenSmelting.getAdditiveUsage(2, inventory[2]);
+    }
+    
+    /* ==================== Smelting ==================== */
+    
     /**
      * Update Tile Entity
      */
@@ -296,9 +279,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                             final FluidStack result = getResultFor(inventory[i]);
                             if (result != null) if (addMoltenMetal(result, false))
                             {
-                                inventory[0].stackSize -= HighOvenSmelting.getAdditiveUsage(0, inventory[0]);
-                                inventory[1].stackSize -= HighOvenSmelting.getAdditiveUsage(1, inventory[1]);
-                                inventory[2].stackSize -= HighOvenSmelting.getAdditiveUsage(2, inventory[2]);
+                                this.removeAdditives();
                                 if (inventory[i].stackSize >= 2)
                                 {
                                     inventory[i].stackSize--;
@@ -322,83 +303,52 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         }
     }
 
-    public boolean validAdditives () 
+    /**
+     * Get molten result for given item
+     * 
+     * @param stack
+     *            ItemStack
+     * @return FluidStack
+     */
+    public FluidStack getResultFor (ItemStack stack)
     {
-        //return (this.hasOxidizer() && this.hasReducer() && this.hasPurifier());
-        return (this.hasAdditive(0) && this.hasAdditive(1) && this.hasAdditive(2));
+        return HighOvenSmelting.instance.getSmelteryResult(stack);
     }
     
-    public boolean hasAdditive(int slot)
-    {
-        ItemStack stack = this.inventory[slot];
-        return (stack != null && HighOvenSmelting.getAdditiveUsage(slot, stack) <= stack.stackSize);
-    }
-    
-    public boolean hasOxidizer ()
-    {
-        //return (this.inventory[0] != null && this.inventory[0].isItemEqual(new ItemStack(Item.gunpowder)));
-        return (this.inventory[0] != null && HighOvenSmelting.getAdditiveUsage(0, this.inventory[0]) > 0);
-    }
-    public boolean hasReducer ()
-    {
-        return (this.inventory[1] != null && this.inventory[1].isItemEqual(new ItemStack(Item.redstone)));
-    }
-    public boolean hasPurifier ()
-    {
-        return (this.inventory[2] != null && this.inventory[2].isItemEqual(new ItemStack(Block.sand)));
-    }
+    /* ==================== Temperatures ==================== */
     
     /**
-     * Add molen metal fluidstack
+     * Get internal temperature for smelting
      * 
-     * @param liquid
-     * @param first
-     * @return Success
+     * @return internal temperature value
      */
-    boolean addMoltenMetal (FluidStack liquid, boolean first)
+    public int getInternalTemperature ()
     {
-        // TODO: Limit fluid input to 1 fluid type only.
-        needsUpdate = true;
-        if (moltenMetal.size() == 0)
-        {
-            moltenMetal.add(liquid.copy());
-            currentLiquid += liquid.amount;
-            return true;
-        }
-        else
-        {
-            if ((liquid.amount + currentLiquid) > maxLiquid) return false;
-            currentLiquid += liquid.amount;
-            boolean added = false;
-            for (int i = 0; i < moltenMetal.size(); i++)
-            {
-                final FluidStack l = moltenMetal.get(i);
-                if (l.isFluidEqual(liquid))
-                {
-                    l.amount += liquid.amount;
-                    added = true;
-                }
-                else
-                    return false;
-                if (l.amount <= 0)
-                {
-                    moltenMetal.remove(l);
-                    i--;
-                }
-            }
-            if (!added) if (first)
-            {
-                moltenMetal.add(0, liquid.copy());
-            }
-            else
-            {
-                moltenMetal.add(liquid.copy());
-            }
-            return true;
-        }
+        return internalTemp;
     }
 
-    /* ==================== Updating ==================== */
+    /**
+     * Get current temperature for slot
+     * 
+     * @param slot
+     * @return
+     */
+    public int getTempForSlot (int slot)
+    {
+        return (this.validOreSlot(slot)) ? activeTemps[slot] : 0;
+    }
+
+    /**
+     * Get melting point for item in slot
+     * 
+     * @param slot
+     * @return
+     */
+    public int getMeltingPointForSlot (int slot)
+    {
+        return (this.validOreSlot(slot)) ? meltingTemps[slot] : 0;
+    }
+    
     /**
      * Update melting temperatures for items
      */
@@ -412,46 +362,70 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         }
     }
 
+    /* ==================== Fuel Handling ==================== */
+    
+    /**
+     * Get fuel gauge scaled for display
+     * 
+     * @param scale
+     * @return scaled value
+     */
+    public int getScaledFuelGague (int scale)
+    {
+//        if (fuelGague == 0)
+//        {
+//            fuelGague = fuelAmount;
+//            if (fuelGague == 0)
+//            {
+//                fuelGague = 52;
+//            }
+//        }
+//        return (fuelAmount * scale) / fuelGague;
+        int ret = (fuelGague * scale) / 52;
+        if (ret < 1)
+        {
+            ret = 1;
+        }
+        return ret;
+    }
+    
+    public boolean isBurning ()
+    {
+        return fuelAmount > 0;
+    }
+    
+    public static int getItemBurnTime (ItemStack stack)
+    {
+        if (stack == null)
+            return 0;
+        else
+        {
+            if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
+                return 800;
+        }
+        return 0;
+    }
+    
     /**
      * Update fuel gauge display
      */
     public void updateFuelDisplay ()
     {
-        if ((activeLavaTank == null) || (useTime > 0)) return;
-        if (!worldObj.blockExists(activeLavaTank.x, activeLavaTank.y, activeLavaTank.z))
-        {
-            fuelAmount = 0;
-            fuelGague = 0;
-            return;
-        }
-        final TileEntity tankContainer = worldObj.getBlockTileEntity(activeLavaTank.x, activeLavaTank.y,
-                                                                     activeLavaTank.z);
-        if (tankContainer == null)
-        {
-            fuelAmount = 0;
-            fuelGague = 0;
-            return;
-        }
-        if (tankContainer instanceof IFluidHandler)
-        {
-            needsUpdate = true;
-            final FluidStack liquid = ((IFluidHandler) tankContainer).drain(ForgeDirection.DOWN, 150, false);
-            if ((liquid != null) && (liquid.getFluid().getBlockID() == Block.lavaStill.blockID))
-            {
-                final FluidTankInfo[] info = ((IFluidHandler) tankContainer).getTankInfo(ForgeDirection.DOWN);
-                if (info.length > 0)
-                {
-                    final int capacity = info[0].capacity;
-                    fuelAmount = liquid.amount;
-                    fuelGague = (liquid.amount * 52) / capacity;
-                }
-            }
-            else
-            {
-                fuelAmount = 0;
-                fuelGague = 0;
-            }
-        }
+      if (useTime > 0) return;
+
+      if (inventory[3] == null)
+      {
+          fuelAmount = 0;
+          fuelGague = 0;
+          return;
+      }
+      if (this.getItemBurnTime(inventory[3]) > 0)
+      {
+          needsUpdate = true;
+          final int capacity = inventory[3].stackSize;
+          fuelAmount = this.getItemBurnTime(inventory[3]);
+          fuelGague = (fuelAmount * 52) / capacity;
+      }
     }
 
     /**
@@ -459,99 +433,42 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     void updateFuelGague ()
     {
-        if ((activeLavaTank == null) || (useTime > 0)) return;
-        if (!worldObj.blockExists(activeLavaTank.x, activeLavaTank.y, activeLavaTank.z))
+        if (useTime > 0) return;
+
+        if (inventory[3] == null)
         {
             fuelAmount = 0;
             fuelGague = 0;
             return;
         }
-        final TileEntity tankContainer = worldObj.getBlockTileEntity(activeLavaTank.x, activeLavaTank.y,
-                                                                     activeLavaTank.z);
-        if (tankContainer == null)
-        {
-            fuelAmount = 0;
-            fuelGague = 0;
-            return;
-        }
-        if (tankContainer instanceof IFluidHandler)
+        if (this.getItemBurnTime(inventory[3]) > 0)
         {
             needsUpdate = true;
-            FluidStack liquid = ((IFluidHandler) tankContainer).drain(ForgeDirection.DOWN, 150, false);
-            if ((liquid != null) && (liquid.getFluid().getBlockID() == Block.lavaStill.blockID))
+            useTime += this.getItemBurnTime(inventory[3]);
+            final int capacity = inventory[3].stackSize;
+            fuelAmount = this.getItemBurnTime(inventory[3]);
+            fuelGague = (fuelAmount * 52) / capacity;
+            
+            inventory[3].stackSize--;
+            if (inventory[3].stackSize <= 0)
             {
-                liquid = ((IFluidHandler) tankContainer).drain(ForgeDirection.DOWN, 150, true);
-                useTime += liquid.amount;
-                final FluidTankInfo[] info = ((IFluidHandler) tankContainer).getTankInfo(ForgeDirection.DOWN);
-                liquid = info[0].fluid;
-                final int capacity = info[0].capacity;
-                if (liquid != null)
-                {
-                    fuelAmount = liquid.amount;
-                    fuelGague = (liquid.amount * 52) / capacity;
-                }
-                else
-                {
-                    fuelAmount = 0;
-                    fuelGague = 0;
-                }
-            }
-            else
-            {
-                boolean foundTank = false;
-                int iter = 0;
-                while (!foundTank)
-                {
-                    final CoordTuple possibleTank = lavaTanks.get(iter);
-                    final TileEntity newTankContainer = worldObj.getBlockTileEntity(possibleTank.x, possibleTank.y,
-                                                                                    possibleTank.z);
-                    if (newTankContainer instanceof IFluidHandler)
-                    {
-                        final FluidStack newliquid = ((IFluidHandler) newTankContainer).drain(ForgeDirection.UNKNOWN,
-                                                                                              150, false);
-                        if ((newliquid != null) && (newliquid.getFluid().getBlockID() == Block.lavaStill.blockID) &&
-                            (newliquid.amount > 0))
-                        {
-                            foundTank = true;
-                            activeLavaTank = possibleTank;
-                            iter = lavaTanks.size();
-                            final FluidTankInfo[] info = ((IFluidHandler) tankContainer).getTankInfo(ForgeDirection.DOWN);
-                            liquid = info[0].fluid;
-                            final int capacity = info[0].capacity;
-                            if (liquid != null)
-                            {
-                                fuelAmount = liquid.amount;
-                                fuelGague = (liquid.amount * 52) / capacity;
-                            }
-                            else
-                            {
-                                fuelAmount = 0;
-                                fuelGague = 0;
-                            }
-                        }
-                    }
-                    iter++;
-                    if (iter >= lavaTanks.size())
-                    {
-                        foundTank = true;
-                    }
-                }
+                inventory[3] = null;
             }
         }
     }
 
-    /**
-     * Get molten result for given item
-     * 
-     * @param stack
-     *            ItemStack
-     * @return FluidStack
-     */
-    public FluidStack getResultFor (ItemStack stack)
-    {
-        return HighOvenSmelting.instance.getSmelteryResult(stack);
-    }
+    /* ==================== Misc Inventory ==================== */
 
+    /**
+     * Determine is slot is valid for 'ore' processing
+     * 
+     * @param slot
+     * @return True if slot is valid
+     */
+    public boolean validOreSlot (int slot)
+    {
+        return (slot > 3);
+    }
     
     /**
      * Get (& Set) Inventory slot stack limit Returns the maximum stack size for
@@ -575,7 +492,79 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         needsUpdate = true;
     }
 
+    @Override
+    public int getSizeInventory ()
+    {
+        return inventory.length;
+    }
+
+    @Override
+    public ItemStack getStackInSlot (int slot)
+    {
+        return inventory[slot];
+    }
+
+    @Override
+    public ItemStack decrStackSize (int slot, int quantity)
+    {
+        if (inventory[slot] != null)
+        {
+            if (inventory[slot].stackSize <= quantity)
+            {
+                final ItemStack stack = inventory[slot];
+                inventory[slot] = null;
+                return stack;
+            }
+            final ItemStack split = inventory[slot].splitStack(quantity);
+            if (inventory[slot].stackSize == 0)
+            {
+                inventory[slot] = null;
+            }
+            return split;
+        }
+        else
+            return null;
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing (int slot)
+    {
+        return null;
+    }
+
+    @Override
+    public void setInventorySlotContents (int slot, ItemStack itemstack)
+    {
+        inventory[slot] = itemstack;
+        if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
+        {
+            itemstack.stackSize = getInventoryStackLimit();
+        }
+    }
+
+    @Override
+    public String getInvName ()
+    {
+        return isInvNameLocalized() ? invName : getDefaultName();
+    }
+
+    @Override
+    public boolean isInvNameLocalized ()
+    {
+        return (invName != null) && (invName.length() > 0);
+    }
+    
+    @Override
+    public boolean isItemValidForSlot (int slot, ItemStack itemstack)
+    {
+        if (slot < getSizeInventory())
+            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())) 
+                return true;
+        return false;
+    }
+    
     /* ==================== Multiblock ==================== */
+    
     /**
      * Called when servants change their state
      * 
@@ -659,7 +648,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             if (tempValidStructure && structureCapped)
             {
                 internalTemp = 800;
-                activeLavaTank = lavaTanks.get(0);
+                //activeLavaTank = lavaTanks.get(0);
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 validStructure = true;
@@ -687,7 +676,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public boolean checkSameLevel (int x, int y, int z)
     {
         numBricks = 0;
-        lavaTanks.clear();
+        //lavaTanks.clear();
         Block block;
         // Check inside
         for (int xPos = x - 0; xPos <= (x + 0); xPos++)
@@ -710,7 +699,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             numBricks += checkBricks(x - 1, y, zPos);
             numBricks += checkBricks(x + 1, y, zPos);
         }
-        if ((numBricks == 8) && (lavaTanks.size() > 0))
+        if ((numBricks == 8)) // && (lavaTanks.size() > 0))
             return true;
         else
             return false;
@@ -878,7 +867,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     {
         int tempBricks = 0;
         final int blockID = worldObj.getBlockId(x, y, z);
-        if (validBlockID(blockID) || validTankID(blockID))
+        if (validBlockID(blockID)) //|| validTankID(blockID))
         {
             final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
             if (te == this)
@@ -901,10 +890,10 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                         {
                             tempBricks++;
                         }
-                    if (te instanceof LavaTankLogic)
-                    {
-                        lavaTanks.add(new CoordTuple(x, y, z));
-                    }
+//                    if (te instanceof LavaTankLogic)
+//                    {
+//                        lavaTanks.add(new CoordTuple(x, y, z));
+//                    }
                 }
         }
         return tempBricks;
@@ -933,6 +922,57 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     }
 
     /* ==================== Fluid Handling ==================== */
+    
+    /**
+     * Add molen metal fluidstack
+     * 
+     * @param liquid
+     * @param first
+     * @return Success
+     */
+    boolean addMoltenMetal (FluidStack liquid, boolean first)
+    {
+        // TODO: Limit fluid input to 1 fluid type only.
+        needsUpdate = true;
+        if (moltenMetal.size() == 0)
+        {
+            moltenMetal.add(liquid.copy());
+            currentLiquid += liquid.amount;
+            return true;
+        }
+        else
+        {
+            if ((liquid.amount + currentLiquid) > maxLiquid) return false;
+            currentLiquid += liquid.amount;
+            boolean added = false;
+            for (int i = 0; i < moltenMetal.size(); i++)
+            {
+                final FluidStack l = moltenMetal.get(i);
+                if (l.isFluidEqual(liquid))
+                {
+                    l.amount += liquid.amount;
+                    added = true;
+                }
+                else
+                    return false;
+                if (l.amount <= 0)
+                {
+                    moltenMetal.remove(l);
+                    i--;
+                }
+            }
+            if (!added) if (first)
+            {
+                moltenMetal.add(0, liquid.copy());
+            }
+            else
+            {
+                moltenMetal.add(liquid.copy());
+            }
+            return true;
+        }
+    }
+    
     /**
      * Get max liquid capacity
      */
@@ -1045,6 +1085,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     }
 
     /* ==================== NBT ==================== */
+    
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -1114,7 +1155,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         tags.setTag("Liquids", taglist);
     }
 
-    /* Packets */
     @Override
     public Packet getDescriptionPacket ()
     {
@@ -1132,77 +1172,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         needsUpdate = true;
     }
 
-    @Override
-    public int getSizeInventory ()
-    {
-        return inventory.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot (int slot)
-    {
-        return inventory[slot];
-    }
-
-    @Override
-    public ItemStack decrStackSize (int slot, int quantity)
-    {
-        if (inventory[slot] != null)
-        {
-            if (inventory[slot].stackSize <= quantity)
-            {
-                final ItemStack stack = inventory[slot];
-                inventory[slot] = null;
-                return stack;
-            }
-            final ItemStack split = inventory[slot].splitStack(quantity);
-            if (inventory[slot].stackSize == 0)
-            {
-                inventory[slot] = null;
-            }
-            return split;
-        }
-        else
-            return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing (int slot)
-    {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents (int slot, ItemStack itemstack)
-    {
-        inventory[slot] = itemstack;
-        if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
-        {
-            itemstack.stackSize = getInventoryStackLimit();
-        }
-    }
-
-    @Override
-    public String getInvName ()
-    {
-        return isInvNameLocalized() ? invName : getDefaultName();
-    }
-
-    @Override
-    public boolean isInvNameLocalized ()
-    {
-        return (invName != null) && (invName.length() > 0);
-    }
-
-    /* Supporting methods */
-    @Override
-    public boolean isUseableByPlayer (EntityPlayer entityplayer)
-    {
-        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-            return false;
-        else
-            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
-    }
+    /* ==================== Other ==================== */
 
     @Override
     public void openChest ()
@@ -1212,12 +1182,4 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public void closeChest ()
     {}
 
-    @Override
-    public boolean isItemValidForSlot (int slot, ItemStack itemstack)
-    {
-        if (slot < getSizeInventory())
-            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())) 
-                return true;
-        return false;
-    }
 }

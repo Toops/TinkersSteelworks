@@ -71,13 +71,13 @@ public class HighOvenGui extends NewContainerGui
         
         // Player Inventory Caption
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 56, (ySize - 96) + 2, 0x404040);
-        
+        // Molten Liquids
         int base = 0;
         final int cornerX = ((width - xSize) / 2);// + 36;
         final int cornerY = (height - ySize) / 2;
         for (final FluidStack liquid : logic.moltenMetal)
         {
-            final int basePos = 54;
+            final int basePos = 90;
             int liquidSize = 0;// liquid.amount * 52 / liquidLayers;
             if (logic.getCapacity() > 0)
             {
@@ -95,22 +95,11 @@ public class HighOvenGui extends NewContainerGui
             }
             final int leftX = cornerX + basePos;
             final int topY = (cornerY + 68) - base;
-            final int sizeX = 52;
+            final int sizeX = 35;
             final int sizeY = liquidSize;
             if ((mouseX >= leftX) && (mouseX <= (leftX + sizeX)) && (mouseY >= topY) && (mouseY < (topY + sizeY)))
             {
                 drawFluidStackTooltip(liquid, (mouseX - cornerX) + 36, mouseY - cornerY);
-            }
-        }
-        if (logic.fuelGague > 0)
-        {
-            final int leftX = cornerX + 117;
-            final int topY = (cornerY + 68) - logic.getScaledFuelGague(52);
-            final int sizeX = 12;
-            final int sizeY = logic.getScaledFuelGague(52);
-            if ((mouseX >= leftX) && (mouseX <= (leftX + sizeX)) && (mouseY >= topY) && (mouseY < (topY + sizeY)))
-            {
-                drawFluidStackTooltip(new FluidStack(-37, logic.fuelAmount), (mouseX - cornerX) + 36, mouseY - cornerY);
             }
         }
     }
@@ -126,27 +115,13 @@ public class HighOvenGui extends NewContainerGui
         final int cornerX = ((width - xSize) / 2);// + 36;
         final int cornerY = (height - ySize) / 2;
         drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
-        // Fuel - Lava
-        mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-        if (logic.fuelGague > 0)
-        {
-            final Icon lavaIcon = Block.lavaStill.getIcon(0, 0);
-            int fuel = logic.getScaledFuelGague(52);
-            int count = 0;
-            while (fuel > 0)
-            {
-                final int size = fuel >= 16 ? 16 : fuel;
-                fuel -= size;
-                drawLiquidRect(cornerX + 117, (cornerY + 68) - size - (16 * count), lavaIcon, 12, size);
-                count++;
-            }
-        }
         // Liquids - molten metal
+        mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         int base = 0;
         for (final FluidStack liquid : logic.moltenMetal)
         {
             final Icon renderIndex = liquid.getFluid().getStillIcon();
-            final int basePos = 54;
+            final int basePos = 90;
             if (logic.getCapacity() > 0)
             {
                 final int total = logic.getTotalLiquid();
@@ -165,8 +140,7 @@ public class HighOvenGui extends NewContainerGui
                         {
                             drawLiquidRect(cornerX + basePos, (cornerY + 68) - size - base, renderIndex, 16, size);
                             drawLiquidRect(cornerX + basePos + 16, (cornerY + 68) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 32, (cornerY + 68) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 48, (cornerY + 68) - size - base, renderIndex, 4, size);
+                            drawLiquidRect(cornerX + basePos + 32, (cornerY + 68) - size - base, renderIndex, 3, size);
                         }
                         liquidSize -= size;
                         base += size;
@@ -177,25 +151,31 @@ public class HighOvenGui extends NewContainerGui
         // Liquid gague
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(cornerX + 54, cornerY + 16, 176, 76, 52, 52);
+        drawTexturedModalRect(cornerX + 90, cornerY + 16, 176, 76, 35, 52);
+        
+        int scale;
+        // Burn progress
+        if (this.logic.isBurning())
+        {
+            scale = this.logic.getScaledFuelGague(52);
+            this.drawTexturedModalRect(cornerX + 56, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
+        }
+
         // Side inventory
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.getTextureManager().bindTexture(backgroundSide);
-        final int slotSize = logic.layers;
+        int slotSize = logic.layers;
+        if (slotSize > 6) slotSize = 6;
         if (slotSize > 0)
         {
             // Draw Top
-            drawTexturedModalRect(cornerX + 16, cornerY, 0, 0, 36, 6);
-            // Draw Slots
-            // Here we iterate one slot at a time and draw it. Each slot is 18
-            // px high.
+            drawTexturedModalRect(cornerX + 16, cornerY, 176, 14, 36, 6);
+            // Iterate one slot at a time and draw it. Each slot is 18 px high.
             for (int iter = 0; iter < slotSize; iter++)
             {
-                drawTexturedModalRect(cornerX + 16, cornerY + 6, 0, 7, 36, (iter * 18) + 18);
+                drawTexturedModalRect(cornerX + 16, (cornerY + 6) + (iter * 18), 176, 21, 36, 18);//(iter * 18) + 18);
             }
             final int dy = slotSize > 1 ? slotSize * 18 : 18;
             // Draw Bottom
-            drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 0, 115, 36, 7);
+            drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 176, 39, 36, 7);
         }
         // Temperatures
         for (int iter = 0; iter < slotSize + 4; iter++)
@@ -205,10 +185,10 @@ public class HighOvenGui extends NewContainerGui
             if ((slotTemp > 0) && (maxTemp > 0))
             {
                 final int size = ((16 * slotTemp) / maxTemp) + 1;
-                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter-4) * 18) + 16) - size, 36, (15 + 16) - size, 5,
+                drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter-4) * 18) + 16) - size, 212, 14 + (15 + 16) - size, 5,
                                       size);
             }
-        }
+        } 
     }
 
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)

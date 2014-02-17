@@ -6,35 +6,23 @@ gui.highoven.reducer=Reducer
 gui.highoven.purifier=Purifier
 
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
-item.tsteelworks.Materials.MonoatomicGoldIngot.name=Monoatomic Gold Ingot
-item.tsteelworks.Materials.MonoatomicGoldNugget.name=Monoatomic Gold Nugget
-
-item.tsteelworks.WoodPattern.ring.name=Ring Pattern
-item.tsteelworks.MetalPattern.ring.name=Ring Cast
-
-item.tsteelworks.Ring.wood.name=Wooden Ring
-item.tsteelworks.Ring.iron.name=Iron Ring
-
-item.tsteelworks.bucket.MonoatomicGold.name=Molten Monoatomic Gold Bucket
 
 item.tsteelworks.helmetSteel.name=Steel Helmet
 item.tsteelworks.chestplateSteel.name=Steel Chestplate
 item.tsteelworks.leggingsSteel.name=Steel Leggings
 item.tsteelworks.bootsSteel.name=Steel Boots
 
-item.tsteelworks.exoGogglesSteel.name=Reinforced Exo-Visor
-item.tsteelworks.exoChestSteel.name=Reinforced Exo-Chestpiece
-item.tsteelworks.exoPantsSteel.name=Reinforced Exo-Legs
-item.tsteelworks.exoShoesSteel.name=Reinforced Exo-Shoes
-
-tile.metal.molten.monoatomicgold.name=Molten Monoatomic Gold
-fluid.monoatomicgold.molten=Molten Monoatomic Gold
-
 HighOven.Controller.name=High Oven Controller
 HighOven.Drain.name=High Oven Drain
 HighOven.Brick.name=Scorched Bricks
-
-StorageMetals.MonoatomicGold.name=Block of Monoatomic Gold
+HighOven.Stone.name=Scorched Stone
+HighOven.Cobblestone.name=Scorched Cobblestone
+HighOven.Paver.name=Scorched Paver
+HighOven.Brick.Cracked.name=Cracked Scorched Bricks
+HighOven.Road.name=Scorched Road
+HighOven.Brick.Fancy.name=Fancy Scorched Bricks
+HighOven.Brick.Square.name=Chiseled Scorched Bricks
+HighOven.Brick.Creeper.name=Chiseled Scorched Bricks
 
 highoven.highoven.tooltip=Can't forget this!
 highoven.drain.tooltip1=Works both as input and output for

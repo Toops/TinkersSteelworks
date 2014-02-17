@@ -92,7 +92,8 @@ public class TSteelworks
      */
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
-    {}
+    {
+    }
 
     public static TSContent      content;
 }

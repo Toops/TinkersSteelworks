@@ -76,7 +76,6 @@ public class HighOvenBlock extends InventoryBlock
     @Override
     public TileEntity createNewTileEntity (World world)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -160,9 +159,9 @@ public class HighOvenBlock extends InventoryBlock
     @Override
     public String[] getTextureNames ()
     {
-        // TODO: Moar textures
         final String[] textureNames = { "highoven_side", "highoven_inactive", "highoven_active", "drain_side", "drain_out",
-            "drain_basin", "scorchedbrick" };
+            "drain_basin", "scorchedbrick", "scorchedstone", "scorchedcobble", "scorchedpaver", "scorchedbrickcracked", 
+            "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper" };
         if (!texturePrefix.equals(""))
         {
             for (int i = 0; i < textureNames.length; i++)
@@ -181,10 +180,16 @@ public class HighOvenBlock extends InventoryBlock
             final int sideTex = side == 3 ? 1 : 0;
             return icons[sideTex + (meta * 3)];
         }
-        else
-            if (meta == 2) return icons[6];
-        //return icons[3 + meta]; 
-        return icons[6];
+        else if (meta == 2)
+        {
+             return icons[6];
+        }
+        else if (meta == 11)
+        {
+            if (side == 0 || side == 1)
+                return icons[9];
+        }
+        return icons[3 + meta];
     }
 
     @Override
@@ -205,19 +210,24 @@ public class HighOvenBlock extends InventoryBlock
             else
                 return icons[0];
         }
-        else
-            if (meta == 1)
-            {
-                if (side == direction)
-                    return icons[5];
-                else
-                    if ((side / 2) == (direction / 2))
-                        return icons[4];
-                    else
-                        return icons[3];
-            }
+        if (meta == 1)
+        {
+            if (side == direction)
+                return icons[5];
+            else if ((side / 2) == (direction / 2))
+                return icons[4];
             else
-                if (meta == 2) return icons[0];
+                return icons[3];
+        }
+        else if (meta == 2)
+        {
+            return icons[6];
+        }
+        else if (meta == 11)
+        {
+            if (side == 0 || side == 1)
+                return icons[9];
+        }
         return icons[3 + meta];
     }
 
