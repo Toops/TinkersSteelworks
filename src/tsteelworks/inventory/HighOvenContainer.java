@@ -4,12 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import tconstruct.inventory.ActiveContainer;
-import tconstruct.inventory.ActiveSlot;
-import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 
-public class HighOvenContainer extends ActiveContainer
+public class HighOvenContainer extends TSActiveContainer
 {
     public HighOvenLogic   logic;
     public InventoryPlayer playerInv;
@@ -28,7 +25,7 @@ public class HighOvenContainer extends ActiveContainer
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
         {
-            addDualSlotToContainer(new ActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 6));
+            addDualSlotToContainer(new TSActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 6));
         }
         
         /* Player inventory */

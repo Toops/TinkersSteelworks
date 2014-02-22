@@ -12,7 +12,7 @@ import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.util.RecipeRemover;
-import tsteelworks.lib.crafting.HighOvenSmelting;
+import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TSRecipes
@@ -54,23 +54,22 @@ public class TSRecipes
     public static void addRecipesSteelMaterial ()
     {
         final FluidType fluidTypeSteel = FluidType.Steel;
-        // TODO: Figure out why TConstruct.xxxLiquidValue is doubling?
         // Add smelting of steel (ores only!) to High Oven. Uses Forge's OreDictionary (mostly)
         // Generic Ore Support
-        HighOvenSmelting.addDictionaryMelting("oreIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        AdvancedSmelting.addDictionaryMelting("oreIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
         // Dusts Support (Thermal Expansion, etc)
-        HighOvenSmelting.addDictionaryMelting("dustIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        AdvancedSmelting.addDictionaryMelting("dustIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
         // Factorization support
-        HighOvenSmelting.addDictionaryMelting("crystallineIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        AdvancedSmelting.addDictionaryMelting("crystallineIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
         // NetherOres support
-        HighOvenSmelting.addDictionaryMelting("oreNetherIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
+        AdvancedSmelting.addDictionaryMelting("oreNetherIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
         // OreBerry Support
-        HighOvenSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
+        AdvancedSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
                                     TConstruct.nuggetLiquidValue / 2);
         
-        HighOvenSmelting.addAdditive(0, new ItemStack(Item.gunpowder), 1, 33);
-        HighOvenSmelting.addAdditive(1, new ItemStack(Item.redstone), 1, 33);
-        HighOvenSmelting.addAdditive(2, new ItemStack(Block.sand), 2, 15);
+        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
+        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1, 55);
+        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 85);
     }
     
     /**

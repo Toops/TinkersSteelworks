@@ -14,7 +14,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tconstruct.blocks.logic.MultiServantLogic;
-import tconstruct.library.blocks.InventoryBlock;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
@@ -23,6 +22,8 @@ import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
+import tsteelworks.lib.blocks.InventoryBlock;
+
 
 public class HighOvenBlock extends InventoryBlock
 {
@@ -32,12 +33,12 @@ public class HighOvenBlock extends InventoryBlock
     public HighOvenBlock (int id)
     {
         super(id, Material.rock);
-        setHardness(3F);
-        setResistance(20F);
-        setStepSound(soundMetalFootstep);
+        this.setHardness(3F);
+        this.setResistance(20F);
+        this.setStepSound(soundMetalFootstep);
         rand = new Random();
-        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        setUnlocalizedName("tsteelworks.HighOven");
+        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+        this.setUnlocalizedName("tsteelworks.HighOven");
     }
 
     public HighOvenBlock (int id, String prefix)
@@ -232,17 +233,6 @@ public class HighOvenBlock extends InventoryBlock
     }
 
     @Override
-    public void registerIcons (IconRegister iconRegister)
-    {
-        final String[] textureNames = getTextureNames();
-        icons = new Icon[textureNames.length];
-        for (int i = 0; i < icons.length; ++i)
-        {
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
-        }
-    }
-
-    @Override
     public void randomDisplayTick (World world, int x, int y, int z, Random random)
     {
         if (isActive(world, x, y, z))
@@ -284,5 +274,17 @@ public class HighOvenBlock extends InventoryBlock
     public int getLightValue (IBlockAccess world, int x, int y, int z)
     {
         return !isActive(world, x, y, z) ? 0 : 9;
+    }
+    
+    @Override
+    public void registerIcons (IconRegister iconRegister)
+    {
+        String[] textureNames = getTextureNames();
+        this.icons = new Icon[textureNames.length];
+
+        for (int i = 0; i < this.icons.length; ++i)
+        {
+            this.icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+        }
     }
 }

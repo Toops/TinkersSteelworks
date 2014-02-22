@@ -3,7 +3,7 @@ package tsteelworks.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tconstruct.library.blocks.InventoryLogic;
+import tsteelworks.lib.blocks.InventoryLogic;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class TSCommonProxy implements IGuiHandler
@@ -32,9 +32,7 @@ public class TSCommonProxy implements IGuiHandler
     }
 
     public void registerRenderers ()
-    {
-        // Stub
-    }
+    {}
 
     public void registerSounds ()
     {}

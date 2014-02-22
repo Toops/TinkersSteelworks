@@ -15,7 +15,7 @@ public class TSteelworksRegistry
     public static TabTools              SteelworksCreativeTab;
     /* Items */
     /**
-     * A directory of crafting items and tools used by the mod.
+     * A directory of crafting items and tools used by the mod. 
      */
     public static HashMap<String, Item> itemDirectory = new HashMap<String, Item>();
 

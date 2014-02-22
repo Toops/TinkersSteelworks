@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -24,13 +23,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tconstruct.TConstruct;
-import tconstruct.client.gui.NewContainerGui;
-import tconstruct.inventory.ActiveContainer;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.inventory.TSActiveContainer;
 import tsteelworks.lib.Repo;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-public class HighOvenGui extends NewContainerGui
+public class HighOvenGui extends TSContainerGui
 {
     public HighOvenLogic logic;
     String               username;
@@ -41,7 +39,7 @@ public class HighOvenGui extends NewContainerGui
 
     public HighOvenGui (InventoryPlayer inventoryplayer, HighOvenLogic highoven, World world, int x, int y, int z)
     {
-        super((ActiveContainer) highoven.getGuiContainer(inventoryplayer, world, x, y, z));
+        super((TSActiveContainer) highoven.getGuiContainer(inventoryplayer, world, x, y, z));
         logic = highoven;
         username = inventoryplayer.player.username;
         xSize = 248;
@@ -105,7 +103,6 @@ public class HighOvenGui extends NewContainerGui
     }
 
     private static final ResourceLocation background     = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
-    private static final ResourceLocation backgroundSide = new ResourceLocation("tsteelworks", "textures/gui/highovenside.png");
 
     @Override
     protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)
@@ -157,7 +154,7 @@ public class HighOvenGui extends NewContainerGui
         // Burn progress
         if (this.logic.isBurning())
         {
-            scale = this.logic.getScaledFuelGague(52);
+            scale = this.logic.getScaledFuelGague(12);
             this.drawTexturedModalRect(cornerX + 56, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
         }
 

@@ -5,7 +5,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -22,12 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.blocks.logic.LavaTankLogic;
 import tconstruct.blocks.logic.MultiServantLogic;
-import tconstruct.common.TContent;
-import tconstruct.library.blocks.InventoryLogic;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
@@ -36,7 +31,8 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
-import tsteelworks.lib.crafting.HighOvenSmelting;
+import tsteelworks.lib.blocks.InventoryLogic;
+import tsteelworks.lib.crafting.AdvancedSmelting;
 
 public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {
@@ -49,7 +45,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     
     public int                   fuelGague;
     public int                   fuelAmount;
-    public int                   fuelScale = 200;
     
     boolean                      inUse;
     public CoordTuple            centerPos;
@@ -70,9 +65,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public HighOvenLogic ()
     {
         super(4);
-        //lavaTanks = new ArrayList<CoordTuple>();
-        activeTemps = new int[4];
-        meltingTemps = new int[4];
+        activeTemps = meltingTemps = new int[4];
     }
 
     /* ==================== Layers ==================== */
@@ -189,31 +182,43 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     
     /* ==================== Additive Materials ==================== */
     
-    public boolean validAdditives () 
+    public boolean validMixers () 
     {
-        return (this.hasAdditive(0) && this.hasAdditive(1) && this.hasAdditive(2));
+        return (this.hasMixers(0) && this.hasMixers(1) && this.hasMixers(2));
     }
     
-    public boolean hasAdditive(int slot)
+    public boolean hasMixers(int slot)
     {
         ItemStack stack = this.inventory[slot];
-        return (stack != null && HighOvenSmelting.getAdditiveUsage(slot, stack) <= stack.stackSize);
+
+        if (stack != null)
+        {
+            if ((AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize) && 
+                    (AdvancedSmelting.instance.getMixerType(stack) == slot))
+            {
+                return true;
+            }
+        }
+
+        //TSteelworks.logger.info("INFO: " + stack);
+        return false;
+               
     }
     
     /**
      * Remove additive materials by preset chance and amount
      */
-    void removeAdditives ()
+    void removeMixers ()
     {
         Random rand1 = new Random();
         Random rand2 = new Random();
         Random rand3 = new Random();
-        if (HighOvenSmelting.getAdditiveUsageChance(0, inventory[0]) < rand1.nextInt(100) )
-            inventory[0].stackSize -= HighOvenSmelting.getAdditiveUsage(0, inventory[0]);
-        if (HighOvenSmelting.getAdditiveUsageChance(1, inventory[1]) < rand2.nextInt(100) )
-            inventory[1].stackSize -= HighOvenSmelting.getAdditiveUsage(1, inventory[1]);
-        if (HighOvenSmelting.getAdditiveUsageChance(2, inventory[2]) < rand3.nextInt(100) )
-            inventory[2].stackSize -= HighOvenSmelting.getAdditiveUsage(2, inventory[2]);
+        if (rand1.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[0]))
+            inventory[0].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[0]);
+        if (rand2.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[1]))
+            inventory[1].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[1]);
+        if (rand3.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[2]))
+            inventory[2].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[2]);
     }
     
     /* ==================== Smelting ==================== */
@@ -263,9 +268,10 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         if (useTime > 0)
         {
             boolean hasUse = false;
-            for (int i = 0; i < layers + 4; i++)
-                
-                if (this.validOreSlot(i) && this.validAdditives() && meltingTemps[i] > 20 && this.isStackInSlot(i))
+            
+            for (int i = 4; i < layers + 4; i+= 1)
+                //if (this.validOreSlot(i) && this.validAdditives() && meltingTemps[i] > 20 && this.isStackInSlot(i))
+                if (meltingTemps[i] > 20 && this.isStackInSlot(i) && this.validMixers())
                 {
                     hasUse = true;
                     if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
@@ -279,7 +285,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                             final FluidStack result = getResultFor(inventory[i]);
                             if (result != null) if (addMoltenMetal(result, false))
                             {
-                                this.removeAdditives();
+                                //this.removeAdditives();
                                 if (inventory[i].stackSize >= 2)
                                 {
                                     inventory[i].stackSize--;
@@ -296,8 +302,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                 }
                 else
                 {
-                    if (this.validOreSlot(i)) 
-                        activeTemps[i] = 20;
+                    activeTemps[i] = 20;
                 }
             inUse = hasUse;
         }
@@ -312,7 +317,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public FluidStack getResultFor (ItemStack stack)
     {
-        return HighOvenSmelting.instance.getSmelteryResult(stack);
+        return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
     
     /* ==================== Temperatures ==================== */
@@ -358,12 +363,12 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         for (int i = 0; i < layers + 4; i++)
         {
             if (!this.validOreSlot(i)) continue;
-            meltingTemps[i] = HighOvenSmelting.instance.getLiquifyTemperature(inventory[i]);
+            meltingTemps[i] = AdvancedSmelting.instance.getLiquifyTemperature(inventory[i]);
         }
     }
 
     /* ==================== Fuel Handling ==================== */
-    
+    // TODO: Fix fuel display scaling
     /**
      * Get fuel gauge scaled for display
      * 
@@ -372,15 +377,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public int getScaledFuelGague (int scale)
     {
-//        if (fuelGague == 0)
-//        {
-//            fuelGague = fuelAmount;
-//            if (fuelGague == 0)
-//            {
-//                fuelGague = 52;
-//            }
-//        }
-//        return (fuelAmount * scale) / fuelGague;
         int ret = (fuelGague * scale) / 52;
         if (ret < 1)
         {
@@ -401,7 +397,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         else
         {
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
-                return 800;
+                return 210;
         }
         return 0;
     }
@@ -424,7 +420,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
           needsUpdate = true;
           final int capacity = inventory[3].stackSize;
           fuelAmount = this.getItemBurnTime(inventory[3]);
-          fuelGague = (fuelAmount * 52) / capacity;
+          fuelGague = (fuelAmount * 52) / 12;
       }
     }
 
@@ -447,7 +443,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             useTime += this.getItemBurnTime(inventory[3]);
             final int capacity = inventory[3].stackSize;
             fuelAmount = this.getItemBurnTime(inventory[3]);
-            fuelGague = (fuelAmount * 52) / capacity;
+            fuelGague = (fuelAmount * 52) / 12;
             
             inventory[3].stackSize--;
             if (inventory[3].stackSize <= 0)
@@ -648,7 +644,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             if (tempValidStructure && structureCapped)
             {
                 internalTemp = 800;
-                //activeLavaTank = lavaTanks.get(0);
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 validStructure = true;
@@ -676,7 +671,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public boolean checkSameLevel (int x, int y, int z)
     {
         numBricks = 0;
-        //lavaTanks.clear();
         Block block;
         // Check inside
         for (int xPos = x - 0; xPos <= (x + 0); xPos++)
@@ -699,7 +693,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             numBricks += checkBricks(x - 1, y, zPos);
             numBricks += checkBricks(x + 1, y, zPos);
         }
-        if ((numBricks == 8)) // && (lavaTanks.size() > 0))
+        if ((numBricks == 8))
             return true;
         else
             return false;
@@ -860,14 +854,13 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     }
 
     /**
-     * Returns whether the brick is a lava tank or not. Increments bricks, sets
-     * them as part of the structure, and adds tanks to the list.
+     * Increments bricks, sets them as part of the structure.
      */
     int checkBricks (int x, int y, int z)
     {
         int tempBricks = 0;
         final int blockID = worldObj.getBlockId(x, y, z);
-        if (validBlockID(blockID)) //|| validTankID(blockID))
+        if (validBlockID(blockID))
         {
             final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
             if (te == this)
@@ -890,10 +883,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                         {
                             tempBricks++;
                         }
-//                    if (te instanceof LavaTankLogic)
-//                    {
-//                        lavaTanks.add(new CoordTuple(x, y, z));
-//                    }
                 }
         }
         return tempBricks;
@@ -908,17 +897,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     boolean validBlockID (int blockID)
     {
         return blockID == TSContent.highoven.blockID;
-    }
-
-    /**
-     * Determine if block is a valid tank
-     * 
-     * @param blockID
-     * @return Success
-     */
-    boolean validTankID (int blockID)
-    {
-        return (blockID == TContent.lavaTank.blockID) || (blockID == TContent.lavaTankNether.blockID);
     }
 
     /* ==================== Fluid Handling ==================== */

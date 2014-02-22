@@ -12,7 +12,7 @@ public class ConfigCore
 
         config.load();
         /*
-         * Block IDs Range: 3400~3499 Item IDs Range 14500~14599
+         * Block IDs Range: 3400~3499 Item IDs Range 14500~14599 
          */
         materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)").getInt(14500);
         
