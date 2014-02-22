@@ -868,9 +868,9 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                 tempBricks++;
             }
             else
-                if (te instanceof MultiServantLogic)
+                if (te instanceof TSMultiServantLogic)
                 {
-                    final MultiServantLogic servant = (MultiServantLogic) te;
+                    final TSMultiServantLogic servant = (TSMultiServantLogic) te;
                     if (servant.hasValidMaster())
                     {
                         if (servant.verifyMaster(this, worldObj, xCoord, yCoord, zCoord))

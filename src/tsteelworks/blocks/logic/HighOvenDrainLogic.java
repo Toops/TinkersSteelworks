@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.IFluidHandler;
 import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.util.IFacingLogic;
 
-public class HighOvenDrainLogic extends MultiServantLogic implements IFluidHandler, IFacingLogic
+public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic
 {
     byte direction;
 

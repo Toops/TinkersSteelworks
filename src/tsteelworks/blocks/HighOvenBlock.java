@@ -13,13 +13,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.InventoryBlock;
@@ -90,7 +90,7 @@ public class HighOvenBlock extends InventoryBlock
             case 1:
                 return new HighOvenDrainLogic();
         }
-        return new MultiServantLogic();
+        return new TSMultiServantLogic();
     }
 
     @Override

@@ -6,11 +6,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
-import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.TConstructRegistry;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.HighOvenItemBlock;
@@ -80,7 +80,7 @@ public class TSContent
         GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
         GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
         GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
-        GameRegistry.registerTileEntity(MultiServantLogic.class, "TSteelworks.Servants");
+        GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
     }
     
     void oreRegistry ()
