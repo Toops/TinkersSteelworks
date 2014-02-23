@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tconstruct.TConstruct;
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.inventory.TSActiveContainer;
 import tsteelworks.lib.Repo;
@@ -157,7 +158,7 @@ public class HighOvenGui extends TSContainerGui
             scale = this.logic.getScaledFuelGague(12);
             this.drawTexturedModalRect(cornerX + 56, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
         }
-
+        
         // Side inventory
         int slotSize = logic.layers;
         if (slotSize > 6) slotSize = 6;

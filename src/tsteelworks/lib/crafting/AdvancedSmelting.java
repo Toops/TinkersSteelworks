@@ -272,6 +272,9 @@ public class AdvancedSmelting
     {
         final Collection<String> inputs = new ArrayList(Arrays.asList(mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
         
+        if (inputs.contains(null))
+            return null;
+        
         for (Entry<FluidType, List<String>> e : instance.mixerCombos.entrySet()) 
         {
             FluidType key = e.getKey();
@@ -328,6 +331,8 @@ public class AdvancedSmelting
      */
     private static String mixItemKey (ItemStack item)
     {
+        if (item == null)
+            return null;
         return (item.itemID + ":" + item.getItemDamage());
     }
     

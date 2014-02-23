@@ -269,7 +269,14 @@ public class HighOvenBlock extends InventoryBlock
             }
         }
     }
-
+    /*
+    @Override
+    public boolean isBlockBurning(World world, int x, int y, int z)
+    {
+        return isActive(world, x, y, z)
+    }
+    */
+    
     @Override
     public int getLightValue (IBlockAccess world, int x, int y, int z)
     {
