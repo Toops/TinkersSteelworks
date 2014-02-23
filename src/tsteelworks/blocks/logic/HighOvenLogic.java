@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import tconstruct.blocks.logic.MultiServantLogic;
+import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
@@ -190,7 +191,6 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
     public boolean hasMixers(int slot)
     {
         ItemStack stack = this.inventory[slot];
-
         if (stack != null)
         {
             if ((AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize) && 
@@ -199,10 +199,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                 return true;
             }
         }
-
-        //TSteelworks.logger.info("INFO: " + stack);
-        return false;
-               
+        return false;  
     }
     
     /**
@@ -270,8 +267,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
             boolean hasUse = false;
             
             for (int i = 4; i < layers + 4; i+= 1)
-                //if (this.validOreSlot(i) && this.validAdditives() && meltingTemps[i] > 20 && this.isStackInSlot(i))
-                if (meltingTemps[i] > 20 && this.isStackInSlot(i) && this.validMixers())
+                if (meltingTemps[i] > 20 && this.isStackInSlot(i))
                 {
                     hasUse = true;
                     if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
@@ -285,7 +281,8 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
                             final FluidStack result = getResultFor(inventory[i]);
                             if (result != null) if (addMoltenMetal(result, false))
                             {
-                                //this.removeAdditives();
+                                if (this.validMixers())
+                                    this.removeMixers();
                                 if (inventory[i].stackSize >= 2)
                                 {
                                     inventory[i].stackSize--;
@@ -317,6 +314,17 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
      */
     public FluidStack getResultFor (ItemStack stack)
     {
+        FluidStack result = AdvancedSmelting.instance.getSmelteryResult(stack);
+        FluidType type = FluidType.getFluidType(result.getFluid());
+        //TSteelworks.logger.info("FluidType: " + type.name());
+        FluidType mixFluid = AdvancedSmelting.instance.validateMixerCombo(inventory[0], inventory[1], inventory[2]);
+        if (mixFluid != null)
+        {
+            //TSteelworks.logger.info("type: " + mixFluid);
+            FluidStack fs = new FluidStack(mixFluid.fluid, result.amount);
+            return fs;
+        }
+        // TODO: Return failed result
         return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
     

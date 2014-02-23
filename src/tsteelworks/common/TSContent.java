@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
@@ -16,6 +17,7 @@ import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
+import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TSContent
@@ -36,6 +38,7 @@ public class TSContent
         registerItems();
         registerBlocks();
         oreRegistry();
+        registerMixerMaterials();
         addCraftingRecipes();
         setupCreativeTabs();
     }
@@ -83,6 +86,8 @@ public class TSContent
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
     }
     
+
+    
     void oreRegistry ()
     {
         ensureOreIsRegistered("blockCobble", new ItemStack(Block.cobblestone));
@@ -99,11 +104,27 @@ public class TSContent
     }
     
     /**
+     * Register mixer materials
+     */
+    public static void registerMixerMaterials ()
+    {
+        // Steel
+        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
+        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1, 55);
+        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 85);
+        // Pig Iron
+        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1, 80);
+        AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
+    }
+    
+    /**
      * Make TSRecipes add all crafting recipes
      */
     void addCraftingRecipes ()
     {
-        TSRecipes.addRecipesSteelMaterial();
+        TSRecipes.addRecipesMaterialIron();
+        TSRecipes.addRecipesMaterialSteel();
+        TSRecipes.addRecipesMaterialPigIron();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();
         changeCraftingRecipes();

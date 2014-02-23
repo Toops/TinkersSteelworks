@@ -48,28 +48,39 @@ public class TSRecipes
 
     }
     
+    public static void addRecipesMaterialIron ()
+    {
+        final FluidType fluidTypeIron = FluidType.Iron;
+        
+        AdvancedSmelting.addDictionaryMelting("oreIron", fluidTypeIron, -400, TConstruct.ingotLiquidValue / 2);
+        // Dusts Support (Thermal Expansion, etc)
+        AdvancedSmelting.addDictionaryMelting("dustIron", fluidTypeIron, 0, TConstruct.ingotLiquidValue / 2);
+        // Factorization support
+        AdvancedSmelting.addDictionaryMelting("crystallineIron", fluidTypeIron, 0, TConstruct.ingotLiquidValue / 2);
+        // NetherOres support
+        AdvancedSmelting.addDictionaryMelting("oreNetherIron", fluidTypeIron, 0, TConstruct.ingotLiquidValue / 2);
+        // OreBerry Support
+        AdvancedSmelting.addMelting(fluidTypeIron, TConstructRegistry.getItemStack("oreberryIron"), 0,
+                                    TConstruct.nuggetLiquidValue / 2);
+    }
+    
     /**
      * Steel Recipes
      */
-    public static void addRecipesSteelMaterial ()
+    public static void addRecipesMaterialSteel ()
     {
         final FluidType fluidTypeSteel = FluidType.Steel;
-        // Add smelting of steel (ores only!) to High Oven. Uses Forge's OreDictionary (mostly)
-        // Generic Ore Support
-        AdvancedSmelting.addDictionaryMelting("oreIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
-        // Dusts Support (Thermal Expansion, etc)
-        AdvancedSmelting.addDictionaryMelting("dustIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
-        // Factorization support
-        AdvancedSmelting.addDictionaryMelting("crystallineIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
-        // NetherOres support
-        AdvancedSmelting.addDictionaryMelting("oreNetherIron", fluidTypeSteel, 0, TConstruct.ingotLiquidValue / 2);
-        // OreBerry Support
-        AdvancedSmelting.addMelting(fluidTypeSteel, TConstructRegistry.getItemStack("oreberryIron"), 0,
-                                    TConstruct.nuggetLiquidValue / 2);
-        
-        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
-        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1, 55);
-        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 85);
+        AdvancedSmelting.addMixerCombo(fluidTypeSteel, new ItemStack(Item.gunpowder, 1, 0), 
+                                                       new ItemStack(Item.redstone,  1, 0), 
+                                                       new ItemStack(Block.sand,     2, 0));
+    }
+    
+    public static void addRecipesMaterialPigIron ()
+    {
+        final FluidType fluidTypePigIron = FluidType.PigIron;
+        AdvancedSmelting.addMixerCombo(fluidTypePigIron, new ItemStack(Item.gunpowder, 1, 0), 
+                                                         new ItemStack(Item.emerald,   1, 0), 
+                                                         new ItemStack(TContent.meatBlock, 1, 0));
     }
     
     /**
