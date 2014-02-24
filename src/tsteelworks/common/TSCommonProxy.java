@@ -3,7 +3,7 @@ package tsteelworks.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tsteelworks.lib.blocks.InventoryLogic;
+import tsteelworks.lib.blocks.TSInventoryLogic;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class TSCommonProxy implements IGuiHandler
@@ -19,8 +19,8 @@ public class TSCommonProxy implements IGuiHandler
             if (ID < 100)
             {
                 final TileEntity tile = world.getBlockTileEntity(x, y, z);
-                if ((tile != null) && (tile instanceof InventoryLogic))
-                    return ((InventoryLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
+                if ((tile != null) && (tile instanceof TSInventoryLogic))
+                    return ((TSInventoryLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
             }
         return null;
     }

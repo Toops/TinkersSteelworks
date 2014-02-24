@@ -109,11 +109,11 @@ public class TSContent
     public static void registerMixerMaterials ()
     {
         // Steel
-        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
-        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1, 55);
-        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 85);
+        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0,  33);
+        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1,  65);
+        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 100);
         // Pig Iron
-        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1, 80);
+        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1,  90);
         AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
     }
     

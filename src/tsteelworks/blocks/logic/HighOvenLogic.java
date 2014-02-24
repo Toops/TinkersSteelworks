@@ -32,10 +32,10 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
-import tsteelworks.lib.blocks.InventoryLogic;
+import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
-public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
+public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {
     public boolean               validStructure;
     public boolean               tempValidStructure;
@@ -432,7 +432,7 @@ public class HighOvenLogic extends InventoryLogic implements IActiveLogic, IFaci
         else
         {
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
-                return 120;
+                return 420;
         }
         return 0;
     }

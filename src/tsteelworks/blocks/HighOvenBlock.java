@@ -22,10 +22,10 @@ import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
-import tsteelworks.lib.blocks.InventoryBlock;
+import tsteelworks.lib.blocks.TSInventoryBlock;
 
 
-public class HighOvenBlock extends InventoryBlock
+public class HighOvenBlock extends TSInventoryBlock
 {
     Random rand;
     String texturePrefix = "";

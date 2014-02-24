@@ -18,11 +18,11 @@ import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tsteelworks.lib.Repo;
 
-public abstract class InventoryBlock extends BlockContainer
+public abstract class TSInventoryBlock extends BlockContainer
 {
     protected Random rand = new Random();
 
-    protected InventoryBlock(int id, Material material)
+    protected TSInventoryBlock(int id, Material material)
     {
         super(id, material);
     }
@@ -66,9 +66,9 @@ public abstract class InventoryBlock extends BlockContainer
     {
         TileEntity te = par1World.getBlockTileEntity(x, y, z);
 
-        if (te != null && te instanceof InventoryLogic)
+        if (te != null && te instanceof TSInventoryLogic)
         {
-            InventoryLogic logic = (InventoryLogic) te;
+            TSInventoryLogic logic = (TSInventoryLogic) te;
             logic.removeBlock();
             for (int iter = 0; iter < logic.getSizeInventory(); ++iter)
             {
@@ -145,9 +145,9 @@ public abstract class InventoryBlock extends BlockContainer
             }
         }
 
-        if (logic instanceof InventoryLogic)
+        if (logic instanceof TSInventoryLogic)
         {
-            InventoryLogic inv = (InventoryLogic) logic;
+            TSInventoryLogic inv = (TSInventoryLogic) logic;
             inv.placeBlock(entityliving, stack);
             if (stack.hasDisplayName())
             {

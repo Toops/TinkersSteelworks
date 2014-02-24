@@ -19,18 +19,18 @@ import net.minecraft.world.World;
  * Abstract to avoid instantiation
  */
 
-public abstract class InventoryLogic extends TileEntity implements IInventory
+public abstract class TSInventoryLogic extends TileEntity implements IInventory
 {
     protected ItemStack[] inventory;
     protected String invName;
     protected int stackSizeLimit;
 
-    public InventoryLogic(int invSize)
+    public TSInventoryLogic(int invSize)
     {
         this(invSize, 64);
     }
 
-    public InventoryLogic(int invSize, int maxStackSize)
+    public TSInventoryLogic(int invSize, int maxStackSize)
     {
         inventory = new ItemStack[invSize];
         stackSizeLimit = maxStackSize;
