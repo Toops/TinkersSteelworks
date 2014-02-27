@@ -1,8 +1,10 @@
 package tsteelworks.blocks;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,6 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import tconstruct.library.util.CoordTuple;
+import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
@@ -114,9 +118,7 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         for (int iter = 0; iter < 12; iter++)
             if (iter != 3)
-            {
                 list.add(new ItemStack(id, 1, iter));
-            }
     }
 
     @Override
@@ -127,13 +129,66 @@ public class HighOvenBlock extends TSInventoryBlock
         {
             ((IServantLogic) logic).notifyMasterOfChange();
         }
-        else
-            if (logic instanceof IMasterLogic)
+        else if (logic instanceof IMasterLogic)
+        {
+            IActiveLogic activeLogic = (IActiveLogic) world.getBlockTileEntity(x, y, z);
+            IFacingLogic facing = (IFacingLogic) activeLogic;
+            int direction = facing.getRenderDirection();
+            boolean active = false;
+            for (int i = 0; i < 6; i++)
             {
-                ((IMasterLogic) logic).notifyChange(null, x, y, z);
+                if (direction == i)
+                    continue;
+                CoordTuple coord = directions.get(i);
+                if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
+                {
+                    active = true;
+                    break;
+                }
             }
+            activeLogic.setActive(active);
+            ((IMasterLogic) logic).notifyChange(null, x, y, z);
+        }
+    }
+    
+    public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
+    {
+        if (world.isBlockNormalCube(x, y, z))
+            return world.getBlockPowerInput(x, y, z);
+        else
+        {
+            int i1 = world.getBlockId(x, y, z);
+            return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
+        }
     }
 
+    boolean activeRedstone (World world, int x, int y, int z)
+    {
+        Block wire = Block.blocksList[world.getBlockId(x, y, z)];
+        if (wire != null && wire.blockID == Block.redstoneWire.blockID) 
+            return world.getBlockMetadata(x, y, z) > 0;
+        return false;
+    }
+
+    /* Redstone connections */
+
+    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
+    {
+        return false;
+    }
+
+    static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
+
+    static
+    {
+        directions.add(new CoordTuple(0, -1, 0));
+        directions.add(new CoordTuple(0, 1, 0));
+        directions.add(new CoordTuple(0, 0, -1));
+        directions.add(new CoordTuple(0, 0, 1));
+        directions.add(new CoordTuple(-1, 0, 0));
+        directions.add(new CoordTuple(1, 0, 0));
+    }
+    
     @Override
     public void breakBlock (World world, int x, int y, int z, int blockID, int meta)
     {

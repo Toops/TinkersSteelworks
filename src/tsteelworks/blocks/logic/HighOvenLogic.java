@@ -40,12 +40,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public boolean               validStructure;
     public boolean               tempValidStructure;
     public boolean               structureCapped;
+    boolean                      redstoneActivated;
     byte                         direction;
     int                          internalTemp;
     public int                   useTime;
-    
-    public int                   fuelAmount;
-    
     boolean                      inUse;
     public CoordTuple            centerPos;
     public int[]                 activeTemps;
@@ -65,6 +63,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public HighOvenLogic ()
     {
         super(4);
+        redstoneActivated = false;
         activeTemps = meltingTemps = new int[0];
     }
 
@@ -173,10 +172,16 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     @Override
     public void setActive (boolean flag)
     {
+        redstoneActivated = flag;
         needsUpdate = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
+    public boolean getRedstoneActive ()
+    {
+        return redstoneActivated;
+    }
+    
     @Override
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
@@ -200,10 +205,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {
             if ((AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize) && 
                     (AdvancedSmelting.instance.getMixerType(stack) == slot))
-            {
-                
                 return true;
-            }
         }
         return false;  
     }
@@ -247,6 +249,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             if (isBurning())
             {
                 useTime -= 3;
+                if (internalTemp < 3000)
+                    internalTemp += 3;
+            } 
+            else
+            {
+                if (internalTemp > 20)
+                    internalTemp -= 10;
+                if (internalTemp < 20)
+                    internalTemp = 20;
             }
             if (validStructure && (useTime <= 0))
             {
@@ -269,21 +280,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     void heatItems ()
     {
-        if (isBurning())
+        if (internalTemp > 20)
         {
             boolean hasUse = false;
             
             for (int i = 4; i < layers + 4; i+= 1)
-                if (meltingTemps[i] > 20 && this.isStackInSlot(i))
+            {
+                if (this.isStackInSlot(i))
                 {
-                    hasUse = true;
-                    if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
+                    if (meltingTemps[i] > 20)
                     {
-                        activeTemps[i] += 1;
-                    }
-                    else
-                    {
-                        if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
+                        hasUse = true;
+                        if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
+                            activeTemps[i] += 1;
+                        else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
+                        {
+                            activeTemps[i] -= 1;
+                        }
+                        else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
                         {
                             final FluidStack result = getResultFor(inventory[i]);
                             if (result != null) 
@@ -293,13 +307,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                                     if (this.validMixers())
                                         this.removeMixers();
                                     if (inventory[i].stackSize >= 2)
-                                    {
                                         inventory[i].stackSize--;
-                                    }
                                     else
-                                    {
                                         inventory[i] = null;
-                                    }
                                     activeTemps[i] = 20;
                                     addMoltenMetal(result, true);
                                     onInventoryChanged();
@@ -312,25 +322,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 {
                     activeTemps[i] = 20;
                 }
-            inUse = hasUse;
-        }
-        else
-        {
-            updateCooldown();
-        }
-    }
-
-    void updateCooldown()
-    {
-        for (int i = 4; i < layers + 4; i+= 1)
-        {
-            if (activeTemps[i] > 20 && this.isStackInSlot(i))
-            {
-                if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
-                {
-                    activeTemps[i] -= 1;
-                }
             }
+            inUse = hasUse;
         }
     }
     
@@ -346,9 +339,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         FluidStack normalResult = AdvancedSmelting.instance.getSmelteryResult(stack);
         FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(inventory[0], inventory[1], inventory[2]);
         if (mixResult != null)
-        {
             return new FluidStack(mixResult.fluid, normalResult.amount);
-        }
         return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
     
@@ -409,9 +400,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         int ret = useTime / scale;
         if (ret < 1)
-        {
             ret = 1;
-        }
         return ret;
     }
     
@@ -454,10 +443,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     void updateFuelGague ()
     {
-        if (isBurning())
-        {
+        if (isBurning() || !redstoneActivated)
             return;
-        }
         else
         {   
             if (inventory[3] == null)
@@ -668,7 +655,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if ((structureCapped != tempValidStructure != validStructure) || (checkLayers != layers))
             if (tempValidStructure && structureCapped)
             {
-                internalTemp = 2000;
+                internalTemp = 20;
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 validStructure = true;
@@ -1095,6 +1082,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         inventory = new ItemStack[4 + layers];
         super.readFromNBT(tags);
         validStructure = tags.getBoolean("ValidStructure");
+        redstoneActivated = tags.getBoolean("RedstoneActivated");
         internalTemp = tags.getInteger("InternalTemp");
         inUse = tags.getBoolean("InUse");
         final int[] center = tags.getIntArray("CenterPos");
@@ -1119,9 +1107,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             final NBTTagCompound nbt = (NBTTagCompound) liquidTag.tagAt(iter);
             final FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid != null)
-            {
                 moltenMetal.add(fluid);
-            }
         }
     }
 
@@ -1130,6 +1116,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         super.writeToNBT(tags);
         tags.setBoolean("ValidStructure", validStructure);
+        tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("InternalTemp", internalTemp);
         tags.setBoolean("InUse", inUse);
         int[] center = new int[3];

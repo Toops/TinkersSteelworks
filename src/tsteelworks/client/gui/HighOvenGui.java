@@ -61,6 +61,7 @@ public class HighOvenGui extends TSContainerGui
         String oxiCaption = StatCollector.translateToLocal("gui.highoven.oxidizer");
         String redCaption = StatCollector.translateToLocal("gui.highoven.reducer");
         String purCaption = StatCollector.translateToLocal("gui.highoven.purifier");
+        String tempCaption = StatCollector.translateToLocal("gui.highoven.temperature");
         
         fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2, 5, 0x404040);
         
@@ -155,7 +156,7 @@ public class HighOvenGui extends TSContainerGui
         // Burn progress
         if (this.logic.isBurning())
         {
-            scale = this.logic.getScaledFuelGague(12);
+            scale = this.logic.getScaledFuelGague(42);
             this.drawTexturedModalRect(cornerX + 56, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
         }
         
@@ -187,6 +188,10 @@ public class HighOvenGui extends TSContainerGui
                                       size);
             }
         } 
+
+        String s = new String("\u00B0".toCharArray());
+        String temp = new String(logic.getInternalTemperature() + s + "c");
+        fontRenderer.drawString(temp, cornerX - this.fontRenderer.getStringWidth(temp) / 2 + 68, cornerY + 21, 0x404040);
     }
 
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
