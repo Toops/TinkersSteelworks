@@ -172,14 +172,18 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     @Override
     public void setActive (boolean flag)
     {
-        redstoneActivated = flag;
         needsUpdate = true;
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-
+    
     public boolean getRedstoneActive ()
     {
         return redstoneActivated;
+    }
+    
+    public void setRedstoneActive (boolean flag)
+    {
+        redstoneActivated = flag;
     }
     
     @Override
@@ -655,7 +659,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if ((structureCapped != tempValidStructure != validStructure) || (checkLayers != layers))
             if (tempValidStructure && structureCapped)
             {
-                internalTemp = 20;
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 validStructure = true;

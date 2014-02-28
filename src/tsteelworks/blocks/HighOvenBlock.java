@@ -131,8 +131,8 @@ public class HighOvenBlock extends TSInventoryBlock
         }
         else if (logic instanceof IMasterLogic)
         {
-            IActiveLogic activeLogic = (IActiveLogic) world.getBlockTileEntity(x, y, z);
-            IFacingLogic facing = (IFacingLogic) activeLogic;
+            HighOvenLogic ovenLogic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
+            IFacingLogic facing = (IFacingLogic) ovenLogic;
             int direction = facing.getRenderDirection();
             boolean active = false;
             for (int i = 0; i < 6; i++)
@@ -140,53 +140,16 @@ public class HighOvenBlock extends TSInventoryBlock
                 if (direction == i)
                     continue;
                 CoordTuple coord = directions.get(i);
-                if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
+//                if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
+                if (world.isBlockIndirectlyGettingPowered(x, y, z))
                 {
                     active = true;
                     break;
                 }
             }
-            activeLogic.setActive(active);
+            ((HighOvenLogic) ovenLogic).setRedstoneActive(active);
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
         }
-    }
-    
-    public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
-    {
-        if (world.isBlockNormalCube(x, y, z))
-            return world.getBlockPowerInput(x, y, z);
-        else
-        {
-            int i1 = world.getBlockId(x, y, z);
-            return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
-        }
-    }
-
-    boolean activeRedstone (World world, int x, int y, int z)
-    {
-        Block wire = Block.blocksList[world.getBlockId(x, y, z)];
-        if (wire != null && wire.blockID == Block.redstoneWire.blockID) 
-            return world.getBlockMetadata(x, y, z) > 0;
-        return false;
-    }
-
-    /* Redstone connections */
-
-    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
-    {
-        return false;
-    }
-
-    static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
-
-    static
-    {
-        directions.add(new CoordTuple(0, -1, 0));
-        directions.add(new CoordTuple(0, 1, 0));
-        directions.add(new CoordTuple(0, 0, -1));
-        directions.add(new CoordTuple(0, 0, 1));
-        directions.add(new CoordTuple(-1, 0, 0));
-        directions.add(new CoordTuple(1, 0, 0));
     }
     
     @Override
@@ -348,5 +311,43 @@ public class HighOvenBlock extends TSInventoryBlock
         {
             this.icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
         }
+    }
+    
+ // Currently unused
+    public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
+    {
+        if (world.isBlockNormalCube(x, y, z))
+            return world.getBlockPowerInput(x, y, z);
+        else
+        {
+            int i1 = world.getBlockId(x, y, z);
+            return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
+        }
+    }
+    
+    // Currently unused
+    boolean activeRedstone (World world, int x, int y, int z)
+    {
+        Block wire = Block.blocksList[world.getBlockId(x, y, z)];
+        if (wire != null && wire.blockID == Block.redstoneWire.blockID) 
+            return world.getBlockMetadata(x, y, z) > 0;
+        return false;
+    }
+
+    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
+    {
+        return true;
+    }
+
+    static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
+
+    static
+    {
+        directions.add(new CoordTuple(0, -1, 0));
+        directions.add(new CoordTuple(0, 1, 0));
+        directions.add(new CoordTuple(0, 0, -1));
+        directions.add(new CoordTuple(0, 0, 1));
+        directions.add(new CoordTuple(-1, 0, 0));
+        directions.add(new CoordTuple(1, 0, 0));
     }
 }
