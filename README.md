@@ -9,8 +9,9 @@ Run [Apache Ant](http://ant.apache.org/bindownload.cgi) in the repository root: 
 Please include the following:
 
 * Minecraft version
-* Tinkers' Steelworks version
 * Forge version/build
+* Tinkers' Construct version
+* Tinkers' Steelworks version
 * Versions of any mods potentially related to the issue 
 * Any relevant screenshots are greatly appreciated.
 * For crashes:
@@ -18,7 +19,7 @@ Please include the following:
     * ForgeModLoader-client-0.log (the FML log) from the root folder of the client
 
 ##Licenses
-Most code is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/licenses/by/3.0/).
 
 ##Notice
 Currently, only the 1.6.4 branch is valid. The master branch will be used for Minecraft 1.7 and onwards.
