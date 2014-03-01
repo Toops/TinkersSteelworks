@@ -131,23 +131,12 @@ public class HighOvenBlock extends TSInventoryBlock
         }
         else if (logic instanceof IMasterLogic)
         {
-            HighOvenLogic ovenLogic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
-            IFacingLogic facing = (IFacingLogic) ovenLogic;
-            int direction = facing.getRenderDirection();
             boolean active = false;
-            for (int i = 0; i < 6; i++)
+            if (world.isBlockIndirectlyGettingPowered(x, y, z))
             {
-                if (direction == i)
-                    continue;
-                CoordTuple coord = directions.get(i);
-//                if (this.getIndirectPowerLevelTo(world, x + coord.x, y + coord.y, z + coord.z, i) > 0 || activeRedstone(world, coord.x, y + coord.y, z + coord.z))
-                if (world.isBlockIndirectlyGettingPowered(x, y, z))
-                {
-                    active = true;
-                    break;
-                }
+                active = true;
             }
-            ((HighOvenLogic) ovenLogic).setRedstoneActive(active);
+            ((HighOvenLogic) logic).setRedstoneActive(active);
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
         }
     }

@@ -43,6 +43,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     boolean                      redstoneActivated;
     byte                         direction;
     int                          internalTemp;
+    int                          fuelHeatRate;
+    int                          internalCoolDownRate;
     public int                   useTime;
     boolean                      inUse;
     public CoordTuple            centerPos;
@@ -64,6 +66,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         super(4);
         redstoneActivated = false;
+        fuelHeatRate = 3;
+        internalCoolDownRate = 10;
         activeTemps = meltingTemps = new int[0];
     }
 
@@ -176,11 +180,22 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
     
+    /**
+     * Get the current state of redstone-connected power
+     * 
+     * @return Redstone powered state
+     */
     public boolean getRedstoneActive ()
     {
         return redstoneActivated;
     }
     
+    /**
+     * Set the redstone powered state
+     * 
+     * @param flag
+     *          true: powered / false: not powered
+     */
     public void setRedstoneActive (boolean flag)
     {
         redstoneActivated = flag;
@@ -197,11 +212,25 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     /* ==================== Additive Materials ==================== */
     
+    /**
+     * Determine if all mixers are present
+     * 
+     * @return
+     *          true: has mixers / false: doesn't
+     */
     public boolean validMixers () 
     {
         return (this.hasMixers(0) && this.hasMixers(1) && this.hasMixers(2));
     }
     
+    /**
+     * Determine if a mixer component material is present
+     * 
+     * @param slot
+     *          Slot to check
+     * @return
+     *          true: has mixer / false: doesn't
+     */
     public boolean hasMixers(int slot)
     {
         ItemStack stack = this.inventory[slot];
@@ -254,12 +283,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             {
                 useTime -= 3;
                 if (internalTemp < 3000)
-                    internalTemp += 3;
+                    internalTemp += fuelHeatRate;
             } 
             else
             {
                 if (internalTemp > 20)
-                    internalTemp -= 10;
+                    internalTemp -= internalCoolDownRate;
                 if (internalTemp < 20)
                     internalTemp = 20;
             }
@@ -280,7 +309,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
     
     /**
-     * Smelt items
+     * Process item heating and liquifying
      */
     void heatItems ()
     {
@@ -290,34 +319,37 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             
             for (int i = 4; i < layers + 4; i+= 1)
             {
-                if (this.isStackInSlot(i))
+                // If an item is present and meltable
+                if (this.isStackInSlot(i) && (meltingTemps[i] > 20))
                 {
-                    if (meltingTemps[i] > 20)
+                    hasUse = true;
+                    // Increase temp if its temp is lower than the High Oven's internal 
+                    // temp and hasn't reached melting point
+                    if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
+                        activeTemps[i] += 1;
+                    // Decrease temp if its temp is higher than the High Oven's internal
+                    // temp and the High Oven's internal temp is lower than the melting point
+                    else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
                     {
-                        hasUse = true;
-                        if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
-                            activeTemps[i] += 1;
-                        else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
+                        activeTemps[i] -= 1;
+                    }
+                    // Liquify metals if the temp has reached the melting point
+                    else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
+                    {
+                        final FluidStack result = getResultFor(inventory[i]);
+                        if (result != null) 
                         {
-                            activeTemps[i] -= 1;
-                        }
-                        else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
-                        {
-                            final FluidStack result = getResultFor(inventory[i]);
-                            if (result != null) 
+                            if (addMoltenMetal(result, false))
                             {
-                                if (addMoltenMetal(result, false))
-                                {
-                                    if (this.validMixers())
-                                        this.removeMixers();
-                                    if (inventory[i].stackSize >= 2)
-                                        inventory[i].stackSize--;
-                                    else
-                                        inventory[i] = null;
-                                    activeTemps[i] = 20;
-                                    addMoltenMetal(result, true);
-                                    onInventoryChanged();
-                                }
+                                if (this.validMixers())
+                                    this.removeMixers();
+                                if (inventory[i].stackSize >= 2)
+                                    inventory[i].stackSize--;
+                                else
+                                    inventory[i] = null;
+                                activeTemps[i] = 20;
+                                addMoltenMetal(result, true);
+                                onInventoryChanged();
                             }
                         }
                     }
@@ -431,6 +463,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
     
     /**
+     * Get the rate of heat increase by given item
+     * 
+     * @param stack
+     * @return
+     */
+    public static int getItemHeatRate (ItemStack stack)
+    {
+        if (stack == null)
+            return 0;
+        else
+        {
+            if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
+                return 3;
+        }
+        return 0;
+    }
+    
+    /**
      * Update fuel gauge display
      */
     public void updateFuelDisplay ()
@@ -460,6 +510,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             {
                 needsUpdate = true;
                 useTime = this.getItemBurnTime(inventory[3]);
+                fuelHeatRate = this.getItemHeatRate(inventory[3]);
                 inventory[3].stackSize--;
                 if (inventory[3].stackSize <= 0)
                 {
@@ -566,7 +617,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return (invName != null) && (invName.length() > 0);
     }
     
-    // TODO: restrict fuels to appropriate slot
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
@@ -820,6 +870,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int validateTop (int x, int y, int z, int count)
     {
+        // TODO: Make drains register properly 
         int topBricks = 0;
         for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
@@ -1099,6 +1150,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
         direction = tags.getByte("Direction");
         useTime = tags.getInteger("UseTime");
+        fuelHeatRate = tags.getInteger("FuelHeatRate");
         currentLiquid = tags.getInteger("CurrentLiquid");
         maxLiquid = tags.getInteger("MaxLiquid");
         meltingTemps = tags.getIntArray("MeltingTemps");
@@ -1134,6 +1186,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         tags.setIntArray("CenterPos", center);
         tags.setByte("Direction", direction);
         tags.setInteger("UseTime", useTime);
+        tags.setInteger("FuelHeatRate", fuelHeatRate);
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);
         tags.setInteger("Layers", layers);
