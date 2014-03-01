@@ -12,6 +12,10 @@ item.tsteelworks.chestplateSteel.name=Steel Chestplate
 item.tsteelworks.leggingsSteel.name=Steel Leggings
 item.tsteelworks.bootsSteel.name=Steel Boots
 
+tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
+block.storage.dust.gunpowder.name=Block of Gunpowder
+block.storage.dust.sugar.name=Sugar Cube
+
 HighOven.Controller.name=High Oven Controller
 HighOven.Drain.name=High Oven Drain
 HighOven.Brick.name=Scorched Bricks

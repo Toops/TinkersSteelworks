@@ -1,26 +1,33 @@
 package tsteelworks.common;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
 import tsteelworks.blocks.HighOvenBlock;
+import tsteelworks.blocks.TSBaseBlock;
+import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSMaterialItem;
+import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
+import cpw.mods.fml.common.IFuelHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class TSContent
+public class TSContent implements IFuelHandler
 {
     public static Item materialsTS;
     public static Item helmetSteel;
@@ -29,6 +36,8 @@ public class TSContent
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     public static Block highoven;
+    public static Block charcoalBlock;
+    public static Block dustStorageBlock;
 
     /**
      * Content Constructor
@@ -79,17 +88,25 @@ public class TSContent
      */
     void registerBlocks ()
     {
+        /* High Oven */
         highoven = new HighOvenBlock(ConfigCore.highoven).setUnlocalizedName("HighOven");
         GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
         GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
         GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
+        /* Raw Vanilla Materials */
+        charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] {"charcoal_block"}).setUnlocalizedName("tsteelworks.blocks.charcoal");
+        GameRegistry.registerBlock(charcoalBlock, "blockCharcoal");
+        dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
+        GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
     }
-    
-
     
     void oreRegistry ()
     {
+        OreDictionary.registerOre("blockCoal", new ItemStack(charcoalBlock));
+        OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
+        OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
+        
         ensureOreIsRegistered("blockCobble", new ItemStack(Block.cobblestone));
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
     }
@@ -113,6 +130,7 @@ public class TSContent
         AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1,  65);
         AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 100);
         // Pig Iron
+        AdvancedSmelting.addMixer(new ItemStack(Item.sugar,         1, 0), 0,  33);
         AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1,  90);
         AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
     }
@@ -127,6 +145,7 @@ public class TSContent
         TSRecipes.addRecipesMaterialPigIron();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();
+        TSRecipes.addRecipesVanillaStorageBlocks();
         changeCraftingRecipes();
     }
     
@@ -140,5 +159,22 @@ public class TSContent
             TSRecipes.changeRecipeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil)
             TSRecipes.changeRecipeAnvil();        
+    }
+    
+    @Override
+    public int getBurnTime (ItemStack fuel)
+    {
+        int i = fuel.getItem().itemID;
+
+        if (fuel.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+        {
+            Block block = Block.blocksList[i];
+
+            if (block == TSContent.charcoalBlock)
+            {
+                return 16000;
+            }
+        }
+        return 0;
     }
 }

@@ -54,8 +54,6 @@ public class TSRecipes
         
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
-        
-
     }
     
     public static void addRecipesMaterialIron ()
@@ -145,7 +143,7 @@ public class TSRecipes
         AdvancedSmelting.addDictionaryMelting("ingotPigIron", fluidTypePigIron,  pigIronMTempDiff, ingotLiquidValue);
         AdvancedSmelting.addDictionaryMelting("nuggetPigIron", fluidTypePigIron, pigIronMTempDiff, nuggetLiquidValue);
         
-        AdvancedSmelting.addMixerCombo(fluidTypePigIron, new ItemStack(Item.gunpowder,     1, 0), 
+        AdvancedSmelting.addMixerCombo(fluidTypePigIron, new ItemStack(Item.sugar,         1, 0), 
                                                          new ItemStack(Item.emerald,       1, 0), 
                                                          new ItemStack(TContent.meatBlock, 1, 0));
     }
@@ -176,10 +174,17 @@ public class TSRecipes
     public static void addRecipesSteelArmor ()
     {
         ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, new Object[] { patHead, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel,     new Object[] { patHead, '#', ingotSteel }));
         GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, new Object[] { patChest, '#', ingotSteel }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, new Object[] { patLegs, '#', ingotSteel }));
-        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel,   new Object[] { patLegs, '#', ingotSteel }));
+        GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel,      new Object[] { patBoots, '#', ingotSteel }));
+    }
+    
+    public static void addRecipesVanillaStorageBlocks ()
+    {
+        GameRegistry.addRecipe(new ItemStack(TSContent.charcoalBlock, 1, 0),    patBlock, '#', new ItemStack(Item.coal, 1, 1));
+        GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), patBlock, '#', new ItemStack(Item.gunpowder, 1));
+        GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), patBlock, '#', new ItemStack(Item.sugar, 1));
     }
     
     /**

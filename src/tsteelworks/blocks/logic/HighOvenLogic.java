@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -456,6 +457,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return 0;
         else
         {
+            int i = stack.getItem().itemID;
+            Item item = stack.getItem();
+            if (stack.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+            {
+                Block block = Block.blocksList[i];
+
+                if (block == TSContent.charcoalBlock)
+                {
+                    return 420 * 4;
+                }
+            }
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
                 return 420;
         }
@@ -474,6 +486,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return 0;
         else
         {
+            int i = stack.getItem().itemID;
+            Item item = stack.getItem();
+            if (stack.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+            {
+                Block block = Block.blocksList[i];
+
+                if (block == TSContent.charcoalBlock)
+                {
+                    return 12;
+                }
+            }
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
                 return 3;
         }
