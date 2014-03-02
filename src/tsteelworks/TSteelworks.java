@@ -9,6 +9,7 @@ import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
+import tsteelworks.plugins.PluginController;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -53,6 +54,8 @@ public class TSteelworks
         logger.setParent(FMLCommonHandler.instance().getFMLLogger());
         TConstruct.logger.info("TSteelworks, are you pondering what I'm pondering?");
         logger.info("I think so, TConstruct, but where are we going to find a duck and a hose at this hour?");
+        
+        PluginController.getController().registerBuiltins();
     }
 
     /**
@@ -73,6 +76,8 @@ public class TSteelworks
         proxy.registerSounds();
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         // TODO: Make horses like sugar cubes :|
+        
+        PluginController.getController().preInit();
     }
 
     /**
@@ -84,7 +89,9 @@ public class TSteelworks
      */
     @EventHandler
     public void init (FMLInitializationEvent event)
-    {}
+    {
+        PluginController.getController().init();
+    }
 
     /**
      * This is code that is executed after all mods are initialized in Minecraft
@@ -96,6 +103,7 @@ public class TSteelworks
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {
+        PluginController.getController().postInit();
     }
 
     public static TSContent      content;
