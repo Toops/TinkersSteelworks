@@ -23,14 +23,12 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.blocks.TSInventoryLogic;
@@ -237,8 +235,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         ItemStack stack = this.inventory[slot];
         if (stack != null)
         {
-            if ((AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize) && 
-                    (AdvancedSmelting.instance.getMixerType(stack) == slot))
+            if ((AdvancedSmelting.instance.getMixerType(stack) == slot) && 
+                (AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize))
                 return true;
         }
         return false;  
@@ -327,7 +325,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     // Increase temp if its temp is lower than the High Oven's internal 
                     // temp and hasn't reached melting point
                     if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
-                        activeTemps[i] += 1;
+                         activeTemps[i] += (internalTemp > 300) ? (internalTemp / 300) : 1;
                     // Decrease temp if its temp is higher than the High Oven's internal
                     // temp and the High Oven's internal temp is lower than the melting point
                     else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
@@ -340,10 +338,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         final FluidStack result = getResultFor(inventory[i]);
                         if (result != null) 
                         {
+                            
                             if (addMoltenMetal(result, false))
                             {
-                                if (this.validMixers())
-                                    this.removeMixers();
                                 if (inventory[i].stackSize >= 2)
                                     inventory[i].stackSize--;
                                 else
@@ -375,8 +372,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         FluidStack normalResult = AdvancedSmelting.instance.getSmelteryResult(stack);
         FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(inventory[0], inventory[1], inventory[2]);
-        if (mixResult != null)
-            return new FluidStack(mixResult.fluid, normalResult.amount);
+        if (mixResult != null && this.validMixers())
+        {
+            this.removeMixers();
+            return new FluidStack(mixResult.fluid, normalResult.amount / 2);
+        }
         return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
     

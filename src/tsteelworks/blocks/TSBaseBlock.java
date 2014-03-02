@@ -25,7 +25,7 @@ public class TSBaseBlock extends Block
         setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
         textureNames = tex;
     }
-
+    
     @Override
     public int damageDropped (int meta)
     {

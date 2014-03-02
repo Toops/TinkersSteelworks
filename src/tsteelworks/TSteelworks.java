@@ -45,10 +45,6 @@ public class TSteelworks
     @SidedProxy (clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
     public static TSCommonProxy proxy;
 
-    /**
-     * This is fired off as soon as the mod is loaded. Mainly useful for logging
-     * and mod compatability checks.
-     */
     public TSteelworks ()
     {
         logger.setParent(FMLCommonHandler.instance().getFMLLogger());
@@ -58,13 +54,6 @@ public class TSteelworks
         PluginController.getController().registerBuiltins();
     }
 
-    /**
-     * This is code that is executed prior to the mod being initialized into of
-     * Minecraft
-     * 
-     * @param event
-     *            The Forge ModLoader pre-initialization event
-     */
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
     {
@@ -80,26 +69,12 @@ public class TSteelworks
         PluginController.getController().preInit();
     }
 
-    /**
-     * This is code that is executed when the mod is being initialized in
-     * Minecraft
-     * 
-     * @param event
-     *            The Forge ModLoader initialization event
-     */
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
         PluginController.getController().init();
     }
 
-    /**
-     * This is code that is executed after all mods are initialized in Minecraft
-     * This is a good place to execute code that interacts with other mods.
-     * 
-     * @param event
-     *            The Forge ModLoader post-initialization event
-     */
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {

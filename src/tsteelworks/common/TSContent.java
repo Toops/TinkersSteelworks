@@ -97,6 +97,7 @@ public class TSContent implements IFuelHandler
         /* Raw Vanilla Materials */
         charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] {"charcoal_block"}).setUnlocalizedName("tsteelworks.blocks.charcoal");
         GameRegistry.registerBlock(charcoalBlock, "blockCharcoal");
+        charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
         GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
     }
@@ -140,9 +141,20 @@ public class TSContent implements IFuelHandler
      */
     void addCraftingRecipes ()
     {
-        TSRecipes.addRecipesMaterialIron();
-        TSRecipes.addRecipesMaterialSteel();
-        TSRecipes.addRecipesMaterialPigIron();
+        TSRecipes.addSmeltingIron();
+        TSRecipes.addSmeltingSteel();
+        TSRecipes.addSmeltingPigIron();
+        TSRecipes.addSmeltingGold();
+        TSRecipes.addSmeltingTin();
+        TSRecipes.addSmeltingCopper();
+        TSRecipes.addSmeltingAluminum();
+        TSRecipes.addSmeltingNickle();
+        TSRecipes.addSmeltingLead();
+        TSRecipes.addSmeltingSilver();
+        TSRecipes.addSmeltingPlatinum();
+        TSRecipes.addSmeltingCobalt();
+        TSRecipes.addSmeltingArdite();
+        TSRecipes.addSmeltingMisc();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();
         TSRecipes.addRecipesVanillaStorageBlocks();

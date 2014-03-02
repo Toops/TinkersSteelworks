@@ -1,6 +1,8 @@
 package tsteelworks.lib;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import net.minecraft.item.Item;
@@ -9,11 +11,13 @@ import tconstruct.library.util.TabTools;
 
 public class TSteelworksRegistry
 {
-    public static TSteelworksRegistry   instance      = new TSteelworksRegistry();
-    public static Logger                logger        = Logger.getLogger("TSteel-API");
-    /* Creative tabs */
-    public static TabTools              SteelworksCreativeTab;
-    /* Items */
+    /** The static instance of this class */
+    public static TSteelworksRegistry instance = new TSteelworksRegistry();
+    /** The logger instance for API */
+    public static Logger logger = Logger.getLogger("TSteel-API");
+    /** Creative tab */
+    public static TabTools SteelworksCreativeTab;
+
     /**
      * A directory of crafting items and tools used by the mod. 
      */
