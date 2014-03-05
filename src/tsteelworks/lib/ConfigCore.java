@@ -28,6 +28,8 @@ public class ConfigCore
         charcoalStorageBlock = config.getBlock("Blocks", "Charcoal Block ID", 3401, "Compressed Charcoal Block (3x3)").getInt(3401);
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
 
+        ingotsPerOre = config.get("High Oven", "Ingots per ore", 1, "Number of ingots returned from smelting ores in the High Oven").getInt(1);
+        
         hardcorePiston        = config.get("TConification", "Hardcore Piston", false,
                                            "Piston requires tough iron tool rod.").getBoolean(false);
         hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false,
@@ -49,6 +51,9 @@ public class ConfigCore
     public static int     highoven;
     public static int     charcoalStorageBlock;
     public static int     dustStorageBlock;
+    
+    
+    public static int     ingotsPerOre;
     // --- Misc  
     public static boolean hardcorePiston;
     public static boolean hardcoreFlintAndSteel;

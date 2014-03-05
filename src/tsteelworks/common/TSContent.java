@@ -48,7 +48,6 @@ public class TSContent implements IFuelHandler
         registerBlocks();
         oreRegistry();
         registerMixerMaterials();
-        addCraftingRecipes();
         setupCreativeTabs();
     }
 
@@ -139,21 +138,13 @@ public class TSContent implements IFuelHandler
     /**
      * Make TSRecipes add all crafting recipes
      */
-    void addCraftingRecipes ()
+    public void addCraftingRecipes ()
     {
+        TSRecipes.addOreDictionarySmelteryRecipes();
         TSRecipes.addSmeltingIron();
         TSRecipes.addSmeltingSteel();
         TSRecipes.addSmeltingPigIron();
         TSRecipes.addSmeltingGold();
-        TSRecipes.addSmeltingTin();
-        TSRecipes.addSmeltingCopper();
-        TSRecipes.addSmeltingAluminum();
-        TSRecipes.addSmeltingNickle();
-        TSRecipes.addSmeltingLead();
-        TSRecipes.addSmeltingSilver();
-        TSRecipes.addSmeltingPlatinum();
-        TSRecipes.addSmeltingCobalt();
-        TSRecipes.addSmeltingArdite();
         TSRecipes.addSmeltingMisc();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();

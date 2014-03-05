@@ -1,9 +1,9 @@
 itemGroup.TSteelworks=TSteelworks
 
 crafters.HighOven=High Oven
-gui.highoven.oxidizer=Oxidizer
-gui.highoven.reducer=Reducer
-gui.highoven.purifier=Purifier
+gui.highoven.oxidizer=Ox
+gui.highoven.reducer=Re
+gui.highoven.purifier=Pu
 
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
 

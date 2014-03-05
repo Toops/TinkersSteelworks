@@ -63,21 +63,21 @@ public class HighOvenGui extends TSContainerGui
         String purCaption = StatCollector.translateToLocal("gui.highoven.purifier");
         String tempCaption = StatCollector.translateToLocal("gui.highoven.temperature");
         
-        fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2, 5, 0x404040);
+        fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2 + 10, 5, 0x404040);
         
-        fontRenderer.drawString(oxiCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(oxiCaption) / 2 + 48, 20, 0x404040);
-        fontRenderer.drawString(redCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(redCaption) / 2 + 48, 38, 0x404040);
-        fontRenderer.drawString(purCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(purCaption) / 2 + 48, 56, 0x404040);
+        fontRenderer.drawString(oxiCaption, this.xSize / 2 - 67, 20, 0x404040);
+        fontRenderer.drawString(redCaption, this.xSize / 2 - 67, 38, 0x404040);
+        fontRenderer.drawString(purCaption, this.xSize / 2 - 67, 56, 0x404040);
         
         // Player Inventory Caption
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 56, (ySize - 96) + 2, 0x404040);
         // Molten Liquids
         int base = 0;
-        final int cornerX = ((width - xSize) / 2);// + 36;
+        final int cornerX = ((width - xSize) / 2);
         final int cornerY = (height - ySize) / 2;
         for (final FluidStack liquid : logic.moltenMetal)
         {
-            final int basePos = 90;
+            final int basePos = 179;
             int liquidSize = 0;// liquid.amount * 52 / liquidLayers;
             if (logic.getCapacity() > 0)
             {
@@ -111,7 +111,7 @@ public class HighOvenGui extends TSContainerGui
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
-        final int cornerX = ((width - xSize) / 2);// + 36;
+        final int cornerX = ((width - xSize) / 2);
         final int cornerY = (height - ySize) / 2;
         drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
         // Liquids - molten metal
@@ -120,7 +120,7 @@ public class HighOvenGui extends TSContainerGui
         for (final FluidStack liquid : logic.moltenMetal)
         {
             final Icon renderIndex = liquid.getFluid().getStillIcon();
-            final int basePos = 90;
+            final int basePos = 179;
             if (logic.getCapacity() > 0)
             {
                 final int total = logic.getTotalLiquid();
@@ -150,14 +150,14 @@ public class HighOvenGui extends TSContainerGui
         // Liquid gague
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(cornerX + 90, cornerY + 16, 176, 76, 35, 52);
+        drawTexturedModalRect(cornerX + 179, cornerY + 16, 176, 76, 35, 52);
         
         int scale;
         // Burn progress
         if (this.logic.isBurning())
         {
             scale = this.logic.getScaledFuelGague(42);
-            this.drawTexturedModalRect(cornerX + 56, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
+            this.drawTexturedModalRect(cornerX + 127, cornerY + 36 + 12 - scale, 176, 12 - scale, 14, scale + 2);
         }
         
         // Side inventory
@@ -191,9 +191,23 @@ public class HighOvenGui extends TSContainerGui
 
         String s = new String("\u00B0".toCharArray());
         String temp = new String(logic.getInternalTemperature() + s + "c");
-        fontRenderer.drawString(temp, cornerX - this.fontRenderer.getStringWidth(temp) / 2 + 68, cornerY + 21, 0x404040);
+        fontRenderer.drawString(temp, cornerX - this.fontRenderer.getStringWidth(temp) / 2 + 135, cornerY + 20, getTempColor());
     }
 
+    protected int getTempColor ()
+    {
+        // TODO: Gradient this
+        int temp = logic.getInternalTemperature();
+        if (temp == 20)
+            return 0x404040;
+        else if (temp < 1000)
+            return 0xFFFF00;
+        else if (temp >= 1000 && temp <= 2000)
+            return 0xFFA500;
+        else 
+            return 0xFF0000;
+    }
+    
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
     {
         zLevel = 100;
@@ -218,6 +232,22 @@ public class HighOvenGui extends TSContainerGui
         {
             final String name = StatCollector.translateToLocal("fluid." + FluidRegistry.getFluidName(liquid));
             list.add("\u00A7f" + name);
+            if (name.equals("Liquified Emerald"))
+            {
+                list.add("Emeralds: " + liquid.amount / 640f);
+            }
+            else if (name.equals("Molten Glass"))
+            {
+                int blocks = liquid.amount / 1000;
+                if (blocks > 0)
+                    list.add("Blocks: " + blocks);
+                int panels = (liquid.amount % 1000) / 250;
+                if (panels > 0)
+                    list.add("Panels: " + panels);
+                int mB = (liquid.amount % 1000) % 250;
+                if (mB > 0)
+                    list.add("mB: " + mB);
+            }
             if (name.contains("Molten"))
             {
                 final int ingots = liquid.amount / TConstruct.ingotLiquidValue;

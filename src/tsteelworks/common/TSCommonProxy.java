@@ -8,6 +8,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
 
 public class TSCommonProxy implements IGuiHandler
 {
+    public static int manualGuiID = -1;
     public static int highOvenGuiID = 0;
 
     @Override
@@ -31,9 +32,12 @@ public class TSCommonProxy implements IGuiHandler
         return null;
     }
 
-    public void registerRenderers ()
+    public void registerRenderer ()
     {}
 
+    public void readManuals ()
+    {}
+    
     public void registerSounds ()
     {}
 }

@@ -61,7 +61,7 @@ public class TSteelworks
         TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
         content = new TSContent();
         GameRegistry.registerFuelHandler(content);
-        proxy.registerRenderers();
+        proxy.registerRenderer();
         proxy.registerSounds();
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         // TODO: Make horses like sugar cubes :|
@@ -72,12 +72,14 @@ public class TSteelworks
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
+        
         PluginController.getController().init();
     }
 
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {
+        content.addCraftingRecipes();
         PluginController.getController().postInit();
     }
 

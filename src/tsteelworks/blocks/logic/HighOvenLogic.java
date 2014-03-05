@@ -281,8 +281,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             if (isBurning())
             {
                 useTime -= 3;
+                if (internalTemp > 3000)
+                    internalTemp = 3000;
                 if (internalTemp < 3000)
                     internalTemp += fuelHeatRate;
+                
             } 
             else
             {
@@ -375,7 +378,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (mixResult != null && this.validMixers())
         {
             this.removeMixers();
-            return new FluidStack(mixResult.fluid, normalResult.amount / 2);
+            // TODO: Adjust this if a problem arises (normalResult.amount / ConfigCore.ingotOutputWhatever if block is ore)
+            return new FluidStack(mixResult.fluid, normalResult.amount);
         }
         return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
@@ -448,10 +452,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     public boolean hasFuel ()
     {
-        return getItemBurnTime(inventory[3]) > 0;
+        return getFuelBurnTime(inventory[3]) > 0;
     }
     
-    public static int getItemBurnTime (ItemStack stack)
+    public static int getFuelBurnTime (ItemStack stack)
     {
         if (stack == null)
             return 0;
@@ -480,7 +484,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param stack
      * @return
      */
-    public static int getItemHeatRate (ItemStack stack)
+    public static int getFuelHeatRate (ItemStack stack)
     {
         if (stack == null)
             return 0;
@@ -494,7 +498,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
                 if (block == TSContent.charcoalBlock)
                 {
-                    return 12;
+                    return 9;
                 }
             }
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
@@ -508,7 +512,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public void updateFuelDisplay ()
     {
-      if (this.getItemBurnTime(inventory[3]) > 0)
+      if (this.getFuelBurnTime(inventory[3]) > 0)
       {
           needsUpdate = true;
           worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -529,11 +533,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 useTime = 0;
                 return;
             }
-            if (this.getItemBurnTime(inventory[3]) > 0)
+            if (this.getFuelBurnTime(inventory[3]) > 0)
             {
                 needsUpdate = true;
-                useTime = this.getItemBurnTime(inventory[3]);
-                fuelHeatRate = this.getItemHeatRate(inventory[3]);
+                useTime = this.getFuelBurnTime(inventory[3]);
+                fuelHeatRate = this.getFuelHeatRate(inventory[3]);
                 inventory[3].stackSize--;
                 if (inventory[3].stackSize <= 0)
                 {

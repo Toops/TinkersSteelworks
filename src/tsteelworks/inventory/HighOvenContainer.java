@@ -18,10 +18,10 @@ public class HighOvenContainer extends TSActiveContainer
         playerInv = inventoryplayer;
         
         /* HighOven Misc inventory */
-        addSlotToContainer(new Slot(highoven, 0, 198, 16)); // oxidizer
-        addSlotToContainer(new Slot(highoven, 1, 198, 34)); // reducer
-        addSlotToContainer(new Slot(highoven, 2, 198, 52)); // purifier
-        addSlotToContainer(new Slot(highoven, 3, 55, 52)); // fuel        
+        addSlotToContainer(new Slot(highoven, 0, 55, 16)); // oxidizer
+        addSlotToContainer(new Slot(highoven, 1, 55, 34)); // reducer
+        addSlotToContainer(new Slot(highoven, 2, 55, 52)); // purifier
+        addSlotToContainer(new Slot(highoven, 3, 126, 52)); // fuel        
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
         {
