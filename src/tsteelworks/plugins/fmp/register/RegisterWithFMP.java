@@ -1,10 +1,9 @@
 package tsteelworks.plugins.fmp.register;
 
-import codechicken.microblock.MicroMaterialRegistry.IMicroMaterial;
-
 import net.minecraft.block.Block;
 import codechicken.microblock.BlockMicroMaterial;
 import codechicken.microblock.MicroMaterialRegistry;
+import codechicken.microblock.MicroMaterialRegistry.IMicroMaterial;
 
 public class RegisterWithFMP
 {

@@ -6,27 +6,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
-import tsteelworks.TSteelworks;
 
 public class AdvancedSmelting
 {
-    /*
-     * Instance variables
-     */
     public static AdvancedSmelting                   instance        = new AdvancedSmelting();
     private final HashMap<List<Integer>, FluidStack> smeltingList    = new HashMap<List<Integer>, FluidStack>();
     private final HashMap<List<Integer>, Integer>    temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<String, List<Integer>>     mixerList       = new HashMap<String, List<Integer>>();
-    private final HashMap<FluidType, List<String>>   mixerCombos     = new HashMap<FluidType, List<String>>();
+    private final HashMap<FluidType, List>   mixerCombos     = new HashMap<FluidType, List>();
     private final HashMap<List<Integer>, ItemStack>  renderIndex     = new HashMap<List<Integer>, ItemStack>();
 
     /**
@@ -249,9 +243,9 @@ public class AdvancedSmelting
         return list.get(2);
     }
     
-    public static void addMixerCombo (FluidType fluid, ItemStack item1, ItemStack item2, ItemStack item3)
+    public static void addMixerCombo (FluidType fluidout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
     {
-        instance.mixerCombos.put(fluid, Arrays.asList(mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
+        instance.mixerCombos.put(fluidout, Arrays.asList(fluidin, mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
     }
     
     public static void getMixerCombo (FluidType fluid)
@@ -268,14 +262,14 @@ public class AdvancedSmelting
      * @param i3 Purifier
      * @return FluidType from ComboList.
      */
-    public static FluidType validateMixerCombo (ItemStack i1, ItemStack i2, ItemStack i3)
+    public static FluidType validateMixerCombo (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
         
         if (inputs.contains(null))
             return null;
         
-        for (Entry<FluidType, List<String>> e : instance.mixerCombos.entrySet()) 
+        for (Entry<FluidType, List> e : instance.mixerCombos.entrySet()) 
         {
             FluidType key = e.getKey();
             Object value = e.getValue();
@@ -374,7 +368,7 @@ public class AdvancedSmelting
     /**
      * @return The entire mixer list
      */
-    public static HashMap<FluidType, List<String>> getCombosList ()
+    public static HashMap<FluidType, List> getCombosList ()
     {
         return instance.mixerCombos;
     }

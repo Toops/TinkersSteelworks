@@ -2,7 +2,6 @@ package tsteelworks.common;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -11,13 +10,14 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
+import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.TSBaseBlock;
-import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.items.TSArmorBasic;
+import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
@@ -30,6 +30,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class TSContent implements IFuelHandler
 {
     public static Item materialsTS;
+    public static Item bookManual;
     public static Item helmetSteel;
     public static Item chestplateSteel;
     public static Item leggingsSteel;
@@ -67,6 +68,8 @@ public class TSContent implements IFuelHandler
         materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
         GameRegistry.registerItem(materialsTS, "Materials");
         TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
+        
+        bookManual = new TSManual(ConfigCore.manual);
         
         if (ConfigCore.enableSteelArmor)
         {

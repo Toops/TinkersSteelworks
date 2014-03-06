@@ -15,7 +15,7 @@ public class ConfigCore
          * Block IDs Range: 3400~3499 Item IDs Range 14500~14599 
          */
         materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)").getInt(14500);
-        
+        manual = config.getItem("Items", "Steelworks Manual ID", 14501, "Manuals (Your First High Oven, Etc)").getInt(14501);
         
         
         enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enable steel armor").getBoolean(true);
@@ -42,6 +42,7 @@ public class ConfigCore
 
     // --- Items
     public static int     materials;
+    public static int     manual;
     public static boolean enableSteelArmor;
     public static int     steelHelmet;
     public static int     steelChestplate;

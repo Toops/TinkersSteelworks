@@ -222,7 +222,7 @@ public class TSRecipes
         {
             AdvancedSmelting.addMelting(ft, new ItemStack(Item.flintAndSteel, 1, 0), tempMod, ingotLiquidValue);
         }
-        AdvancedSmelting.addMixerCombo(ft, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+        AdvancedSmelting.addMixerCombo(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
     }
     
     /**
@@ -231,7 +231,7 @@ public class TSRecipes
     public static void addSmeltingPigIron ()
     {
         final FluidType ft = FluidType.PigIron;
-        AdvancedSmelting.addMixerCombo(ft, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
+        AdvancedSmelting.addMixerCombo(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
     }
     
     public static void addSmeltingGold ()

@@ -23,7 +23,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tconstruct.TConstruct;
-import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.inventory.TSActiveContainer;
 import tsteelworks.lib.Repo;

@@ -62,6 +62,7 @@ public class TSteelworks
         content = new TSContent();
         GameRegistry.registerFuelHandler(content);
         proxy.registerRenderer();
+        proxy.readManuals();
         proxy.registerSounds();
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         // TODO: Make horses like sugar cubes :|
@@ -79,6 +80,7 @@ public class TSteelworks
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {
+        
         content.addCraftingRecipes();
         PluginController.getController().postInit();
     }

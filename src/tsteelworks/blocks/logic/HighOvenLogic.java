@@ -237,26 +237,21 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {
             if ((AdvancedSmelting.instance.getMixerType(stack) == slot) && 
                 (AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize))
+            {
                 return true;
+            }
         }
         return false;  
     }
     
     /**
      * Remove additive materials by preset chance and amount
-     * TODO: Clean this up for efficiency
      */
     void removeMixers ()
     {
-        Random rand1 = new Random();
-        Random rand2 = new Random();
-        Random rand3 = new Random();
-        if (rand1.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[0]))
-            inventory[0].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[0]);
-        if (rand2.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[1]))
-            inventory[1].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[1]);
-        if (rand3.nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[2]))
-            inventory[2].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[2]);
+        for (int i = 0; i < 3; i++)
+            if (new Random().nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]))
+                inventory[i].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
     }
     
     /* ==================== Smelting ==================== */
@@ -365,7 +360,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
     
     /**
-     * Get molten result for given item
+     * Get (post-mixed) molten result for given item
      * 
      * @param stack
      *            ItemStack
@@ -373,17 +368,28 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public FluidStack getResultFor (ItemStack stack)
     {
-        FluidStack normalResult = AdvancedSmelting.instance.getSmelteryResult(stack);
-        FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(inventory[0], inventory[1], inventory[2]);
+        FluidStack result = getNormalResultFor(stack);
+        FluidType resultType = FluidType.getFluidType(result.getFluid());
+        FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
         if (mixResult != null && this.validMixers())
         {
             this.removeMixers();
-            // TODO: Adjust this if a problem arises (normalResult.amount / ConfigCore.ingotOutputWhatever if block is ore)
-            return new FluidStack(mixResult.fluid, normalResult.amount);
+            return new FluidStack(mixResult.fluid, result.amount);
         }
-        return AdvancedSmelting.instance.getSmelteryResult(stack);
+        return result;
     }
     
+    /**
+     * Get molten result for given item
+     * 
+     * @param stack
+     *            ItemStack
+     * @return FluidStack
+     */
+    public FluidStack getNormalResultFor (ItemStack stack)
+    {
+        return AdvancedSmelting.instance.getSmelteryResult(stack);
+    }
     /* ==================== Temperatures ==================== */
     
     /**

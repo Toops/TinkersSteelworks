@@ -7,14 +7,15 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import org.w3c.dom.Document;
+
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.block.SmallFontRenderer;

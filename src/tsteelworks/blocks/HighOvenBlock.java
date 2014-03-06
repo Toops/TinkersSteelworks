@@ -16,7 +16,6 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;

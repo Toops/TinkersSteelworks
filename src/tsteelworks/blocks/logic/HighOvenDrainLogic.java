@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.library.util.IFacingLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic
