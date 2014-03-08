@@ -21,7 +21,7 @@ import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.block.SmallFontRenderer;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.client.gui.TSManualGui;
-import tsteelworks.client.pages.TSBookPage;
+import tsteelworks.client.pages.*;
 import tsteelworks.common.TSCommonProxy;
 
 public class TSClientProxy extends TSCommonProxy
@@ -32,7 +32,7 @@ public class TSClientProxy extends TSCommonProxy
     @Override
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        if (ID == highOvenGuiID)
+        if (ID == highovenGuiID)
             return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
         if (ID == manualGuiID)
         {
@@ -49,12 +49,12 @@ public class TSClientProxy extends TSCommonProxy
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
     }
     
-    public static Document bookHighoOen;
+    public static Document highovenXml;
 
     public void readManuals ()
     {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        bookHighoOen = readManual("/assets/tsteelworks/manuals/highoven.xml", dbFactory);
+        highovenXml = readManual("/assets/tsteelworks/manuals/highoven.xml", dbFactory);
         initManualIcons();
         initManualRecipes();
         initManualPages();
@@ -101,7 +101,15 @@ public class TSClientProxy extends TSCommonProxy
 
     void initManualPages ()
     {
-        
+        TSClientProxy.registerManualPage("picture", TSPicturePage.class);
+        TSClientProxy.registerManualPage("text", TSTextPage.class);
+        TSClientProxy.registerManualPage("intro", TSTextPage.class);
+        TSClientProxy.registerManualPage("sectionpage", TSSectionPage.class);
+        TSClientProxy.registerManualPage("intro", TSTitlePage.class);
+        TSClientProxy.registerManualPage("contents", TSContentsTablePage.class);
+        TSClientProxy.registerManualPage("sidebar", TSSidebarPage.class);
+
+        TSClientProxy.registerManualPage("blank", TSBlankPage.class);
     }
     
     public static Document getManualFromStack (ItemStack stack)
@@ -109,7 +117,7 @@ public class TSClientProxy extends TSCommonProxy
         switch (stack.getItemDamage())
         {
         case 0:
-            return bookHighoOen;
+            return highovenXml;
         }
 
         return null;

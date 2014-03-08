@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 
 public class TSManual extends TSCraftingItem
 {
-    // TODO: Finish this.
     static String[] name = new String[] { "highoven" };
     static String[] textureName = new String[] { "tinkerbook_highoven" };
 

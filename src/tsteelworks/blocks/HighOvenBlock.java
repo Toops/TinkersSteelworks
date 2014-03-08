@@ -130,12 +130,7 @@ public class HighOvenBlock extends TSInventoryBlock
         }
         else if (logic instanceof IMasterLogic)
         {
-            boolean active = false;
-            if (world.isBlockIndirectlyGettingPowered(x, y, z))
-            {
-                active = true;
-            }
-            ((HighOvenLogic) logic).setRedstoneActive(active);
+            ((HighOvenLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
         }
     }
@@ -154,7 +149,7 @@ public class HighOvenBlock extends TSInventoryBlock
     @Override
     public Integer getGui (World world, int x, int y, int z, EntityPlayer entityplayer)
     {
-        return TSteelworks.proxy.highOvenGuiID;
+        return TSteelworks.proxy.highovenGuiID;
     }
 
     @Override
@@ -301,7 +296,7 @@ public class HighOvenBlock extends TSInventoryBlock
         }
     }
     
- // Currently unused
+    // Currently unused
     public int getIndirectPowerLevelTo (World world, int x, int y, int z, int side)
     {
         if (world.isBlockNormalCube(x, y, z))
@@ -324,7 +319,8 @@ public class HighOvenBlock extends TSInventoryBlock
 
     public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
     {
-        return true;
+        final TileEntity logic = world.getBlockTileEntity(x, y, z);
+        return (logic instanceof IMasterLogic);
     }
 
     static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);

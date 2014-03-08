@@ -731,8 +731,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void checkValidStructure (int x, int y, int z)
     {
         int checkLayers = 0;
-        tempValidStructure = false;
-        structureCapped = false;
+//        if (!validStructure)
+//        {
+//            tempValidStructure = false;
+//            structureCapped = false;
+//        }
         if (checkSameLevel(x, y, z))
         {
             checkLayers++;
@@ -910,13 +913,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             for (int zPos = z - 1; zPos <= (z + 1); zPos++)
                 if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1))
                 {
-                    topBricks++;
+                    topBricks += checkBricks(xPos, y, zPos);
                 }
         }
-        if (topBricks == 9)
-        {
-            structureCapped = true;
-        }
+        structureCapped = (topBricks == 9);
         return count;
     }
 
@@ -939,16 +939,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
             for (int zPos = z - 1; zPos <= (z + 1); zPos++)
-                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 2))
+                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1))
                 {
-                    bottomBricks++;
+                    bottomBricks += checkBricks(xPos, y, zPos);;
                 }
         }
-        if (bottomBricks == 9)
-        {
-            tempValidStructure = true;
+        tempValidStructure = (bottomBricks == 9);
+        if (tempValidStructure)
             centerPos = new CoordTuple(x, y + 1, z);
-        }
         return count;
     }
 
