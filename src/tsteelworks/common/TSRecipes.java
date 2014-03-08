@@ -16,6 +16,7 @@ import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.Smeltery;
 import tconstruct.util.RecipeRemover;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -132,6 +133,14 @@ public class TSRecipes
             'T', rod, 
             'R', Item.redstone, //"dustRedstone", 
             'W', "plankWood"));
+    }
+    
+    public static void addAlloyRecipesForSmeltery ()
+    {
+        // Fixed that for ya, mDiyo.
+        Smeltery.addAlloyMixing(new FluidStack(TContent.moltenObsidianFluid, 1), 
+                                new FluidStack(FluidRegistry.LAVA, 1),
+                                new FluidStack(FluidRegistry.WATER, 1));  
     }
     
     public static void addOreDictionarySmelteryRecipes ()
@@ -277,7 +286,7 @@ public class TSRecipes
         switch (type)
         {
             case Water:         return 10;
-            case Iron:          return 604;
+            case Iron:          return 913;
             case Gold:          return 663;
             case Tin:           return -163;
             case Copper:        return 534;

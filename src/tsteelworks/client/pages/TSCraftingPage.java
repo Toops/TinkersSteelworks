@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL12;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import tconstruct.library.client.TConstructClientRegistry;
+import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSCraftingPage extends TSBookPage
 {
@@ -26,7 +26,7 @@ public class TSCraftingPage extends TSBookPage
 
         nodes = element.getElementsByTagName("name");
         if (nodes != null)
-            icons = TConstructClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
+            icons = TSClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
 
         nodes = element.getElementsByTagName("size");
         if (nodes != null)

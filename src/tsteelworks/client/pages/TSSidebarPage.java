@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL12;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import tconstruct.library.client.TConstructClientRegistry;
+import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSSidebarPage extends TSBookPage
 {
@@ -30,7 +30,7 @@ public class TSSidebarPage extends TSBookPage
         {
             NodeList children = nodes.item(i).getChildNodes();
             iconText[i] = children.item(1).getTextContent();
-            icons[i] = TConstructClientRegistry.getManualIcon(children.item(3).getTextContent());
+            icons[i] = TSClientRegistry.getManualIcon(children.item(3).getTextContent());
         }
     }
 

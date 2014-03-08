@@ -3,14 +3,38 @@
 <book>
 <page type="intro">
 <text>          Steelworking and You
-     A beginner's guide to Steelcraft
+      A beginner's guide to Steelcraft
 
          By The Tinkerers' Society</text>
 </page>
 
+<page type="contents">
+<text>Table of Contents</text>
+<link>
+ <text>Forward</text>
+ <icon>highovenbook</icon>
+ <jump>3</jump>
+</link>
+<link>
+ <text>Construction</text>
+ <icon>scorchedbrick</icon>
+ <jump>6</jump>
+</link>
+<link>
+ <text>Usage</text>
+ <icon>highoven</icon>
+ <jump>8</jump>
+</link>
+<link>
+ <text>Recipes</text>
+ <icon>workbench</icon>
+ <jump>10</jump>
+</link>
+</page>
+
 <page type="text">
 <text>-Forward-
-To preserve the sacred art of steelwork, we have written this book in a special invisible ink which is activated on a factor of time. This will help ensure that the people of the age have reached a level of social and technological maturity may harmoniously benefit from the knowledge contained herein.
+To preserve the sacred art of steelwork, we have written this book in a special invisible ink which is activated on a factor of time. This will help ensure that the people of the age have reached a level of social and technological maturity, so that they may harmoniously benefit from the knowledge contained herein.
 
 The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive cave dweller. Heed my words dear reader: attentive caution must exercised in its production. Steelworking is an art and a hallmark of the master tinkerer. Be your intentions noble and hands deft!
 
@@ -19,8 +43,113 @@ The discovery of steel opens doors to a vast and brave new world of marvels inco
 </page>
 
 <page type="text">
-<text>Welcome to the world of steelwork. Within these pages you will be presented the secrets of processing metals and non-metal materials into refined substances with much more substantial traits over their mundane predecessors. Just remember, experimentation is key!
+<text>Welcome to the world of steelwork. Within these pages you will be presented the secrets of processing metals and non-metal materials into refined substances with much more substantial traits over their mundane predecessors. Just remember: experimentation is key!
 
-The High Oven will be your doorway into this process. It is somewhat smaller than the Smeltery you are accustomed to, yet, both the method for its construction and general operation are very similar.</text>
+The High Oven will be your threshold into this process. It is smaller than the Smeltery you are accustomed to, yet, both the method for its construction and general operation are very similar.</text>
+</page>
+
+<page type="text">
+<text>Here are a few tips working with the High Oven:
+
+* Like the Smeltery, the High Oven functions as a liquid tank. It is capable of melting metals and more. Unlike the Smeltery, it cannot contain multiple liquids or mix metals into alloys.
+
+* Mixing materials is key! As time goes on, you will become familiar with oxidizers, reducers, and purifiers. These are properties of materials which lead may to robust crystalline structures within your metalworking.
+
+* The High Oven can be as small as three blocks high, or as high as eight. For each layer between the top and bottom layers, more space will be available to cook items within.</text>
+</page>
+
+<page type="sidebar">
+<text>The High Oven is a multi-block structure. You will need a Smeltery and the following materials to get started.</text>
+<item>
+ <text>1 High Oven Controller</text>
+ <icon>highoven</icon>
+</item>
+<item>
+ <text>Any combination of 24 Scorched Bricks...</text>
+ <icon>scorchedbrick</icon>
+</item>
+<item>
+ <text>...or High Oven Drains</text>
+ <icon>highovendrain</icon>
+</item>
+<item>
+ <text>1 Faucet</text>
+ <icon>faucet</icon>
+</item>
+</page>
+
+<page type="text">
+<text>To begin, lay a 3x3 bed of scorched bricks. Continue laying bricks in a similar fashion upward, but leave the center hollow. Cap it off with one additional 3x3 layer, just like the bottom. While there are no vertical limits to the size of your High Oven, it is pointless to build it beyond eight blocks in height.
+
+Place the Controller in the middle of any layer you desire. You may place drains anywhere within the structure. 
+
+The controller must have an active redstone signal to burn fuel. Simply placing a lever anywhere next to or on the controller will do the trick.</text>
+</page>
+
+<page type="picture">
+<text>A Working High Oven</text>
+<location>tsteelworks:manuals/highovensmall.png</location>
+</page>
+
+<page type="text">
+<text>The High Oven should only be fuelled with charcoal. Charcoal is a purified fuel and thus does not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease.
+
+The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.
+
+To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.</text>
+</page>
+
+<page type="sidebar">
+<text>Crystalline structures may be formed within your metals when raw materials are mixed into the metal. The raw materials may or may not be entirely consumed.</text>
+<item>
+ <text>Cast Steel: smelt Iron(1) with Gunpowder(1), Redstone(1), and Sand(2)</text>
+ <icon>steelingot</icon>
+</item>
+<item>
+ <text>Pig Iron: smelt Iron with ...(garbled text)... </text>
+ <icon>pigironingot</icon>
+</item>
+</page>
+
+<page type="blockcast">
+<text>Scorched Brick</text>
+<recipe>scorchedbrickcasting</recipe>
+</page>
+
+<page type="blockcast">
+<text>Scorched Bricks</text>
+<recipe>scorchedbrickblockcasting</recipe>
+</page>
+
+<page type="crafting">
+<text>Scorched Bricks</text>
+<recipe>
+ <name>scorchedbrickblock</name>
+ <size>two</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>High Oven Controller</text>
+<recipe>
+ <name>highovencontroller</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>High Oven Drain</text>
+<recipe>
+ <name>highovenydrain</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>Block of Charcoal</text>
+<recipe>
+ <name>charcoalblock</name>
+ <size>three</size>
+</recipe>
 </page>
 </book>

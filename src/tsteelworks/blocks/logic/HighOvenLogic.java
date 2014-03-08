@@ -37,15 +37,15 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {
     public boolean               validStructure;
-    public boolean               tempValidStructure;
-    public boolean               structureCapped;
+    boolean                      structureHasBottom;
+    boolean                      structureHasTop;
     boolean                      redstoneActivated;
     byte                         direction;
     int                          internalTemp;
     int                          fuelHeatRate;
     int                          internalCoolDownRate;
-    public int                   useTime;
-    boolean                      inUse;
+    public int                   fuelBurnTime;
+    boolean                      isMeltingItems;
     public CoordTuple            centerPos;
     public int[]                 activeTemps;
     public int[]                 meltingTemps;
@@ -245,7 +245,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
     
     /**
-     * Remove additive materials by preset chance and amount
+     * Remove additive materials by preset vs random chance and amount
      */
     void removeMixers ()
     {
@@ -275,7 +275,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             if (isBurning())
             {
-                useTime -= 3;
+                fuelBurnTime -= 3;
                 if (internalTemp > 3000)
                     internalTemp = 3000;
                 if (internalTemp < 3000)
@@ -289,7 +289,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 if (internalTemp < 20)
                     internalTemp = 20;
             }
-            if (validStructure && (useTime <= 0))
+            if (validStructure && (fuelBurnTime <= 0))
             {
                 updateFuelGague();
             }
@@ -355,7 +355,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     activeTemps[i] = 20;
                 }
             }
-            inUse = hasUse;
+            isMeltingItems = hasUse;
         }
     }
     
@@ -429,7 +429,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     void updateTemperatures ()
     {
-        inUse = true;
+        isMeltingItems = true;
         for (int i = 4; i < layers + 4; i += 1)
         {
             meltingTemps[i] = AdvancedSmelting.instance.getLiquifyTemperature(inventory[i]);
@@ -445,7 +445,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int getScaledFuelGague (int scale)
     {
-        int ret = useTime / scale;
+        int ret = fuelBurnTime / scale;
         if (ret < 1)
             ret = 1;
         return ret;
@@ -453,7 +453,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     public boolean isBurning ()
     {
-        return useTime > 0;
+        return fuelBurnTime > 0;
     }
     
     public boolean hasFuel ()
@@ -536,13 +536,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {   
             if (inventory[3] == null)
             {
-                useTime = 0;
+                fuelBurnTime = 0;
                 return;
             }
             if (this.getFuelBurnTime(inventory[3]) > 0)
             {
                 needsUpdate = true;
-                useTime = this.getFuelBurnTime(inventory[3]);
+                fuelBurnTime = this.getFuelBurnTime(inventory[3]);
                 fuelHeatRate = this.getFuelHeatRate(inventory[3]);
                 inventory[3].stackSize--;
                 if (inventory[3].stackSize <= 0)
@@ -731,19 +731,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void checkValidStructure (int x, int y, int z)
     {
         int checkLayers = 0;
-//        if (!validStructure)
-//        {
-//            tempValidStructure = false;
-//            structureCapped = false;
-//        }
         if (checkSameLevel(x, y, z))
         {
             checkLayers++;
             checkLayers += recurseStructureUp(x, y + 1, z, 0);
             checkLayers += recurseStructureDown(x, y - 1, z, 0);
         }
-        if ((structureCapped != tempValidStructure != validStructure) || (checkLayers != layers))
-            if (tempValidStructure && structureCapped)
+        if ((structureHasTop != structureHasBottom != validStructure) || (checkLayers != layers))
+            if (structureHasBottom && structureHasTop)
             {
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -916,7 +911,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     topBricks += checkBricks(xPos, y, zPos);
                 }
         }
-        structureCapped = (topBricks == 9);
+        structureHasTop = (topBricks == 9);
         return count;
     }
 
@@ -944,8 +939,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     bottomBricks += checkBricks(xPos, y, zPos);;
                 }
         }
-        tempValidStructure = (bottomBricks == 9);
-        if (tempValidStructure)
+        structureHasBottom = (bottomBricks == 9);
+        if (structureHasBottom)
             centerPos = new CoordTuple(x, y + 1, z);
         return count;
     }
@@ -1169,7 +1164,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         validStructure = tags.getBoolean("ValidStructure");
         redstoneActivated = tags.getBoolean("RedstoneActivated");
         internalTemp = tags.getInteger("InternalTemp");
-        inUse = tags.getBoolean("InUse");
+        isMeltingItems = tags.getBoolean("InUse");
         final int[] center = tags.getIntArray("CenterPos");
         if (center.length > 2)
         {
@@ -1180,7 +1175,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             centerPos = new CoordTuple(xCoord, yCoord, zCoord);
         }
         direction = tags.getByte("Direction");
-        useTime = tags.getInteger("UseTime");
+        fuelBurnTime = tags.getInteger("UseTime");
         fuelHeatRate = tags.getInteger("FuelHeatRate");
         currentLiquid = tags.getInteger("CurrentLiquid");
         maxLiquid = tags.getInteger("MaxLiquid");
@@ -1204,7 +1199,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         tags.setBoolean("ValidStructure", validStructure);
         tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("InternalTemp", internalTemp);
-        tags.setBoolean("InUse", inUse);
+        tags.setBoolean("InUse", isMeltingItems);
         int[] center = new int[3];
         if (centerPos == null)
         {
@@ -1216,7 +1211,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
         tags.setIntArray("CenterPos", center);
         tags.setByte("Direction", direction);
-        tags.setInteger("UseTime", useTime);
+        tags.setInteger("UseTime", fuelBurnTime);
         tags.setInteger("FuelHeatRate", fuelHeatRate);
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);

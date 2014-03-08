@@ -54,7 +54,7 @@ public class HighOvenContainer extends TSActiveContainer
     {
         if (id == 0)
         {
-            logic.useTime = value / 12;
+            logic.fuelBurnTime = value / 12;
         }
     }
 

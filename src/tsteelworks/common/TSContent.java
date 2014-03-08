@@ -149,6 +149,7 @@ public class TSContent implements IFuelHandler
         TSRecipes.addSmeltingPigIron();
         TSRecipes.addSmeltingGold();
         TSRecipes.addSmeltingMisc();
+        TSRecipes.addAlloyRecipesForSmeltery();
         TSRecipes.addRecipesScorchedBrickMaterial();
         TSRecipes.addRecipesHighOvenComponents();
         TSRecipes.addRecipesVanillaStorageBlocks();
