@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.common.TContent;
@@ -48,15 +49,23 @@ public class TSRecipes
     {
         LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();
         LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
-        
         final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
         final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
-        
         final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4);
         final FluidStack fluidStoneChunk = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue);
-        
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
+    }
+    
+    /**
+     * Manual recipes
+     */
+    public static void addRecipesManuals ()
+    {
+        LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
+        final ItemStack manual1 = new ItemStack(TSContent.bookManual, 1, 0);
+        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4);
+        tableCasting.addCastingRecipe(manual1, fluidStoneMinor, new ItemStack(TContent.manualBook, 1, 0), true, 50);
     }
     
     /**
@@ -123,6 +132,7 @@ public class TSRecipes
                                 'b', "blockSteel"));
     }
     
+    // FIXME: this?
     public static void changeRecipePiston ()
     {
         final ItemStack rod = new ItemStack(TContent.toughRod, 1, 2);
@@ -144,7 +154,7 @@ public class TSRecipes
                                     new FluidStack(FluidRegistry.WATER, 1));  
     }
     
-    public static void addOreDictionarySmelteryRecipes ()
+    public static void addOreDictionarySmeltingRecipes ()
     {
         List<FluidType> exceptions = Arrays.asList(new FluidType[] { FluidType.Water, FluidType.Stone, FluidType.Ender, FluidType.Glass, FluidType.Slime, FluidType.Obsidian });
         for (FluidType ft : FluidType.values())
@@ -176,6 +186,7 @@ public class TSRecipes
             AdvancedSmelting.addDictionaryMelting("compressedCobblestone" + i + "x", FluidType.Stone, getFluidTempMod(FluidType.Stone), ingotLiquidValue / 18 * (9 ^ i));
         }
         AdvancedSmelting.addDictionaryMelting("compressedSand1x", FluidType.Glass, getFluidTempMod(FluidType.Glass), FluidContainerRegistry.BUCKET_VOLUME * 9);
+    
     }
     
     /**

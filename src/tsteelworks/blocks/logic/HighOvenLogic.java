@@ -245,7 +245,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     /**
      * Remove additive materials by preset vs random chance and amount
-     * WHAT: For some reason, we don't like for loops here?
      */
     private void removeMixers ()
     {
@@ -255,7 +254,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             if (new Random().nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]))
                 if (inventory[i].stackSize >= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]))
                     inventory[i].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
-                if (inventory[i].stackSize == 0)
+                if (inventory[i] != null && inventory[i].stackSize == 0)
                     inventory[i] = null;
         }
     }

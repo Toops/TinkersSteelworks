@@ -1,14 +1,19 @@
 package tsteelworks.blocks;
 
+import static net.minecraftforge.common.ForgeDirection.UP;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockStep;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +26,7 @@ import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
+import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.lib.Repo;
@@ -92,6 +98,8 @@ public class HighOvenBlock extends TSInventoryBlock
                 return new HighOvenLogic();
             case 1:
                 return new HighOvenDrainLogic();
+            case 12:
+                return new HighOvenDuctLogic();
         }
         return new TSMultiServantLogic();
     }
@@ -115,7 +123,7 @@ public class HighOvenBlock extends TSInventoryBlock
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
-        for (int iter = 0; iter < 12; iter++)
+        for (int iter = 0; iter < 13; iter++)
             if (iter != 3)
                 list.add(new ItemStack(id, 1, iter));
     }
@@ -163,7 +171,7 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         final String[] textureNames = { "highoven_side", "highoven_inactive", "highoven_active", "drain_side", "drain_out",
             "drain_basin", "scorchedbrick", "scorchedstone", "scorchedcobble", "scorchedpaver", "scorchedbrickcracked", 
-            "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper" };
+            "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper", "duct_out" };
         if (!texturePrefix.equals(""))
         {
             for (int i = 0; i < textureNames.length; i++)
@@ -179,7 +187,7 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         if (meta < 2)
         {
-            final int sideTex = side == 3 ? 1 : 0;
+            final int sideTex = side == 4 ? 1 : 0;
             return icons[sideTex + (meta * 3)];
         }
         else if (meta == 2)
@@ -190,6 +198,11 @@ public class HighOvenBlock extends TSInventoryBlock
         {
             if (side == 0 || side == 1)
                 return icons[9];
+        }
+        else if (meta == 12)
+        {
+            final int sideTex = side == 4 ? 15 : 6;
+            return icons[sideTex];
         }
         return icons[3 + meta];
     }
@@ -229,6 +242,15 @@ public class HighOvenBlock extends TSInventoryBlock
         {
             if (side == 0 || side == 1)
                 return icons[9];
+        }
+        if (meta == 12)
+        {
+            if (side == direction)
+                return icons[15];
+            else if ((side / 2) == (direction / 2))
+                return icons[4];
+            else
+                return icons[3];
         }
         return icons[3 + meta];
     }
@@ -282,6 +304,12 @@ public class HighOvenBlock extends TSInventoryBlock
     public int getLightValue (IBlockAccess world, int x, int y, int z)
     {
         return !isActive(world, x, y, z) ? 0 : 9;
+    }
+    
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z)
+    {
+        return false;
     }
     
     @Override

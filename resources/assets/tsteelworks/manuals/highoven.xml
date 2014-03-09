@@ -26,9 +26,14 @@
  <jump>8</jump>
 </link>
 <link>
+ <text>Mixing</text>
+ <icon>gunpowderdust</icon>
+ <jump>10</jump>
+</link>
+<link>
  <text>Recipes</text>
  <icon>workbench</icon>
- <jump>10</jump>
+ <jump>13</jump>
 </link>
 </page>
 
@@ -38,8 +43,8 @@ To preserve the sacred art of steelwork, we have written this book in a special 
 
 The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive cave dweller. Heed my words dear reader: attentive caution must exercised in its production. Steelworking is an art and a hallmark of the master tinkerer. Be your intentions noble and hands deft!
 
- -Slags O'Molten
- Scribemaster of the Tinkerers' Society</text>
+        -Slags O'Molten
+        Scribemaster of the Tinkerers' Society</text>
 </page>
 
 <page type="text">
@@ -92,15 +97,49 @@ The controller must have an active redstone signal to burn fuel. Simply placing 
 </page>
 
 <page type="text">
-<text>The High Oven should only be fuelled with charcoal. Charcoal is a purified fuel and thus does not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease.
+<text>The High Oven should only be fuelled with charcoal. Charcoal is a purified fuel and thus does not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.
 
-The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.
-
-To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.</text>
+The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.</text>
 </page>
 
 <page type="sidebar">
-<text>Crystalline structures may be formed within your metals when raw materials are mixed into the metal. The raw materials may or may not be entirely consumed.</text>
+<text>Known Oxidizers include:</text>
+<item>
+ <text>Gunpowder - 33% Dissipation </text>
+ <icon>gunpowderdust</icon>
+</item>
+<item>
+ <text>Sugar - 62% Dissipation</text>
+ <icon>sugardust</icon>
+</item>
+</page>
+
+<page type="sidebar">
+<text>Known Reducers include:</text>
+<item>
+ <text>Redstone Dust - 65% Dissipation</text>
+ <icon>redstonedust</icon>
+</item>
+<item>
+ <text>Emerald - 30% Dissipation</text>
+ <icon>emeraldgem</icon>
+</item>
+</page>
+
+<page type="sidebar">
+<text>Known Purifiers include:</text>
+<item>
+ <text>Sand - 100% Dissipation</text>
+ <icon>sandblock</icon>
+</item>
+<item>
+ <text>H$m#o@e - -^% ...(garbled text)...</text>
+ <icon>spongeblock</icon>
+</item>
+</page>
+
+<page type="sidebar">
+<text>Crystalline structures may be formed within your metals when raw materials are mixed into the metal. The raw materials may or may not be entirely consumed on a basis of their dissipation property.</text>
 <item>
  <text>Cast Steel: smelt Iron(1) with Gunpowder(1), Redstone(1), and Sand(2)</text>
  <icon>steelingot</icon>

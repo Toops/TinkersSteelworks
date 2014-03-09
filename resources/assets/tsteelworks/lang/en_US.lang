@@ -28,10 +28,17 @@ HighOven.Brick.Cracked.name=Cracked Scorched Bricks
 HighOven.Road.name=Scorched Road
 HighOven.Brick.Fancy.name=Fancy Scorched Bricks
 HighOven.Brick.Square.name=Chiseled Scorched Bricks
-HighOven.Brick.Creeper.name=Chiseled Scorched Bricks
+HighOven.Brick.Creeper.name=Chiseled Creepy Bricks
+HighOven.Duct.name=High Oven Duct
 
-highoven.highoven.tooltip=Can't forget this!
+highoven.highoven.tooltip=The main component for the High Oven
 highoven.drain.tooltip1=Works both as input and output for
 highoven.drain.tooltip2=fluids in the High Oven
+highoven.duct.tooltip1=Works both as input and output for
+highoven.duct.tooltip2=items in the High Oven
 highoven.brick.tooltip1=High Oven structure block
 highoven.brick.tooltip2=(Safe for decoration)
+dustblock.gunpowder.tooltip=Fire in the hole!
+dustblock.sugar.tooltip=How sweet!
+
+manual.steelworks.tooltip1=By: The Tinkerers' Society

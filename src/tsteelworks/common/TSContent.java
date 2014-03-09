@@ -14,6 +14,7 @@ import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.TSBaseBlock;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
+import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.items.TSArmorBasic;
@@ -96,6 +97,7 @@ public class TSContent implements IFuelHandler
         GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
         GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
         GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
+        GameRegistry.registerTileEntity(HighOvenDuctLogic.class, "TSteelworks.HighOvenDuct");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
         /* Raw Vanilla Materials */
         charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] {"charcoal_block"}).setUnlocalizedName("tsteelworks.blocks.charcoal");
@@ -132,8 +134,8 @@ public class TSContent implements IFuelHandler
         AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1,  65);
         AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 100);
         // Pig Iron
-        AdvancedSmelting.addMixer(new ItemStack(Item.sugar,         1, 0), 0,  33);
-        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1,  90);
+        AdvancedSmelting.addMixer(new ItemStack(Item.sugar,         1, 0), 0,  62);
+        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1,  30);
         AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
     }
     
@@ -142,7 +144,7 @@ public class TSContent implements IFuelHandler
      */
     public void addCraftingRecipes ()
     {
-        TSRecipes.addOreDictionarySmelteryRecipes();
+        TSRecipes.addOreDictionarySmeltingRecipes();
         TSRecipes.addSmeltingIron();
         TSRecipes.addSmeltingSteel();
         TSRecipes.addSmeltingPigIron();
@@ -150,6 +152,7 @@ public class TSContent implements IFuelHandler
         TSRecipes.addSmeltingMisc();
         TSRecipes.addAlloyRecipesForSmeltery();
         TSRecipes.addRecipesScorchedBrickMaterial();
+        TSRecipes.addRecipesManuals();
         TSRecipes.addRecipesHighOvenComponents();
         TSRecipes.addRecipesVanillaStorageBlocks();
         changeCraftingRecipes();

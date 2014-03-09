@@ -1,8 +1,13 @@
 package tsteelworks.items;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import tsteelworks.TSteelworks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 
@@ -24,4 +29,14 @@ public class TSManual extends TSCraftingItem
         return stack;
     }
     
+    @SideOnly(Side.CLIENT)
+    public void addInformation (ItemStack stack, EntityPlayer player, List list, boolean par4)
+    {
+        switch (stack.getItemDamage())
+        {
+        case 0:
+            list.add("\u00a7o"+StatCollector.translateToLocal("manual.steelworks.tooltip1"));
+            break;
+        }
+    }
 }

@@ -105,6 +105,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
         TSClientRegistry.registerManualIcon("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2));
         TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
+        TSClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Item.emerald));
         TSClientRegistry.registerManualIcon("gunpowderdust", new ItemStack(Item.gunpowder));
         TSClientRegistry.registerManualIcon("sugardust", new ItemStack(Item.sugar));
         TSClientRegistry.registerManualIcon("charcoal", new ItemStack(Item.coal, 1, 1));
@@ -112,6 +113,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("sandblock", new ItemStack(Block.sand));
         TSClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
         TSClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
+        TSClientRegistry.registerManualIcon("spongeblock", new ItemStack(Block.sponge));
         
         // TCON
         TSClientRegistry.registerManualIcon("smelterybook", TConstructClientRegistry.getManualIcon("smelterybook"));
