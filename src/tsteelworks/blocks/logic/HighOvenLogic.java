@@ -29,6 +29,7 @@ import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.blocks.TSInventoryLogic;
@@ -232,26 +233,31 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public boolean hasMixers(int slot)
     {
-        ItemStack stack = this.inventory[slot];
+        ItemStack stack = inventory[slot];
         if (stack != null)
         {
             if ((AdvancedSmelting.instance.getMixerType(stack) == slot) && 
                 (AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize))
-            {
                 return true;
-            }
         }
         return false;  
     }
     
     /**
      * Remove additive materials by preset vs random chance and amount
+     * WHAT: For some reason, we don't like for loops here?
      */
-    void removeMixers ()
+    private void removeMixers ()
     {
         for (int i = 0; i < 3; i++)
+        {
+        if (inventory[i] != null)
             if (new Random().nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]))
-                inventory[i].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
+                if (inventory[i].stackSize >= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]))
+                    inventory[i].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
+                if (inventory[i].stackSize == 0)
+                    inventory[i] = null;
+        }
     }
     
     /* ==================== Smelting ==================== */
@@ -333,17 +339,18 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     // Liquify metals if the temp has reached the melting point
                     else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
                     {
-                        final FluidStack result = getResultFor(inventory[i]);
+                        FluidStack result = getResultFor(inventory[i]);
                         if (result != null) 
                         {
-                            
                             if (addMoltenMetal(result, false))
                             {
                                 if (inventory[i].stackSize >= 2)
                                     inventory[i].stackSize--;
                                 else
                                     inventory[i] = null;
+                                
                                 activeTemps[i] = 20;
+                                removeMixers();
                                 addMoltenMetal(result, true);
                                 onInventoryChanged();
                             }
@@ -373,7 +380,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
         if (mixResult != null && this.validMixers())
         {
-            this.removeMixers();
             return new FluidStack(mixResult.fluid, result.amount);
         }
         return result;
@@ -410,7 +416,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int getTempForSlot (int slot)
     {
-        return (this.validOreSlot(slot)) ? activeTemps[slot] : 20;
+        return (validOreSlot(slot)) ? activeTemps[slot] : 20;
     }
 
     /**
@@ -421,7 +427,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int getMeltingPointForSlot (int slot)
     {
-        return (this.validOreSlot(slot)) ? meltingTemps[slot] : 20;
+        return (validOreSlot(slot)) ? meltingTemps[slot] : 20;
     }
     
     /**

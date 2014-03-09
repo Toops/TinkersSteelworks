@@ -70,6 +70,7 @@ public class TSContent implements IFuelHandler
         TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
         
         bookManual = new TSManual(ConfigCore.manual);
+        GameRegistry.registerItem(bookManual, "tsteelManual");
         
         if (ConfigCore.enableSteelArmor)
         {
@@ -118,9 +119,7 @@ public class TSContent implements IFuelHandler
     {
         int oreId = OreDictionary.getOreID(is);
         if (oreId == -1)
-        {
             OreDictionary.registerOre(oreName, is);
-        }
     }
     
     /**
@@ -172,15 +171,11 @@ public class TSContent implements IFuelHandler
     public int getBurnTime (ItemStack fuel)
     {
         int i = fuel.getItem().itemID;
-
         if (fuel.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
         {
             Block block = Block.blocksList[i];
-
             if (block == TSContent.charcoalBlock)
-            {
                 return 16000;
-            }
         }
         return 0;
     }

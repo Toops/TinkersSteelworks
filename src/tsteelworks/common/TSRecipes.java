@@ -138,9 +138,10 @@ public class TSRecipes
     public static void addAlloyRecipesForSmeltery ()
     {
         // Fixed that for ya, mDiyo.
-        Smeltery.addAlloyMixing(new FluidStack(TContent.moltenObsidianFluid, 1), 
-                                new FluidStack(FluidRegistry.LAVA, 1),
-                                new FluidStack(FluidRegistry.WATER, 1));  
+        if (ConfigCore.smelteryObsidianAlloy)
+            Smeltery.addAlloyMixing(new FluidStack(TContent.moltenObsidianFluid, 1), 
+                                    new FluidStack(FluidRegistry.LAVA, 1),
+                                    new FluidStack(FluidRegistry.WATER, 1));  
     }
     
     public static void addOreDictionarySmelteryRecipes ()
