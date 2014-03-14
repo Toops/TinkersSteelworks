@@ -85,6 +85,16 @@ public class TSteelworks
         PluginController.getController().postInit();
     }
 
+    public static void loginfo (String desc, String text)
+    {
+        logger.info(desc + ": " + text);
+    }
+    
+    public static void loginfo (String desc, int value)
+    {
+        logger.info(desc + ": " + value);
+    }
+    
     public static TSContent      content;
     
 }

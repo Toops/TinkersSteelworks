@@ -113,7 +113,6 @@ public class TSContent implements IFuelHandler
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
         
-        ensureOreIsRegistered("blockCobble", new ItemStack(Block.cobblestone));
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
     }
     

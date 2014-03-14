@@ -59,7 +59,6 @@ public class TSPacketHandler implements IPacketHandler
         try
         {
             packetID = inputStream.readByte();
-            TSteelworks.logger.info("Packet ID: " + packetID);
             if (packetID == 1) // High Oven
             {
                 final int dimension = inputStream.readInt();

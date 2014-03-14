@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -21,8 +22,10 @@ import org.w3c.dom.Document;
 import tconstruct.common.TContent;
 import tconstruct.library.client.TConstructClientRegistry;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.block.SmallFontRenderer;
+import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.client.gui.TSManualGui;
 import tsteelworks.client.pages.TSBlankPage;
@@ -53,6 +56,8 @@ public class TSClientProxy extends TSCommonProxy
     {
         if (ID == highovenGuiID)
             return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
+        if (ID == highovenDuctGuiID)
+            return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
         if (ID == manualGuiID)
         {
             ItemStack stack = player.getCurrentEquippedItem();

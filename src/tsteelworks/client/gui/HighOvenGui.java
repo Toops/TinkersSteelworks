@@ -51,7 +51,7 @@ public class HighOvenGui extends TSContainerGui
     {
         super.drawScreen(mouseX, mouseY, par3);
     }
-
+    
     @Override
     protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY)
     {
@@ -64,9 +64,9 @@ public class HighOvenGui extends TSContainerGui
         
         fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2 + 10, 5, 0x404040);
         
-        fontRenderer.drawString(oxiCaption, this.xSize / 2 - 67, 20, 0x404040);
-        fontRenderer.drawString(redCaption, this.xSize / 2 - 67, 38, 0x404040);
-        fontRenderer.drawString(purCaption, this.xSize / 2 - 67, 56, 0x404040);
+//        fontRenderer.drawString(oxiCaption, this.xSize / 2 - 67, 20, 0x404040);
+//        fontRenderer.drawString(redCaption, this.xSize / 2 - 67, 38, 0x404040);
+//        fontRenderer.drawString(purCaption, this.xSize / 2 - 67, 56, 0x404040);
         
         // Player Inventory Caption
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 56, (ySize - 96) + 2, 0x404040);
@@ -103,7 +103,8 @@ public class HighOvenGui extends TSContainerGui
         }
     }
 
-    private static final ResourceLocation background     = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
+    private static final ResourceLocation background = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
+    private static final ResourceLocation icons      = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
 
     @Override
     protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)
@@ -191,6 +192,19 @@ public class HighOvenGui extends TSContainerGui
         String s = new String("\u00B0".toCharArray());
         String temp = new String(logic.getInternalTemperature() + s + "c");
         fontRenderer.drawString(temp, cornerX - this.fontRenderer.getStringWidth(temp) / 2 + 135, cornerY + 20, getTempColor());
+        
+        
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(icons);
+        int slotX = cornerX + 54;
+        int slotY = cornerY + 16;
+        for (int i = 0; i < 3; i++)
+        {
+            if (!logic.isStackInSlot(i))
+                this.drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
+        }
+        if (!logic.isStackInSlot(3))
+            this.drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
     }
 
     protected int getTempColor ()

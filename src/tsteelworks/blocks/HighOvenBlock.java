@@ -72,15 +72,18 @@ public class HighOvenBlock extends TSInventoryBlock
     public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float clickX,
                                      float clickY, float clickZ)
     {
-        if (player.isSneaking() || (world.getBlockMetadata(x, y, z) != 0)) return false;
+        int meta = world.getBlockMetadata(x, y, z);
+        if (player.isSneaking()) return false;
         final Integer integer = getGui(world, x, y, z, player);
         if ((integer == null) || (integer == -1))
             return false;
-        else
+        if (meta == 0 || meta == 12) 
         {
-            player.openGui(getModInstance(), integer, world, x, y, z);
-            return true;
+                player.openGui(getModInstance(), integer, world, x, y, z);
+                return true;
         }
+        return false;
+        
     }
 
     @Override
@@ -116,8 +119,16 @@ public class HighOvenBlock extends TSInventoryBlock
 
     public void onBlockPlacedElsewhere (World world, int x, int y, int z, EntityLivingBase entityliving)
     {
-        final HighOvenLogic logic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
-        logic.checkValidPlacement();
+        if (world.getBlockMetadata(x, y, z) == 0)
+        {
+            final HighOvenLogic logic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
+            logic.checkValidPlacement();
+        }
+//        if (world.getBlockMetadata(x, y, z) == 12)
+//        {
+//            final HighOvenDuctLogic logic = (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z);
+//            logic.checkValidPlacement();
+//        }
     }
 
     @Override
@@ -138,8 +149,11 @@ public class HighOvenBlock extends TSInventoryBlock
         }
         else if (logic instanceof IMasterLogic)
         {
-            ((HighOvenLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
+        }
+        if (logic instanceof HighOvenLogic)
+        {
+            ((HighOvenLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
         }
     }
     
@@ -157,7 +171,17 @@ public class HighOvenBlock extends TSInventoryBlock
     @Override
     public Integer getGui (World world, int x, int y, int z, EntityPlayer entityplayer)
     {
-        return TSteelworks.proxy.highovenGuiID;
+        int meta = world.getBlockMetadata(x, y, z);
+        final TileEntity logic = world.getBlockTileEntity(x, y, z);
+        switch (meta)
+        {
+            case 0:
+                return TSteelworks.proxy.highovenGuiID;
+            case 12:
+                return TSteelworks.proxy.highovenDuctGuiID;  
+            default:
+                return null;
+        }
     }
 
     @Override

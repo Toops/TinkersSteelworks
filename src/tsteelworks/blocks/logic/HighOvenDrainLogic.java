@@ -24,6 +24,19 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     }
 
     @Override
+    public void onInventoryChanged ()
+    {
+        updateEntity();
+        super.onInventoryChanged();
+    }
+    
+    @Override
+    public void updateEntity ()
+    {
+        
+    }
+    
+    @Override
     public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
     {
         if (hasValidMaster() && (resource != null) && canFill(from, resource.getFluid()))

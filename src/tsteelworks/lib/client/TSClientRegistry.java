@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import tconstruct.library.client.ToolGuiElement;
 import tconstruct.library.crafting.ToolBuilder;
 import net.minecraft.item.Item; 
 import net.minecraft.item.ItemStack;
 
 public class TSClientRegistry
 {
+    public static ArrayList<ToolGuiElement> toolButtons = new ArrayList<ToolGuiElement>(20);
     public static Map<String, ItemStack> manualIcons = new HashMap<String, ItemStack>();
     public static Map<String, ItemStack[]> recipeIcons = new HashMap<String, ItemStack[]>();
     public static ItemStack defaultStack = new ItemStack(Item.ingotIron);
@@ -77,5 +79,21 @@ public class TSClientRegistry
     public static ItemStack[] getRecipeIcons (String recipeName)
     {
         return recipeIcons.get(recipeName);
+    }
+    
+    //Gui
+    public static void addToolButton (ToolGuiElement element)
+    {
+        toolButtons.add(element);
+    }
+    
+    public static void addToolButton (int slotType, int xButton, int yButton, int[] xIcons, int[] yIcons, String title, String body, String domain, String texture)
+    {
+        toolButtons.add(new ToolGuiElement(slotType, xButton, yButton, xIcons, yIcons, title, body, domain, texture));
+    }
+    
+    public static ArrayList<ToolGuiElement> getToolButtons ()
+    {
+        return toolButtons;
     }
 }

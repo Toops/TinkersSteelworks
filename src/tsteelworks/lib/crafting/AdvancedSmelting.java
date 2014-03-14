@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
+import tsteelworks.TSteelworks;
 
 public class AdvancedSmelting
 {
@@ -196,13 +197,25 @@ public class AdvancedSmelting
         instance.mixerList.put(mixItemKey(item), Arrays.asList(type, item.stackSize, chance));
     }
     
+    public static Boolean doesMixerItemMeetRequirements (ItemStack item, int slot)
+    {
+        return (isMixerItemValidForSlot(item, slot) && item.stackSize >= getMixerConsumeAmount(item));
+    }
+    
+    public static Boolean isMixerItemValidForSlot (ItemStack item, int slot)
+    {
+        if (!isMixerItemValid(item)) return false;
+        if (getMixerType(item) != slot) return false;
+        return true;
+    }
+    
     /**
      * Determine if item is in mixer list
      * 
      * @param item
      * @return
      */
-    public static Boolean isMixerValid (ItemStack item)
+    public static Boolean isMixerItemValid (ItemStack item)
     {
         return instance.mixerList.containsKey(mixItemKey(item));
     }
@@ -267,6 +280,9 @@ public class AdvancedSmelting
         final Collection<String> inputs = new ArrayList(Arrays.asList(f1, mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
         
         if (inputs.contains(null))
+            return null;
+        
+        if (!doesMixerItemMeetRequirements(i1, 0) || !doesMixerItemMeetRequirements(i2, 1) || !doesMixerItemMeetRequirements(i3, 2))
             return null;
         
         for (Entry<FluidType, List> e : instance.mixerCombos.entrySet()) 

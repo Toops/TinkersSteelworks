@@ -64,8 +64,9 @@ public class TSRecipes
     {
         LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
         final ItemStack manual1 = new ItemStack(TSContent.bookManual, 1, 0);
-        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4);
-        tableCasting.addCastingRecipe(manual1, fluidStoneMinor, new ItemStack(TContent.manualBook, 1, 0), true, 50);
+        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4 - 1);
+        tableCasting.addCastingRecipe(manual1, fluidStoneMinor, new ItemStack(TContent.manualBook, 1), true, 50);
+        tableCasting.addCastingRecipe(manual1, fluidStoneMinor, new ItemStack(Item.book, 1), true, 50);
     }
     
     /**
@@ -108,9 +109,9 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.charcoalBlock, 1, 0),    patBlock, '#', new ItemStack(Item.coal, 1, 1));
         GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), patBlock, '#', new ItemStack(Item.gunpowder, 1));
         GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), patBlock, '#', new ItemStack(Item.sugar, 1));
-        GameRegistry.addRecipe(new ItemStack(Item.coal, 9, 1),      "#", '#', new ItemStack(TSContent.charcoalBlock, 1, 0));
-        GameRegistry.addRecipe(new ItemStack(Item.gunpowder, 9, 1), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 0));
-        GameRegistry.addRecipe(new ItemStack(Item.sugar, 9, 1),     "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 1));
+        GameRegistry.addRecipe(new ItemStack(Item.coal, 9, 1),   "#", '#', new ItemStack(TSContent.charcoalBlock, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(Item.gunpowder, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(Item.sugar, 9),     "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 1));
     }
     
     /**
@@ -132,16 +133,14 @@ public class TSRecipes
                                 'b', "blockSteel"));
     }
     
-    // FIXME: this?
     public static void changeRecipePiston ()
     {
         final ItemStack rod = new ItemStack(TContent.toughRod, 1, 2);
         RecipeRemover.removeAnyRecipe(new ItemStack(Block.pistonBase));
-        // TODO: Figure out wtf is wrong with this.
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonBase), "WWW", "CTC", "CRC", 
-            'C', Block.cobblestone, //"blockCobble", 
+            'C', "cobblestone",
             'T', rod, 
-            'R', Item.redstone, //"dustRedstone", 
+            'R', "dustRedstone",
             'W', "plankWood"));
     }
     

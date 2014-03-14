@@ -210,55 +210,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     }
     
-    /* ==================== Additive Materials ==================== */
-    
-    /**
-     * Determine if all mixers are present
-     * 
-     * @return
-     *          true: has mixers / false: doesn't
-     */
-    public boolean validMixers () 
-    {
-        return (this.hasMixers(0) && this.hasMixers(1) && this.hasMixers(2));
-    }
-    
-    /**
-     * Determine if a mixer component material is present
-     * 
-     * @param slot
-     *          Slot to check
-     * @return
-     *          true: has mixer / false: doesn't
-     */
-    public boolean hasMixers(int slot)
-    {
-        ItemStack stack = inventory[slot];
-        if (stack != null)
-        {
-            if ((AdvancedSmelting.instance.getMixerType(stack) == slot) && 
-                (AdvancedSmelting.instance.getMixerConsumeAmount(stack) <= stack.stackSize))
-                return true;
-        }
-        return false;  
-    }
-    
-    /**
-     * Remove additive materials by preset vs random chance and amount
-     */
-    private void removeMixers ()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-        if (inventory[i] != null)
-            if (new Random().nextInt(100) <= AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]))
-                if (inventory[i].stackSize >= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]))
-                    inventory[i].stackSize -= AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
-                if (inventory[i] != null && inventory[i].stackSize == 0)
-                    inventory[i] = null;
-        }
-    }
-    
     /* ==================== Smelting ==================== */
     
     /**
@@ -318,7 +269,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (internalTemp > 20)
         {
             boolean hasUse = false;
-            
             for (int i = 4; i < layers + 4; i+= 1)
             {
                 // If an item is present and meltable
@@ -332,56 +282,41 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     // Decrease temp if its temp is higher than the High Oven's internal
                     // temp and the High Oven's internal temp is lower than the melting point
                     else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
-                    {
                         activeTemps[i] -= 1;
-                    }
                     // Liquify metals if the temp has reached the melting point
                     else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
                     {
-                        FluidStack result = getResultFor(inventory[i]);
+                        FluidStack result = getNormalResultFor(inventory[i]);
                         if (result != null) 
                         {
-                            if (addMoltenMetal(result, false))
-                            {
-                                if (inventory[i].stackSize >= 2)
-                                    inventory[i].stackSize--;
-                                else
-                                    inventory[i] = null;
-                                
-                                activeTemps[i] = 20;
-                                removeMixers();
-                                addMoltenMetal(result, true);
-                                onInventoryChanged();
-                            }
+                            FluidStack resultEx = getMixedResultFor(result);
+                            if (resultEx != null) 
+                                meltItems(i, resultEx, true);
+                            else
+                                meltItems(i, result, false);
                         }
                     }
                 }
                 else
-                {
                     activeTemps[i] = 20;
-                }
             }
             isMeltingItems = hasUse;
         }
     }
     
-    /**
-     * Get (post-mixed) molten result for given item
-     * 
-     * @param stack
-     *            ItemStack
-     * @return FluidStack
-     */
-    public FluidStack getResultFor (ItemStack stack)
+    void meltItems (int slot, FluidStack fluid, Boolean doMix)
     {
-        FluidStack result = getNormalResultFor(stack);
-        FluidType resultType = FluidType.getFluidType(result.getFluid());
-        FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
-        if (mixResult != null && this.validMixers())
+        if (addMoltenMetal(fluid, false))
         {
-            return new FluidStack(mixResult.fluid, result.amount);
+            if (inventory[slot].stackSize >= 2)
+                inventory[slot].stackSize--;
+            else
+                inventory[slot] = null;
+            activeTemps[slot] = 20;
+            if (doMix) removeMixers();
+            addMoltenMetal(fluid, true);
+            onInventoryChanged();
         }
-        return result;
     }
     
     /**
@@ -394,6 +329,35 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public FluidStack getNormalResultFor (ItemStack stack)
     {
         return AdvancedSmelting.instance.getSmelteryResult(stack);
+    }
+    
+    public FluidStack getMixedResultFor (FluidStack stack)
+    {
+        FluidType resultType = FluidType.getFluidType(stack.getFluid());
+        FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
+        if (mixResult != null)
+            return new FluidStack(mixResult.fluid, stack.amount);
+        return null;
+    }
+    
+    /**
+     * Remove additive materials by preset vs random chance and amount
+     */
+    private void removeMixers ()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (inventory[i] != null)
+            {
+                int consumeChance = AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]);
+                int consumeAmount = AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
+                if (new Random().nextInt(100) <= consumeChance)
+                    if (inventory[i].stackSize >= consumeAmount)
+                        inventory[i].stackSize -= consumeAmount;
+                    if (inventory[i] != null && inventory[i].stackSize == 0)
+                        inventory[i] = null;
+            }
+        }
     }
     /* ==================== Temperatures ==================== */
     
@@ -906,7 +870,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int validateTop (int x, int y, int z, int count)
     {
-        // TODO: Make drains register properly 
         int topBricks = 0;
         for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
