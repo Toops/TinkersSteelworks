@@ -79,6 +79,7 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 2), "bb", "bb", 'b', itemScorchedBrick);
+        GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 12), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
         
         chiseling.addDetailing(TSContent.highoven, 4,  TSContent.highoven, 6,  TContent.chisel);
         chiseling.addDetailing(TSContent.highoven, 6,  TSContent.highoven, 11, TContent.chisel);
