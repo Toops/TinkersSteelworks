@@ -15,6 +15,8 @@ item.tsteelworks.chestplateSteel.name=Steel Chestplate
 item.tsteelworks.leggingsSteel.name=Steel Leggings
 item.tsteelworks.bootsSteel.name=Steel Boots
 
+entity.HighGolem.name=High Golem
+
 tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
 block.storage.dust.sugar.name=Sugar Cube
@@ -32,14 +34,16 @@ HighOven.Brick.Square.name=Chiseled Scorched Bricks
 HighOven.Brick.Creeper.name=Chiseled Creepy Bricks
 HighOven.Duct.name=High Oven Duct
 
-highoven.highoven.tooltip=The main component for the High Oven
-highoven.drain.tooltip1=Works both as input and output for
-highoven.drain.tooltip2=fluids in the High Oven
-highoven.duct.tooltip1=Works both as input and output for
-highoven.duct.tooltip2=items in the High Oven
+highoven.controller.tooltip1=The main component of the High Oven
+highoven.controller.tooltip2=(Caution: Very hot!)
+highoven.drain.tooltip1=Fluid input/output for the High Oven
+highoven.drain.tooltip2=(For use with faucets or piping)
+highoven.duct.tooltip1=Item input/output for the High Oven
+highoven.duct.tooltip2=(For use with hoppers, chests, or piping)
 highoven.brick.tooltip1=High Oven structure block
 highoven.brick.tooltip2=(Safe for decoration)
 dustblock.gunpowder.tooltip=Fire in the hole!
 dustblock.sugar.tooltip=How sweet!
+material.scorchedbrick.tooltip1=Use for crafting, or throwing!
 
 manual.steelworks.tooltip1=By: The Tinkerers' Society

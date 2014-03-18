@@ -1,16 +1,22 @@
 package tsteelworks.client.gui;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.inventory.TSActiveContainer;
+import tsteelworks.lib.Repo;
 
 public class HighOvenDuctGui extends TSContainerGui
 {
@@ -44,12 +50,34 @@ public class HighOvenDuctGui extends TSContainerGui
     
     protected void actionPerformed (GuiButton button)
     {
+        super.actionPerformed(button);
+        if (!logic.hasValidMaster()) return;
         int mode = logic.getMode();
         if (button.id == 1 && mode < 5) 
             mode++;       
         if (button.id == 0 && mode > 0) 
             mode--;  
-        logic.setMode(mode);
+        //logic.setMode(mode);
+        final Packet250CustomPayload packet = new Packet250CustomPayload();
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final DataOutputStream dos = new DataOutputStream(bos);
+        try
+        {
+            dos.write(2);
+            dos.writeInt(logic.worldObj.provider.dimensionId);
+            dos.writeInt(logic.xCoord);
+            dos.writeInt(logic.yCoord);
+            dos.writeInt(logic.zCoord);
+            dos.writeInt(mode);
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
+        packet.channel = Repo.modChan;
+        packet.data = bos.toByteArray();
+        packet.length = bos.size();
+        PacketDispatcher.sendPacketToServer(packet);
     }
     
     @Override

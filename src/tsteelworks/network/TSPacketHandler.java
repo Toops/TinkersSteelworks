@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.Repo;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -59,7 +60,7 @@ public class TSPacketHandler implements IPacketHandler
         try
         {
             packetID = inputStream.readByte();
-            if (packetID == 1) // High Oven
+            if (packetID == 1) // HighOvenGUI
             {
                 final int dimension = inputStream.readInt();
                 final World world = DimensionManager.getWorld(dimension);
@@ -91,6 +92,25 @@ public class TSPacketHandler implements IPacketHandler
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
+                
+            }
+            if (packetID == 2) // HighOvenDuctGui
+            {
+                final int dimension = inputStream.readInt();
+                final World world = DimensionManager.getWorld(dimension);
+                final int x = inputStream.readInt();
+                final int y = inputStream.readInt();
+                final int z = inputStream.readInt();
+                final int mode = inputStream.readInt();
+                final TileEntity te = world.getBlockTileEntity(x, y, z);
+                if (te instanceof HighOvenDuctLogic)
+                {
+                    int tempMode = ((HighOvenDuctLogic) te).getMode();
+                    if (tempMode != mode)
+                        ((HighOvenDuctLogic) te).setMode(mode);
+                    PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
+                }
+                
             }
         }
         catch (final IOException e)

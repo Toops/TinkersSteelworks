@@ -42,7 +42,8 @@ public class HighOvenItemBlock extends ItemBlock
         switch (stack.getItemDamage())
         {
             case 0:
-                list.add(StatCollector.translateToLocal("highoven.highoven.tooltip"));
+                list.add(StatCollector.translateToLocal("highoven.controller.tooltip1"));
+                list.add(StatCollector.translateToLocal("highoven.controller.tooltip2"));
                 break;
             case 1:
                 list.add(StatCollector.translateToLocal("highoven.drain.tooltip1"));

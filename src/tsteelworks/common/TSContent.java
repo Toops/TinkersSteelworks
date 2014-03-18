@@ -10,6 +10,7 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.TSBaseBlock;
@@ -17,6 +18,8 @@ import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
+import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
@@ -26,6 +29,7 @@ import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.IFuelHandler;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TSContent implements IFuelHandler
@@ -51,6 +55,13 @@ public class TSContent implements IFuelHandler
         oreRegistry();
         registerMixerMaterials();
         setupCreativeTabs();
+    }
+
+    public void createEntities ()
+    {
+        EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
+        // TODO: Register with registerModEntity instead
+        EntityRegistry.registerGlobalEntityID(HighGolem.class,"HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
     }
 
     /**

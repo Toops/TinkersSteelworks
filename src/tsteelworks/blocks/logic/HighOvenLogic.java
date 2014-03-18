@@ -23,6 +23,7 @@ import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
@@ -437,6 +438,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         else
         {
             int i = stack.getItem().itemID;
+            
             Item item = stack.getItem();
             if (stack.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
             {
@@ -449,6 +451,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             if (stack.itemID == new ItemStack(Item.coal).itemID && stack.getItemDamage() == 1)
                 return 420;
+            for (final ItemStack fuelCoke : OreDictionary.getOres("fuelCoke"))
+            {
+                if (stack.itemID == fuelCoke.itemID)
+                    return 840;
+            }
         }
         return 0;
     }

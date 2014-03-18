@@ -57,16 +57,9 @@ public class HighOvenGui extends TSContainerGui
     {
         // High Oven Caption
         String hoCaption = StatCollector.translateToLocal("crafters.HighOven");
-        String oxiCaption = StatCollector.translateToLocal("gui.highoven.oxidizer");
-        String redCaption = StatCollector.translateToLocal("gui.highoven.reducer");
-        String purCaption = StatCollector.translateToLocal("gui.highoven.purifier");
         String tempCaption = StatCollector.translateToLocal("gui.highoven.temperature");
         
         fontRenderer.drawString(hoCaption, this.xSize / 2 - this.fontRenderer.getStringWidth(hoCaption) / 2 + 10, 5, 0x404040);
-        
-//        fontRenderer.drawString(oxiCaption, this.xSize / 2 - 67, 20, 0x404040);
-//        fontRenderer.drawString(redCaption, this.xSize / 2 - 67, 38, 0x404040);
-//        fontRenderer.drawString(purCaption, this.xSize / 2 - 67, 56, 0x404040);
         
         // Player Inventory Caption
         fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 56, (ySize - 96) + 2, 0x404040);

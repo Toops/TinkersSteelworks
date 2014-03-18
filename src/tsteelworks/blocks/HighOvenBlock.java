@@ -1,14 +1,10 @@
 package tsteelworks.blocks;
 
-import static net.minecraftforge.common.ForgeDirection.UP;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockStep;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
@@ -29,6 +26,7 @@ import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
+import tsteelworks.entity.HighGolem;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
@@ -67,10 +65,9 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         return 1;
     }
-
+    
     @Override
-    public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float clickX,
-                                     float clickY, float clickZ)
+    public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ)
     {
         int meta = world.getBlockMetadata(x, y, z);
         if (player.isSneaking()) return false;
@@ -83,9 +80,8 @@ public class HighOvenBlock extends TSInventoryBlock
                 return true;
         }
         return false;
-        
     }
-
+    
     @Override
     public TileEntity createNewTileEntity (World world)
     {
@@ -107,6 +103,39 @@ public class HighOvenBlock extends TSInventoryBlock
         return new TSMultiServantLogic();
     }
 
+    private void spawnHighGolem(World world, int x, int y, int z)
+    {
+        boolean check1 = (world.getBlockId(x, y - 1, z) == TContent.smeltery.blockID && world.getBlockMetadata(x, y - 1, z) > 1);
+        boolean check2 = (world.getBlockId(x, y - 2, z) == TContent.smeltery.blockID && world.getBlockMetadata(x, y - 2, z) > 1);
+        
+        if (check1 && check2)
+        {
+            if (!world.isRemote)
+            {
+                world.setBlock(x, y, z, 0, 0, 2);
+                world.setBlock(x, y - 1, z, 0, 0, 2);
+                world.setBlock(x, y - 2, z, 0, 0, 2);
+                HighGolem entityhighgolem = new HighGolem(world);
+                entityhighgolem.setLocationAndAngles((double)x + 0.5D, (double)y - 1.95D, (double)z + 0.5D, 0.0F, 0.0F);
+                world.spawnEntityInWorld(entityhighgolem);
+                world.notifyBlockChange(x, y, z, 0);
+                world.notifyBlockChange(x, y - 1, z, 0);
+                world.notifyBlockChange(x, y - 2, z, 0);
+            }   
+            for (int l = 0; l < 120; ++l)
+            {
+                TSteelworks.proxy.spawnParticle("scorchedbrick", (double)x + world.rand.nextDouble(), (double)(y - 2) + world.rand.nextDouble() * 2.5D, (double)z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+            }
+        }
+    }
+    
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+        super.onBlockAdded(world, x, y, z);
+        if (world.getBlockMetadata(x, y, z) == 0)
+            spawnHighGolem(world, x, y, z);
+    }
+    
     @Override
     public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack)
     {
@@ -124,11 +153,6 @@ public class HighOvenBlock extends TSInventoryBlock
             final HighOvenLogic logic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
             logic.checkValidPlacement();
         }
-//        if (world.getBlockMetadata(x, y, z) == 12)
-//        {
-//            final HighOvenDuctLogic logic = (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z);
-//            logic.checkValidPlacement();
-//        }
     }
 
     @Override

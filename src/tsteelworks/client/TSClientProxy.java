@@ -9,9 +9,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityBreakingFX;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -19,12 +21,14 @@ import net.minecraft.world.World;
 
 import org.w3c.dom.Document;
 
+import tconstruct.TConstruct;
 import tconstruct.common.TContent;
 import tconstruct.library.client.TConstructClientRegistry;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.block.SmallFontRenderer;
+import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.client.gui.TSManualGui;
@@ -44,10 +48,14 @@ import tsteelworks.client.pages.TSTitlePage;
 import tsteelworks.client.pages.TSToolPage;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
+import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.client.TSClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class TSClientProxy extends TSCommonProxy
 {
+    public static Minecraft mc;
     public static SmallFontRenderer smallFontRenderer;
     public static RenderItem itemRenderer = new RenderItem();
     
@@ -71,6 +79,8 @@ public class TSClientProxy extends TSCommonProxy
     {
         Minecraft mc = Minecraft.getMinecraft();
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
+        RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
+        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
     }
     
     public static Document highovenXml;
@@ -284,5 +294,67 @@ public class TSClientProxy extends TSCommonProxy
     
     @Override
     public void registerSounds ()
+    {}
+    
+    public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
+    {
+        if (particle != "scorchedbrick")
+            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+        else
+            this.doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+    }
+
+    public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
+    {
+        if (this.mc == null)
+            this.mc = Minecraft.getMinecraft();
+
+        if (this.mc.renderViewEntity != null && this.mc.effectRenderer != null)
+        {
+            int i = this.mc.gameSettings.particleSetting;
+
+            if (i == 1 && mc.theWorld.rand.nextInt(3) == 0)
+            {
+                i = 2;
+            }
+
+            double d6 = this.mc.renderViewEntity.posX - par2;
+            double d7 = this.mc.renderViewEntity.posY - par4;
+            double d8 = this.mc.renderViewEntity.posZ - par6;
+            EntityFX entityfx = null;
+
+            double d9 = 16.0D;
+
+            if (d6 * d6 + d7 * d7 + d8 * d8 > d9 * d9)
+            {
+                return null;
+            }
+            else if (i > 1)
+            {
+                return null;
+                }
+                else
+                {
+                    if (par1Str.equals("scorchedbrick"))
+                    {
+                        entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
+                    }
+
+                    if (entityfx != null)
+                    {
+                        this.mc.effectRenderer.addEffect((EntityFX) entityfx);
+                    }
+
+                    return (EntityFX) entityfx;
+                }
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    @Override
+    public void postInit ()
     {}
 }

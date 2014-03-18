@@ -51,7 +51,7 @@ public class TSRecipes
         LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
         final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
         final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
-        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4);
+        final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue / 4 - 1);
         final FluidStack fluidStoneChunk = new FluidStack(TContent.moltenStoneFluid, chunkLiquidValue);
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);

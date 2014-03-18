@@ -30,8 +30,10 @@ public class ConfigCore
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, 
                                            "Powder Blocks (Gunpowder, etc)").getInt(3402);
 
-        ingotsPerOre = config.get("High Oven", "Ingots per ore", 1, 
-                                  "Number of ingots returned from smelting ores in the High Oven").getInt(1);
+        enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false,
+            "Enables High Oven Ducts to suck in items like a hopper (potential lag)").getBoolean(false);
+        ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, 
+                                  "Number of ingots returned from smelting ores in the High Oven").getInt(2);
         
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false,
                                            "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
@@ -64,4 +66,5 @@ public class ConfigCore
     public static boolean hardcoreAnvil;
     public static int     ingotsPerOre;
     public static boolean smelteryObsidianAlloy;
+    public static boolean enableDuctVacuum;
 }

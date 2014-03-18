@@ -74,7 +74,6 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     @Override
     public FluidStack drain (ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 

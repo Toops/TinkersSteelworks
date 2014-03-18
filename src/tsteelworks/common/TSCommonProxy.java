@@ -46,4 +46,10 @@ public class TSCommonProxy implements IGuiHandler
     
     public void registerSounds ()
     {}
+    
+    public void spawnParticle (String slimeParticle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
+    {}
+    
+    public void postInit ()
+    {}
 }

@@ -80,11 +80,16 @@ public class TSteelworks
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {
-        
+        content.createEntities();
         content.addCraftingRecipes();
         PluginController.getController().postInit();
     }
 
+    public static void loginfo (String desc)
+    {
+        logger.info(desc);
+    }
+    
     public static void loginfo (String desc, String text)
     {
         logger.info(desc + ": " + text);
@@ -96,5 +101,4 @@ public class TSteelworks
     }
     
     public static TSContent      content;
-    
 }
