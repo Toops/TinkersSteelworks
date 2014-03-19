@@ -17,12 +17,13 @@ import tsteelworks.TSteelworks;
 
 public class AdvancedSmelting
 {
-    public static AdvancedSmelting                   instance        = new AdvancedSmelting();
-    private final HashMap<List<Integer>, FluidStack> smeltingList    = new HashMap<List<Integer>, FluidStack>();
-    private final HashMap<List<Integer>, Integer>    temperatureList = new HashMap<List<Integer>, Integer>();
-    private final HashMap<String, List<Integer>>     mixerList       = new HashMap<String, List<Integer>>();
-    private final HashMap<FluidType, List>   mixerCombos     = new HashMap<FluidType, List>();
-    private final HashMap<List<Integer>, ItemStack>  renderIndex     = new HashMap<List<Integer>, ItemStack>();
+    public static AdvancedSmelting                   instance         = new AdvancedSmelting();
+    private final HashMap<List<Integer>, FluidStack> smeltingList     = new HashMap<List<Integer>, FluidStack>();
+    private final HashMap<List<Integer>, Integer>    temperatureList  = new HashMap<List<Integer>, Integer>();
+    private final HashMap<String, List<Integer>>     mixerList        = new HashMap<String, List<Integer>>();
+    private final HashMap<FluidType, List>           mixerFluidCombos = new HashMap<FluidType, List>();
+    private final HashMap<ItemStack, List>           mixerSolidCombos = new HashMap<ItemStack, List>();
+    private final HashMap<List<Integer>, ItemStack>  renderIndex      = new HashMap<List<Integer>, ItemStack>();
 
     /**
      * Adds mappings between an itemstack and an output liquid.
@@ -256,14 +257,23 @@ public class AdvancedSmelting
         return list.get(2);
     }
     
-    public static void addMixerCombo (FluidType fluidout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
+    public static void addFluidMixerCombo (FluidType fluidout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
     {
-        instance.mixerCombos.put(fluidout, Arrays.asList(fluidin, mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
+        instance.mixerFluidCombos.put(fluidout, Arrays.asList(fluidin, mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
     }
     
-    public static void getMixerCombo (FluidType fluid)
+    public static void addSolidMixerCombo (ItemStack stackout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
     {
-        instance.mixerCombos.get(fluid);
+        instance.mixerSolidCombos.put(stackout, Arrays.asList(fluidin, mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
+    }
+    
+    public static void getFluidMixerCombo (FluidType fluid)
+    {
+        instance.mixerFluidCombos.get(fluid);
+    }
+    public static void getSolidMixerCombo (ItemStack stack)
+    {
+        instance.mixerSolidCombos.get(stack);
     }
     
     /**
@@ -285,9 +295,29 @@ public class AdvancedSmelting
         if (!doesMixerItemMeetRequirements(i1, 0) || !doesMixerItemMeetRequirements(i2, 1) || !doesMixerItemMeetRequirements(i3, 2))
             return null;
         
-        for (Entry<FluidType, List> e : instance.mixerCombos.entrySet()) 
+        for (Entry<FluidType, List> e : instance.mixerFluidCombos.entrySet()) 
         {
             FluidType key = e.getKey();
+            Object value = e.getValue();
+            if (value.equals(inputs))
+                return key;
+        }
+        return null;
+    }
+    
+    public static ItemStack validateSolidMixerCombo (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
+    {
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
+        
+        if (inputs.contains(null))
+            return null;
+        
+        if (!doesMixerItemMeetRequirements(i1, 0) || !doesMixerItemMeetRequirements(i2, 1) || !doesMixerItemMeetRequirements(i3, 2))
+            return null;
+        
+        for (Entry<ItemStack, List> e : instance.mixerSolidCombos.entrySet()) 
+        {
+            ItemStack key = e.getKey();
             Object value = e.getValue();
             if (value.equals(inputs))
                 return key;
@@ -307,7 +337,7 @@ public class AdvancedSmelting
         boolean match = false;
         
         final ArrayList<String> copyMix = new ArrayList(instance.mixerList.keySet());
-        final ArrayList<String> copyCombo = new ArrayList(instance.mixerCombos.get(fluid));
+        final ArrayList<String> copyCombo = new ArrayList(instance.mixerFluidCombos.get(fluid));
         
         for (int i = 0; i < copyMix.size(); i++)
         {
@@ -386,7 +416,7 @@ public class AdvancedSmelting
      */
     public static HashMap<FluidType, List> getCombosList ()
     {
-        return instance.mixerCombos;
+        return instance.mixerFluidCombos;
     }
     
     public static HashMap<List<Integer>, ItemStack> getRenderIndex ()

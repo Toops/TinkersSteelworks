@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockHopper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,9 +24,11 @@ import net.minecraft.tileentity.Hopper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.inventory.HighOvenDuctContainer;
@@ -47,6 +50,14 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     public void setMode (int newMode)
     {
         this.mode = (newMode < 6) ? newMode : 5; 
+        if (mode == 5)
+        {
+            final int mx = getMasterPosition().x;
+            final int my = getMasterPosition().y;
+            final int mz = getMasterPosition().z;
+            final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+            highoven.outputItemDuct = new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
+        }
     }
     
     /* TSServantLogic */
@@ -86,14 +97,14 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     
     private boolean insertItemToInventory()
     {
-        if (!hasValidMaster() || mode == 5) return false;
+        if (!hasValidMaster()) return false;
         IInventory masterInventory = this.getOutputInventory();
-
+        
         if (masterInventory == null)
             return false;
         else
         {   
-            for (int slot = 0; slot < this.getSizeInventory(); slot += 1)
+            for (int slot = 0; slot < this.getSizeInventory(); slot++)
             {
                 if (this.getStackInSlot(slot) != null)
                 {
@@ -281,11 +292,18 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     
     private IInventory getOutputInventory()
     {
-        final int mx = getMasterPosition().x;
-        final int my = getMasterPosition().y;
-        final int mz = getMasterPosition().z;
-        HighOvenLogic logic = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-        return logic;
+        if (mode == 5)
+        {
+            return getExternalInventory(this, direction);
+        }
+        else
+        {
+            final int mx = getMasterPosition().x;
+            final int my = getMasterPosition().y;
+            final int mz = getMasterPosition().z;
+            HighOvenLogic logic = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
+            return logic;
+        }
     }
     
     public static IInventory getExternalInventory(Hopper localInventory, byte facing)
@@ -389,7 +407,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         return iinventory;
     }
     
-    private static boolean areItemStacksEqualItem(ItemStack stack1, ItemStack stack2)
+    public static boolean areItemStacksEqualItem(ItemStack stack1, ItemStack stack2)
     {
         return stack1.itemID != stack2.itemID ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
     }
@@ -652,6 +670,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
                 nbttaglist.appendTag(tagList);
             }
         }
+        tags.setInteger("TransferCooldown", this.transferCooldown);
         tags.setTag("Items", nbttaglist);
         tags.setByte("Direction", this.direction);
         tags.setInteger("Mode", this.mode);

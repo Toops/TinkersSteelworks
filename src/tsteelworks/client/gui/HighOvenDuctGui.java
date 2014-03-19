@@ -30,22 +30,16 @@ public class HighOvenDuctGui extends TSContainerGui
         username = inventoryplayer.player.username;
         xSize = 248;
     }
-
-//    @Override
-//    public void drawScreen (int mouseX, int mouseY, float par3)
-//    {
-//        super.drawScreen(mouseX, mouseY, par3);
-//    }
     
     public void initGui ()
     {
         super.initGui();
         final int cornerX = (this.width - this.xSize) / 2;
         final int cornerY = (this.height - this.ySize) / 2;
-
+        
         this.buttonList.clear();
-        this.buttonList.add(new GuiButton(0, cornerX + 134, cornerY + 33, 8, 20, (StatCollector.translateToLocal("<"))));
-        this.buttonList.add(new GuiButton(1, cornerX + 170, cornerY + 33, 8, 20, (StatCollector.translateToLocal(">"))));
+        this.buttonList.add(new GuiButton(0, cornerX + 114, cornerY + 40, 8, 20, (StatCollector.translateToLocal("<"))));
+        this.buttonList.add(new GuiButton(1, cornerX + 148, cornerY + 40, 8, 20, (StatCollector.translateToLocal(">"))));
     }
     
     protected void actionPerformed (GuiButton button)
@@ -98,16 +92,17 @@ public class HighOvenDuctGui extends TSContainerGui
     @Override
     protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)
     {
+        // Draw Background
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.getTextureManager().bindTexture(background);
         final int cornerX = ((width - xSize) / 2);
         final int cornerY = (height - ySize) / 2;
         drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
-        
+        // Draw Icons
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(icons);
-        int slotX = cornerX + 146;
-        int slotY = cornerY + 35;
+        int slotX = cornerX + 126;
+        int slotY = cornerY + 42;
         this.drawTexturedModalRect(slotX, slotY, logic.getMode() * 18, 234, 18, 18);
     }
     

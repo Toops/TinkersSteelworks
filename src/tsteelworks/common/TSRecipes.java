@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,12 +37,11 @@ public class TSRecipes
     static String[] patLegs     = { "###", "# #", "# #" };
     static String[] patBoots     = { "# #", "# #" };
     
-    final static int blockLiquidValue  = TConstruct.blockLiquidValue / 2;
-    final static int oreLiquidValue    = TConstruct.oreLiquidValue / 2;
-    final static int ingotLiquidValue  = TConstruct.ingotLiquidValue / 2;
-    final static int chunkLiquidValue  = TConstruct.chunkLiquidValue / 2;
-    final static int nuggetLiquidValue = TConstruct.nuggetLiquidValue / 2;
-    
+    public static final int ingotLiquidValue = 72;
+    public static final int oreLiquidValue = ingotLiquidValue * ConfigCore.ingotsPerOre;
+    public static final int blockLiquidValue = ingotLiquidValue * 9;
+    public static final int chunkLiquidValue = ingotLiquidValue / 2;
+    public static final int nuggetLiquidValue = ingotLiquidValue / 9;
     /**
      * Scorched brick recipes
      */
@@ -166,8 +166,8 @@ public class TSRecipes
             AdvancedSmelting.addDictionaryMelting("ingot" + ft.toString(),       ft, tempMod, ingotLiquidValue);
             AdvancedSmelting.addDictionaryMelting("dust" + ft.toString(),        ft, tempMod, ingotLiquidValue);
             AdvancedSmelting.addDictionaryMelting("crystalline" + ft.toString(), ft, tempMod, ingotLiquidValue);
-            AdvancedSmelting.addDictionaryMelting("ore" + ft.toString(),         ft, tempMod, ingotLiquidValue * ConfigCore.ingotsPerOre);
-            AdvancedSmelting.addDictionaryMelting("oreNether" + ft.toString(),   ft, tempMod, ingotLiquidValue * ConfigCore.ingotsPerOre * 2);
+            AdvancedSmelting.addDictionaryMelting("ore" + ft.toString(),         ft, tempMod, oreLiquidValue);
+            AdvancedSmelting.addDictionaryMelting("oreNether" + ft.toString(),   ft, tempMod, oreLiquidValue * 2);
             AdvancedSmelting.addDictionaryMelting("block" + ft.toString(),       ft, tempMod, blockLiquidValue);
         }
         {
@@ -177,8 +177,8 @@ public class TSRecipes
             AdvancedSmelting.addDictionaryMelting("ingot" + ft.toString(),       ft, tempMod, ingotLiquidValue);
             AdvancedSmelting.addDictionaryMelting("dust" + ft.toString(),        ft, tempMod, ingotLiquidValue / 4);
             AdvancedSmelting.addDictionaryMelting("crystalline" + ft.toString(), ft, tempMod, ingotLiquidValue);
-            AdvancedSmelting.addDictionaryMelting("ore" + ft.toString(),         ft, tempMod, ingotLiquidValue * ConfigCore.ingotsPerOre);
-            AdvancedSmelting.addDictionaryMelting("oreNether" + ft.toString(),   ft, tempMod, ingotLiquidValue * ConfigCore.ingotsPerOre * 2);
+            AdvancedSmelting.addDictionaryMelting("ore" + ft.toString(),         ft, tempMod, oreLiquidValue);
+            AdvancedSmelting.addDictionaryMelting("oreNether" + ft.toString(),   ft, tempMod, oreLiquidValue * 2);
             AdvancedSmelting.addDictionaryMelting("block" + ft.toString(),       ft, tempMod, blockLiquidValue);
         }
         for (int i = 1; i <= 8; i++)
@@ -222,6 +222,12 @@ public class TSRecipes
         }
     }
     
+    public static void addSmeltingSolids ()
+    {
+        ItemStack out = new ItemStack(Item.netherQuartz, 1);
+        AdvancedSmelting.addSolidMixerCombo(out, FluidType.Glass, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+    }
+    
     /**
      * Add steel smelting recipes to the High Oven
      */
@@ -243,7 +249,7 @@ public class TSRecipes
         {
             AdvancedSmelting.addMelting(ft, new ItemStack(Item.flintAndSteel, 1, 0), tempMod, ingotLiquidValue);
         }
-        AdvancedSmelting.addMixerCombo(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+        AdvancedSmelting.addFluidMixerCombo(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
     }
     
     /**
@@ -252,7 +258,7 @@ public class TSRecipes
     public static void addSmeltingPigIron ()
     {
         final FluidType ft = FluidType.PigIron;
-        AdvancedSmelting.addMixerCombo(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
+        AdvancedSmelting.addFluidMixerCombo(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
     }
     
     public static void addSmeltingGold ()
@@ -264,12 +270,12 @@ public class TSRecipes
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.legsGold, 1, 0),    tempMod, ingotLiquidValue * 7);
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.bootsGold, 1, 0),   tempMod, ingotLiquidValue * 4);
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.horseArmorGold, 1), tempMod, ingotLiquidValue * 6);
-        AdvancedSmelting.addMelting(ft, new ItemStack(Item.hoeGold, 1, 0),     tempMod, oreLiquidValue);
-        AdvancedSmelting.addMelting(ft, new ItemStack(Item.swordGold, 1, 0),   tempMod, oreLiquidValue);
+        AdvancedSmelting.addMelting(ft, new ItemStack(Item.hoeGold, 1, 0),     tempMod, ingotLiquidValue * 2);
+        AdvancedSmelting.addMelting(ft, new ItemStack(Item.swordGold, 1, 0),   tempMod, ingotLiquidValue * 2);
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.shovelGold, 1, 0),  tempMod, ingotLiquidValue);
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.pickaxeGold, 1, 0), tempMod, ingotLiquidValue * 3);
         AdvancedSmelting.addMelting(ft, new ItemStack(Item.axeGold, 1, 0),     tempMod, ingotLiquidValue * 3);
-        AdvancedSmelting.addMelting(ft, new ItemStack(Block.pressurePlateGold, 4),  tempMod, oreLiquidValue);
+        AdvancedSmelting.addMelting(ft, new ItemStack(Block.pressurePlateGold, 4),  tempMod, ingotLiquidValue * 2);
         AdvancedSmelting.addMelting(ft, new ItemStack(Block.railPowered),           tempMod, ingotLiquidValue);
         AdvancedSmelting.addMelting(ft, new ItemStack(TContent.blankPattern, 4, 2), tempMod, ingotLiquidValue * 2);
     }
@@ -277,21 +283,47 @@ public class TSRecipes
     public static void addSmeltingMisc ()
     {
         //TODO: OreDictify, expand, sort, and move these
-        AdvancedSmelting.addMelting(Block.obsidian, 0, getFluidTempMod(FluidType.Obsidian), new FluidStack(TContent.moltenObsidianFluid, ingotLiquidValue * 2));
-        AdvancedSmelting.addMelting(Block.ice, 0, getFluidTempMod(FluidType.Water), new FluidStack(FluidRegistry.getFluid("water"), 1000));
-        AdvancedSmelting.addMelting(Block.blockSnow, 0, getFluidTempMod(FluidType.Water), new FluidStack(FluidRegistry.getFluid("water"), 500));
-        AdvancedSmelting.addMelting(Block.snow, 0, getFluidTempMod(FluidType.Water), new FluidStack(FluidRegistry.getFluid("water"), 250));
-        AdvancedSmelting.addMelting(Block.sand, 0, getFluidTempMod(FluidType.Glass), new FluidStack(TContent.moltenGlassFluid, FluidContainerRegistry.BUCKET_VOLUME));
-        AdvancedSmelting.addMelting(Block.glass, 0, getFluidTempMod(FluidType.Glass), new FluidStack(TContent.moltenGlassFluid, FluidContainerRegistry.BUCKET_VOLUME));
-        AdvancedSmelting.addMelting(Block.thinGlass, 0, getFluidTempMod(FluidType.Glass), new FluidStack(TContent.moltenGlassFluid, 250));
-        AdvancedSmelting.addMelting(Block.stone, 0, getFluidTempMod(FluidType.Stone), new FluidStack(TContent.moltenStoneFluid, ingotLiquidValue / 18));
-        AdvancedSmelting.addMelting(Block.cobblestone, 0, getFluidTempMod(FluidType.Stone), new FluidStack(TContent.moltenStoneFluid, ingotLiquidValue / 18));
+        addSmeltingObsidian();
+        addSmeltingWater();
+        addSmeltingGlass();
+        addSmeltingStone();
         AdvancedSmelting.addMelting(Block.blockEmerald, 0, getFluidTempMod(FluidType.Emerald), new FluidStack(TContent.moltenEmeraldFluid, 320 * 9));
         AdvancedSmelting.addMelting(TContent.glueBlock, 0, getFluidTempMod(FluidType.Glue), new FluidStack(TContent.glueFluid, blockLiquidValue));
-        AdvancedSmelting.addMelting(TContent.craftedSoil, 1, getFluidTempMod(FluidType.Stone), new FluidStack(TContent.moltenStoneFluid, ingotLiquidValue / 4));
-        AdvancedSmelting.addMelting(TContent.clearGlass, 0, getFluidTempMod(FluidType.Glass), new FluidStack(TContent.moltenGlassFluid, 1000));
-        AdvancedSmelting.addMelting(TContent.glassPane, 0, getFluidTempMod(FluidType.Glass), new FluidStack(TContent.moltenGlassFluid, 250));
     }
+    
+    public static void addSmeltingObsidian ()
+    {
+        final FluidType ft = FluidType.Obsidian;
+        Fluid fluid = TContent.moltenObsidianFluid;
+        AdvancedSmelting.addMelting(Block.obsidian, 0, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue * 2));
+    }
+    public static void addSmeltingWater ()
+    {
+        final FluidType ft = FluidType.Water;
+        Fluid fluid = FluidRegistry.getFluid("water");
+        AdvancedSmelting.addMelting(Block.ice,       0, getFluidTempMod(ft), new FluidStack(fluid, 1000));
+        AdvancedSmelting.addMelting(Block.blockSnow, 0, getFluidTempMod(ft), new FluidStack(fluid, 500));
+        AdvancedSmelting.addMelting(Block.snow,      0, getFluidTempMod(ft), new FluidStack(fluid, 250));
+    }
+    public static void addSmeltingGlass ()
+    {
+        final FluidType ft = FluidType.Glass;
+        Fluid fluid = TContent.moltenGlassFluid;
+        AdvancedSmelting.addMelting(Block.sand,  0, getFluidTempMod(ft), new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
+        AdvancedSmelting.addMelting(Block.glass, 0, getFluidTempMod(ft), new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
+        AdvancedSmelting.addMelting(Block.thinGlass,     0, getFluidTempMod(ft), new FluidStack(fluid, 250));
+        AdvancedSmelting.addMelting(TContent.clearGlass, 0, getFluidTempMod(ft), new FluidStack(fluid, 1000));
+        AdvancedSmelting.addMelting(TContent.glassPane,  0, getFluidTempMod(ft), new FluidStack(fluid, 250));
+    }
+    public static void addSmeltingStone ()
+    {
+        final FluidType ft = FluidType.Stone;
+        Fluid fluid = TContent.moltenStoneFluid;
+        AdvancedSmelting.addMelting(Block.stone,          0, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue / 18));
+        AdvancedSmelting.addMelting(Block.cobblestone,    0, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue / 18));
+        AdvancedSmelting.addMelting(TContent.craftedSoil, 1, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue / 4));
+    }
+
     
     public static int getFluidTempMod (FluidType type)
     {

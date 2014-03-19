@@ -18,13 +18,9 @@ public class HighOvenDuctContainer extends TSActiveContainer
         logic = duct;
         playerInv = inventoryplayer;
 
-        for (int column = 0; column < 3; column++)
+        for (int column = 0; column < 9; column++)
         {
-            for (int row = 0; row < 3; row++)
-            {
-                addSlotToContainer(new Slot(logic, row + (column * 3), 54 + (row * 18),
-                                            16 + (column * 18)));
-            }
+            addSlotToContainer(new Slot(logic, column, 54 + (column * 18), 16));
         }
         /* Player inventory */
         for (int column = 0; column < 3; column++)

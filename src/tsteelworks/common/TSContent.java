@@ -157,6 +157,7 @@ public class TSContent implements IFuelHandler
         TSRecipes.addOreDictionarySmeltingRecipes();
         TSRecipes.addSmeltingIron();
         TSRecipes.addSmeltingSteel();
+        TSRecipes.addSmeltingSolids();
         TSRecipes.addSmeltingPigIron();
         TSRecipes.addSmeltingGold();
         TSRecipes.addSmeltingMisc();

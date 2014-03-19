@@ -4,10 +4,18 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSourceImpl;
+import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
+import net.minecraft.dispenser.IBehaviorDispenseItem;
+import net.minecraft.dispenser.IRegistry;
+import net.minecraft.dispenser.RegistryDefaulted;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -38,17 +46,22 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {
+    public static final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public boolean               validStructure;
     boolean                      structureHasBottom;
     boolean                      structureHasTop;
     boolean                      redstoneActivated;
     byte                         direction;
+    
     int                          internalTemp;
     int                          fuelHeatRate;
     int                          internalCoolDownRate;
     public int                   fuelBurnTime;
     boolean                      isMeltingItems;
+    
+    public CoordTuple            outputItemDuct;
     public CoordTuple            centerPos;
+    
     public int[]                 activeTemps;
     public int[]                 meltingTemps;
     int                          tick;
@@ -288,7 +301,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     else if (activeTemps[i] >= meltingTemps[i]) if (!worldObj.isRemote)
                     {
                         FluidStack result = getNormalResultFor(inventory[i]);
-                        if (result != null) 
+                        ItemStack resultitemstack = getSolidMixedResultFor(result);
+                        if (resultitemstack != null) 
+                        {
+                            if (resultitemstack != null) 
+                                meltItemsSolid(i, resultitemstack, true);
+                        }
+                        else if (result != null) 
                         {
                             FluidStack resultEx = getMixedResultFor(result);
                             if (resultEx != null) 
@@ -296,6 +315,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                             else
                                 meltItems(i, result, false);
                         }
+                            
                     }
                 }
                 else
@@ -320,6 +340,20 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
     
+    void meltItemsSolid (int slot, ItemStack stack, Boolean doMix)
+    {
+//        if (addMoltenMetal(fluid, false))
+//        {
+            if (inventory[slot].stackSize >= 2)
+                inventory[slot].stackSize--;
+            else
+                inventory[slot] = null;
+            activeTemps[slot] = 20;
+            if (doMix) removeMixers();
+            addSolidItem(stack);
+            onInventoryChanged();
+//        }
+    }
     /**
      * Get molten result for given item
      * 
@@ -338,6 +372,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
         if (mixResult != null)
             return new FluidStack(mixResult.fluid, stack.amount);
+        return null;
+    }
+    
+    public ItemStack getSolidMixedResultFor (FluidStack stack)
+    {
+        FluidType resultType = FluidType.getFluidType(stack.getFluid());
+        ItemStack mixResult = AdvancedSmelting.instance.validateSolidMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
+        if (mixResult != null)
+            return new ItemStack(mixResult.itemID, mixResult.stackSize, mixResult.getItemDamage());
         return null;
     }
     
@@ -726,7 +769,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 validStructure = false;
             }
     }
-
+    
     /**
      * Scan the controller layer of the structure for valid components
      * 
@@ -946,10 +989,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         }
                     }
                     else
+                    {
                         if (servant.setMaster(xCoord, yCoord, zCoord))
                         {
                             tempBricks++;
                         }
+                    }
                 }
         }
         return tempBricks;
@@ -1015,6 +1060,83 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             return true;
         }
+    }
+    
+    void addSolidItem (ItemStack stack)
+    {
+        boolean transferred = false;
+        // Dispense item if no duct is present
+        if (outputItemDuct != null)
+        {
+            TileEntity te = worldObj.getBlockTileEntity(outputItemDuct.x, outputItemDuct.y, outputItemDuct.z);
+            if (te instanceof HighOvenDuctLogic)
+            {
+                final HighOvenDuctLogic duct = (HighOvenDuctLogic) worldObj.getBlockTileEntity(te.xCoord, te.yCoord, te.zCoord);
+                transferred = sendItemToDuct(duct, stack);
+            }
+        }
+        if (!transferred)
+            dispenseSolidItem(stack);
+    }
+    
+    void dispenseSolidItem (ItemStack stack)
+    {
+        BlockSourceImpl blocksourceimpl = new BlockSourceImpl(this.worldObj, xCoord, yCoord, zCoord);
+        IBehaviorDispenseItem ibehaviordispenseitem = (IBehaviorDispenseItem)dispenseBehaviorRegistry.getObject(stack.getItem());
+
+        if (ibehaviordispenseitem != IBehaviorDispenseItem.itemDispenseBehaviorProvider)
+        {
+            ItemStack itemstack1 = ibehaviordispenseitem.dispense(blocksourceimpl, stack);
+        }
+    }
+    
+    boolean sendItemToDuct(HighOvenDuctLogic duct, ItemStack stack)
+    {
+        boolean effective = false;
+        for (int slot = 0; slot < duct.getSizeInventory(); slot++)
+        {
+            ItemStack getstack = duct.getStackInSlot(slot);
+            if (duct.isItemValidForSlot(slot, stack))
+            {
+                boolean flag = false;
+    
+                if (stack != null && !flag)
+                {
+                    if (getstack == null)
+                    {
+                        
+                        int max = Math.min(stack.getMaxStackSize(), duct.getInventoryStackLimit());
+                        if (max >= stack.stackSize)
+                        {
+                            duct.setInventorySlotContents(slot, stack);
+                            stack = null;
+                            flag = true;
+                        }
+                        else
+                        {
+                            duct.setInventorySlotContents(slot, stack.splitStack(max));
+                            flag = true;
+                        }
+                        
+                    }
+                    else if (duct.areItemStacksEqualItem(getstack, stack))
+                    {
+                        int max = Math.min(stack.getMaxStackSize(), duct.getInventoryStackLimit());
+                        if (max > getstack.stackSize)
+                        {
+                            int l = Math.min(stack.stackSize, max - getstack.stackSize);
+                            stack.stackSize -= l;
+                            getstack.stackSize += l;
+                            flag = l > 0;
+                        }
+                    }
+                }
+                if (flag)
+                    duct.onInventoryChanged();
+                effective = flag;
+            }
+        }
+        return effective;
     }
     
     /**
