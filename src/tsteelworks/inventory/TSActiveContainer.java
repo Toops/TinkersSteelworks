@@ -18,9 +18,9 @@ public class TSActiveContainer extends Container
 
     protected TSActiveSlot addDualSlotToContainer (TSActiveSlot slot)
     {
-        slot.activeSlotNumber = this.activeInventorySlots.size();
-        this.activeInventorySlots.add(slot);
-        this.addSlotToContainer(slot);
+        slot.activeSlotNumber = activeInventorySlots.size();
+        activeInventorySlots.add(slot);
+        addSlotToContainer(slot);
         return slot;
     }
 

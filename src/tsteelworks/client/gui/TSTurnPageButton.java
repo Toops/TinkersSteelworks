@@ -17,38 +17,35 @@ public class TSTurnPageButton extends GuiButton
      */
     private final boolean nextPage;
 
+    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/bookleft.png");
+
     public TSTurnPageButton(int par1, int par2, int par3, boolean par4)
     {
         super(par1, par2, par3, 23, 13, "");
-        this.nextPage = par4;
+        nextPage = par4;
     }
-
-    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/bookleft.png");
 
     /**
      * Draws this button to the screen.
      */
+    @Override
     public void drawButton (Minecraft par1Minecraft, int par2, int par3)
     {
-        if (this.drawButton)
+        if (drawButton)
         {
-            boolean var4 = par2 >= this.xPosition && par3 >= this.yPosition && par2 < this.xPosition + this.width && par3 < this.yPosition + this.height;
+            final boolean var4 = (par2 >= xPosition) && (par3 >= yPosition) && (par2 < (xPosition + width)) && (par3 < (yPosition + height));
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             par1Minecraft.getTextureManager().bindTexture(background);
             int var5 = 0;
             int var6 = 192;
 
             if (var4)
-            {
                 var5 += 23;
-            }
 
-            if (!this.nextPage)
-            {
+            if (!nextPage)
                 var6 += 13;
-            }
 
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, var5, var6, 23, 13);
+            drawTexturedModalRect(xPosition, yPosition, var5, var6, 23, 13);
         }
     }
 }

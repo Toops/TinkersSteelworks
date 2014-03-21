@@ -58,7 +58,70 @@ public class TSClientProxy extends TSCommonProxy
     public static Minecraft mc;
     public static SmallFontRenderer smallFontRenderer;
     public static RenderItem itemRenderer = new RenderItem();
-    
+
+    public static Document highovenXml;
+
+    public static Map<String, Class<? extends TSBookPage>> pageClasses = new HashMap<String, Class<? extends TSBookPage>>();
+
+    public static Document getManualFromStack (ItemStack stack)
+    {
+        switch (stack.getItemDamage())
+        {
+        case 0:
+            return highovenXml;
+        }
+
+        return null;
+    }
+
+    public static Class<? extends TSBookPage> getPageClass (String type)
+    {
+        return pageClasses.get(type);
+    }
+
+    public static void registerManualPage (String type, Class<? extends TSBookPage> clazz)
+    {
+        pageClasses.put(type, clazz);
+    }
+
+    public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
+    {
+        if (mc == null)
+            mc = Minecraft.getMinecraft();
+
+        if ((mc.renderViewEntity != null) && (mc.effectRenderer != null))
+        {
+            int i = mc.gameSettings.particleSetting;
+
+            if ((i == 1) && (mc.theWorld.rand.nextInt(3) == 0))
+                i = 2;
+
+            final double d6 = mc.renderViewEntity.posX - par2;
+            final double d7 = mc.renderViewEntity.posY - par4;
+            final double d8 = mc.renderViewEntity.posZ - par6;
+            EntityFX entityfx = null;
+
+            final double d9 = 16.0D;
+
+            if (((d6 * d6) + (d7 * d7) + (d8 * d8)) > (d9 * d9))
+                return null;
+            else if (i > 1)
+                return null;
+            else
+            {
+                if (par1Str.equals("scorchedbrick"))
+                    entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
+
+                if (entityfx != null)
+                    mc.effectRenderer.addEffect(entityfx);
+
+                return entityfx;
+            }
+        }
+        else
+            return null;
+    }
+
     @Override
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
     {
@@ -68,49 +131,12 @@ public class TSClientProxy extends TSCommonProxy
             return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
         if (ID == manualGuiID)
         {
-            ItemStack stack = player.getCurrentEquippedItem();
+            final ItemStack stack = player.getCurrentEquippedItem();
             return new TSManualGui(stack, TSClientProxy.getManualFromStack(stack));
         }
         return null;
     }
 
-    @Override
-    public void registerRenderer ()
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
-        RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
-        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
-    }
-    
-    public static Document highovenXml;
-
-    public void readManuals ()
-    {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        highovenXml = readManual("/assets/tsteelworks/manuals/highoven.xml", dbFactory);
-        initManualIcons();
-        initManualRecipes();
-        initManualPages();
-    }
-    
-    Document readManual (String location, DocumentBuilderFactory dbFactory)
-    {
-        try
-        {
-            InputStream stream = TSteelworks.class.getResourceAsStream(location);
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(stream);
-            doc.getDocumentElement().normalize();
-            return doc;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
     public void initManualIcons ()
     {
         // TSTL
@@ -129,7 +155,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
         TSClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
         TSClientRegistry.registerManualIcon("spongeblock", new ItemStack(Block.sponge));
-        
+
         // TCON
         TSClientRegistry.registerManualIcon("smelterybook", TConstructClientRegistry.getManualIcon("smelterybook"));
         TSClientRegistry.registerManualIcon("smeltery", TConstructClientRegistry.getManualIcon("smeltery"));
@@ -139,7 +165,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("searedbrick", TConstructClientRegistry.getManualIcon("searedbrick"));
         TSClientRegistry.registerManualIcon("drain", TConstructClientRegistry.getManualIcon("drain"));
         TSClientRegistry.registerManualIcon("faucet", TConstructClientRegistry.getManualIcon("faucet"));
-        
+
         TSClientRegistry.registerManualIcon("blankpattern", TConstructClientRegistry.getManualIcon("blankpattern"));
         TSClientRegistry.registerManualIcon("toolstation", TConstructClientRegistry.getManualIcon("toolstation"));
         TSClientRegistry.registerManualIcon("partcrafter", TConstructClientRegistry.getManualIcon("partcrafter"));
@@ -183,7 +209,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("bowstring", TConstructClientRegistry.getManualIcon("bowstring"));
         TSClientRegistry.registerManualIcon("arrowhead", TConstructClientRegistry.getManualIcon("arrowhead"));
         TSClientRegistry.registerManualIcon("fletching", TConstructClientRegistry.getManualIcon("fletching"));
-        
+
         TSClientRegistry.registerManualIcon("bloodbucket", TConstructClientRegistry.getManualIcon("bloodbucket"));
         TSClientRegistry.registerManualIcon("emeraldbucket", TConstructClientRegistry.getManualIcon("emeraldbucket"));
         TSClientRegistry.registerManualIcon("gluebucket", TConstructClientRegistry.getManualIcon("gluebucket"));
@@ -212,55 +238,71 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("cleavericon", TConstructClientRegistry.getManualIcon("cleavericon"));
         TSClientRegistry.registerManualIcon("battleaxeicon", TConstructClientRegistry.getManualIcon("battleaxeicon"));
     }
-    
+
     public void initManualRecipes ()
     {
-        ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
-        ItemStack sand = new ItemStack(Block.sand, 1, 0);
-        ItemStack redstoneDust = new ItemStack(Item.redstone);
-        ItemStack gunpowderDust = new ItemStack(Item.gunpowder);
-        ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
-        ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
-        ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
-        
-        ItemStack brick = new ItemStack(Item.brick);
-        ItemStack brickBlock = new ItemStack(Block.brick);
-        
-        ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
-        ItemStack scorchedbrickBlock = new ItemStack(TSContent.highoven, 1, 2);
-        
-        TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, 
-                                                new ItemStack(TContent.moltenStone, 1), brick);
-        TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, 
-                                                new ItemStack(TContent.moltenStone, 1), brickBlock);
-        
-        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), 
-                                                   scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
-        
-        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), 
-                                                   scorchedbrick, scorchedbrick, scorchedbrick, 
-                                                   scorchedbrick, null, scorchedbrick, 
-                                                   scorchedbrick, scorchedbrick, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1), 
-                                                   scorchedbrick, null, scorchedbrick, 
-                                                   scorchedbrick, null, scorchedbrick, 
-                                                   scorchedbrick, null, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock, 
-                                                   charcoal, charcoal, charcoal, 
-                                                   charcoal, charcoal, charcoal, 
-                                                   charcoal, charcoal, charcoal);
-    }
-    
-    public static Map<String, Class<? extends TSBookPage>> pageClasses = new HashMap<String, Class<? extends TSBookPage>>();
+        final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
+        new ItemStack(Block.sand, 1, 0);
+        new ItemStack(Item.redstone);
+        new ItemStack(Item.gunpowder);
+        final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
+        new ItemStack(TSContent.dustStorageBlock, 1, 0);
+        new ItemStack(TSContent.dustStorageBlock, 1, 1);
 
-    public static void registerManualPage (String type, Class<? extends TSBookPage> clazz)
-    {
-        pageClasses.put(type, clazz);
+        final ItemStack brick = new ItemStack(Item.brick);
+        final ItemStack brickBlock = new ItemStack(Block.brick);
+
+        final ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
+        final ItemStack scorchedbrickBlock = new ItemStack(TSContent.highoven, 1, 2);
+
+        TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TContent.moltenStone, 1), brick);
+        TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TContent.moltenStone, 1), brickBlock);
+
+        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
+
+        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick, null, scorchedbrick,
+                scorchedbrick, scorchedbrick, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1), scorchedbrick, null, scorchedbrick, scorchedbrick, null, scorchedbrick, scorchedbrick,
+                null, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal);
     }
 
-    public static Class<? extends TSBookPage> getPageClass (String type)
+    @Override
+    public void postInit ()
     {
-        return pageClasses.get(type);
+    }
+
+    @Override
+    public void readManuals ()
+    {
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        highovenXml = readManual("/assets/tsteelworks/manuals/highoven.xml", dbFactory);
+        initManualIcons();
+        initManualRecipes();
+        initManualPages();
+    }
+
+    @Override
+    public void registerRenderer ()
+    {
+        final Minecraft mc = Minecraft.getMinecraft();
+        smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
+        RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
+        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
+    }
+
+    @Override
+    public void registerSounds ()
+    {
+    }
+
+    @Override
+    public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
+    {
+        if (particle != "scorchedbrick")
+            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+        else
+            doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
     }
 
     void initManualPages ()
@@ -280,81 +322,21 @@ public class TSClientProxy extends TSCommonProxy
         TSClientProxy.registerManualPage("blockcast", TSBlockCastPage.class);
         TSClientProxy.registerManualPage("blank", TSBlankPage.class);
     }
-    
-    public static Document getManualFromStack (ItemStack stack)
+
+    Document readManual (String location, DocumentBuilderFactory dbFactory)
     {
-        switch (stack.getItemDamage())
+        try
         {
-        case 0:
-            return highovenXml;
+            final InputStream stream = TSteelworks.class.getResourceAsStream(location);
+            final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            final Document doc = dBuilder.parse(stream);
+            doc.getDocumentElement().normalize();
+            return doc;
         }
-
-        return null;
-    }
-    
-    @Override
-    public void registerSounds ()
-    {}
-    
-    public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
-    {
-        if (particle != "scorchedbrick")
-            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-        else
-            this.doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-    }
-
-    public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
-    {
-        if (this.mc == null)
-            this.mc = Minecraft.getMinecraft();
-
-        if (this.mc.renderViewEntity != null && this.mc.effectRenderer != null)
+        catch (final Exception e)
         {
-            int i = this.mc.gameSettings.particleSetting;
-
-            if (i == 1 && mc.theWorld.rand.nextInt(3) == 0)
-            {
-                i = 2;
-            }
-
-            double d6 = this.mc.renderViewEntity.posX - par2;
-            double d7 = this.mc.renderViewEntity.posY - par4;
-            double d8 = this.mc.renderViewEntity.posZ - par6;
-            EntityFX entityfx = null;
-
-            double d9 = 16.0D;
-
-            if (d6 * d6 + d7 * d7 + d8 * d8 > d9 * d9)
-            {
-                return null;
-            }
-            else if (i > 1)
-            {
-                return null;
-                }
-                else
-                {
-                    if (par1Str.equals("scorchedbrick"))
-                    {
-                        entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
-                    }
-
-                    if (entityfx != null)
-                    {
-                        this.mc.effectRenderer.addEffect((EntityFX) entityfx);
-                    }
-
-                    return (EntityFX) entityfx;
-                }
-        }
-        else
-        {
+            e.printStackTrace();
             return null;
         }
     }
-    
-    @Override
-    public void postInit ()
-    {}
 }

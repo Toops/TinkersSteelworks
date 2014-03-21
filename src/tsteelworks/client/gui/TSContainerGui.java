@@ -78,30 +78,29 @@ public abstract class TSContainerGui extends GuiScreen
 
     public TSContainerGui(TSActiveContainer activeContainer)
     {
-        this.container = activeContainer;
-        this.field_94068_E = true;
+        container = activeContainer;
+        field_94068_E = true;
     }
 
     /**
-     * Adds the buttons (and other controls) to the screen in question.
+     * Returns true if this GUI should pause the game when it is displayed in single-player
      */
-    public void initGui ()
+    @Override
+    public boolean doesGuiPauseGame ()
     {
-        super.initGui();
-        this.mc.thePlayer.openContainer = this.container;
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
+        return false;
     }
 
     /**
      * Draws the screen and all the components in it.
      */
+    @Override
     public void drawScreen (int mouseX, int mouseY, float par3)
     {
-        this.drawDefaultBackground();
-        int gLeft = this.guiLeft;
-        int gTop = this.guiTop;
-        this.drawGuiContainerBackgroundLayer(par3, mouseX, mouseY);
+        drawDefaultBackground();
+        final int gLeft = guiLeft;
+        final int gTop = guiTop;
+        drawGuiContainerBackgroundLayer(par3, mouseX, mouseY);
 
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.disableStandardItemLighting();
@@ -111,34 +110,34 @@ public abstract class TSContainerGui extends GuiScreen
 
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glPushMatrix();
-        GL11.glTranslatef((float) gLeft, (float) gTop, 0.0F);
+        GL11.glTranslatef(gLeft, gTop, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
-        this.mainSlot = null;
-        short short1 = 240;
-        short short2 = 240;
+        mainSlot = null;
+        final short short1 = 240;
+        final short short2 = 240;
 
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) short1 / 1.0F, (float) short2 / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, short1 / 1.0F, short2 / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int slotXPos;
         int slotYPos;
 
-        for (int slotIter = 0; slotIter < this.container.inventorySlots.size(); ++slotIter)
+        for (int slotIter = 0; slotIter < container.inventorySlots.size(); ++slotIter)
         {
-            Slot slot = (Slot) this.container.inventorySlots.get(slotIter);
+            final Slot slot = (Slot) container.inventorySlots.get(slotIter);
             if (!(slot instanceof TSActiveSlot) || ((TSActiveSlot) slot).getActive())
             {
-                this.drawSlotInventory(slot);
+                drawSlotInventory(slot);
 
-                if (this.isMouseOverSlot(slot, mouseX, mouseY))
+                if (isMouseOverSlot(slot, mouseX, mouseY))
                 {
-                    this.mainSlot = slot;
+                    mainSlot = slot;
                     GL11.glDisable(GL11.GL_LIGHTING);
                     GL11.glDisable(GL11.GL_DEPTH_TEST);
                     slotXPos = slot.xDisplayPosition;
                     slotYPos = slot.yDisplayPosition;
-                    this.drawGradientRect(slotXPos, slotYPos, slotXPos + 16, slotYPos + 16, -2130706433, -2130706433);
+                    drawGradientRect(slotXPos, slotYPos, slotXPos + 16, slotYPos + 16, -2130706433, -2130706433);
                     GL11.glEnable(GL11.GL_LIGHTING);
                     GL11.glEnable(GL11.GL_DEPTH_TEST);
                 }
@@ -166,58 +165,56 @@ public abstract class TSContainerGui extends GuiScreen
             }
         }*/
 
-        this.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        InventoryPlayer inventoryplayer = this.mc.thePlayer.inventory;
-        ItemStack itemstack = this.draggedStack == null ? inventoryplayer.getItemStack() : this.draggedStack;
+        drawGuiContainerForegroundLayer(mouseX, mouseY);
+        final InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
+        ItemStack itemstack = draggedStack == null ? inventoryplayer.getItemStack() : draggedStack;
 
         if (itemstack != null)
         {
-            byte b0 = 8;
-            slotYPos = this.draggedStack == null ? 8 : 16;
+            final byte b0 = 8;
+            slotYPos = draggedStack == null ? 8 : 16;
             String s = null;
 
-            if (this.draggedStack != null && this.isRightMouseClick)
+            if ((draggedStack != null) && isRightMouseClick)
             {
                 itemstack = itemstack.copy();
-                itemstack.stackSize = MathHelper.ceiling_float_int((float) itemstack.stackSize / 2.0F);
+                itemstack.stackSize = MathHelper.ceiling_float_int(itemstack.stackSize / 2.0F);
             }
-            else if (this.field_94076_q && this.field_94077_p.size() > 1)
+            else if (field_94076_q && (field_94077_p.size() > 1))
             {
                 itemstack = itemstack.copy();
-                itemstack.stackSize = this.field_94069_F;
+                itemstack.stackSize = field_94069_F;
 
                 if (itemstack.stackSize == 0)
-                {
                     s = "" + EnumChatFormatting.YELLOW + "0";
-                }
             }
 
-            this.drawItemStack(itemstack, mouseX - gLeft - b0, mouseY - gTop - slotYPos, s);
+            drawItemStack(itemstack, mouseX - gLeft - b0, mouseY - gTop - slotYPos, s);
         }
 
-        if (this.returningStack != null)
+        if (returningStack != null)
         {
-            float f1 = (float) (Minecraft.getSystemTime() - this.returningStackTime) / 100.0F;
+            float f1 = (Minecraft.getSystemTime() - returningStackTime) / 100.0F;
 
             if (f1 >= 1.0F)
             {
                 f1 = 1.0F;
-                this.returningStack = null;
+                returningStack = null;
             }
 
-            slotXPos = this.returningStackDestSlot.xDisplayPosition - this.field_85049_r;
-            slotYPos = this.returningStackDestSlot.yDisplayPosition - this.field_85048_s;
-            int xPos = this.field_85049_r + (int) ((float) slotXPos * f1);
-            int yPos = this.field_85048_s + (int) ((float) slotYPos * f1);
-            this.drawItemStack(this.returningStack, xPos, yPos, (String) null);
+            slotXPos = returningStackDestSlot.xDisplayPosition - field_85049_r;
+            slotYPos = returningStackDestSlot.yDisplayPosition - field_85048_s;
+            final int xPos = field_85049_r + (int) (slotXPos * f1);
+            final int yPos = field_85048_s + (int) (slotYPos * f1);
+            drawItemStack(returningStack, xPos, yPos, (String) null);
         }
 
         GL11.glPopMatrix();
 
-        if (inventoryplayer.getItemStack() == null && this.mainSlot != null && this.mainSlot.getHasStack())
+        if ((inventoryplayer.getItemStack() == null) && (mainSlot != null) && mainSlot.getHasStack())
         {
-            ItemStack itemstack1 = this.mainSlot.getStack();
-            this.drawItemStackTooltip(itemstack1, mouseX, mouseY);
+            final ItemStack itemstack1 = mainSlot.getStack();
+            drawItemStackTooltip(itemstack1, mouseX, mouseY);
         }
 
         GL11.glEnable(GL11.GL_LIGHTING);
@@ -225,34 +222,54 @@ public abstract class TSContainerGui extends GuiScreen
         RenderHelper.enableStandardItemLighting();
     }
 
-    protected void drawItemStack (ItemStack par1ItemStack, int par2, int par3, String par4Str)
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
+    @Override
+    public void initGui ()
     {
-        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
-        this.zLevel = 200.0F;
-        itemRenderer.zLevel = 200.0F;
-        itemRenderer.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine, par1ItemStack, par2, par3);
-        itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, par1ItemStack, par2, par3 - (this.draggedStack == null ? 0 : 8), par4Str);
-        this.zLevel = 0.0F;
-        itemRenderer.zLevel = 0.0F;
+        super.initGui();
+        mc.thePlayer.openContainer = container;
+        guiLeft = (width - xSize) / 2;
+        guiTop = (height - ySize) / 2;
     }
 
-    protected void drawItemStackTooltip (ItemStack par1ItemStack, int par2, int par3)
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
+    @Override
+    public void onGuiClosed ()
     {
-        List list = par1ItemStack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
+        if (mc.thePlayer != null)
+            container.onContainerClosed(mc.thePlayer);
+    }
 
-        for (int k = 0; k < list.size(); ++k)
-        {
-            if (k == 0)
-            {
-                list.set(k, "\u00a7" + Integer.toHexString(par1ItemStack.getRarity().rarityColor) + (String) list.get(k));
-            }
-            else
-            {
-                list.set(k, EnumChatFormatting.GRAY + (String) list.get(k));
-            }
-        }
+    /**
+     * Called from the main game loop to update the screen.
+     */
+    @Override
+    public void updateScreen ()
+    {
+        super.updateScreen();
 
-        this.func_102021_a(list, par2, par3);
+        if (!mc.thePlayer.isEntityAlive() || mc.thePlayer.isDead)
+            mc.thePlayer.closeScreen();
+    }
+
+    /**
+     * This function is what controls the hotbar shortcut check when you press a number key when hovering a stack.
+     */
+    protected boolean checkHotbarKeys (int par1)
+    {
+        if ((mc.thePlayer.inventory.getItemStack() == null) && (mainSlot != null))
+            for (int j = 0; j < 9; ++j)
+                if (par1 == (2 + j))
+                {
+                    handleMouseClick(mainSlot, mainSlot.slotNumber, j, 2);
+                    return true;
+                }
+
+        return false;
     }
 
     /**
@@ -261,92 +278,7 @@ public abstract class TSContainerGui extends GuiScreen
      */
     protected void drawCreativeTabHoveringText (String par1Str, int par2, int par3)
     {
-        this.func_102021_a(Arrays.asList(new String[] { par1Str }), par2, par3);
-    }
-
-    protected void func_102021_a (List par1List, int par2, int par3)
-    {
-        if (!par1List.isEmpty())
-        {
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-            int k = 0;
-            Iterator iterator = par1List.iterator();
-
-            while (iterator.hasNext())
-            {
-                String s = (String) iterator.next();
-                int l = this.fontRenderer.getStringWidth(s);
-
-                if (l > k)
-                {
-                    k = l;
-                }
-            }
-
-            int i1 = par2 + 12;
-            int j1 = par3 - 12;
-            int k1 = 8;
-
-            if (par1List.size() > 1)
-            {
-                k1 += 2 + (par1List.size() - 1) * 10;
-            }
-
-            if (i1 + k > this.width)
-            {
-                i1 -= 28 + k;
-            }
-
-            if (j1 + k1 + 6 > this.height)
-            {
-                j1 = this.height - k1 - 6;
-            }
-
-            this.zLevel = 300.0F;
-            itemRenderer.zLevel = 300.0F;
-            int l1 = -267386864;
-            this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
-            int i2 = 1347420415;
-            int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-            this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
-
-            for (int k2 = 0; k2 < par1List.size(); ++k2)
-            {
-                String s1 = (String) par1List.get(k2);
-                this.fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
-
-                if (k2 == 0)
-                {
-                    j1 += 2;
-                }
-
-                j1 += 10;
-            }
-
-            this.zLevel = 0.0F;
-            itemRenderer.zLevel = 0.0F;
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
-            RenderHelper.enableStandardItemLighting();
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        }
-    }
-
-    /**
-     * Draw the foreground layer for the GuiContainer (everything in front of the items)
-     */
-    protected void drawGuiContainerForegroundLayer (int par1, int par2)
-    {
+        func_102021_a(Arrays.asList(new String[] { par1Str }), par2, par3);
     }
 
     /**
@@ -355,35 +287,64 @@ public abstract class TSContainerGui extends GuiScreen
     protected abstract void drawGuiContainerBackgroundLayer (float f, int i, int j);
 
     /**
+     * Draw the foreground layer for the GuiContainer (everything in front of the items)
+     */
+    protected void drawGuiContainerForegroundLayer (int par1, int par2)
+    {
+    }
+
+    protected void drawItemStack (ItemStack par1ItemStack, int par2, int par3, String par4Str)
+    {
+        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+        zLevel = 200.0F;
+        itemRenderer.zLevel = 200.0F;
+        itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, par1ItemStack, par2, par3);
+        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, par1ItemStack, par2, par3 - (draggedStack == null ? 0 : 8), par4Str);
+        zLevel = 0.0F;
+        itemRenderer.zLevel = 0.0F;
+    }
+
+    protected void drawItemStackTooltip (ItemStack par1ItemStack, int par2, int par3)
+    {
+        final List list = par1ItemStack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips);
+
+        for (int k = 0; k < list.size(); ++k)
+            if (k == 0)
+                list.set(k, "\u00a7" + Integer.toHexString(par1ItemStack.getRarity().rarityColor) + (String) list.get(k));
+            else
+                list.set(k, EnumChatFormatting.GRAY + (String) list.get(k));
+
+        func_102021_a(list, par2, par3);
+    }
+
+    /**
      * Draws an inventory slot
      */
     protected void drawSlotInventory (Slot par1Slot)
     {
-        int i = par1Slot.xDisplayPosition;
-        int j = par1Slot.yDisplayPosition;
+        final int i = par1Slot.xDisplayPosition;
+        final int j = par1Slot.yDisplayPosition;
         ItemStack itemstack = par1Slot.getStack();
         boolean flag = false;
-        boolean flag1 = par1Slot == this.clickedSlot && this.draggedStack != null && !this.isRightMouseClick;
-        ItemStack itemstack1 = this.mc.thePlayer.inventory.getItemStack();
+        boolean flag1 = (par1Slot == clickedSlot) && (draggedStack != null) && !isRightMouseClick;
+        final ItemStack itemstack1 = mc.thePlayer.inventory.getItemStack();
         String s = null;
 
-        if (par1Slot == this.clickedSlot && this.draggedStack != null && this.isRightMouseClick && itemstack != null)
+        if ((par1Slot == clickedSlot) && (draggedStack != null) && isRightMouseClick && (itemstack != null))
         {
             itemstack = itemstack.copy();
             itemstack.stackSize /= 2;
         }
-        else if (this.field_94076_q && this.field_94077_p.contains(par1Slot) && itemstack1 != null)
+        else if (field_94076_q && field_94077_p.contains(par1Slot) && (itemstack1 != null))
         {
-            if (this.field_94077_p.size() == 1)
-            {
+            if (field_94077_p.size() == 1)
                 return;
-            }
 
-            if (Container.func_94527_a(par1Slot, itemstack1, true) && this.container.canDragIntoSlot(par1Slot))
+            if (Container.func_94527_a(par1Slot, itemstack1, true) && container.canDragIntoSlot(par1Slot))
             {
                 itemstack = itemstack1.copy();
                 flag = true;
-                Container.func_94525_a(this.field_94077_p, this.field_94071_C, itemstack, par1Slot.getStack() == null ? 0 : par1Slot.getStack().stackSize);
+                Container.func_94525_a(field_94077_p, field_94071_C, itemstack, par1Slot.getStack() == null ? 0 : par1Slot.getStack().stackSize);
 
                 if (itemstack.stackSize > itemstack.getMaxStackSize())
                 {
@@ -399,23 +360,23 @@ public abstract class TSContainerGui extends GuiScreen
             }
             else
             {
-                this.field_94077_p.remove(par1Slot);
-                this.func_94066_g();
+                field_94077_p.remove(par1Slot);
+                func_94066_g();
             }
         }
 
-        this.zLevel = 100.0F;
+        zLevel = 100.0F;
         itemRenderer.zLevel = 100.0F;
 
         if (itemstack == null)
         {
-            Icon icon = par1Slot.getBackgroundIconIndex();
+            final Icon icon = par1Slot.getBackgroundIconIndex();
 
             if (icon != null)
             {
                 GL11.glDisable(GL11.GL_LIGHTING);
-                this.mc.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
-                this.drawTexturedModelRectFromIcon(i, j, icon, 16, 16);
+                mc.getTextureManager().bindTexture(TextureMap.locationItemsTexture);
+                drawTexturedModelRectFromIcon(i, j, icon, 16, 16);
                 GL11.glEnable(GL11.GL_LIGHTING);
                 flag1 = true;
             }
@@ -424,45 +385,150 @@ public abstract class TSContainerGui extends GuiScreen
         if (!flag1)
         {
             if (flag)
-            {
                 drawRect(i, j, i + 16, j + 16, -2130706433);
-            }
 
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            itemRenderer.renderItemAndEffectIntoGUI(this.fontRenderer, this.mc.renderEngine, itemstack, i, j);
-            itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, itemstack, i, j, s);
+            itemRenderer.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j);
+            itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j, s);
         }
 
         itemRenderer.zLevel = 0.0F;
-        this.zLevel = 0.0F;
+        zLevel = 0.0F;
+    }
+
+    protected void func_102021_a (List par1List, int par2, int par3)
+    {
+        if (!par1List.isEmpty())
+        {
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            RenderHelper.disableStandardItemLighting();
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            int k = 0;
+            final Iterator iterator = par1List.iterator();
+
+            while (iterator.hasNext())
+            {
+                final String s = (String) iterator.next();
+                final int l = fontRenderer.getStringWidth(s);
+
+                if (l > k)
+                    k = l;
+            }
+
+            int i1 = par2 + 12;
+            int j1 = par3 - 12;
+            int k1 = 8;
+
+            if (par1List.size() > 1)
+                k1 += 2 + ((par1List.size() - 1) * 10);
+
+            if ((i1 + k) > width)
+                i1 -= 28 + k;
+
+            if ((j1 + k1 + 6) > height)
+                j1 = height - k1 - 6;
+
+            zLevel = 300.0F;
+            itemRenderer.zLevel = 300.0F;
+            final int l1 = -267386864;
+            drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
+            drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
+            drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
+            final int i2 = 1347420415;
+            final int j2 = ((i2 & 16711422) >> 1) | (i2 & -16777216);
+            drawGradientRect(i1 - 3, (j1 - 3) + 1, (i1 - 3) + 1, (j1 + k1 + 3) - 1, i2, j2);
+            drawGradientRect(i1 + k + 2, (j1 - 3) + 1, i1 + k + 3, (j1 + k1 + 3) - 1, i2, j2);
+            drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, (j1 - 3) + 1, i2, i2);
+            drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
+
+            for (int k2 = 0; k2 < par1List.size(); ++k2)
+            {
+                final String s1 = (String) par1List.get(k2);
+                fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
+
+                if (k2 == 0)
+                    j1 += 2;
+
+                j1 += 10;
+            }
+
+            zLevel = 0.0F;
+            itemRenderer.zLevel = 0.0F;
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            RenderHelper.enableStandardItemLighting();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        }
+    }
+
+    protected void func_85041_a (int par1, int par2, int par3, long par4)
+    {
+        final Slot slot = getSlotAtPosition(par1, par2);
+        final ItemStack itemstack = mc.thePlayer.inventory.getItemStack();
+
+        if ((clickedSlot != null) && mc.gameSettings.touchscreen)
+        {
+            if ((par3 == 0) || (par3 == 1))
+                if (draggedStack == null)
+                {
+                    if (slot != clickedSlot)
+                        draggedStack = clickedSlot.getStack().copy();
+                }
+                else if ((draggedStack.stackSize > 1) && (slot != null) && Container.func_94527_a(slot, draggedStack, false))
+                {
+                    final long i1 = Minecraft.getSystemTime();
+
+                    if (field_92033_y == slot)
+                    {
+                        if ((i1 - field_92032_z) > 500L)
+                        {
+                            handleMouseClick(clickedSlot, clickedSlot.slotNumber, 0, 0);
+                            handleMouseClick(slot, slot.slotNumber, 1, 0);
+                            handleMouseClick(clickedSlot, clickedSlot.slotNumber, 0, 0);
+                            field_92032_z = i1 + 750L;
+                            --draggedStack.stackSize;
+                        }
+                    }
+                    else
+                    {
+                        field_92033_y = slot;
+                        field_92032_z = i1;
+                    }
+                }
+        }
+        else if (field_94076_q && (slot != null) && (itemstack != null) && (itemstack.stackSize > field_94077_p.size()) && Container.func_94527_a(slot, itemstack, true) && slot.isItemValid(itemstack)
+                && container.canDragIntoSlot(slot))
+        {
+            field_94077_p.add(slot);
+            func_94066_g();
+        }
     }
 
     protected void func_94066_g ()
     {
-        ItemStack itemstack = this.mc.thePlayer.inventory.getItemStack();
+        final ItemStack itemstack = mc.thePlayer.inventory.getItemStack();
 
-        if (itemstack != null && this.field_94076_q)
+        if ((itemstack != null) && field_94076_q)
         {
-            this.field_94069_F = itemstack.stackSize;
+            field_94069_F = itemstack.stackSize;
             ItemStack itemstack1;
             int i;
 
-            for (Iterator iterator = this.field_94077_p.iterator(); iterator.hasNext(); this.field_94069_F -= itemstack1.stackSize - i)
+            for (final Iterator iterator = field_94077_p.iterator(); iterator.hasNext(); field_94069_F -= itemstack1.stackSize - i)
             {
-                Slot slot = (Slot) iterator.next();
+                final Slot slot = (Slot) iterator.next();
                 itemstack1 = itemstack.copy();
                 i = slot.getStack() == null ? 0 : slot.getStack().stackSize;
-                Container.func_94525_a(this.field_94077_p, this.field_94071_C, itemstack1, i);
+                Container.func_94525_a(field_94077_p, field_94071_C, itemstack1, i);
 
                 if (itemstack1.stackSize > itemstack1.getMaxStackSize())
-                {
                     itemstack1.stackSize = itemstack1.getMaxStackSize();
-                }
 
                 if (itemstack1.stackSize > slot.getSlotStackLimit())
-                {
                     itemstack1.stackSize = slot.getSlotStackLimit();
-                }
             }
         }
     }
@@ -472,321 +538,23 @@ public abstract class TSContainerGui extends GuiScreen
      */
     protected Slot getSlotAtPosition (int mouseX, int mouseY)
     {
-        for (int k = 0; k < this.container.inventorySlots.size(); ++k)
+        for (int k = 0; k < container.inventorySlots.size(); ++k)
         {
-            Slot slot = (Slot) this.container.inventorySlots.get(k);
+            final Slot slot = (Slot) container.inventorySlots.get(k);
 
-            if (this.isMouseOverSlot(slot, mouseX, mouseY))
-            {
+            if (isMouseOverSlot(slot, mouseX, mouseY))
                 return slot;
-            }
         }
 
         return null;
     }
 
-    /**
-     * Called when the mouse is clicked.
-     */
-    protected void mouseClicked (int mouseX, int mouseY, int mouseButton)
+    protected void handleMouseClick (Slot par1Slot, int par2, int par3, int par4)
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        boolean flag = mouseButton == this.mc.gameSettings.keyBindPickBlock.keyCode + 100;
-        Slot slot = this.getSlotAtPosition(mouseX, mouseY);
-        long l = Minecraft.getSystemTime();
-        this.field_94074_J = this.field_94072_H == slot && l - this.field_94070_G < 250L && this.field_94073_I == mouseButton;
-        this.field_94068_E = false;
+        if (par1Slot != null)
+            par2 = par1Slot.slotNumber;
 
-        if (mouseButton == 0 || mouseButton == 1 || flag)
-        {
-            int gLeft = this.guiLeft;
-            int gTop = this.guiTop;
-            boolean flag1 = mouseX < gLeft || mouseY < gTop || mouseX >= gLeft + this.xSize || mouseY >= gTop + this.ySize;
-            int k1 = -1;
-
-            if (slot != null)
-            {
-                k1 = slot.slotNumber;
-            }
-
-            if (flag1)
-            {
-                k1 = -999;
-            }
-
-            if (this.mc.gameSettings.touchscreen && flag1 && this.mc.thePlayer.inventory.getItemStack() == null)
-            {
-                this.mc.displayGuiScreen((GuiScreen) null);
-                return;
-            }
-
-            if (k1 != -1)
-            {
-                if (this.mc.gameSettings.touchscreen)
-                {
-                    if (slot != null && slot.getHasStack())
-                    {
-                        this.clickedSlot = slot;
-                        this.draggedStack = null;
-                        this.isRightMouseClick = mouseButton == 1;
-                    }
-                    else
-                    {
-                        this.clickedSlot = null;
-                    }
-                }
-                else if (!this.field_94076_q)
-                {
-                    if (this.mc.thePlayer.inventory.getItemStack() == null)
-                    {
-                        if (mouseButton == this.mc.gameSettings.keyBindPickBlock.keyCode + 100)
-                        {
-                            this.handleMouseClick(slot, k1, mouseButton, 3);
-                        }
-                        else
-                        {
-                            boolean flag2 = k1 != -999 && (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54));
-                            byte b0 = 0;
-
-                            if (flag2)
-                            {
-                                this.field_94075_K = slot != null && slot.getHasStack() ? slot.getStack() : null;
-                                b0 = 1;
-                            }
-                            else if (k1 == -999)
-                            {
-                                b0 = 4;
-                            }
-
-                            this.handleMouseClick(slot, k1, mouseButton, b0);
-                        }
-
-                        this.field_94068_E = true;
-                    }
-                    else
-                    {
-                        this.field_94076_q = true;
-                        this.field_94067_D = mouseButton;
-                        this.field_94077_p.clear();
-
-                        if (mouseButton == 0)
-                        {
-                            this.field_94071_C = 0;
-                        }
-                        else if (mouseButton == 1)
-                        {
-                            this.field_94071_C = 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        this.field_94072_H = slot;
-        this.field_94070_G = l;
-        this.field_94073_I = mouseButton;
-    }
-
-    protected void func_85041_a (int par1, int par2, int par3, long par4)
-    {
-        Slot slot = this.getSlotAtPosition(par1, par2);
-        ItemStack itemstack = this.mc.thePlayer.inventory.getItemStack();
-
-        if (this.clickedSlot != null && this.mc.gameSettings.touchscreen)
-        {
-            if (par3 == 0 || par3 == 1)
-            {
-                if (this.draggedStack == null)
-                {
-                    if (slot != this.clickedSlot)
-                    {
-                        this.draggedStack = this.clickedSlot.getStack().copy();
-                    }
-                }
-                else if (this.draggedStack.stackSize > 1 && slot != null && Container.func_94527_a(slot, this.draggedStack, false))
-                {
-                    long i1 = Minecraft.getSystemTime();
-
-                    if (this.field_92033_y == slot)
-                    {
-                        if (i1 - this.field_92032_z > 500L)
-                        {
-                            this.handleMouseClick(this.clickedSlot, this.clickedSlot.slotNumber, 0, 0);
-                            this.handleMouseClick(slot, slot.slotNumber, 1, 0);
-                            this.handleMouseClick(this.clickedSlot, this.clickedSlot.slotNumber, 0, 0);
-                            this.field_92032_z = i1 + 750L;
-                            --this.draggedStack.stackSize;
-                        }
-                    }
-                    else
-                    {
-                        this.field_92033_y = slot;
-                        this.field_92032_z = i1;
-                    }
-                }
-            }
-        }
-        else if (this.field_94076_q && slot != null && itemstack != null && itemstack.stackSize > this.field_94077_p.size() && Container.func_94527_a(slot, itemstack, true)
-                && slot.isItemValid(itemstack) && this.container.canDragIntoSlot(slot))
-        {
-            this.field_94077_p.add(slot);
-            this.func_94066_g();
-        }
-    }
-
-    /**
-     * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
-     * mouseMove, which==0 or which==1 is mouseUp
-     */
-    protected void mouseMovedOrUp (int par1, int par2, int par3)
-    {
-        Slot slot = this.getSlotAtPosition(par1, par2);
-        int l = this.guiLeft;
-        int i1 = this.guiTop;
-        boolean flag = par1 < l || par2 < i1 || par1 >= l + this.xSize || par2 >= i1 + this.ySize;
-        int j1 = -1;
-
-        if (slot != null)
-        {
-            j1 = slot.slotNumber;
-        }
-
-        if (flag)
-        {
-            j1 = -999;
-        }
-
-        Slot slot1;
-        Iterator iterator;
-
-        if (this.field_94074_J && slot != null && par3 == 0 && this.container.func_94530_a((ItemStack) null, slot))
-        {
-            if (isShiftKeyDown())
-            {
-                if (slot != null && slot.inventory != null && this.field_94075_K != null)
-                {
-                    iterator = this.container.inventorySlots.iterator();
-
-                    while (iterator.hasNext())
-                    {
-                        slot1 = (Slot) iterator.next();
-
-                        if (slot1 != null && slot1.canTakeStack(this.mc.thePlayer) && slot1.getHasStack() && slot1.inventory == slot.inventory
-                                && Container.func_94527_a(slot1, this.field_94075_K, true))
-                        {
-                            this.handleMouseClick(slot1, slot1.slotNumber, par3, 1);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                this.handleMouseClick(slot, j1, par3, 6);
-            }
-
-            this.field_94074_J = false;
-            this.field_94070_G = 0L;
-        }
-        else
-        {
-            if (this.field_94076_q && this.field_94067_D != par3)
-            {
-                this.field_94076_q = false;
-                this.field_94077_p.clear();
-                this.field_94068_E = true;
-                return;
-            }
-
-            if (this.field_94068_E)
-            {
-                this.field_94068_E = false;
-                return;
-            }
-
-            boolean flag1;
-
-            if (this.clickedSlot != null && this.mc.gameSettings.touchscreen)
-            {
-                if (par3 == 0 || par3 == 1)
-                {
-                    if (this.draggedStack == null && slot != this.clickedSlot)
-                    {
-                        this.draggedStack = this.clickedSlot.getStack();
-                    }
-
-                    flag1 = Container.func_94527_a(slot, this.draggedStack, false);
-
-                    if (j1 != -1 && this.draggedStack != null && flag1)
-                    {
-                        this.handleMouseClick(this.clickedSlot, this.clickedSlot.slotNumber, par3, 0);
-                        this.handleMouseClick(slot, j1, 0, 0);
-
-                        if (this.mc.thePlayer.inventory.getItemStack() != null)
-                        {
-                            this.handleMouseClick(this.clickedSlot, this.clickedSlot.slotNumber, par3, 0);
-                            this.field_85049_r = par1 - l;
-                            this.field_85048_s = par2 - i1;
-                            this.returningStackDestSlot = this.clickedSlot;
-                            this.returningStack = this.draggedStack;
-                            this.returningStackTime = Minecraft.getSystemTime();
-                        }
-                        else
-                        {
-                            this.returningStack = null;
-                        }
-                    }
-                    else if (this.draggedStack != null)
-                    {
-                        this.field_85049_r = par1 - l;
-                        this.field_85048_s = par2 - i1;
-                        this.returningStackDestSlot = this.clickedSlot;
-                        this.returningStack = this.draggedStack;
-                        this.returningStackTime = Minecraft.getSystemTime();
-                    }
-
-                    this.draggedStack = null;
-                    this.clickedSlot = null;
-                }
-            }
-            else if (this.field_94076_q && !this.field_94077_p.isEmpty())
-            {
-                this.handleMouseClick((Slot) null, -999, Container.func_94534_d(0, this.field_94071_C), 5);
-                iterator = this.field_94077_p.iterator();
-
-                while (iterator.hasNext())
-                {
-                    slot1 = (Slot) iterator.next();
-                    this.handleMouseClick(slot1, slot1.slotNumber, Container.func_94534_d(1, this.field_94071_C), 5);
-                }
-
-                this.handleMouseClick((Slot) null, -999, Container.func_94534_d(2, this.field_94071_C), 5);
-            }
-            else if (this.mc.thePlayer.inventory.getItemStack() != null)
-            {
-                if (par3 == this.mc.gameSettings.keyBindPickBlock.keyCode + 100)
-                {
-                    this.handleMouseClick(slot, j1, par3, 3);
-                }
-                else
-                {
-                    flag1 = j1 != -999 && (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54));
-
-                    if (flag1)
-                    {
-                        this.field_94075_K = slot != null && slot.getHasStack() ? slot.getStack() : null;
-                    }
-
-                    this.handleMouseClick(slot, j1, par3, flag1 ? 1 : 0);
-                }
-            }
-        }
-
-        if (this.mc.thePlayer.inventory.getItemStack() == null)
-        {
-            this.field_94070_G = 0L;
-        }
-
-        this.field_94076_q = false;
+        mc.playerController.windowClick(container.windowId, par2, par3, par4, mc.thePlayer);
     }
 
     /**
@@ -795,9 +563,7 @@ public abstract class TSContainerGui extends GuiScreen
     protected boolean isMouseOverSlot (Slot slot, int mouseX, int mouseY)
     {
         if (!(slot instanceof TSActiveSlot) || ((TSActiveSlot) slot).getActive())
-        {
-            return this.isPointInRegion(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY);
-        }
+            return isPointInRegion(slot.xDisplayPosition, slot.yDisplayPosition, 16, 16, mouseX, mouseY);
         return false;
     }
 
@@ -807,97 +573,248 @@ public abstract class TSContainerGui extends GuiScreen
      */
     protected boolean isPointInRegion (int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        int k1 = this.guiLeft;
-        int l1 = this.guiTop;
+        final int k1 = guiLeft;
+        final int l1 = guiTop;
         par5 -= k1;
         par6 -= l1;
-        return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
-    }
-
-    protected void handleMouseClick (Slot par1Slot, int par2, int par3, int par4)
-    {
-        if (par1Slot != null)
-        {
-            par2 = par1Slot.slotNumber;
-        }
-
-        this.mc.playerController.windowClick(this.container.windowId, par2, par3, par4, this.mc.thePlayer);
+        return (par5 >= (par1 - 1)) && (par5 < (par1 + par3 + 1)) && (par6 >= (par2 - 1)) && (par6 < (par2 + par4 + 1));
     }
 
     /**
      * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
+    @Override
     protected void keyTyped (char par1, int par2)
     {
-        if (par2 == 1 || par2 == this.mc.gameSettings.keyBindInventory.keyCode)
-        {
-            this.mc.thePlayer.closeScreen();
-        }
+        if ((par2 == 1) || (par2 == mc.gameSettings.keyBindInventory.keyCode))
+            mc.thePlayer.closeScreen();
 
-        this.checkHotbarKeys(par2);
+        checkHotbarKeys(par2);
 
-        if (this.mainSlot != null && this.mainSlot.getHasStack())
-        {
-            if (par2 == this.mc.gameSettings.keyBindPickBlock.keyCode)
-            {
-                this.handleMouseClick(this.mainSlot, this.mainSlot.slotNumber, 0, 3);
-            }
-            else if (par2 == this.mc.gameSettings.keyBindDrop.keyCode)
-            {
-                this.handleMouseClick(this.mainSlot, this.mainSlot.slotNumber, isCtrlKeyDown() ? 1 : 0, 4);
-            }
-        }
+        if ((mainSlot != null) && mainSlot.getHasStack())
+            if (par2 == mc.gameSettings.keyBindPickBlock.keyCode)
+                handleMouseClick(mainSlot, mainSlot.slotNumber, 0, 3);
+            else if (par2 == mc.gameSettings.keyBindDrop.keyCode)
+                handleMouseClick(mainSlot, mainSlot.slotNumber, isCtrlKeyDown() ? 1 : 0, 4);
     }
 
     /**
-     * This function is what controls the hotbar shortcut check when you press a number key when hovering a stack.
+     * Called when the mouse is clicked.
      */
-    protected boolean checkHotbarKeys (int par1)
+    @Override
+    protected void mouseClicked (int mouseX, int mouseY, int mouseButton)
     {
-        if (this.mc.thePlayer.inventory.getItemStack() == null && this.mainSlot != null)
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        final boolean flag = mouseButton == (mc.gameSettings.keyBindPickBlock.keyCode + 100);
+        final Slot slot = getSlotAtPosition(mouseX, mouseY);
+        final long l = Minecraft.getSystemTime();
+        field_94074_J = (field_94072_H == slot) && ((l - field_94070_G) < 250L) && (field_94073_I == mouseButton);
+        field_94068_E = false;
+
+        if ((mouseButton == 0) || (mouseButton == 1) || flag)
         {
-            for (int j = 0; j < 9; ++j)
+            final int gLeft = guiLeft;
+            final int gTop = guiTop;
+            final boolean flag1 = (mouseX < gLeft) || (mouseY < gTop) || (mouseX >= (gLeft + xSize)) || (mouseY >= (gTop + ySize));
+            int k1 = -1;
+
+            if (slot != null)
+                k1 = slot.slotNumber;
+
+            if (flag1)
+                k1 = -999;
+
+            if (mc.gameSettings.touchscreen && flag1 && (mc.thePlayer.inventory.getItemStack() == null))
             {
-                if (par1 == 2 + j)
+                mc.displayGuiScreen((GuiScreen) null);
+                return;
+            }
+
+            if (k1 != -1)
+                if (mc.gameSettings.touchscreen)
                 {
-                    this.handleMouseClick(this.mainSlot, this.mainSlot.slotNumber, j, 2);
-                    return true;
+                    if ((slot != null) && slot.getHasStack())
+                    {
+                        clickedSlot = slot;
+                        draggedStack = null;
+                        isRightMouseClick = mouseButton == 1;
+                    }
+                    else
+                        clickedSlot = null;
+                }
+                else if (!field_94076_q)
+                    if (mc.thePlayer.inventory.getItemStack() == null)
+                    {
+                        if (mouseButton == (mc.gameSettings.keyBindPickBlock.keyCode + 100))
+                            handleMouseClick(slot, k1, mouseButton, 3);
+                        else
+                        {
+                            final boolean flag2 = (k1 != -999) && (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54));
+                            byte b0 = 0;
+
+                            if (flag2)
+                            {
+                                field_94075_K = (slot != null) && slot.getHasStack() ? slot.getStack() : null;
+                                b0 = 1;
+                            }
+                            else if (k1 == -999)
+                                b0 = 4;
+
+                            handleMouseClick(slot, k1, mouseButton, b0);
+                        }
+
+                        field_94068_E = true;
+                    }
+                    else
+                    {
+                        field_94076_q = true;
+                        field_94067_D = mouseButton;
+                        field_94077_p.clear();
+
+                        if (mouseButton == 0)
+                            field_94071_C = 0;
+                        else if (mouseButton == 1)
+                            field_94071_C = 1;
+                    }
+        }
+
+        field_94072_H = slot;
+        field_94070_G = l;
+        field_94073_I = mouseButton;
+    }
+
+    /**
+     * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
+     * mouseMove, which==0 or which==1 is mouseUp
+     */
+    @Override
+    protected void mouseMovedOrUp (int par1, int par2, int par3)
+    {
+        final Slot slot = getSlotAtPosition(par1, par2);
+        final int l = guiLeft;
+        final int i1 = guiTop;
+        final boolean flag = (par1 < l) || (par2 < i1) || (par1 >= (l + xSize)) || (par2 >= (i1 + ySize));
+        int j1 = -1;
+
+        if (slot != null)
+            j1 = slot.slotNumber;
+
+        if (flag)
+            j1 = -999;
+
+        Slot slot1;
+        Iterator iterator;
+
+        if (field_94074_J && (slot != null) && (par3 == 0) && container.func_94530_a((ItemStack) null, slot))
+        {
+            if (isShiftKeyDown())
+            {
+                if ((slot != null) && (slot.inventory != null) && (field_94075_K != null))
+                {
+                    iterator = container.inventorySlots.iterator();
+
+                    while (iterator.hasNext())
+                    {
+                        slot1 = (Slot) iterator.next();
+
+                        if ((slot1 != null) && slot1.canTakeStack(mc.thePlayer) && slot1.getHasStack() && (slot1.inventory == slot.inventory) && Container.func_94527_a(slot1, field_94075_K, true))
+                            handleMouseClick(slot1, slot1.slotNumber, par3, 1);
+                    }
                 }
             }
+            else
+                handleMouseClick(slot, j1, par3, 6);
+
+            field_94074_J = false;
+            field_94070_G = 0L;
         }
-
-        return false;
-    }
-
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
-    public void onGuiClosed ()
-    {
-        if (this.mc.thePlayer != null)
+        else
         {
-            this.container.onContainerClosed(this.mc.thePlayer);
+            if (field_94076_q && (field_94067_D != par3))
+            {
+                field_94076_q = false;
+                field_94077_p.clear();
+                field_94068_E = true;
+                return;
+            }
+
+            if (field_94068_E)
+            {
+                field_94068_E = false;
+                return;
+            }
+
+            boolean flag1;
+
+            if ((clickedSlot != null) && mc.gameSettings.touchscreen)
+            {
+                if ((par3 == 0) || (par3 == 1))
+                {
+                    if ((draggedStack == null) && (slot != clickedSlot))
+                        draggedStack = clickedSlot.getStack();
+
+                    flag1 = Container.func_94527_a(slot, draggedStack, false);
+
+                    if ((j1 != -1) && (draggedStack != null) && flag1)
+                    {
+                        handleMouseClick(clickedSlot, clickedSlot.slotNumber, par3, 0);
+                        handleMouseClick(slot, j1, 0, 0);
+
+                        if (mc.thePlayer.inventory.getItemStack() != null)
+                        {
+                            handleMouseClick(clickedSlot, clickedSlot.slotNumber, par3, 0);
+                            field_85049_r = par1 - l;
+                            field_85048_s = par2 - i1;
+                            returningStackDestSlot = clickedSlot;
+                            returningStack = draggedStack;
+                            returningStackTime = Minecraft.getSystemTime();
+                        }
+                        else
+                            returningStack = null;
+                    }
+                    else if (draggedStack != null)
+                    {
+                        field_85049_r = par1 - l;
+                        field_85048_s = par2 - i1;
+                        returningStackDestSlot = clickedSlot;
+                        returningStack = draggedStack;
+                        returningStackTime = Minecraft.getSystemTime();
+                    }
+
+                    draggedStack = null;
+                    clickedSlot = null;
+                }
+            }
+            else if (field_94076_q && !field_94077_p.isEmpty())
+            {
+                handleMouseClick((Slot) null, -999, Container.func_94534_d(0, field_94071_C), 5);
+                iterator = field_94077_p.iterator();
+
+                while (iterator.hasNext())
+                {
+                    slot1 = (Slot) iterator.next();
+                    handleMouseClick(slot1, slot1.slotNumber, Container.func_94534_d(1, field_94071_C), 5);
+                }
+
+                handleMouseClick((Slot) null, -999, Container.func_94534_d(2, field_94071_C), 5);
+            }
+            else if (mc.thePlayer.inventory.getItemStack() != null)
+                if (par3 == (mc.gameSettings.keyBindPickBlock.keyCode + 100))
+                    handleMouseClick(slot, j1, par3, 3);
+                else
+                {
+                    flag1 = (j1 != -999) && (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54));
+
+                    if (flag1)
+                        field_94075_K = (slot != null) && slot.getHasStack() ? slot.getStack() : null;
+
+                    handleMouseClick(slot, j1, par3, flag1 ? 1 : 0);
+                }
         }
-    }
 
-    /**
-     * Returns true if this GUI should pause the game when it is displayed in single-player
-     */
-    public boolean doesGuiPauseGame ()
-    {
-        return false;
-    }
+        if (mc.thePlayer.inventory.getItemStack() == null)
+            field_94070_G = 0L;
 
-    /**
-     * Called from the main game loop to update the screen.
-     */
-    public void updateScreen ()
-    {
-        super.updateScreen();
-
-        if (!this.mc.thePlayer.isEntityAlive() || this.mc.thePlayer.isDead)
-        {
-            this.mc.thePlayer.closeScreen();
-        }
+        field_94076_q = false;
     }
 }

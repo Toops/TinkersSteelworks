@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockHopper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,13 +23,11 @@ import net.minecraft.tileentity.Hopper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
 
@@ -41,48 +38,50 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     int mode = 0;
     private ItemStack[] inventory = new ItemStack[9];
     private int transferCooldown = -1;
-    
+
+    /* TSServantLogic */
+
+    @Override
+    public boolean canUpdate ()
+    {
+        return true;
+    }
+
+    /* Duct Logic */
+
     public int getMode ()
     {
         return mode;
     }
-    
+
     public void setMode (int newMode)
     {
-        this.mode = (newMode < 6) ? newMode : 5; 
+        mode = (newMode < 6) ? newMode : 5;
         if (mode == 5)
-        {
-            final int mx = getMasterPosition().x;
-            final int my = getMasterPosition().y;
-            final int mz = getMasterPosition().z;
-            final HighOvenLogic highoven = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            highoven.outputItemDuct = new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
-        }
+            getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
+    }
+
+    public HighOvenLogic getHighOvenController ()
+    {
+        final int mx = getMasterPosition().x;
+        final int my = getMasterPosition().y;
+        final int mz = getMasterPosition().z;
+        return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
     
-    /* TSServantLogic */
-    
-    @Override
-    public boolean canUpdate ()
+    public boolean updateDuct ()
     {
-        return true;//hasValidMaster();
-    }
-    
-    /* Duct Logic */
-    
-    public boolean updateDuct()
-    {
-        if (this.worldObj != null && !this.worldObj.isRemote)
+        if ((worldObj != null) && !worldObj.isRemote)
         {
-            if (!this.isCoolingDown())
+            if (!isCoolingDown())
             {
-                boolean flag = this.insertItemToInventory();
+                boolean flag = insertItemToInventory();
                 flag = suckItemsIntoDuct(this) || flag;
 
                 if (flag)
                 {
-                    this.setTransferCooldown(8);
-                    this.onInventoryChanged();
+                    setTransferCooldown(8);
+                    onInventoryChanged();
                     return true;
                 }
             }
@@ -90,93 +89,84 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
             return false;
         }
         else
-        {
             return false;
-        }
     }
-    
-    private boolean insertItemToInventory()
+
+    private boolean insertItemToInventory ()
     {
-        if (!hasValidMaster()) return false;
-        IInventory masterInventory = this.getOutputInventory();
-        
+        if (!hasValidMaster())
+            return false;
+        final IInventory masterInventory = getOutputInventory();
+
         if (masterInventory == null)
             return false;
         else
-        {   
-            for (int slot = 0; slot < this.getSizeInventory(); slot++)
-            {
-                if (this.getStackInSlot(slot) != null)
+        {
+            for (int slot = 0; slot < getSizeInventory(); slot++)
+                if (getStackInSlot(slot) != null)
                 {
-                    ItemStack copyStack = this.getStackInSlot(slot).copy();
-                    ItemStack outputStack = insertStack(masterInventory, this.decrStackSize(slot, 1), this.getRenderDirection(), mode);
-                    if (outputStack == null || outputStack.stackSize == 0)
+                    final ItemStack copyStack = getStackInSlot(slot).copy();
+                    final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection(), mode);
+                    if ((outputStack == null) || (outputStack.stackSize == 0))
                     {
                         masterInventory.onInventoryChanged();
                         return true;
                     }
-                    this.setInventorySlotContents(slot, copyStack);
+                    setInventorySlotContents(slot, copyStack);
                 }
-            }
             return false;
         }
     }
-    
-    public boolean suckItemsIntoDuct(Hopper localInventory)
+
+    public boolean suckItemsIntoDuct (Hopper localInventory)
     {
-        if (mode == 5) return false;
-        IInventory outsideInventory = getExternalInventory(localInventory, direction);
+        if (mode == 5)
+            return false;
+        final IInventory outsideInventory = getExternalInventory(localInventory, direction);
 
         if (outsideInventory != null)
         {
-            byte side = 0;
+            final byte side = 0;
 
-            if (outsideInventory instanceof ISidedInventory && side > -1)
+            if ((outsideInventory instanceof ISidedInventory) && (side > -1))
             {
-                ISidedInventory isidedinventory = (ISidedInventory)outsideInventory;
-                int[] slots = isidedinventory.getAccessibleSlotsFromSide(side);
+                final ISidedInventory isidedinventory = (ISidedInventory) outsideInventory;
+                final int[] slots = isidedinventory.getAccessibleSlotsFromSide(side);
 
-                for (int i = 0; i < slots.length; ++i)
-                {
-                    if (insertStackFromInventory(localInventory, outsideInventory, slots[i], side, mode))
+                for (final int slot : slots)
+                    if (insertStackFromInventory(localInventory, outsideInventory, slot, side, mode))
                         return true;
-                }
             }
             else
             {
-                int j = outsideInventory.getSizeInventory();
+                final int j = outsideInventory.getSizeInventory();
 
                 for (int k = 0; k < j; ++k)
-                {
                     if (insertStackFromInventory(localInventory, outsideInventory, k, side, mode))
                         return true;
-                }
             }
         }
-        else
+        else if (ConfigCore.enableDuctVacuum)
         {
-            if (ConfigCore.enableDuctVacuum)
-            {
-                EntityItem entityitem = getExternalItemEntity(localInventory.getWorldObj(), localInventory.getXPos(), localInventory.getYPos(), localInventory.getZPos(), direction);
-    
-                if (entityitem != null)
-                    return insertStackFromEntity(localInventory, entityitem, mode);
-            }
+            final EntityItem entityitem = getExternalItemEntity(localInventory.getWorldObj(), localInventory.getXPos(), localInventory.getYPos(), localInventory.getZPos(), direction);
+
+            if (entityitem != null)
+                return insertStackFromEntity(localInventory, entityitem, mode);
         }
 
         return false;
     }
-    
-    private static boolean insertStackFromInventory(Hopper localInventory, IInventory outsideInventory, int slot, int side, int transferMode)
+
+    private static boolean insertStackFromInventory (Hopper localInventory, IInventory outsideInventory, int slot, int side, int transferMode)
     {
-        ItemStack itemstack = outsideInventory.getStackInSlot(slot);
+        final ItemStack itemstack = outsideInventory.getStackInSlot(slot);
 
-        if (itemstack != null && canExtractItemFromInventory(outsideInventory, itemstack, slot, side))
+        if ((itemstack != null) && canExtractItemFromInventory(outsideInventory, itemstack, slot, side))
         {
-            ItemStack itemstack1 = itemstack.copy();
-            ItemStack outputStack = insertStack(localInventory, outsideInventory.decrStackSize(slot, 1), -1, transferMode);
+            final ItemStack itemstack1 = itemstack.copy();
+            final ItemStack outputStack = insertStack(localInventory, outsideInventory.decrStackSize(slot, 1), -1, transferMode);
 
-            if (outputStack == null || outputStack.stackSize == 0)
+            if ((outputStack == null) || (outputStack.stackSize == 0))
             {
                 outsideInventory.onInventoryChanged();
                 return true;
@@ -187,8 +177,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 
         return false;
     }
-    
-    public static boolean insertStackFromEntity(IInventory localInventory, EntityItem item, int transferMode)
+
+    public static boolean insertStackFromEntity (IInventory localInventory, EntityItem item, int transferMode)
     {
         boolean flag = false;
 
@@ -196,10 +186,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
             return false;
         else
         {
-            ItemStack itemstack = item.getEntityItem().copy();
-            ItemStack itemstack1 = insertStack(localInventory, itemstack, -1, transferMode);
+            final ItemStack itemstack = item.getEntityItem().copy();
+            final ItemStack itemstack1 = insertStack(localInventory, itemstack, -1, transferMode);
 
-            if (itemstack1 != null && itemstack1.stackSize != 0)
+            if ((itemstack1 != null) && (itemstack1.stackSize != 0))
                 item.setEntityItemStack(itemstack1);
             else
             {
@@ -210,50 +200,41 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         }
     }
 
-    public static ItemStack insertStack(IInventory iiventory, ItemStack stack, int side, int transferMode)
+    public static ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
     {
-        if (iiventory instanceof ISidedInventory && side > -1)
+        if ((iiventory instanceof ISidedInventory) && (side > -1))
         {
-            ISidedInventory isidedinventory = (ISidedInventory)iiventory;
-            int[] slot = isidedinventory.getAccessibleSlotsFromSide(side);
+            final ISidedInventory isidedinventory = (ISidedInventory) iiventory;
+            final int[] slot = isidedinventory.getAccessibleSlotsFromSide(side);
 
-            for (int i = 0; i < slot.length && stack != null && stack.stackSize > 0; ++i)
+            for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
                 stack = sendItemsToLocation(iiventory, stack, slot[i], side);
         }
+        else if (transferMode == 4)
+            for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
+                stack = sendItemsToLocation(iiventory, stack, slot, side);
         else
-        {
-            if (transferMode == 4)
-            {
-                for (int slot = 4; slot < iiventory.getSizeInventory() && stack != null && stack.stackSize > 0; slot += 1)
-                {
-                    stack = sendItemsToLocation(iiventory, stack, slot, side);
-                }
-            }
-            else
-            {
-                stack = sendItemsToLocation(iiventory, stack, transferMode, side);
-            }
-        }
+            stack = sendItemsToLocation(iiventory, stack, transferMode, side);
 
-        if (stack != null && stack.stackSize == 0)
+        if ((stack != null) && (stack.stackSize == 0))
             stack = null;
 
         return stack;
     }
-    
-    private static boolean canInsertItemToInventory(IInventory iiventory, ItemStack stack, int slot, int side)
+
+    private static boolean canInsertItemToInventory (IInventory iiventory, ItemStack stack, int slot, int side)
     {
-        return !iiventory.isItemValidForSlot(slot, stack) ? false : !(iiventory instanceof ISidedInventory) || ((ISidedInventory)iiventory).canInsertItem(slot, stack, side);
+        return !iiventory.isItemValidForSlot(slot, stack) ? false : !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canInsertItem(slot, stack, side);
     }
-    
-    private static boolean canExtractItemFromInventory(IInventory iiventory, ItemStack stack, int slot, int side)
+
+    private static boolean canExtractItemFromInventory (IInventory iiventory, ItemStack stack, int slot, int side)
     {
-        return !(iiventory instanceof ISidedInventory) || ((ISidedInventory)iiventory).canExtractItem(slot, stack, side);
+        return !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canExtractItem(slot, stack, side);
     }
-    
-    private static ItemStack sendItemsToLocation(IInventory iinventory, ItemStack stack, int slot, int side)
+
+    private static ItemStack sendItemsToLocation (IInventory iinventory, ItemStack stack, int slot, int side)
     {
-        ItemStack masterStack = iinventory.getStackInSlot(slot);
+        final ItemStack masterStack = iinventory.getStackInSlot(slot);
 
         if (canInsertItemToInventory(iinventory, stack, slot, side))
         {
@@ -261,24 +242,22 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 
             if (masterStack == null)
             {
-                int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
+                final int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
                 if (max >= stack.stackSize)
                 {
                     iinventory.setInventorySlotContents(slot, stack);
                     stack = null;
                 }
                 else
-                {
                     iinventory.setInventorySlotContents(slot, stack.splitStack(max));
-                }
                 flag = true;
             }
             else if (areItemStacksEqualItem(masterStack, stack))
             {
-                int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
+                final int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
                 if (max > masterStack.stackSize)
                 {
-                    int l = Math.min(stack.stackSize, max - masterStack.stackSize);
+                    final int l = Math.min(stack.stackSize, max - masterStack.stackSize);
                     stack.stackSize -= l;
                     masterStack.stackSize += l;
                     flag = l > 0;
@@ -289,57 +268,46 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         }
         return stack;
     }
-    
-    private IInventory getOutputInventory()
+
+    private IInventory getOutputInventory ()
     {
-        if (mode == 5)
-        {
-            return getExternalInventory(this, direction);
-        }
-        else
-        {
-            final int mx = getMasterPosition().x;
-            final int my = getMasterPosition().y;
-            final int mz = getMasterPosition().z;
-            HighOvenLogic logic = (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-            return logic;
-        }
+        return (mode == 5) ? getExternalInventory(this, direction) : getHighOvenController();
     }
-    
-    public static IInventory getExternalInventory(Hopper localInventory, byte facing)
+
+    public static IInventory getExternalInventory (Hopper localInventory, byte facing)
     {
         double checkXPos = localInventory.getXPos();
         double checkYPos = localInventory.getYPos();
         double checkZPos = localInventory.getZPos();
-        
+
         switch (facing)
         {
-            case 0: // Down
-                checkYPos = localInventory.getYPos() - 1.0D;
-                break;
-            case 1: // Up
-                checkYPos = localInventory.getYPos() + 1.0D;
-                break;
-            case 2: // North
-                checkZPos = localInventory.getZPos() - 1.0D;
-                break;
-            case 3: // South
-                checkZPos = localInventory.getZPos() + 1.0D;
-                break;
-            case 4: // West
-                checkXPos = localInventory.getXPos() - 1.0D;
-                break;
-            case 5: // East
-                checkXPos = localInventory.getXPos() + 1.0D;
-                break;
-            default:
-                break;
+        case 0: // Down
+            checkYPos = localInventory.getYPos() - 1.0D;
+            break;
+        case 1: // Up
+            checkYPos = localInventory.getYPos() + 1.0D;
+            break;
+        case 2: // North
+            checkZPos = localInventory.getZPos() - 1.0D;
+            break;
+        case 3: // South
+            checkZPos = localInventory.getZPos() + 1.0D;
+            break;
+        case 4: // West
+            checkXPos = localInventory.getXPos() - 1.0D;
+            break;
+        case 5: // East
+            checkXPos = localInventory.getXPos() + 1.0D;
+            break;
+        default:
+            break;
         }
-        
+
         return getInventoryAtLocation(localInventory.getWorldObj(), checkXPos, checkYPos, checkZPos);
     }
-    
-    public static EntityItem getExternalItemEntity(World world, double minX, double minY, double minZ, byte facing)
+
+    public static EntityItem getExternalItemEntity (World world, double minX, double minY, double minZ, byte facing)
     {
         double x = minX;
         double maxX = minX;
@@ -349,136 +317,141 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         double maxZ = minZ;
         switch (facing)
         {
-            case 0: // Down
-                y = minY - 1.0D;
-                maxY = minY - 1.0D;
-                break;
-            case 1: // Up
-                maxY = minY + 1.0D;
-                break;
-            case 2: // North
-                z = minZ - 1.0D;
-                maxZ = minZ - 1.0D;
-                break;
-            case 3: // South
-                maxZ = minZ + 1.0D;
-                break;
-            case 4: // West
-                x = minX - 1.0D;
-                maxX = minX - 1.0D;
-                break;
-            case 5: // East
-                maxX = minX + 1.0D;
-                break;
-            default:
-                break;
+        case 0: // Down
+            y = minY - 1.0D;
+            maxY = minY - 1.0D;
+            break;
+        case 1: // Up
+            maxY = minY + 1.0D;
+            break;
+        case 2: // North
+            z = minZ - 1.0D;
+            maxZ = minZ - 1.0D;
+            break;
+        case 3: // South
+            maxZ = minZ + 1.0D;
+            break;
+        case 4: // West
+            x = minX - 1.0D;
+            maxX = minX - 1.0D;
+            break;
+        case 5: // East
+            maxX = minX + 1.0D;
+            break;
+        default:
+            break;
         }
-        List list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
-        return list.size() > 0 ? (EntityItem)list.get(0) : null;
+        final List list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
+        return list.size() > 0 ? (EntityItem) list.get(0) : null;
     }
-    
-    public static IInventory getInventoryAtLocation(World world, double minX, double minY, double maxX)
+
+    public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
     {
         IInventory iinventory = null;
-        int i = MathHelper.floor_double(minX);
-        int j = MathHelper.floor_double(minY);
-        int k = MathHelper.floor_double(maxX);
-        TileEntity tileentity = world.getBlockTileEntity(i, j, k);
+        final int i = MathHelper.floor_double(minX);
+        final int j = MathHelper.floor_double(minY);
+        final int k = MathHelper.floor_double(maxX);
+        final TileEntity tileentity = world.getBlockTileEntity(i, j, k);
 
-        if (tileentity != null && tileentity instanceof IInventory)
+        if ((tileentity != null) && (tileentity instanceof IInventory))
         {
-            iinventory = (IInventory)tileentity;
+            iinventory = (IInventory) tileentity;
             if (iinventory instanceof TileEntityChest)
             {
-                int l = world.getBlockId(i, j, k);
-                Block block = Block.blocksList[l];
+                final int l = world.getBlockId(i, j, k);
+                final Block block = Block.blocksList[l];
 
                 if (block instanceof BlockChest)
-                    iinventory = ((BlockChest)block).getInventory(world, i, j, k);
+                    iinventory = ((BlockChest) block).getInventory(world, i, j, k);
             }
         }
         if (iinventory == null)
         {
-            List list = world.getEntitiesWithinAABBExcludingEntity((Entity)null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D), IEntitySelector.selectInventories);
-            if (list != null && list.size() > 0)
-                iinventory = (IInventory)list.get(world.rand.nextInt(list.size()));
+            final List list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
+                    IEntitySelector.selectInventories);
+            if ((list != null) && (list.size() > 0))
+                iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
         }
 
         return iinventory;
     }
-    
-    public static boolean areItemStacksEqualItem(ItemStack stack1, ItemStack stack2)
+
+    public static boolean areItemStacksEqualItem (ItemStack stack1, ItemStack stack2)
     {
-        return stack1.itemID != stack2.itemID ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack.areItemStackTagsEqual(stack1, stack2)));
+        return stack1.itemID != stack2.itemID ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack
+                .areItemStackTagsEqual(stack1, stack2)));
     }
-    
+
     /**
      * Gets the world X position for this hopper entity.
      */
-    public double getXPos()
+    @Override
+    public double getXPos ()
     {
-        return (double)this.xCoord;
+        return xCoord;
     }
 
     /**
      * Gets the world Y position for this hopper entity.
      */
-    public double getYPos()
+    @Override
+    public double getYPos ()
     {
-        return (double)this.yCoord;
+        return yCoord;
     }
 
     /**
      * Gets the world Z position for this hopper entity.
      */
-    public double getZPos()
+    @Override
+    public double getZPos ()
     {
-        return (double)this.zCoord;
+        return zCoord;
     }
 
-    public void setTransferCooldown(int par1)
+    public void setTransferCooldown (int par1)
     {
-        this.transferCooldown = par1;
+        transferCooldown = par1;
     }
 
-    public boolean isCoolingDown()
+    public boolean isCoolingDown ()
     {
-        return this.transferCooldown > 0;
+        return transferCooldown > 0;
     }
-    
+
     /* TileEntity */
-    
+
     @Override
     public void updateEntity ()
     {
-        if (this.worldObj != null && !this.worldObj.isRemote)
+        if ((worldObj != null) && !worldObj.isRemote)
         {
-            --this.transferCooldown;
+            --transferCooldown;
 
-            if (!this.isCoolingDown())
+            if (!isCoolingDown())
             {
-                this.setTransferCooldown(0);
-                this.updateDuct();
+                setTransferCooldown(0);
+                updateDuct();
             }
         }
     }
-    
+
     /* Container */
-    
+
     public Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z)
     {
         return new HighOvenDuctContainer(inventoryplayer, this);
     }
-    
+
     /* IInventory */
-    
+
     @Override
     public void onInventoryChanged ()
     {
         //updateEntity();
         super.onInventoryChanged();
     }
-    
+
     @Override
     public int getSizeInventory ()
     {
@@ -504,9 +477,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
             }
             final ItemStack split = inventory[slot].splitStack(quantity);
             if (inventory[slot].stackSize == 0)
-            {
                 inventory[slot] = null;
-            }
             return split;
         }
         else
@@ -524,11 +495,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     {
         inventory[slot] = itemstack;
         if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
-        {
             itemstack.stackSize = getInventoryStackLimit();
-        }
     }
-    
+
     @Override
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
@@ -543,7 +512,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     {
         return "container.HighOvenDuct";
     }
-    
+
     @Override
     public boolean isInvNameLocalized ()
     {
@@ -560,27 +529,27 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     public void openChest ()
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void closeChest ()
     {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
         if (slot < getSizeInventory())
-            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())) 
+            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit()))
                 return true;
         return false;
     }
 
     /* IFacingLogic */
-    
+
     @Override
     public byte getRenderDirection ()
     {
@@ -595,87 +564,79 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 
     @Override
     public void setDirection (int side)
-    {}
+    {
+    }
 
     @Override
     public void setDirection (float yaw, float pitch, EntityLivingBase player)
     {
         if (pitch > 45)
-        {
             direction = 1;
-        }
+        else if (pitch < -45)
+            direction = 0;
         else
-            if (pitch < -45)
+        {
+            final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
+            switch (facing)
             {
-                direction = 0;
+            case 0:
+                direction = 2;
+                break;
+            case 1:
+                direction = 5;
+                break;
+            case 2:
+                direction = 3;
+                break;
+            case 3:
+                direction = 4;
+                break;
             }
-            else
-            {
-                final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
-                switch (facing)
-                {
-                    case 0:
-                        direction = 2;
-                        break;
-                    case 1:
-                        direction = 5;
-                        break;
-                    case 2:
-                        direction = 3;
-                        break;
-                    case 3:
-                        direction = 4;
-                        break;
-                }
-            }
+        }
     }
-    
+
     /* NBT */
-    
+
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
-        this.mode = tags.getInteger("Mode");
+        mode = tags.getInteger("Mode");
         super.readFromNBT(tags);
-        NBTTagList itemList = tags.getTagList("Items");
-        this.inventory = new ItemStack[getSizeInventory()];
-        this.transferCooldown = tags.getInteger("TransferCooldown");
-        this.direction = tags.getByte("Direction");
-        
+        final NBTTagList itemList = tags.getTagList("Items");
+        inventory = new ItemStack[getSizeInventory()];
+        transferCooldown = tags.getInteger("TransferCooldown");
+        direction = tags.getByte("Direction");
+
         for (int iter = 0; iter < itemList.tagCount(); iter++)
         {
-            NBTTagCompound tagList = (NBTTagCompound) itemList.tagAt(iter);
-            byte slotID = tagList.getByte("Slot");
-            if (slotID >= 0 && slotID < inventory.length)
-            {
+            final NBTTagCompound tagList = (NBTTagCompound) itemList.tagAt(iter);
+            final byte slotID = tagList.getByte("Slot");
+            if ((slotID >= 0) && (slotID < inventory.length))
                 inventory[slotID] = ItemStack.loadItemStackFromNBT(tagList);
-            }
         }
-        
+
     }
 
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
-        
+
         super.writeToNBT(tags);
-        NBTTagList nbttaglist = new NBTTagList();
-        for (int iter = 0; iter < this.inventory.length; iter++)
-        {
-            if (this.inventory[iter] != null)
+        final NBTTagList nbttaglist = new NBTTagList();
+        for (int iter = 0; iter < inventory.length; iter++)
+            if (inventory[iter] != null)
             {
-                NBTTagCompound tagList = new NBTTagCompound();
+                final NBTTagCompound tagList = new NBTTagCompound();
                 tagList.setByte("Slot", (byte) iter);
-                this.inventory[iter].writeToNBT(tagList);
+                inventory[iter].writeToNBT(tagList);
                 nbttaglist.appendTag(tagList);
             }
-        }
-        tags.setInteger("TransferCooldown", this.transferCooldown);
+        tags.setInteger("TransferCooldown", transferCooldown);
         tags.setTag("Items", nbttaglist);
-        tags.setByte("Direction", this.direction);
-        tags.setInteger("Mode", this.mode);
+        tags.setByte("Direction", direction);
+        tags.setInteger("Mode", mode);
     }
-    
+
     @Override
     public Packet getDescriptionPacket ()
     {

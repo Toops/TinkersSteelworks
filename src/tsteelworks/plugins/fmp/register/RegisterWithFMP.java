@@ -7,20 +7,26 @@ import codechicken.microblock.MicroMaterialRegistry.IMicroMaterial;
 
 public class RegisterWithFMP
 {
+    //For blocks without metadata values only.
+    public static void registerBlock (Block block)
+    {
+        BlockMicroMaterial.createAndRegister(block);
+    }
+
+    //For blocks without metadata values and special MicroMaterial only.
+    public static void registerBlock (Block block, IMicroMaterial material)
+    {
+        MicroMaterialRegistry.registerMaterial(material, new String(block.getUnlocalizedName()));
+    }
+
     //For blocks with metadata values only
     public static void registerBlock (Block block, int metastart, int metaend)
     {
         for (int meta = metastart; meta <= metaend; meta++)
         {
-            String identifier = new String(block.getUnlocalizedName());
+            final String identifier = new String(block.getUnlocalizedName());
             MicroMaterialRegistry.registerMaterial(new BlockMicroMaterial(block, meta), identifier + meta);
         }
-    }
-
-    //For blocks without metadata values only.
-    public static void registerBlock (Block block)
-    {
-        BlockMicroMaterial.createAndRegister(block);
     }
 
     //For blocks with metadata values and special MicroMaterial only
@@ -28,14 +34,8 @@ public class RegisterWithFMP
     {
         for (int meta = metastart; meta <= metaend; meta++)
         {
-            String identifier = new String(block.getUnlocalizedName());
+            final String identifier = new String(block.getUnlocalizedName());
             MicroMaterialRegistry.registerMaterial(material, identifier + meta);
         }
-    }
-
-    //For blocks without metadata values and special MicroMaterial only.
-    public static void registerBlock (Block block, IMicroMaterial material)
-    {
-        MicroMaterialRegistry.registerMaterial(material, new String(block.getUnlocalizedName()));
     }
 }

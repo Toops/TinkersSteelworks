@@ -28,7 +28,7 @@ public class TSSidebarPage extends TSBookPage
         icons = new ItemStack[nodes.getLength()];
         for (int i = 0; i < nodes.getLength(); i++)
         {
-            NodeList children = nodes.item(i).getChildNodes();
+            final NodeList children = nodes.item(i).getChildNodes();
             iconText[i] = children.item(1).getTextContent();
             icons[i] = TSClientRegistry.getManualIcon(children.item(3).getTextContent());
         }
@@ -41,14 +41,14 @@ public class TSSidebarPage extends TSBookPage
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.enableGUIStandardItemLighting();
         manual.renderitem.zLevel = 100;
-        int offset = text.length() / 4 + 10;
+        final int offset = (text.length() / 4) + 10;
         for (int i = 0; i < icons.length; i++)
         {
-            manual.renderitem.renderItemIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], localWidth + 8, localHeight + 18 * i + offset);
-            int yOffset = 39;
+            manual.renderitem.renderItemIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], localWidth + 8, localHeight + (18 * i) + offset);
             if (iconText[i].length() > 40)
-                yOffset = 34;
-            manual.fonts.drawSplitString(iconText[i], localWidth + 30, localHeight + 18 * i + offset, 140, 0);
+            {
+            }
+            manual.fonts.drawSplitString(iconText[i], localWidth + 30, localHeight + (18 * i) + offset, 140, 0);
         }
         manual.renderitem.zLevel = 0;
         RenderHelper.disableStandardItemLighting();

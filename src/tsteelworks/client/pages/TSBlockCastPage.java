@@ -16,6 +16,8 @@ public class TSBlockCastPage extends TSBookPage
     String text;
     ItemStack[] icons;
 
+    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/booksmeltery.png");
+
     @Override
     public void readPageFromXML (Element element)
     {
@@ -26,6 +28,14 @@ public class TSBlockCastPage extends TSBookPage
         nodes = element.getElementsByTagName("recipe");
         if (nodes != null)
             icons = TSClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
+    }
+
+    @Override
+    public void renderBackgroundLayer (int localWidth, int localHeight)
+    {
+        manual.getMC().getTextureManager().bindTexture(background);
+        manual.drawTexturedModalRect(localWidth, localHeight + 32, 0, 0, 174, 115);
+        manual.drawTexturedModalRect(localWidth + 62, localHeight + 105, 2, 118, 45, 45);
     }
 
     @Override
@@ -54,14 +64,5 @@ public class TSBlockCastPage extends TSBookPage
         manual.fonts.drawString("- " + icons[1].getDisplayName(), localWidth + 120, localHeight + 42, 0);
         if (icons[2] != null)
             manual.fonts.drawString("- " + icons[2].getDisplayName(), localWidth + 120, localHeight + 50, 0);
-    }
-
-    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/booksmeltery.png");
-
-    public void renderBackgroundLayer (int localWidth, int localHeight)
-    {
-        manual.getMC().getTextureManager().bindTexture(background);
-        manual.drawTexturedModalRect(localWidth, localHeight + 32, 0, 0, 174, 115);
-        manual.drawTexturedModalRect(localWidth + 62, localHeight + 105, 2, 118, 45, 45);
     }
 }

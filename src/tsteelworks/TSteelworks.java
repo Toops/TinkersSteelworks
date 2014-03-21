@@ -31,26 +31,27 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Toops
  * @license Creative Commons Attribution 3.0 Unported (http://creativecommons.org/licenses/by/3.0/)
  */
-@Mod (modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = Repo.modRequire)
-@NetworkMod (clientSideRequired = true, serverSideRequired = false, channels = (Repo.modChan),
-             packetHandler = tsteelworks.network.TSPacketHandler.class)
+@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = Repo.modRequire)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = (Repo.modChan), packetHandler = tsteelworks.network.TSPacketHandler.class)
 public class TSteelworks
 {
     // Shared logger
-    public static final Logger  logger = Logger.getLogger(Repo.modId);
+    public static final Logger logger = Logger.getLogger(Repo.modId);
     // Mod Instance
-    @Instance (Repo.modId)
-    public static TSteelworks   instance;
+    @Instance(Repo.modId)
+    public static TSteelworks instance;
     // Proxy
-    @SidedProxy (clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
+    @SidedProxy(clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
     public static TSCommonProxy proxy;
+    // Content Creator
+    public static TSContent content;
 
-    public TSteelworks ()
+    public TSteelworks()
     {
         logger.setParent(FMLCommonHandler.instance().getFMLLogger());
         TConstruct.logger.info("TSteelworks, are you pondering what I'm pondering?");
         logger.info("I think so, TConstruct, but where are we going to find a duck and a hose at this hour?");
-        
+
         PluginController.getController().registerBuiltins();
     }
 
@@ -66,14 +67,13 @@ public class TSteelworks
         proxy.registerSounds();
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
         // TODO: Make horses like sugar cubes :|
-        
+
         PluginController.getController().preInit();
     }
 
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
-        
         PluginController.getController().init();
     }
 
@@ -89,16 +89,14 @@ public class TSteelworks
     {
         logger.info(desc);
     }
-    
-    public static void loginfo (String desc, String text)
-    {
-        logger.info(desc + ": " + text);
-    }
-    
+
     public static void loginfo (String desc, int value)
     {
         logger.info(desc + ": " + value);
     }
-    
-    public static TSContent      content;
+
+    public static void loginfo (String desc, String text)
+    {
+        logger.info(desc + ": " + text);
+    }
 }

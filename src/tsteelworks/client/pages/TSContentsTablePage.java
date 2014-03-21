@@ -28,7 +28,7 @@ public class TSContentsTablePage extends TSBookPage
         icons = new ItemStack[nodes.getLength()];
         for (int i = 0; i < nodes.getLength(); i++)
         {
-            NodeList children = nodes.item(i).getChildNodes();
+            final NodeList children = nodes.item(i).getChildNodes();
             iconText[i] = children.item(1).getTextContent();
             icons[i] = TSClientRegistry.getManualIcon(children.item(3).getTextContent());
         }
@@ -38,17 +38,17 @@ public class TSContentsTablePage extends TSBookPage
     public void renderContentLayer (int localWidth, int localHeight)
     {
         if (text != null)
-            manual.fonts.drawString("\u00a7n" + text, localWidth + 25 + manual.fonts.getStringWidth(text) / 2, localHeight + 4, 0);
+            manual.fonts.drawString("\u00a7n" + text, localWidth + 25 + (manual.fonts.getStringWidth(text) / 2), localHeight + 4, 0);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.enableGUIStandardItemLighting();
         manual.renderitem.zLevel = 100;
         for (int i = 0; i < icons.length; i++)
         {
-            manual.renderitem.renderItemIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], localWidth + 16, localHeight + 18 * i + 18);
+            manual.renderitem.renderItemIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], localWidth + 16, localHeight + (18 * i) + 18);
             int yOffset = 18;
             if (iconText[i].length() > 40)
                 yOffset = 13;
-            manual.fonts.drawString(iconText[i], localWidth + 38, localHeight + 18 * i + yOffset, 0);
+            manual.fonts.drawString(iconText[i], localWidth + 38, localHeight + (18 * i) + yOffset, 0);
         }
         manual.renderitem.zLevel = 0;
         RenderHelper.disableStandardItemLighting();

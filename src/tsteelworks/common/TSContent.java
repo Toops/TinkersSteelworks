@@ -56,22 +56,7 @@ public class TSContent implements IFuelHandler
         registerMixerMaterials();
         setupCreativeTabs();
     }
-
-    public void createEntities ()
-    {
-        EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
-        // TODO: Register with registerModEntity instead
-        EntityRegistry.registerGlobalEntityID(HighGolem.class,"HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
-    }
-
-    /**
-     * Initialize the Steelworks creative tab with an icon.
-     */
-    private void setupCreativeTabs ()
-    {
-        TSteelworksRegistry.SteelworksCreativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
-    }
-
+    
     /**
      * Register Items
      */
@@ -80,10 +65,10 @@ public class TSContent implements IFuelHandler
         materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
         GameRegistry.registerItem(materialsTS, "Materials");
         TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
-        
+
         bookManual = new TSManual(ConfigCore.manual);
         GameRegistry.registerItem(bookManual, "tsteelManual");
-        
+
         if (ConfigCore.enableSteelArmor)
         {
             materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[] { 3, 7, 5, 3 }, 10);
@@ -97,7 +82,7 @@ public class TSContent implements IFuelHandler
             GameRegistry.registerItem(bootsSteel, "bootsSteel");
         }
     }
-
+    
     /**
      * Register Blocks and TileEntities (Logic)
      */
@@ -111,7 +96,7 @@ public class TSContent implements IFuelHandler
         GameRegistry.registerTileEntity(HighOvenDuctLogic.class, "TSteelworks.HighOvenDuct");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
         /* Raw Vanilla Materials */
-        charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] {"charcoal_block"}).setUnlocalizedName("tsteelworks.blocks.charcoal");
+        charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] { "charcoal_block" }).setUnlocalizedName("tsteelworks.blocks.charcoal");
         GameRegistry.registerBlock(charcoalBlock, "blockCharcoal");
         charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
@@ -123,13 +108,13 @@ public class TSContent implements IFuelHandler
         OreDictionary.registerOre("blockCoal", new ItemStack(charcoalBlock));
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
-        
+
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
     }
-    
+
     void ensureOreIsRegistered (String oreName, ItemStack is)
     {
-        int oreId = OreDictionary.getOreID(is);
+        final int oreId = OreDictionary.getOreID(is);
         if (oreId == -1)
             OreDictionary.registerOre(oreName, is);
     }
@@ -139,14 +124,27 @@ public class TSContent implements IFuelHandler
      */
     public static void registerMixerMaterials ()
     {
-        // Steel
-        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0,  33);
-        AdvancedSmelting.addMixer(new ItemStack(Item.redstone,  1, 0), 1,  65);
-        AdvancedSmelting.addMixer(new ItemStack(Block.sand,     2, 0), 2, 100);
-        // Pig Iron
-        AdvancedSmelting.addMixer(new ItemStack(Item.sugar,         1, 0), 0,  62);
-        AdvancedSmelting.addMixer(new ItemStack(Item.emerald,       1, 0), 1,  30);
+        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
+        AdvancedSmelting.addMixer(new ItemStack(Item.redstone, 1, 0), 1, 65);
+        AdvancedSmelting.addMixer(new ItemStack(Block.sand, 2, 0), 2, 100);
+        AdvancedSmelting.addMixer(new ItemStack(Item.sugar, 1, 0), 0, 62);
+        AdvancedSmelting.addMixer(new ItemStack(Item.emerald, 1, 0), 1, 30);
         AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
+    }
+    
+    /**
+     * Initialize the Steelworks creative tab with an icon.
+     */
+    private void setupCreativeTabs ()
+    {
+        TSteelworksRegistry.SteelworksCreativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
+    }
+    
+    public void createEntities ()
+    {
+        EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
+        // TODO: Register with registerModEntity instead
+        EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
     }
     
     /**
@@ -168,7 +166,7 @@ public class TSContent implements IFuelHandler
         TSRecipes.addRecipesVanillaStorageBlocks();
         changeCraftingRecipes();
     }
-    
+
     public void changeCraftingRecipes ()
     {
         if (ConfigCore.enableSteelArmor)
@@ -178,16 +176,16 @@ public class TSContent implements IFuelHandler
         if (ConfigCore.hardcoreFlintAndSteel)
             TSRecipes.changeRecipeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil)
-            TSRecipes.changeRecipeAnvil();        
+            TSRecipes.changeRecipeAnvil();
     }
-    
+
     @Override
     public int getBurnTime (ItemStack fuel)
     {
-        int i = fuel.getItem().itemID;
-        if (fuel.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+        final int i = fuel.getItem().itemID;
+        if ((fuel.getItem() instanceof ItemBlock) && (Block.blocksList[i] != null))
         {
-            Block block = Block.blocksList[i];
+            final Block block = Block.blocksList[i];
             if (block == TSContent.charcoalBlock)
                 return 16000;
         }

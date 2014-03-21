@@ -21,29 +21,8 @@ public class DustStorageBlock extends BlockSand
     public DustStorageBlock(int id)
     {
         super(id, Material.sand);
-        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        this.setStepSound(soundSandFootstep);
-    }
-
-    public void registerIcons (IconRegister iconRegister)
-    {
-        this.icons = new Icon[textureNames.length];
-
-        for (int i = 0; i < this.icons.length; ++i)
-        {
-            this.icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i] + "_block");
-        }
-    }
-
-    @Override
-    public Icon getIcon (int side, int meta)
-    {
-        return icons[meta];
-    }
-
-    public float getBlockHardness (World world, int x, int y, int z)
-    {
-        return 3f;
+        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+        setStepSound(soundSandFootstep);
     }
 
     @Override
@@ -52,17 +31,37 @@ public class DustStorageBlock extends BlockSand
         return meta;
     }
 
-    public int idDropped (int par1, Random par2Random, int par3)
+    @Override
+    public float getBlockHardness (World world, int x, int y, int z)
     {
-        return this.blockID;
+        return 3f;
+    }
+
+    @Override
+    public Icon getIcon (int side, int meta)
+    {
+        return icons[meta];
     }
 
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < 2; iter++)
-        {
             list.add(new ItemStack(id, 1, iter));
-        }
+    }
+
+    @Override
+    public int idDropped (int par1, Random par2Random, int par3)
+    {
+        return blockID;
+    }
+
+    @Override
+    public void registerIcons (IconRegister iconRegister)
+    {
+        icons = new Icon[textureNames.length];
+
+        for (int i = 0; i < icons.length; ++i)
+            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i] + "_block");
     }
 }

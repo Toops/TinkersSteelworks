@@ -39,7 +39,7 @@ public class TSMaterialPage extends TSBookPage
             icons[0] = TSClientRegistry.getManualIcon(nodes.item(0).getTextContent());
 
         nodes = element.getElementsByTagName("toolmaterial");
-        if (nodes != null && nodes.getLength() > 0)
+        if ((nodes != null) && (nodes.getLength() > 0))
             material = TConstructRegistry.getMaterial(nodes.item(0).getTextContent());
         else
             material = TConstructRegistry.getMaterial(title);
@@ -93,41 +93,41 @@ public class TSMaterialPage extends TSBookPage
         manual.fonts.drawString("Handle Modifier: " + material.handleDurability() + "x", localWidth, localHeight + 50, 0);
         manual.fonts.drawString("Full Tool Durability: " + (int) (material.durability() * material.handleDurability()), localWidth, localHeight + 60, 0);
 
-        manual.fonts.drawString("Mining Speed: " + material.toolSpeed() / 100f, localWidth, localHeight + 80, 0);
+        manual.fonts.drawString("Mining Speed: " + (material.toolSpeed() / 100f), localWidth, localHeight + 80, 0);
         manual.fonts.drawString("Mining Level: " + material.harvestLevel() + " (" + PartCrafterGui.getHarvestLevelName(material.harvestLevel()) + ")", localWidth, localHeight + 90, 0);
-        int attack = material.attack();
-        String heart = attack == 2 ? " Heart" : " Hearts";
-        if (attack % 2 == 0)
-            manual.fonts.drawString("Base Attack: " + material.attack() / 2 + heart, localWidth, localHeight + 100, 0);
+        final int attack = material.attack();
+        final String heart = attack == 2 ? " Heart" : " Hearts";
+        if ((attack % 2) == 0)
+            manual.fonts.drawString("Base Attack: " + (material.attack() / 2) + heart, localWidth, localHeight + 100, 0);
         else
-            manual.fonts.drawString("Base Attack: " + material.attack() / 2f + heart, localWidth, localHeight + 100, 0);
+            manual.fonts.drawString("Base Attack: " + (material.attack() / 2f) + heart, localWidth, localHeight + 100, 0);
 
         int offset = 0;
-        String ability = material.ability();
+        final String ability = material.ability();
         if (!ability.equals(""))
         {
-            manual.fonts.drawString("Material Trait: " + material.ability(), localWidth, localHeight + 120 + 10 * offset, 0);
+            manual.fonts.drawString("Material Trait: " + material.ability(), localWidth, localHeight + 120 + (10 * offset), 0);
             offset++;
             if (ability.equals("Writable"))
-                manual.fonts.drawString("+1 Modifiers", localWidth, localHeight + 120 + 10 * offset, 0);
+                manual.fonts.drawString("+1 Modifiers", localWidth, localHeight + 120 + (10 * offset), 0);
         }
 
         if (material.reinforced() > 0)
         {
-            manual.fonts.drawString("Material Trait: Reinforced", localWidth, localHeight + 120 + 10 * offset, 0);
+            manual.fonts.drawString("Material Trait: Reinforced", localWidth, localHeight + 120 + (10 * offset), 0);
             offset++;
-            manual.fonts.drawString("Reinforced level: " + material.reinforced(), localWidth, localHeight + 120 + 10 * offset, 0);
+            manual.fonts.drawString("Reinforced level: " + material.reinforced(), localWidth, localHeight + 120 + (10 * offset), 0);
             offset++;
         }
 
         if (material.shoddy() > 0)
         {
-            manual.fonts.drawString("Stonebound level: " + material.shoddy(), localWidth, localHeight + 120 + 10 * offset, 0);
+            manual.fonts.drawString("Stonebound level: " + material.shoddy(), localWidth, localHeight + 120 + (10 * offset), 0);
             offset++;
         }
         else if (material.shoddy() < 0)
         {
-            manual.fonts.drawString("Splintering level: " + -material.shoddy(), localWidth, localHeight + 120 + 10 * offset, 0);
+            manual.fonts.drawString("Splintering level: " + -material.shoddy(), localWidth, localHeight + 120 + (10 * offset), 0);
             offset++;
         }
     }

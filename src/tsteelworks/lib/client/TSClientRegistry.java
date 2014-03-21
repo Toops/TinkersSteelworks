@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import tconstruct.library.client.ToolGuiElement;
 import tconstruct.library.crafting.ToolBuilder;
-import net.minecraft.item.Item; 
-import net.minecraft.item.ItemStack;
 
 public class TSClientRegistry
 {
@@ -16,40 +16,53 @@ public class TSClientRegistry
     public static Map<String, ItemStack[]> recipeIcons = new HashMap<String, ItemStack[]>();
     public static ItemStack defaultStack = new ItemStack(Item.ingotIron);
 
-    public static void registerManualIcon (String name, ItemStack stack)
+    public static void addToolButton (int slotType, int xButton, int yButton, int[] xIcons, int[] yIcons, String title, String body, String domain, String texture)
     {
-        manualIcons.put(name, stack);
+        toolButtons.add(new ToolGuiElement(slotType, xButton, yButton, xIcons, yIcons, title, body, domain, texture));
+    }
+
+    //Gui
+    public static void addToolButton (ToolGuiElement element)
+    {
+        toolButtons.add(element);
     }
 
     public static ItemStack getManualIcon (String textContent)
     {
-        ItemStack stack = manualIcons.get(textContent);
+        final ItemStack stack = manualIcons.get(textContent);
         if (stack != null)
             return stack;
         return defaultStack;
     }
 
-    public static void registerManualSmallRecipe (String name, ItemStack output, ItemStack... stacks)
+    public static ItemStack[] getRecipeIcons (String recipeName)
     {
-        ItemStack[] recipe = new ItemStack[5];
-        recipe[0] = output;
-        System.arraycopy(stacks, 0, recipe, 1, 4);
-        recipeIcons.put(name, recipe);
+        return recipeIcons.get(recipeName);
     }
 
-    public static void registerManualLargeRecipe (String name, ItemStack output, ItemStack... stacks)
+    public static ArrayList<ToolGuiElement> getToolButtons ()
     {
-        ItemStack[] recipe = new ItemStack[10];
-        recipe[0] = output;
-        System.arraycopy(stacks, 0, recipe, 1, 9);
-        recipeIcons.put(name, recipe);
+        return toolButtons;
     }
 
     public static void registerManualFurnaceRecipe (String name, ItemStack output, ItemStack input)
     {
-        ItemStack[] recipe = new ItemStack[2];
+        final ItemStack[] recipe = new ItemStack[2];
         recipe[0] = output;
         recipe[1] = input;
+        recipeIcons.put(name, recipe);
+    }
+
+    public static void registerManualIcon (String name, ItemStack stack)
+    {
+        manualIcons.put(name, stack);
+    }
+
+    public static void registerManualLargeRecipe (String name, ItemStack output, ItemStack... stacks)
+    {
+        final ItemStack[] recipe = new ItemStack[10];
+        recipe[0] = output;
+        System.arraycopy(stacks, 0, recipe, 1, 9);
         recipeIcons.put(name, recipe);
     }
 
@@ -60,40 +73,27 @@ public class TSClientRegistry
 
     public static void registerManualModifier (String name, ItemStack output, ItemStack topinput, ItemStack bottominput)
     {
-        ItemStack[] recipe = new ItemStack[3];
+        final ItemStack[] recipe = new ItemStack[3];
         recipe[0] = ToolBuilder.instance.buildTool(output, topinput, bottominput, "");
         recipe[1] = topinput;
         recipe[2] = bottominput;
         recipeIcons.put(name, recipe);
     }
 
+    public static void registerManualSmallRecipe (String name, ItemStack output, ItemStack... stacks)
+    {
+        final ItemStack[] recipe = new ItemStack[5];
+        recipe[0] = output;
+        System.arraycopy(stacks, 0, recipe, 1, 4);
+        recipeIcons.put(name, recipe);
+    }
+
     public static void registerManualSmeltery (String name, ItemStack output, ItemStack liquid, ItemStack cast)
     {
-        ItemStack[] recipe = new ItemStack[3];
+        final ItemStack[] recipe = new ItemStack[3];
         recipe[0] = output;
         recipe[1] = liquid;
         recipe[2] = cast;
         recipeIcons.put(name, recipe);
-    }
-
-    public static ItemStack[] getRecipeIcons (String recipeName)
-    {
-        return recipeIcons.get(recipeName);
-    }
-    
-    //Gui
-    public static void addToolButton (ToolGuiElement element)
-    {
-        toolButtons.add(element);
-    }
-    
-    public static void addToolButton (int slotType, int xButton, int yButton, int[] xIcons, int[] yIcons, String title, String body, String domain, String texture)
-    {
-        toolButtons.add(new ToolGuiElement(slotType, xButton, yButton, xIcons, yIcons, title, body, domain, texture));
-    }
-    
-    public static ArrayList<ToolGuiElement> getToolButtons ()
-    {
-        return toolButtons;
     }
 }

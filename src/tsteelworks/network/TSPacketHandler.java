@@ -29,14 +29,19 @@ public class TSPacketHandler implements IPacketHandler
     public void onPacketData (INetworkManager manager, Packet250CustomPayload packet, Player player)
     {
         final Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (packet.channel.equals(Repo.modChan)) if (side == Side.SERVER)
-        {
-            handleServerPacket(packet, (EntityPlayerMP) player);
-        }
-        else
-        {
-            handleClientPacket(packet, (EntityPlayer) player);
-        }
+        if (packet.channel.equals(Repo.modChan))
+            if (side == Side.SERVER)
+                handleServerPacket(packet, (EntityPlayerMP) player);
+            else
+                handleClientPacket(packet, (EntityPlayer) player);
+    }
+
+    Entity getEntity (World world, int id)
+    {
+        for (final Object o : world.loadedEntityList)
+            if (((Entity) o).entityId == id)
+                return (Entity) o;
+        return null;
     }
 
     void handleClientPacket (Packet250CustomPayload packet, EntityPlayer player)
@@ -75,24 +80,18 @@ public class TSPacketHandler implements IPacketHandler
                     FluidStack temp = null;
                     for (final FluidStack liquid : ((HighOvenLogic) te).moltenMetal)
                         if (liquid.fluidID == fluidID)
-                        {
                             temp = liquid;
-                        }
                     if (temp != null)
                     {
                         ((HighOvenLogic) te).moltenMetal.remove(temp);
                         if (isShiftPressed)
-                        {
                             ((HighOvenLogic) te).moltenMetal.add(temp);
-                        }
                         else
-                        {
                             ((HighOvenLogic) te).moltenMetal.add(0, temp);
-                        }
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
-                
+
             }
             if (packetID == 2) // HighOvenDuctGui
             {
@@ -105,12 +104,12 @@ public class TSPacketHandler implements IPacketHandler
                 final TileEntity te = world.getBlockTileEntity(x, y, z);
                 if (te instanceof HighOvenDuctLogic)
                 {
-                    int tempMode = ((HighOvenDuctLogic) te).getMode();
+                    final int tempMode = ((HighOvenDuctLogic) te).getMode();
                     if (tempMode != mode)
                         ((HighOvenDuctLogic) te).setMode(mode);
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
-                
+
             }
         }
         catch (final IOException e)
@@ -118,12 +117,5 @@ public class TSPacketHandler implements IPacketHandler
             TSteelworks.logger.warning("Failed at reading server packet for TSteelworks.");
             e.printStackTrace();
         }
-    }
-
-    Entity getEntity (World world, int id)
-    {
-        for (final Object o : world.loadedEntityList)
-            if (((Entity) o).entityId == id) return (Entity) o;
-        return null;
     }
 }

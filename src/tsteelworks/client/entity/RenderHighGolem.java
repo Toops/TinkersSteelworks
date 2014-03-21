@@ -11,22 +11,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderHighGolem extends RenderLiving
 {
     private static final ResourceLocation textures = new ResourceLocation("tsteelworks", "textures/mob/highgolem.png");
-    private ModelHighGolem model;
+    private final ModelHighGolem model;
 
     public RenderHighGolem()
     {
         super(new ModelHighGolem(), 0.5F);
-        this.model = (ModelHighGolem)super.mainModel;
-        this.setRenderPassModel(this.model);
+        model = (ModelHighGolem) super.mainModel;
+        setRenderPassModel(model);
     }
 
-    protected ResourceLocation getHighGolemTextures(HighGolem entity)
+    @Override
+    protected ResourceLocation getEntityTexture (Entity entity)
+    {
+        return getHighGolemTextures((HighGolem) entity);
+    }
+
+    protected ResourceLocation getHighGolemTextures (HighGolem entity)
     {
         return textures;
-    }
-
-    protected ResourceLocation getEntityTexture(Entity entity)
-    {
-        return this.getHighGolemTextures((HighGolem)entity);
     }
 }

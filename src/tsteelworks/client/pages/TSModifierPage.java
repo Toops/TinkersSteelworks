@@ -9,13 +9,14 @@ import org.lwjgl.opengl.GL12;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import tconstruct.library.client.TConstructClientRegistry;
 import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSModifierPage extends TSBookPage
 {
     String type;
     ItemStack[] icons;
+
+    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/bookmodify.png");
 
     @Override
     public void readPageFromXML (Element element)
@@ -27,6 +28,13 @@ public class TSModifierPage extends TSBookPage
         nodes = element.getElementsByTagName("recipe");
         if (nodes != null)
             icons = TSClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
+    }
+
+    @Override
+    public void renderBackgroundLayer (int localWidth, int localHeight)
+    {
+        manual.getMC().getTextureManager().bindTexture(background);
+        manual.drawTexturedModalRect(localWidth + 12, localHeight + 32, 0, 0, 154, 78);
     }
 
     @Override
@@ -52,13 +60,5 @@ public class TSModifierPage extends TSBookPage
         GL11.glScalef(0.5F, 0.5F, 0.5F);
         RenderHelper.disableStandardItemLighting();
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-    }
-
-    private static final ResourceLocation background = new ResourceLocation("tinker", "textures/gui/bookmodify.png");
-
-    public void renderBackgroundLayer (int localWidth, int localHeight)
-    {
-        manual.getMC().getTextureManager().bindTexture(background);
-        manual.drawTexturedModalRect(localWidth + 12, localHeight + 32, 0, 0, 154, 78);
     }
 }

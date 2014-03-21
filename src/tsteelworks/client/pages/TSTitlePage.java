@@ -10,7 +10,7 @@ public class TSTitlePage extends TSBookPage
     @Override
     public void readPageFromXML (Element element)
     {
-        NodeList nodes = element.getElementsByTagName("text");
+        final NodeList nodes = element.getElementsByTagName("text");
         if (nodes != null)
             text = nodes.item(0).getTextContent();
     }

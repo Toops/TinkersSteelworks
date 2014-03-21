@@ -16,16 +16,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TSBaseBlock extends Block
 {
     public String[] textureNames;
-    public Icon[]   icons;
+    public Icon[] icons;
 
-    public TSBaseBlock (int id, Material material, float hardness, String[] tex)
+    public TSBaseBlock(int id, Material material, float hardness, String[] tex)
     {
         super(id, material);
         setHardness(hardness);
         setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
         textureNames = tex;
     }
-    
+
     @Override
     public int damageDropped (int meta)
     {
@@ -33,28 +33,19 @@ public class TSBaseBlock extends Block
     }
 
     @Override
-    @SideOnly (Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
-    {
-        icons = new Icon[textureNames.length];
-        for (int i = 0; i < icons.length; ++i)
-        {
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
-        }
-    }
-
-    @Override
-    @SideOnly (Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     public Icon getIcon (int side, int meta)
     {
         return meta < icons.length ? icons[meta] : icons[0];
     }
 
-    @SideOnly (Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     public int getSideTextureIndex (int side)
     {
-        if (side == 0) return 2;
-        if (side == 1) return 0;
+        if (side == 0)
+            return 2;
+        if (side == 1)
+            return 0;
 
         return 1;
     }
@@ -63,8 +54,15 @@ public class TSBaseBlock extends Block
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
         for (int iter = 0; iter < icons.length; iter++)
-        {
             list.add(new ItemStack(id, 1, iter));
-        }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons (IconRegister iconRegister)
+    {
+        icons = new Icon[textureNames.length];
+        for (int i = 0; i < icons.length; ++i)
+            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
     }
 }
