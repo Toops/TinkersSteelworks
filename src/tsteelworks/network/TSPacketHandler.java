@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.Repo;
@@ -107,6 +108,34 @@ public class TSPacketHandler implements IPacketHandler
                     final int tempMode = ((HighOvenDuctLogic) te).getMode();
                     if (tempMode != mode)
                         ((HighOvenDuctLogic) te).setMode(mode);
+                    PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
+                }
+
+            }
+            if (packetID == 3) // HighOvenGUI
+            {
+                final int dimension = inputStream.readInt();
+                final World world = DimensionManager.getWorld(dimension);
+                final int x = inputStream.readInt();
+                final int y = inputStream.readInt();
+                final int z = inputStream.readInt();
+                final boolean isShiftPressed = inputStream.readBoolean();
+                final int fluidID = inputStream.readInt();
+                final TileEntity te = world.getBlockTileEntity(x, y, z);
+                if (te instanceof DeepTankLogic)
+                {
+                    FluidStack temp = null;
+                    for (final FluidStack liquid : ((DeepTankLogic) te).fluidlist)
+                        if (liquid.fluidID == fluidID)
+                            temp = liquid;
+                    if (temp != null)
+                    {
+                        ((DeepTankLogic) te).fluidlist.remove(temp);
+                        if (isShiftPressed)
+                            ((DeepTankLogic) te).fluidlist.add(temp);
+                        else
+                            ((DeepTankLogic) te).fluidlist.add(0, temp);
+                    }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
 

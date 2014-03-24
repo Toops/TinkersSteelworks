@@ -133,17 +133,6 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
 
     }
 
-    /* Cause of the heisenbug. Do not uncomment! */
-    /*public void superReadFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
-    }
-    
-    public void superWriteToNBT (NBTTagCompound tags)
-    {
-        super.writeToNBT(tags);
-    }*/
-
     @Override
     public void openChest ()
     {

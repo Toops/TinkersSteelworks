@@ -8,6 +8,7 @@ import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.Repo;
+import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.plugins.PluginController;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -45,6 +46,7 @@ public class TSteelworks
     public static TSCommonProxy proxy;
     // Content Creator
     public static TSContent content;
+    public static TSFuelHandler fuelHandler;
 
     public TSteelworks()
     {
@@ -61,7 +63,7 @@ public class TSteelworks
         ConfigCore.initProps(event.getSuggestedConfigurationFile());
         TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
         content = new TSContent();
-        GameRegistry.registerFuelHandler(content);
+        fuelHandler = new TSFuelHandler();
         proxy.registerRenderer();
         proxy.readManuals();
         proxy.registerSounds();
@@ -82,6 +84,7 @@ public class TSteelworks
     {
         content.createEntities();
         content.addCraftingRecipes();
+        GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
     }
 

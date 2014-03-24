@@ -17,8 +17,10 @@ public class ConfigCore
     public static int steelBoots;
     // -- Blocks
     public static int highoven;
+    public static int machine;
     public static int charcoalStorageBlock;
     public static int dustStorageBlock;
+    public static int steam;
     // --- Misc  
     public static boolean hardcorePiston;
     public static boolean hardcoreFlintAndSteel;
@@ -47,7 +49,9 @@ public class ConfigCore
         highoven = config.getBlock("Blocks", "High Oven Blocks ID", 3400, "High Oven Blocks (Scorched Bricks, etc)").getInt(3400);
         charcoalStorageBlock = config.getBlock("Blocks", "Charcoal Block ID", 3401, "Compressed Charcoal Block (3x3)").getInt(3401);
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
-
+        machine = config.getBlock("Blocks", "Machine Blocks ID", 3403, "Machine Blocks (Turbine, etc)").getInt(3403);
+        steam = config.getBlock("Blocks", "Steam Block ID", 3409, "Steam Fluid 'Block'").getInt(3409);
+        
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag)").getBoolean(false);
         ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
 

@@ -3,6 +3,7 @@ package tsteelworks.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -12,6 +13,7 @@ public class TSCommonProxy implements IGuiHandler
     public static int manualGuiID = -1;
     public static int highovenGuiID = 0;
     public static int highovenDuctGuiID = 1;
+    public static int deeptankGuiID = 2;
 
     @Override
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -31,6 +33,8 @@ public class TSCommonProxy implements IGuiHandler
                 return ((TSInventoryLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
             if ((tile != null) && (tile instanceof HighOvenDuctLogic))
                 return ((HighOvenDuctLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
+            if ((tile != null) && (tile instanceof DeepTankLogic))
+                return ((DeepTankLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
         }
         return null;
     }

@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.w3c.dom.Document;
 
@@ -25,10 +26,14 @@ import tconstruct.TConstruct;
 import tconstruct.common.TContent;
 import tconstruct.library.client.TConstructClientRegistry;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.client.block.DeepTankRender;
+import tsteelworks.client.block.MachineRender;
 import tsteelworks.client.block.SmallFontRenderer;
 import tsteelworks.client.entity.RenderHighGolem;
+import tsteelworks.client.gui.DeepTankGui;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.client.gui.TSManualGui;
@@ -129,6 +134,8 @@ public class TSClientProxy extends TSCommonProxy
             return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
         if (ID == highovenDuctGuiID)
             return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
+        if (ID == deeptankGuiID)
+            return new DeepTankGui(player.inventory, (DeepTankLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
         if (ID == manualGuiID)
         {
             final ItemStack stack = player.getCurrentEquippedItem();
@@ -286,9 +293,12 @@ public class TSClientProxy extends TSCommonProxy
     public void registerRenderer ()
     {
         final Minecraft mc = Minecraft.getMinecraft();
+        MinecraftForge.EVENT_BUS.register(new TSClientEvents());
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
         RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
+        RenderingRegistry.registerBlockHandler(new DeepTankRender());
+        RenderingRegistry.registerBlockHandler(new MachineRender());
     }
 
     @Override

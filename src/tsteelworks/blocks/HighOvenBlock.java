@@ -22,10 +22,12 @@ import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
+import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
@@ -33,20 +35,9 @@ import tsteelworks.lib.blocks.TSInventoryBlock;
 
 public class HighOvenBlock extends TSInventoryBlock
 {
+    static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
     Random rand;
     String texturePrefix = "";
-
-    static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
-
-    static
-    {
-        directions.add(new CoordTuple(0, -1, 0));
-        directions.add(new CoordTuple(0, 1, 0));
-        directions.add(new CoordTuple(0, 0, -1));
-        directions.add(new CoordTuple(0, 0, 1));
-        directions.add(new CoordTuple(-1, 0, 0));
-        directions.add(new CoordTuple(1, 0, 0));
-    }
 
     public HighOvenBlock(int id)
     {
@@ -104,6 +95,8 @@ public class HighOvenBlock extends TSInventoryBlock
             return new HighOvenDrainLogic();
         case 12:
             return new HighOvenDuctLogic();
+        case 13:
+            return new DeepTankLogic();
         }
         return new TSMultiServantLogic();
     }
@@ -114,6 +107,12 @@ public class HighOvenBlock extends TSInventoryBlock
         return meta;
     }
 
+    @Override
+    public int getRenderType ()
+    {
+        return DeepTankRender.deeptankModel;
+    }
+    
     @Override
     public Icon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
     {
@@ -130,7 +129,7 @@ public class HighOvenBlock extends TSInventoryBlock
             }
             else
                 return icons[0];
-        if (meta == 1)
+        else if (meta == 1)
         {
             if (side == direction)
                 return icons[5];
@@ -151,6 +150,11 @@ public class HighOvenBlock extends TSInventoryBlock
                 return icons[4];
             else
                 return icons[3];
+        else if (meta == 13)
+            if (side == direction)
+                return icons[16];
+            else
+                return icons[0];
         return icons[3 + meta];
     }
 
@@ -165,6 +169,8 @@ public class HighOvenBlock extends TSInventoryBlock
             return TSteelworks.proxy.highovenGuiID;
         case 12:
             return TSteelworks.proxy.highovenDuctGuiID;
+        case 13:
+            return TSteelworks.proxy.deeptankGuiID;
         default:
             return null;
         }
@@ -175,7 +181,7 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         if (meta < 2)
         {
-            final int sideTex = side == 4 ? 1 : 0;
+            final int sideTex = side == 3 ? 1 : 0;
             return icons[sideTex + (meta * 3)];
         }
         else if (meta == 2)
@@ -187,7 +193,12 @@ public class HighOvenBlock extends TSInventoryBlock
         }
         else if (meta == 12)
         {
-            final int sideTex = side == 4 ? 15 : 6;
+            final int sideTex = side == 3 ? 15 : 6;
+            return icons[sideTex];
+        }
+        else if (meta == 13)
+        {
+            final int sideTex = side == 3 ? 16 : 6;
             return icons[sideTex];
         }
         return icons[3 + meta];
@@ -220,7 +231,7 @@ public class HighOvenBlock extends TSInventoryBlock
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
-        for (int iter = 0; iter < 13; iter++)
+        for (int iter = 0; iter < 14; iter++)
             if (iter != 3)
                 list.add(new ItemStack(id, 1, iter));
     }
@@ -229,7 +240,7 @@ public class HighOvenBlock extends TSInventoryBlock
     public String[] getTextureNames ()
     {
         final String[] textureNames = { "highoven_side", "highoven_inactive", "highoven_active", "drain_side", "drain_out", "drain_basin", "scorchedbrick", "scorchedstone", "scorchedcobble",
-                "scorchedpaver", "scorchedbrickcracked", "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper", "duct_out" };
+                "scorchedpaver", "scorchedbrickcracked", "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper", "duct_out", "deeptank_controller" };
         if (!texturePrefix.equals(""))
             for (int i = 0; i < textureNames.length; i++)
                 textureNames[i] = texturePrefix + "_" + textureNames[i];
@@ -245,7 +256,7 @@ public class HighOvenBlock extends TSInventoryBlock
         final Integer integer = getGui(world, x, y, z, player);
         if ((integer == null) || (integer == -1))
             return false;
-        if ((meta == 0) || (meta == 12))
+        if ((meta == 0) || (meta == 12) || (meta == 13))
         {
             player.openGui(getModInstance(), integer, world, x, y, z);
             return true;
@@ -265,7 +276,7 @@ public class HighOvenBlock extends TSInventoryBlock
     public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack)
     {
         super.onBlockPlacedBy(world, x, y, z, entityliving, stack);
-        if (world.getBlockMetadata(x, y, z) == 0)
+        if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 13)
             onBlockPlacedElsewhere(world, x, y, z, entityliving);
     }
 
@@ -274,6 +285,11 @@ public class HighOvenBlock extends TSInventoryBlock
         if (world.getBlockMetadata(x, y, z) == 0)
         {
             final HighOvenLogic logic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
+            logic.checkValidPlacement();
+        }
+        if (world.getBlockMetadata(x, y, z) == 13)
+        {
+            final DeepTankLogic logic = (DeepTankLogic) world.getBlockTileEntity(x, y, z);
             logic.checkValidPlacement();
         }
     }
@@ -374,5 +390,13 @@ public class HighOvenBlock extends TSInventoryBlock
         return false;
     }
     
-    
+    static
+    {
+        directions.add(new CoordTuple(0, -1, 0));
+        directions.add(new CoordTuple(0, 1, 0));
+        directions.add(new CoordTuple(0, 0, -1));
+        directions.add(new CoordTuple(0, 0, 1));
+        directions.add(new CoordTuple(-1, 0, 0));
+        directions.add(new CoordTuple(1, 0, 0));
+    }
 }

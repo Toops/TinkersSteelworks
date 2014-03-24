@@ -28,6 +28,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -111,6 +113,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             final int invLength = tempInv.length > inventory.length ? inventory.length : tempInv.length;
             System.arraycopy(tempInv, 0, inventory, 0, invLength);
             if ((activeTemps.length > 0) && (activeTemps.length > tempActive.length))
+            {
                 for (int i = tempActive.length; i < activeTemps.length; i++)
                 {
                     if (!validOreSlot(i))
@@ -118,6 +121,55 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     activeTemps[i] = 20;
                     meltingTemps[i] = 20;
                 }
+            }
+            if (tempInv.length > inventory.length)
+            {
+                for (int i = inventory.length; i < tempInv.length; i++)
+                {
+                    ItemStack stack = tempInv[i];
+                    if (stack != null)
+                    {
+                        float jumpX = rand.nextFloat() * 0.8F + 0.1F;
+                        float jumpY = rand.nextFloat() * 0.8F + 0.1F;
+                        float jumpZ = rand.nextFloat() * 0.8F + 0.1F;
+                        int offsetX = 0;
+                        int offsetZ = 0;
+                        switch (getRenderDirection())
+                        {
+                        case 2: // +z
+                            offsetZ = -1;
+                            break;
+                        case 3: // -z
+                            offsetZ = 1;
+                            break;
+                        case 4: // +x
+                            offsetX = -1;
+                            break;
+                        case 5: // -x
+                            offsetX = 1;
+                            break;
+                        }
+
+                        while (stack.stackSize > 0)
+                        {
+                            int itemSize = rand.nextInt(21) + 10;
+                            if (itemSize > stack.stackSize)
+                                itemSize = stack.stackSize;
+                            stack.stackSize -= itemSize;
+                            EntityItem entityitem = new EntityItem(worldObj, (double) ((float) xCoord + jumpX + offsetX), (double) ((float) yCoord + jumpY),
+                                    (double) ((float) zCoord + jumpZ + offsetZ), new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
+
+                            if (stack.hasTagCompound())
+                                entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+                            float offset = 0.05F;
+                            entityitem.motionX = (double) ((float) rand.nextGaussian() * offset);
+                            entityitem.motionY = (double) ((float) rand.nextGaussian() * offset + 0.2F);
+                            entityitem.motionZ = (double) ((float) rand.nextGaussian() * offset);
+                            worldObj.spawnEntityInWorld(entityitem);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -164,18 +216,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
         switch (facing)
         {
-        case 0:
-            direction = 2;
-            break;
-        case 1:
-            direction = 5;
-            break;
-        case 2:
-            direction = 3;
-            break;
-        case 3:
-            direction = 4;
-            break;
+        case 0: direction = 2; break;
+        case 1: direction = 5; break;
+        case 2: direction = 3; break;
+        case 3: direction = 4; break;
         }
     }
 
@@ -233,6 +277,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         tick++;
         if ((tick % 4) == 0)
             heatItems();
+        if ((tick % 10) == 0)
+            heatFluids();
         if ((tick % 20) == 0)
         {
             if (!validStructure)
@@ -295,15 +341,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                             if (resultitemstack != null)
                             {
                                 if (resultitemstack != null)
-                                    meltItemsSolid(i, resultitemstack, true);
+                                    meltItemsSolidOutput(i, resultitemstack, true);
                             }
                             else if (result != null)
                             {
-                                final FluidStack resultEx = getMixedResultFor(result);
+                                final FluidStack resultEx = getLiquidMixedResultFor(result);
                                 if (resultEx != null)
-                                    meltItems(i, resultEx, true);
+                                    meltItemsLiquidOutput(i, resultEx, true);
                                 else
-                                    meltItems(i, result, false);
+                                    meltItemsLiquidOutput(i, result, false);
                             }
 
                         }
@@ -313,8 +359,23 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             isMeltingItems = hasUse;
         }
     }
+    // TODO: temp marker
+    void heatFluids()
+    {
+        if (internalTemp < 300 || moltenMetal.size() < 1) return;
+        if (moltenMetal.get(0).getFluid() != FluidRegistry.getFluid("water")) return;
 
-    void meltItems (int slot, FluidStack fluid, Boolean doMix)
+//        for (int i = 0; i < moltenMetal.size(); i++)
+//        {
+            final FluidStack water = moltenMetal.get(0);
+            final FluidStack steam = new FluidStack(TSteelworks.content.steamFluid.getID(), water.amount);
+            moltenMetal.remove(0);
+            moltenMetal.add(steam);
+            //info[i] = new FluidTankInfo(fluid.copy(), fluid.amount);
+//        }
+    }
+    
+    void meltItemsLiquidOutput (int slot, FluidStack fluid, Boolean doMix)
     {
         if (addMoltenMetal(fluid, false))
         {
@@ -329,7 +390,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
-    void meltItemsSolid (int slot, ItemStack stack, Boolean doMix)
+    void meltItemsSolidOutput (int slot, ItemStack stack, Boolean doMix)
     {
         if (inventory[slot].stackSize >= 2)
             inventory[slot].stackSize--;
@@ -354,7 +415,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return AdvancedSmelting.instance.getSmelteryResult(stack);
     }
 
-    public FluidStack getMixedResultFor (FluidStack stack)
+    public FluidStack getLiquidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
         final FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
@@ -445,8 +506,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public int getScaledFuelGague (int scale)
     {
         int ret = fuelBurnTime / scale;
-        if (ret < 1)
-            ret = 1;
+        if (ret < 1) ret = 1;
         return ret;
     }
 
@@ -464,25 +524,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         if (stack == null)
             return 0;
-        else
-        {
-            final int i = stack.getItem().itemID;
-
-            stack.getItem();
-            if ((stack.getItem() instanceof ItemBlock) && (Block.blocksList[i] != null))
-            {
-                final Block block = Block.blocksList[i];
-
-                if (block == TSContent.charcoalBlock)
-                    return 420 * 4;
-            }
-            if ((stack.itemID == new ItemStack(Item.coal).itemID) && (stack.getItemDamage() == 1))
-                return 420;
-            for (final ItemStack fuelCoke : OreDictionary.getOres("fuelCoke"))
-                if (stack.itemID == fuelCoke.itemID)
-                    return 840;
-        }
-        return 0;
+        return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(stack);
     }
 
     /**
@@ -495,21 +537,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         if (stack == null)
             return 0;
-        else
-        {
-            final int i = stack.getItem().itemID;
-            stack.getItem();
-            if ((stack.getItem() instanceof ItemBlock) && (Block.blocksList[i] != null))
-            {
-                final Block block = Block.blocksList[i];
-
-                if (block == TSContent.charcoalBlock)
-                    return 9;
-            }
-            if ((stack.itemID == new ItemStack(Item.coal).itemID) && (stack.getItemDamage() == 1))
-                return 3;
-        }
-        return 0;
+        return TSteelworks.fuelHandler.getHighOvenFuelHeatRate(stack);
     }
 
     /**
@@ -761,6 +789,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         numBricks = 0;
         Block block;
+        
         // Check inside
         for (int xPos = x - 0; xPos <= (x + 0); xPos++)
             for (int zPos = z - 0; zPos <= (z + 0); zPos++)
@@ -771,12 +800,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
         // Check outer layer
         // Scans in a swastica-like pattern
-        for (int xPos = x - 1; xPos <= (x + 0); xPos++)
+        for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
             numBricks += checkBricks(xPos, y, z - 1);
             numBricks += checkBricks(xPos, y, z + 1);
         }
-        for (int zPos = z - 1; zPos <= (z + 0); zPos++)
+        for (int zPos = z - 0; zPos <= (z + 0); zPos++)
         {
             numBricks += checkBricks(x - 1, y, zPos);
             numBricks += checkBricks(x + 1, y, zPos);
@@ -816,12 +845,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         return count;
             }
         // Check outer layer
-        for (int xPos = x - 1; xPos <= (x + 0); xPos++)
+        for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
             numBricks += checkBricks(xPos, y, z - 1);
             numBricks += checkBricks(xPos, y, z + 1);
         }
-        for (int zPos = z - 1; zPos <= (z + 0); zPos++)
+        for (int zPos = z - 0; zPos <= (z + 0); zPos++)
         {
             numBricks += checkBricks(x - 1, y, zPos);
             numBricks += checkBricks(x + 1, y, zPos);
@@ -861,13 +890,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         return count;
             }
         // Check outer layer X
-        for (int xPos = x - 1; xPos <= (x + 0); xPos++)
+        for (int xPos = x - 1; xPos <= (x + 1); xPos++)
         {
             numBricks += checkBricks(xPos, y, z - 1);
             numBricks += checkBricks(xPos, y, z + 1);
         }
         // Check outer layer Z
-        for (int zPos = z - 1; zPos <= (z + 0); zPos++)
+        for (int zPos = z - 0; zPos <= (z + 0); zPos++)
         {
             numBricks += checkBricks(x - 1, y, zPos);
             numBricks += checkBricks(x + 1, y, zPos);
@@ -920,11 +949,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         int bottomBricks = 0;
         for (int xPos = x - 1; xPos <= (x + 1); xPos++)
             for (int zPos = z - 1; zPos <= (z + 1); zPos++)
-                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1))
-                {
+                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && 
+                        (worldObj.getBlockMetadata(xPos, y, zPos) >= 1))
                     bottomBricks += checkBricks(xPos, y, zPos);
-                    ;
-                }
         structureHasBottom = (bottomBricks == 9);
         if (structureHasBottom)
             centerPos = new CoordTuple(x, y + 1, z);

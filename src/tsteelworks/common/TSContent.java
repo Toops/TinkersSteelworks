@@ -7,24 +7,33 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
+import tsteelworks.blocks.MachineBlock;
+import tsteelworks.blocks.SteamFluidBlock;
 import tsteelworks.blocks.TSBaseBlock;
+import tsteelworks.blocks.TSBaseFluid;
+import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
+import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
+import tsteelworks.fluids.SteamFluid;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
+import tsteelworks.items.blocks.MachineItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -32,7 +41,7 @@ import cpw.mods.fml.common.IFuelHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class TSContent implements IFuelHandler
+public class TSContent
 {
     public static Item materialsTS;
     public static Item bookManual;
@@ -42,8 +51,11 @@ public class TSContent implements IFuelHandler
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     public static Block highoven;
+    public static Block machine;
     public static Block charcoalBlock;
     public static Block dustStorageBlock;
+    public static Block steamBlock;
+    public static Fluid steamFluid;
 
     /**
      * Content Constructor
@@ -52,6 +64,7 @@ public class TSContent implements IFuelHandler
     {
         registerItems();
         registerBlocks();
+        registerFluids();
         oreRegistry();
         registerMixerMaterials();
         setupCreativeTabs();
@@ -94,13 +107,31 @@ public class TSContent implements IFuelHandler
         GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
         GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
         GameRegistry.registerTileEntity(HighOvenDuctLogic.class, "TSteelworks.HighOvenDuct");
+        GameRegistry.registerTileEntity(DeepTankLogic.class, "TSteelworks.DeepTank");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
+        /* Machines */
+        machine = new MachineBlock(ConfigCore.machine).setUnlocalizedName("Machine");
+        GameRegistry.registerBlock(machine, MachineItemBlock.class, "Machine");
+        GameRegistry.registerTileEntity(TurbineLogic.class, "TSteelworks.Machine");
         /* Raw Vanilla Materials */
         charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] { "charcoal_block" }).setUnlocalizedName("tsteelworks.blocks.charcoal");
         GameRegistry.registerBlock(charcoalBlock, "blockCharcoal");
         charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
         GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
+        
+        
+    }
+    
+    void registerFluids()
+    {
+        steamFluid = new Fluid("water.steam");
+        if (!FluidRegistry.registerFluid(steamFluid))
+            steamFluid = FluidRegistry.getFluid("liquid.steam");
+        steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("water.steam");
+        GameRegistry.registerBlock(steamBlock, "water.steam");
+        steamBlock.setLightOpacity(3);
+        steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
     }
     
     void oreRegistry ()
@@ -118,6 +149,7 @@ public class TSContent implements IFuelHandler
         final int oreId = OreDictionary.getOreID(is);
         if (oreId == -1)
             OreDictionary.registerOre(oreName, is);
+        
     }
     
     /**
@@ -178,18 +210,5 @@ public class TSContent implements IFuelHandler
             TSRecipes.changeRecipeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil)
             TSRecipes.changeRecipeAnvil();
-    }
-
-    @Override
-    public int getBurnTime (ItemStack fuel)
-    {
-        final int i = fuel.getItem().itemID;
-        if ((fuel.getItem() instanceof ItemBlock) && (Block.blocksList[i] != null))
-        {
-            final Block block = Block.blocksList[i];
-            if (block == TSContent.charcoalBlock)
-                return 16000;
-        }
-        return 0;
     }
 }
