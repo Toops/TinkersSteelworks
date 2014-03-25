@@ -21,6 +21,7 @@ entity.HighGolem.name=High Golem
 tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
 block.storage.dust.sugar.name=Sugar Cube
+tile.water.steam.name=Steam
 
 HighOven.Controller.name=High Oven Controller
 HighOven.Drain.name=High Oven Drain
@@ -36,6 +37,8 @@ HighOven.Brick.Creeper.name=Chiseled Creepy Bricks
 HighOven.Duct.name=High Oven Duct
 HighOven.TankController.name=Deep Tank Controller
 
+Machine.Turbine.name=Steam Turbine
+
 highoven.controller.tooltip1=The main component of the High Oven
 highoven.controller.tooltip2=(Caution: Contents under pressure!)
 highoven.drain.tooltip1=Fluid input/output for the High Oven or Deep Tank
@@ -48,6 +51,8 @@ highoven.tankcontroller.tooltip1=The main component of the Deep Tank
 highoven.tankcontroller.tooltip2=(High capacity!)
 dustblock.gunpowder.tooltip=Fire in the hole!
 dustblock.sugar.tooltip=How sweet!
+machine.turbine.tooltip1=Experimental!
+machine.turbine.tooltip2=(Wittisism)
 material.scorchedbrick.tooltip1=Use for crafting, or throwing!
 
 manual.steelworks.tooltip1=By: The Tinkerers' Society

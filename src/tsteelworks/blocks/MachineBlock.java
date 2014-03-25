@@ -26,8 +26,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class MachineBlock extends TSInventoryBlock
 {
-    public String[] textureNames = new String[] { "gunpowder", "sugar" };
-    public Icon[] icons;
     static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
 
     public MachineBlock(int id) {

@@ -379,6 +379,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         if (addMoltenMetal(fluid, false))
         {
+            if (itemIsOre(inventory[slot]))
+                if (TSteelworks.thermalExpansionAvailable)
+                    for (final ItemStack is : OreDictionary.getOres("slag"))
+                    {
+                        addSolidItem(is);
+                        break;
+                    }
             if (inventory[slot].stackSize >= 2)
                 inventory[slot].stackSize--;
             else
@@ -403,6 +410,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         onInventoryChanged();
     }
 
+    public boolean itemIsOre (ItemStack stack)
+    {
+        return (stack.getDisplayName().endsWith("Ore"));
+    }
+    
     /**
      * Get molten result for given item
      * 

@@ -12,6 +12,7 @@ import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.plugins.PluginController;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -47,6 +48,7 @@ public class TSteelworks
     // Content Creator
     public static TSContent content;
     public static TSFuelHandler fuelHandler;
+    public static boolean thermalExpansionAvailable;
 
     public TSteelworks()
     {
@@ -86,6 +88,8 @@ public class TSteelworks
         content.addCraftingRecipes();
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
+        
+        thermalExpansionAvailable = Loader.isModLoaded("ThermalExpansion");
     }
 
     public static void loginfo (String desc)

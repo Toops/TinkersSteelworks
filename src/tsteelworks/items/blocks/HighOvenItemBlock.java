@@ -43,6 +43,10 @@ public class HighOvenItemBlock extends ItemBlock
             list.add(StatCollector.translateToLocal("highoven.duct.tooltip1"));
             list.add(StatCollector.translateToLocal("highoven.duct.tooltip2"));
             break;
+        case 13:
+            list.add(StatCollector.translateToLocal("highoven.tankcontroller.tooltip1"));
+            list.add(StatCollector.translateToLocal("highoven.tankcontroller.tooltip2"));
+            break;
         default:
             list.add(StatCollector.translateToLocal("highoven.brick.tooltip1"));
             list.add(StatCollector.translateToLocal("highoven.brick.tooltip2"));

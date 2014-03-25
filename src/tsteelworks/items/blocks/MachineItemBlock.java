@@ -28,8 +28,8 @@ public class MachineItemBlock extends ItemBlock
         switch (stack.getItemDamage())
         {
         case 0:
-            list.add(StatCollector.translateToLocal("highoven.controller.tooltip1"));
-            list.add(StatCollector.translateToLocal("highoven.controller.tooltip2"));
+            list.add(StatCollector.translateToLocal("machine.turbine.tooltip1"));
+            list.add(StatCollector.translateToLocal("machine.turbine.tooltip2"));
             break;
         default:
             break;

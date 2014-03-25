@@ -54,14 +54,10 @@ public class HighOvenGui extends TSContainerGui
     {
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(startU + 0, startV + endV, zLevel, par3Icon.getMinU(), par3Icon.getMaxV());// Bottom
-                                                                                                               // left
-        tessellator.addVertexWithUV(startU + endU, startV + endV, zLevel, par3Icon.getMaxU(), par3Icon.getMaxV());// Bottom
-                                                                                                                  // right
-        tessellator.addVertexWithUV(startU + endU, startV + 0, zLevel, par3Icon.getMaxU(), par3Icon.getMinV());// Top
-                                                                                                               // right
-        tessellator.addVertexWithUV(startU + 0, startV + 0, zLevel, par3Icon.getMinU(), par3Icon.getMinV()); // Top
-                                                                                                             // left
+        tessellator.addVertexWithUV(startU + 0, startV + endV, zLevel, par3Icon.getMinU(), par3Icon.getMaxV());// Bottom left
+        tessellator.addVertexWithUV(startU + endU, startV + endV, zLevel, par3Icon.getMaxU(), par3Icon.getMaxV());// Bottom right
+        tessellator.addVertexWithUV(startU + endU, startV + 0, zLevel, par3Icon.getMaxU(), par3Icon.getMinV());// Top right
+        tessellator.addVertexWithUV(startU + 0, startV + 0, zLevel, par3Icon.getMinU(), par3Icon.getMinV()); // Top left
         tessellator.draw();
     }
 
@@ -277,6 +273,15 @@ public class HighOvenGui extends TSContainerGui
                 drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
         if (!logic.isStackInSlot(3))
             drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
+        if (slotSize > 0) 
+        {
+            for (int i = 0; i < slotSize; i++) 
+            {
+                drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
+//                drawTexturedModalRect(slotX + 16, (slotY + 6) + (iter * 18), 176, 21, 36, 18);
+                
+            }
+        }
     }
 
     @Override
