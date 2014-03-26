@@ -43,7 +43,6 @@ public class TSRecipes
 
     public static void addAlloyRecipesForSmeltery ()
     {
-        // Fixed that for ya, mDiyo.
         if (ConfigCore.smelteryObsidianAlloy)
             Smeltery.addAlloyMixing(new FluidStack(TContent.moltenObsidianFluid, 1), new FluidStack(FluidRegistry.LAVA, 1), new FluidStack(FluidRegistry.WATER, 1));
     }
@@ -219,7 +218,6 @@ public class TSRecipes
 
     public static void addSmeltingMisc ()
     {
-        //TODO: OreDictify, expand, sort, and move these
         addSmeltingObsidian();
         addSmeltingWater();
         addSmeltingGlass();
@@ -241,13 +239,13 @@ public class TSRecipes
     public static void addSmeltingPigIron ()
     {
         final FluidType ft = FluidType.PigIron;
-        AdvancedSmelting.addFluidMixerCombo(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
+        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
     }
 
-    public static void addSmeltingSolids ()
+    public static void addMixComboSmeltingForSolidOutput ()
     {
         final ItemStack out = new ItemStack(Item.netherQuartz, 1);
-        AdvancedSmelting.addSolidMixerCombo(out, FluidType.Glass, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+        AdvancedSmelting.registerMixComboForSolidOutput(out, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.flint, 1, 0), new ItemStack(Block.blockClay, 1, 0));
     }
 
     /**
@@ -269,7 +267,7 @@ public class TSRecipes
         }
         if (ConfigCore.hardcoreFlintAndSteel)
             AdvancedSmelting.addMelting(ft, new ItemStack(Item.flintAndSteel, 1, 0), tempMod, ingotLiquidValue);
-        AdvancedSmelting.addFluidMixerCombo(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
     }
 
     public static void addSmeltingStone ()

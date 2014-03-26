@@ -14,10 +14,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -28,7 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -194,6 +189,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
 
     @Override
+    public boolean isUseableByPlayer (EntityPlayer entityplayer)
+    {
+        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+            return false;
+        else
+            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+    }
+    
+    /* ==================== Facing Logic ==================== */
+    
+    @Override
     public byte getRenderDirection ()
     {
         return direction;
@@ -223,6 +229,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
+    /* ==================== Active Logic ==================== */
+    
     @Override
     public boolean getActive ()
     {
@@ -236,6 +244,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
+    /* ==================== Redstone Logic ==================== */
+    
     /**
      * Get the current state of redstone-connected power
      * 
@@ -256,17 +266,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         redstoneActivated = flag;
     }
-
-    @Override
-    public boolean isUseableByPlayer (EntityPlayer entityplayer)
-    {
-        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-            return false;
-        else
-            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
-    }
-
-    /* ==================== Smelting ==================== */
+    
+    /* ==================== Smelting Logic ==================== */
 
     /**
      * Update Tile Entity
@@ -380,19 +381,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (addMoltenMetal(fluid, false))
         {
             if (itemIsOre(inventory[slot]))
-                if (TSteelworks.thermalExpansionAvailable)
-                    for (final ItemStack is : OreDictionary.getOres("slag"))
-                    {
-                        addSolidItem(is);
-                        break;
-                    }
+                outputTE3Slag();
+
             if (inventory[slot].stackSize >= 2)
                 inventory[slot].stackSize--;
             else
                 inventory[slot] = null;
             activeTemps[slot] = 20;
             if (doMix)
-                removeMixers();
+                removeMixItems();
             onInventoryChanged();
         }
     }
@@ -405,7 +402,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             inventory[slot] = null;
         activeTemps[slot] = 20;
         if (doMix)
-            removeMixers();
+            removeMixItems();
         addSolidItem(stack);
         onInventoryChanged();
     }
@@ -424,13 +421,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public FluidStack getNormalResultFor (ItemStack stack)
     {
-        return AdvancedSmelting.instance.getSmelteryResult(stack);
+        return AdvancedSmelting.instance.getMeltingResult(stack);
     }
 
     public FluidStack getLiquidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final FluidType mixResult = AdvancedSmelting.instance.validateMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
+        final FluidType mixResult = AdvancedSmelting.instance.getMixSmeltingFluidResult(resultType, inventory[0], inventory[1], inventory[2]);
         if (mixResult != null)
             return new FluidStack(mixResult.fluid, stack.amount);
         return null;
@@ -439,22 +436,33 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public ItemStack getSolidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final ItemStack mixResult = AdvancedSmelting.instance.validateSolidMixerCombo(resultType, inventory[0], inventory[1], inventory[2]);
+        final ItemStack mixResult = AdvancedSmelting.instance.getMixSmeltingSolidResult(resultType, inventory[0], inventory[1], inventory[2]);
         if (mixResult != null)
             return new ItemStack(mixResult.itemID, mixResult.stackSize, mixResult.getItemDamage());
         return null;
     }
 
+    private void outputTE3Slag ()
+    {
+        if (TSteelworks.thermalExpansionAvailable)
+            if (new Random().nextInt(100) <= 15)
+                for (final ItemStack is : OreDictionary.getOres("slag"))
+                {
+                    addSolidItem(is);
+                    break;
+                }
+    }
+    
     /**
      * Remove additive materials by preset vs random chance and amount
      */
-    private void removeMixers ()
+    private void removeMixItems ()
     {
         for (int i = 0; i < 3; i++)
             if (inventory[i] != null)
             {
-                final int consumeChance = AdvancedSmelting.instance.getMixerConsumeChance(inventory[i]);
-                final int consumeAmount = AdvancedSmelting.instance.getMixerConsumeAmount(inventory[i]);
+                final int consumeChance = AdvancedSmelting.instance.getMixItemConsumeChance(inventory[i]);
+                final int consumeAmount = AdvancedSmelting.instance.getMixItemConsumeAmount(inventory[i]);
                 if (new Random().nextInt(100) <= consumeChance)
                     if (inventory[i].stackSize >= consumeAmount)
                         inventory[i].stackSize -= consumeAmount;
@@ -509,6 +517,16 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Fuel Handling ==================== */
     
+    public boolean isBurning ()
+    {
+        return fuelBurnTime > 0;
+    }
+
+    public boolean hasFuel ()
+    {
+        return getFuelBurnTime(inventory[3]) > 0;
+    }
+
     /**
      * Get fuel gauge scaled for display
      * 
@@ -520,48 +538,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         int ret = fuelBurnTime / scale;
         if (ret < 1) ret = 1;
         return ret;
-    }
-
-    public boolean isBurning ()
-    {
-        return fuelBurnTime > 0;
-    }
-
-    public boolean hasFuel ()
-    {
-        return getFuelBurnTime(inventory[3]) > 0;
-    }
-
-    public static int getFuelBurnTime (ItemStack stack)
-    {
-        if (stack == null)
-            return 0;
-        return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(stack);
-    }
-
-    /**
-     * Get the rate of heat increase by given item
-     * 
-     * @param stack
-     * @return
-     */
-    public static int getFuelHeatRate (ItemStack stack)
-    {
-        if (stack == null)
-            return 0;
-        return TSteelworks.fuelHandler.getHighOvenFuelHeatRate(stack);
-    }
-
-    /**
-     * Update fuel gauge display
-     */
-    public void updateFuelDisplay ()
-    {
-        if (getFuelBurnTime(inventory[3]) > 0)
-        {
-            needsUpdate = true;
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
     }
 
     /**
@@ -589,8 +565,40 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
         }
     }
+    
+    /**
+     * Update fuel gauge display
+     */
+    public void updateFuelDisplay ()
+    {
+        if (getFuelBurnTime(inventory[3]) > 0)
+        {
+            needsUpdate = true;
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        }
+    }
 
-    /* ==================== Misc Inventory ==================== */
+    public static int getFuelBurnTime (ItemStack stack)
+    {
+        if (stack == null)
+            return 0;
+        return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(stack);
+    }
+
+    /**
+     * Get the rate of heat increase by given item
+     * 
+     * @param stack
+     * @return
+     */
+    public static int getFuelHeatRate (ItemStack stack)
+    {
+        if (stack == null)
+            return 0;
+        return TSteelworks.fuelHandler.getHighOvenFuelHeatRate(stack);
+    }
+    
+    /* ==================== Inventory ==================== */
 
     /**
      * Determine is slot is valid for 'ore' processing

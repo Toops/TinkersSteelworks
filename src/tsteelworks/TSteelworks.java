@@ -97,6 +97,11 @@ public class TSteelworks
         logger.info(desc);
     }
 
+    public static void loginfo (String desc, boolean flag)
+    {
+        logger.info(desc + ": " + flag);
+    }
+    
     public static void loginfo (String desc, int value)
     {
         logger.info(desc + ": " + value);

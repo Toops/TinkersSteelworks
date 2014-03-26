@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
@@ -18,7 +17,6 @@ import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.MachineBlock;
 import tsteelworks.blocks.SteamFluidBlock;
 import tsteelworks.blocks.TSBaseBlock;
-import tsteelworks.blocks.TSBaseFluid;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
@@ -27,7 +25,6 @@ import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
-import tsteelworks.fluids.SteamFluid;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
@@ -37,7 +34,6 @@ import tsteelworks.items.blocks.MachineItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import cpw.mods.fml.common.IFuelHandler;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -157,12 +153,19 @@ public class TSContent
      */
     public static void registerMixerMaterials ()
     {
-        AdvancedSmelting.addMixer(new ItemStack(Item.gunpowder, 1, 0), 0, 33);
-        AdvancedSmelting.addMixer(new ItemStack(Item.redstone, 1, 0), 1, 65);
-        AdvancedSmelting.addMixer(new ItemStack(Block.sand, 2, 0), 2, 100);
-        AdvancedSmelting.addMixer(new ItemStack(Item.sugar, 1, 0), 0, 62);
-        AdvancedSmelting.addMixer(new ItemStack(Item.emerald, 1, 0), 1, 30);
-        AdvancedSmelting.addMixer(new ItemStack(TContent.meatBlock, 1, 0), 2, 100);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.gunpowder,      1, 0), 0, 33);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.sugar,          1, 0), 0, 62);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.blazePowder,    1, 0), 0, 33);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 0, 33);
+        
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 1, 65);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.emerald,        1, 0), 1, 30);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.flint,          1, 0), 1, 30);
+        
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.ghastTear,      1, 0), 2, 30);
+        AdvancedSmelting.registerMixItem(new ItemStack(Block.blockClay,     1, 0), 2, 80);
+        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          2, 0), 2, 100);
+        AdvancedSmelting.registerMixItem(new ItemStack(TContent.meatBlock,  1, 0), 2, 100);
     }
     
     /**
@@ -188,7 +191,7 @@ public class TSContent
         TSRecipes.addOreDictionarySmeltingRecipes();
         TSRecipes.addSmeltingIron();
         TSRecipes.addSmeltingSteel();
-        TSRecipes.addSmeltingSolids();
+        TSRecipes.addMixComboSmeltingForSolidOutput();
         TSRecipes.addSmeltingPigIron();
         TSRecipes.addSmeltingGold();
         TSRecipes.addSmeltingMisc();

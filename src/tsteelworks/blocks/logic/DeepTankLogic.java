@@ -22,13 +22,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import tconstruct.TConstruct;
 import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 
@@ -533,24 +533,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     boolean validBlockID(int blockID)
     {
-        return blockID == TSContent.highoven.blockID || blockID == TContent.smeltery.blockID || 
-                blockID == TContent.smelteryNether.blockID;
+        return (blockID == TSContent.highoven.blockID || blockID == TConstruct.content.smeltery.blockID);
     }
     
     boolean validTankID(int blockID)
     {
-        return blockID == TContent.lavaTank.blockID || blockID == TContent.lavaTankNether.blockID 
-                || blockID == TContent.clearGlass.blockID || blockID == TContent.stainedGlassClear.blockID;
-    }
-    
-    boolean validCornerBlockID(int blockID)
-    {
-        return blockID == TSContent.highoven.blockID || blockID == TContent.smeltery.blockID || blockID == TContent.smelteryNether.blockID;
-    }
-    
-    boolean validWallBlockID(int blockID)
-    {
-        return blockID == TContent.lavaTank.blockID || blockID == TContent.lavaTankNether.blockID;
+        return (blockID == TConstruct.content.lavaTank.blockID);
     }
 
     public int getCapacity ()
