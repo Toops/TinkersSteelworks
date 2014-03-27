@@ -304,6 +304,8 @@ public class HighOvenBlock extends TSInventoryBlock
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
         if (logic instanceof HighOvenLogic)
             ((HighOvenLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
+        if (logic instanceof HighOvenDuctLogic)
+            ((HighOvenDuctLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
     }
 
     @Override

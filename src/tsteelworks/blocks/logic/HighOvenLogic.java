@@ -3,6 +3,7 @@ package tsteelworks.blocks.logic;
 import java.util.ArrayList;
 import java.util.Random;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSourceImpl;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
@@ -38,6 +39,7 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
+import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
@@ -328,7 +330,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     // Increase temp if its temp is lower than the High Oven's internal 
                     // temp and hasn't reached melting point
                     if ((activeTemps[i] < internalTemp) && (activeTemps[i] < meltingTemps[i]))
-                        activeTemps[i] += (internalTemp > 300) ? (internalTemp / 300) : 1;
+                        activeTemps[i] += (internalTemp > 250) ? (internalTemp / 250) : 1;
                     // Decrease temp if its temp is higher than the High Oven's internal
                     // temp and the High Oven's internal temp is lower than the melting point
                     else if ((activeTemps[i] > internalTemp) && (internalTemp < meltingTemps[i]))
@@ -360,25 +362,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             isMeltingItems = hasUse;
         }
     }
-    // TODO: temp marker
+
     void heatFluids()
     {
         if (internalTemp < 300 || moltenMetal.size() < 1) return;
         if (moltenMetal.get(0).getFluid() != FluidRegistry.getFluid("water")) return;
 
-//        for (int i = 0; i < moltenMetal.size(); i++)
-//        {
+        for (int i = 0; i < moltenMetal.size(); i++)
+        {
             final FluidStack water = moltenMetal.get(0);
             final FluidStack steam = new FluidStack(TSteelworks.content.steamFluid.getID(), water.amount);
-            moltenMetal.remove(0);
+            moltenMetal.remove(i);
             moltenMetal.add(steam);
-            //info[i] = new FluidTankInfo(fluid.copy(), fluid.amount);
-//        }
+        }
     }
     
     void meltItemsLiquidOutput (int slot, FluidStack fluid, Boolean doMix)
     {
-        if (addMoltenMetal(fluid, false))
+        if (addFluidToTank(fluid, false))
         {
             if (itemIsOre(inventory[slot]))
                 outputTE3Slag();
@@ -444,13 +445,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     private void outputTE3Slag ()
     {
-        if (TSteelworks.thermalExpansionAvailable)
+        if (TSteelworks.thermalExpansionAvailable && ConfigCore.enableTE3SlagOutput)
             if (new Random().nextInt(100) <= 15)
-                for (final ItemStack is : OreDictionary.getOres("slag"))
-                {
-                    addSolidItem(is);
-                    break;
-                }
+                    addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
     }
     
     /**
@@ -1025,7 +1022,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param first
      * @return Success
      */
-    boolean addMoltenMetal (FluidStack liquid, boolean first)
+    boolean addFluidToTank (FluidStack liquid, boolean first)
     {
         needsUpdate = true;
         if (moltenMetal.size() == 0)
@@ -1042,14 +1039,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             boolean added = false;
             for (int i = 0; i < moltenMetal.size(); i++)
             {
-                final FluidStack l = moltenMetal.get(i);
+                FluidStack l = moltenMetal.get(i);
                 if (l.isFluidEqual(liquid))
                 {
                     l.amount += liquid.amount;
                     added = true;
                 }
-                else
-                    return false;
+                else if (liquid.fluidID != TSContent.steamFluid.getID())
+                    added = false;
                 if (l.amount <= 0)
                 {
                     moltenMetal.remove(l);
@@ -1210,7 +1207,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             final int amount = resource.amount;
             if ((amount > 0) && doFill)
             {
-                addMoltenMetal(resource, false);
+                addFluidToTank(resource, false);
                 needsUpdate = true;
                 worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
             }

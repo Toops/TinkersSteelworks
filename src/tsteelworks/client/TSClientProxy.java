@@ -150,6 +150,8 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
         TSClientRegistry.registerManualIcon("highoven", new ItemStack(TSContent.highoven));
         TSClientRegistry.registerManualIcon("highovendrain", new ItemStack(TSContent.highoven, 1, 1));
+        TSClientRegistry.registerManualIcon("highovenduct", new ItemStack(TSContent.highoven, 12, 1));
+        TSClientRegistry.registerManualIcon("deeptank", new ItemStack(TSContent.highoven, 13, 1));
         TSClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
         TSClientRegistry.registerManualIcon("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2));
         TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
@@ -252,6 +254,7 @@ public class TSClientProxy extends TSCommonProxy
         new ItemStack(Block.sand, 1, 0);
         new ItemStack(Item.redstone);
         new ItemStack(Item.gunpowder);
+        final ItemStack lapis = new ItemStack(Item.dyePowder, 1, 4);
         final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
         new ItemStack(TSContent.dustStorageBlock, 1, 0);
         new ItemStack(TSContent.dustStorageBlock, 1, 1);
@@ -265,13 +268,30 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TContent.moltenStone, 1), brick);
         TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TContent.moltenStone, 1), brickBlock);
 
-        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
-
-        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick, null, scorchedbrick,
-                scorchedbrick, scorchedbrick, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1), scorchedbrick, null, scorchedbrick, scorchedbrick, null, scorchedbrick, scorchedbrick,
-                null, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal, charcoal);
+        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), 
+                                                                            scorchedbrick, scorchedbrick, 
+                                                                            scorchedbrick, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), 
+                                                                            scorchedbrick, scorchedbrick, scorchedbrick, 
+                                                                            scorchedbrick, null, scorchedbrick,
+                                                                            scorchedbrick, scorchedbrick, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1), 
+                                                                        scorchedbrick, null, scorchedbrick, 
+                                                                        scorchedbrick, null, scorchedbrick, 
+                                                                        scorchedbrick, null, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("highovenyduct", new ItemStack(TSContent.highoven, 1, 12), 
+                                                                        scorchedbrick, scorchedbrick, scorchedbrick, 
+                                                                        null, null, null, 
+                                                                        scorchedbrick, scorchedbrick, scorchedbrick);
+        TSClientRegistry.registerManualLargeRecipe("deeptank", new ItemStack(TSContent.highoven, 1, 13), 
+                                                                    scorchedbrick, scorchedbrick, scorchedbrick, 
+                                                                    scorchedbrick, lapis, scorchedbrick, 
+                                                                    scorchedbrick, scorchedbrick, scorchedbrick);
+        
+        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock, 
+                                                                    charcoal, charcoal, charcoal, 
+                                                                    charcoal, charcoal, charcoal, 
+                                                                    charcoal, charcoal, charcoal);
     }
 
     @Override

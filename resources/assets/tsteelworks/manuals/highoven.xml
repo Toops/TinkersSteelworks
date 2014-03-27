@@ -185,6 +185,22 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
 </page>
 
 <page type="crafting">
+<text>High Oven Duct</text>
+<recipe>
+ <name>highovenyduct</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>Deep Tank Controller</text>
+<recipe>
+ <name>deeptank</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
 <text>Block of Charcoal</text>
 <recipe>
  <name>charcoalblock</name>

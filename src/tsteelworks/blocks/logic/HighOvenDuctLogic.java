@@ -36,9 +36,33 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 {
     byte direction = 0;
     int mode = 0;
+    boolean redstoneActivated = false;
     private ItemStack[] inventory = new ItemStack[9];
     private int transferCooldown = -1;
 
+    /* ==================== Redstone Logic ==================== */
+    
+    /**
+     * Get the current state of redstone-connected power
+     * 
+     * @return Redstone powered state
+     */
+    public boolean getRedstoneActive ()
+    {
+        return redstoneActivated;
+    }
+
+    /**
+     * Set the redstone powered state
+     * 
+     * @param flag
+     *          true: powered / false: not powered
+     */
+    public void setRedstoneActive (boolean flag)
+    {
+        redstoneActivated = flag;
+    }
+    
     /* TSServantLogic */
 
     @Override
@@ -94,7 +118,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 
     private boolean insertItemToInventory ()
     {
-        if (!hasValidMaster())
+        if (!hasValidMaster() || !redstoneActivated)
             return false;
         final IInventory masterInventory = getOutputInventory();
 
@@ -120,7 +144,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
 
     public boolean suckItemsIntoDuct (Hopper localInventory)
     {
-        if (mode == 5)
+        if (mode == 5 || !redstoneActivated)
             return false;
         final IInventory outsideInventory = getExternalInventory(localInventory, direction);
 
@@ -601,6 +625,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     public void readFromNBT (NBTTagCompound tags)
     {
         mode = tags.getInteger("Mode");
+        redstoneActivated = tags.getBoolean("RedstoneActivated");
         super.readFromNBT(tags);
         final NBTTagList itemList = tags.getTagList("Items");
         inventory = new ItemStack[getSizeInventory()];
@@ -634,6 +659,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         tags.setInteger("TransferCooldown", transferCooldown);
         tags.setTag("Items", nbttaglist);
         tags.setByte("Direction", direction);
+        tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("Mode", mode);
     }
 

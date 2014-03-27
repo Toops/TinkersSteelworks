@@ -28,6 +28,7 @@ public class ConfigCore
     public static int ingotsPerOre;
     public static boolean smelteryObsidianAlloy;
     public static boolean enableDuctVacuum;
+    public static boolean enableTE3SlagOutput;
 
     public static void initProps (File configFile)
     {
@@ -54,7 +55,8 @@ public class ConfigCore
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag)").getBoolean(false);
         ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
-
+        enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present.").getBoolean(true);
+        
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false, "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
 
         hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod.").getBoolean(false);
