@@ -188,30 +188,30 @@ public class TSContent
      */
     public void addCraftingRecipes ()
     {
-        TSRecipes.addOreDictionarySmeltingRecipes();
-        TSRecipes.addSmeltingIron();
-        TSRecipes.addSmeltingSteel();
-        TSRecipes.addMixComboSmeltingForSolidOutput();
-        TSRecipes.addSmeltingPigIron();
-        TSRecipes.addSmeltingGold();
-        TSRecipes.addSmeltingMisc();
-        TSRecipes.addAlloyRecipesForSmeltery();
-        TSRecipes.addRecipesScorchedBrickMaterial();
-        TSRecipes.addRecipesManuals();
-        TSRecipes.addRecipesHighOvenComponents();
-        TSRecipes.addRecipesVanillaStorageBlocks();
+        TSRecipes.smeltOreDict();
+        TSRecipes.smeltIron();
+        TSRecipes.smeltSteel();
+        TSRecipes.solidSmeltMixCombos();
+        TSRecipes.smeltPigIron();
+        TSRecipes.smeltGold();
+        TSRecipes.smeltMisc();
+        TSRecipes.alloyMisc();
+        TSRecipes.castScorchedBrick();
+        TSRecipes.castManuals();
+        TSRecipes.craftHighOven();
+        TSRecipes.craftStorageBlocks();
         changeCraftingRecipes();
     }
 
     public void changeCraftingRecipes ()
     {
         if (ConfigCore.enableSteelArmor)
-            TSRecipes.addRecipesSteelArmor();
+            TSRecipes.craftSteelArmor();
         if (ConfigCore.hardcorePiston)
-            TSRecipes.changeRecipePiston();
+            TSRecipes.changePiston();
         if (ConfigCore.hardcoreFlintAndSteel)
-            TSRecipes.changeRecipeFlintAndSteel();
+            TSRecipes.changeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil)
-            TSRecipes.changeRecipeAnvil();
+            TSRecipes.changeAnvil();
     }
 }

@@ -10,5 +10,9 @@ public class Repo
     public static final String modClientProxy = "tsteelworks.client.TSClientProxy";
     public static final String modRequire = "required-after:TConstruct";
     public static final String textureDir = "tsteelworks:";
+    
+    public static final Integer ovenPacketID = 1;
+    public static final Integer ductPacketID = 2;
+    public static final Integer tankPacketID = 3;
 
 }

@@ -378,9 +378,10 @@ public class HighOvenBlock extends TSInventoryBlock
                 world.notifyBlockChange(x, y, z, 0);
                 world.notifyBlockChange(x, y - 1, z, 0);
                 world.notifyBlockChange(x, y - 2, z, 0);
-            }
-            for (int l = 0; l < 120; ++l)
-                TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+                world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
+                for (int l = 0; l < 120; ++l)
+                    TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+            } 
         }
     }
 

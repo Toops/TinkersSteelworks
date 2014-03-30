@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.Smeltery;
 
 public class AdvancedSmelting
 {
@@ -22,7 +23,7 @@ public class AdvancedSmelting
     private final HashMap<FluidType, List> mixerFluidComboList = new HashMap<FluidType, List>();
     private final HashMap<ItemStack, List> mixerSolidComboList = new HashMap<ItemStack, List>();
     private final HashMap<List<Integer>, ItemStack> renderIndex = new HashMap<List<Integer>, ItemStack>();
-
+    
     /* ========== Normal Smelting  ========== */
     
     /**

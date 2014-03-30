@@ -40,6 +40,49 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     private ItemStack[] inventory = new ItemStack[9];
     private int transferCooldown = -1;
 
+    /* ==================== Update ==================== */
+
+    @Override
+    public void updateEntity ()
+    {
+        if ((worldObj != null) && !worldObj.isRemote) return;
+        --transferCooldown;
+        updateDuct();
+
+    }
+    
+    public boolean updateDuct ()
+    {
+        if (!isCoolingDown())
+        {
+            setTransferCooldown(0);
+
+            boolean flag = insertItemToInventory();
+            flag = suckItemsIntoDuct(this) || flag;
+
+            if (flag)
+            {
+                setTransferCooldown(8);
+                onInventoryChanged();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean canUpdate ()
+    {
+        return true;
+    }
+    
+    /* ==================== Container ==================== */
+
+    public Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z)
+    {
+        return new HighOvenDuctContainer(inventoryplayer, this);
+    }
+    
     /* ==================== Redstone Logic ==================== */
     
     /**
@@ -61,14 +104,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     public void setRedstoneActive (boolean flag)
     {
         redstoneActivated = flag;
-    }
-    
-    /* TSServantLogic */
-
-    @Override
-    public boolean canUpdate ()
-    {
-        return true;
     }
 
     /* Duct Logic */
@@ -93,28 +128,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
     
-    public boolean updateDuct ()
-    {
-        if ((worldObj != null) && !worldObj.isRemote)
-        {
-            if (!isCoolingDown())
-            {
-                boolean flag = insertItemToInventory();
-                flag = suckItemsIntoDuct(this) || flag;
 
-                if (flag)
-                {
-                    setTransferCooldown(8);
-                    onInventoryChanged();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        else
-            return false;
-    }
 
     private boolean insertItemToInventory ()
     {
@@ -443,29 +457,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
         return transferCooldown > 0;
     }
 
-    /* TileEntity */
 
-    @Override
-    public void updateEntity ()
-    {
-        if ((worldObj != null) && !worldObj.isRemote)
-        {
-            --transferCooldown;
-
-            if (!isCoolingDown())
-            {
-                setTransferCooldown(0);
-                updateDuct();
-            }
-        }
-    }
-
-    /* Container */
-
-    public Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z)
-    {
-        return new HighOvenDuctContainer(inventoryplayer, this);
-    }
 
     /* IInventory */
 
@@ -552,15 +544,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     @Override
     public void openChest ()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void closeChest ()
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

@@ -362,19 +362,21 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             isMeltingItems = hasUse;
         }
     }
-
+    
+    // TODO: Fix this
     void heatFluids()
     {
-        if (internalTemp < 300 || moltenMetal.size() < 1) return;
-        if (moltenMetal.get(0).getFluid() != FluidRegistry.getFluid("water")) return;
-
-        for (int i = 0; i < moltenMetal.size(); i++)
-        {
-            final FluidStack water = moltenMetal.get(0);
-            final FluidStack steam = new FluidStack(TSteelworks.content.steamFluid.getID(), water.amount);
-            moltenMetal.remove(i);
-            moltenMetal.add(steam);
-        }
+//        if (internalTemp < 300 || moltenMetal.size() < 1) return;
+//        if (moltenMetal.get(0).getFluid() == FluidRegistry.getFluid("water"));
+//        {
+//            for (int i = 0; i < moltenMetal.size(); i++)
+//            {
+//                final FluidStack water = moltenMetal.get(i);
+//                final FluidStack steam = new FluidStack(TSteelworks.content.steamFluid.getID(), water.amount);
+//                moltenMetal.remove(i);
+//                moltenMetal.add(steam);
+//            }
+//        }
     }
     
     void meltItemsLiquidOutput (int slot, FluidStack fluid, Boolean doMix)
@@ -1045,8 +1047,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     l.amount += liquid.amount;
                     added = true;
                 }
-                else if (liquid.fluidID != TSContent.steamFluid.getID())
-                    added = false;
+//                else if (liquid.fluidID != TSContent.steamFluid.getID())
+//                    added = false;
                 if (l.amount <= 0)
                 {
                     moltenMetal.remove(l);

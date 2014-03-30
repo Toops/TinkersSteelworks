@@ -8,9 +8,7 @@ gui.button.prev=<
 
 
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
-
 item.tsteelworks.manual.highoven.name=Steelworking and You
-
 item.tsteelworks.helmetSteel.name=Steel Helmet
 item.tsteelworks.chestplateSteel.name=Steel Chestplate
 item.tsteelworks.leggingsSteel.name=Steel Leggings
@@ -22,6 +20,8 @@ tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
 block.storage.dust.sugar.name=Sugar Cube
 tile.water.steam.name=Steam
+fluid.water.steam=Steam
+fluid.water=Water
 
 HighOven.Controller.name=High Oven Controller
 HighOven.Drain.name=High Oven Drain

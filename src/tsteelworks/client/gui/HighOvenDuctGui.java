@@ -63,7 +63,7 @@ public class HighOvenDuctGui extends TSContainerGui
         final DataOutputStream dos = new DataOutputStream(bos);
         try
         {
-            dos.write(2);
+            dos.write(Repo.ductPacketID);
             dos.writeInt(logic.worldObj.provider.dimensionId);
             dos.writeInt(logic.xCoord);
             dos.writeInt(logic.yCoord);

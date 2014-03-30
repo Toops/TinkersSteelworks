@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
@@ -51,7 +52,8 @@ public class DeepTankGui extends TSContainerGui
     @Override
     protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY)
     {
-        fontRenderer.drawString(StatCollector.translateToLocal("tank.DeepTank"), 85, 5, 0x404040);
+        final String title = StatCollector.translateToLocal("tank.DeepTank");
+        fontRenderer.drawString(title, ((xSize / 2) - (fontRenderer.getStringWidth(title) / 2)), 17, 0x404040);
 
         int base = 0;
         int cornerX = (width - xSize) / 2 + 20;
@@ -308,31 +310,30 @@ public class DeepTankGui extends TSContainerGui
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         int base = 0;
-        int cornerX = (width - xSize) / 2 + 36;
-        int cornerY = (height - ySize) / 2;
+        int cornerX = (width - xSize) / 2 + 20;
+        int cornerY = (height - ySize) / 2 + 12;
         int fluidToBeBroughtUp = -1;
 
         for (FluidStack liquid : logic.fluidlist)
         {
             int basePos = 54;
             int initialLiquidSize = 0;
-            int liquidSize = 0;//liquid.amount * 52 / liquidLayers;
+            int liquidSize = 0;//liquid.amount * 104 / liquidLayers;
             if (logic.getCapacity() > 0)
             {
                 int total = logic.getTotalLiquid();
                 int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
                 if (liquidLayers > 0)
                 {
-                    liquidSize = liquid.amount * 52 / liquidLayers;
+                    liquidSize = liquid.amount * 104 / liquidLayers;
                     if (liquidSize == 0)
                         liquidSize = 1;
                     base += liquidSize;
                 }
             }
-
             int leftX = cornerX + basePos;
-            int topY = (cornerY + 68) - base;
-            int sizeX = 52;
+            int topY = (cornerY + 120) - base;
+            int sizeX = 104;
             int sizeY = liquidSize;
             if (mouseX >= leftX && mouseX <= leftX + sizeX && mouseY >= topY && mouseY < topY + sizeY)
             {
@@ -345,7 +346,7 @@ public class DeepTankGui extends TSContainerGui
 
                 try
                 {
-                    dos.write(2);
+                    dos.write(Repo.tankPacketID);
 
                     dos.writeInt(logic.worldObj.provider.dimensionId);
                     dos.writeInt(logic.xCoord);
