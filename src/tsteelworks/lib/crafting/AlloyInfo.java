@@ -1,4 +1,4 @@
-package tsteelworks.common;
+package tsteelworks.lib.crafting;
 
 import java.util.ArrayList;
 import java.util.HashMap;

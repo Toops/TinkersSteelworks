@@ -3,17 +3,19 @@ package tsteelworks;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.TConstruct;
 import tconstruct.library.util.TabTools;
-import tsteelworks.common.AlloyInfo;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSteelworksRegistry;
+import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
+import tsteelworks.util.TSEventHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -42,14 +44,13 @@ public class TSteelworks
 {
     // Shared logger
     public static final Logger logger = Logger.getLogger(Repo.modId);
-    // Mod Instance
     @Instance(Repo.modId)
     public static TSteelworks instance;
-    // Proxy
     @SidedProxy(clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
     public static TSCommonProxy proxy;
-    // Content Creator
+    
     public static TSContent content;
+    public static TSEventHandler events;
     public static TSFuelHandler fuelHandler;
     public static boolean thermalExpansionAvailable;
 
@@ -67,8 +68,13 @@ public class TSteelworks
     {
         ConfigCore.initProps(event.getSuggestedConfigurationFile());
         TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
+        
         content = new TSContent();
+        events = new TSEventHandler();
+        MinecraftForge.EVENT_BUS.register(events);
+        
         fuelHandler = new TSFuelHandler();
+        
         proxy.registerRenderer();
         proxy.readManuals();
         proxy.registerSounds();
