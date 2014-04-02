@@ -24,11 +24,13 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import tconstruct.TConstruct;
 import tconstruct.blocks.logic.MultiServantLogic;
+import tconstruct.blocks.logic.SmelteryDrainLogic;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 
@@ -45,6 +47,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     int maxLiquid;
     int currentLiquid;
     int numBricks;
+    int innerMaxX;
+    int innerMaxZ;
     public int layers;
     Random rand = new Random();
 
@@ -209,84 +213,322 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         checkValidPlacement();
     }
 
+//    public void checkValidPlacement ()
+//    {
+//        int initX = 0;
+//        int initZ = 0;
+//        int centerX = 0;
+//        int centerZ = 0;
+//        switch (getRenderDirection())
+//        {
+//        case 2: // +z
+//            initZ = this.measureGlassBlocks();
+//            centerZ = (initZ % 2 == 0) ? 0 : (initZ / 2 + 1); 
+//            if (centerZ == 0) break;
+////            TSteelworks.loginfo("Divied", centerZ);
+//            alignControllerLayer(xCoord, yCoord, zCoord + 2);
+//            break;
+//        case 3: // -z
+//            initZ = this.measureGlassBlocks();
+//            centerZ = (initZ % 2 == 0) ? 0 : (initZ / 2 + 1); 
+//            if (centerZ == 0) break;
+//            alignControllerLayer(xCoord, yCoord, zCoord - 2);
+//            break;
+//        case 4: // +x
+//            initX = this.measureGlassBlocks();
+//            centerX = (initX % 2 == 0) ? 0 : (initX / 2 + 1); 
+//            if (centerX == 0) break;
+//            alignControllerLayer(xCoord + 2, yCoord, zCoord);
+//            break;
+//        case 5: // -x
+//            initX = this.measureGlassBlocks();
+//            centerX = (initX % 2 == 0) ? 0 : (initX / 2 + 1); 
+//            if (centerX == 0) break;
+//            alignControllerLayer(xCoord - 2, yCoord, zCoord);
+//            break;
+//        }
+//    }
     public void checkValidPlacement ()
     {
+        int[] center = scanGlassLayerCenter();
+        alignControllerLayer(center[0], yCoord, center[1]);
+    }
+
+    private int[] scanGlassLayerCenter ()
+    {
+        int centerX = 0;
+        int centerZ = 0;
+        Block block;
         switch (getRenderDirection())
         {
         case 2: // +z
-            alignInitialPlacement(xCoord, yCoord, zCoord + 2);
-            break;
+            // Scan to last block
+            for (int z = zCoord + 1; z < zCoord + 10; z++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
+                if (block != null && validGlassID(block.blockID))
+                    centerZ += checkBricks(xCoord, yCoord, z, true);
+                else
+                    break;
+            }
+            // Adjust depth scan to center
+            if ((centerZ != 1) && (centerZ % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxZ = centerZ;
+                centerZ = (centerZ / 2 + 1); 
+            }
+            if (centerZ == 0) break;
+            // Scan width from center
+            for (int x = xCoord - 9; x < xCoord + 9; x++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord + centerZ)];
+                if (block != null && validGlassID(block.blockID))
+                    centerX += checkBricks(x, yCoord, zCoord + centerZ, true);
+            }
+            // Adjust width to center
+            if ((centerX != 1) && (centerX % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxX = centerX;
+                centerX = (centerX / 2 + 1); 
+            }
+            if (centerX == 0) break;
+            return new int[] {xCoord, zCoord + centerZ};
         case 3: // -z
-            alignInitialPlacement(xCoord, yCoord, zCoord - 2);
-            break;
+            for (int z = zCoord - 1; z > zCoord - 10; z--)
+            {
+                block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
+                if (block != null && validGlassID(block.blockID))
+                {
+                    centerZ += checkBricks(xCoord, yCoord, z, true);
+                }
+                else
+                    break;
+            }
+            // Adjust depth scan to center
+            if ((centerZ != 1) && (centerZ % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxZ = centerZ;
+                centerZ = (centerZ / 2 + 1); 
+            }
+            if (centerZ == 0) break;
+            // Scan width from center
+            for (int x = xCoord - 9; x < xCoord + 9; x++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord - centerZ)];
+                if (block != null && validGlassID(block.blockID))
+                    centerX += checkBricks(x, yCoord, zCoord - centerZ, true);
+            }
+            // Adjust width to center
+            if ((centerX != 1) && (centerX % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxX = centerX;
+                centerX = (centerX / 2 + 1); 
+            }
+            if (centerX == 0) break;
+            return new int[] {xCoord, zCoord - centerZ};
         case 4: // +x
-            alignInitialPlacement(xCoord + 2, yCoord, zCoord);
-            break;
+            for (int x = xCoord + 1; x < xCoord + 10; x++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
+                if (block != null && validGlassID(block.blockID))
+                    centerX += checkBricks(x, yCoord, zCoord, true);
+                else
+                    break;
+            }
+            // Adjust depth scan to center
+            if ((centerX != 1) && (centerX % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxX = centerX;
+                centerX = (centerX / 2 + 1); 
+            }
+            if (centerX == 0) break;
+            // Scan length from center
+            for (int z = zCoord - 9; z < zCoord + 9; z++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(xCoord + centerX, yCoord, zCoord)];
+                if (block != null && validGlassID(block.blockID))
+                    centerZ += checkBricks(xCoord + centerX, yCoord, z, true);
+                else
+                    break;
+            }
+            // Adjust length to center
+            if ((centerZ != 1) && (centerZ % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxZ = centerZ;
+                centerZ = (centerZ / 2 + 1); 
+            }
+            if (centerZ == 0) break;
+            return new int[] {xCoord + centerX, zCoord};
         case 5: // -x
-            alignInitialPlacement(xCoord - 2, yCoord, zCoord);
-            break;
+            for (int x = xCoord - 1; x > xCoord - 10; x++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
+                if (block != null && validGlassID(block.blockID))
+                    centerX += checkBricks(x, yCoord, zCoord, true);
+                else
+                    break;
+            }
+            // Adjust depth scan to center
+            if ((centerX != 1) && (centerX % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxX = centerX;
+                centerX = (centerX / 2 + 1); 
+            }
+            if (centerX == 0) break;
+            // Scan length from center
+            for (int z = zCoord - 9; z < zCoord + 9; z++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(xCoord - centerX, yCoord, zCoord)];
+                if (block != null && validGlassID(block.blockID))
+                    centerZ += checkBricks(xCoord - centerX, yCoord, z, true);
+            }
+            // Adjust length to center
+            if ((centerZ != 1) && (centerZ % 2 == 0))
+                break;
+            else 
+            {
+                innerMaxZ = centerZ;
+                centerZ = (centerZ / 2 + 1); 
+            }
+            if (centerZ == 0) break;
+            return new int[] {xCoord - centerX, zCoord};
         }
+        return new int[] {xCoord, yCoord};
     }
-
-    public void alignInitialPlacement (int x, int y, int z)
+    
+    void alignControllerLayer (int x, int y, int z)
     {
-        int northID = worldObj.getBlockId(x, y, z + 1);
-        int southID = worldObj.getBlockId(x, y, z - 1);
-        int eastID = worldObj.getBlockId(x + 1, y, z);
-        int westID = worldObj.getBlockId(x - 1, y, z);
+        if (x == xCoord || z == zCoord) return;
 
-        Block northBlock = Block.blocksList[northID];
-        Block southBlock = Block.blocksList[southID];
-        Block eastBlock = Block.blocksList[eastID];
-        Block westBlock = Block.blocksList[westID];
-
-        if ((northBlock == null || northBlock.isAirBlock(worldObj, x, y, z + 1)) && (southBlock == null || southBlock.isAirBlock(worldObj, x, y, z - 1))
-                && (eastBlock == null || eastBlock.isAirBlock(worldObj, x + 1, y, z)) && (westBlock == null || westBlock.isAirBlock(worldObj, x - 1, y, z)))
+        int innerCenterX = (innerMaxX / 2) + 1;
+        int innerCenterZ = (innerMaxZ / 2) + 1;
+        
+        int tempBricks = 0;
+        int depthcenter = 0;
+        Block block;
+        
+//        TSteelworks.loginfo("center", center);
+        
+        // Scan inner for glass blocks by adjusted X coordinate
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
         {
-            checkValidStructure(x, y, z);
+            block = Block.blocksList[worldObj.getBlockId(xPos, y, z)];
+            if (block != null && validGlassID(block.blockID))
+                tempBricks += checkBricks(xPos, y, z, true);
         }
-
-        else if ((northBlock != null && !northBlock.isAirBlock(worldObj, x, y, z + 1)) && (southBlock == null || southBlock.isAirBlock(worldObj, x, y, z - 1))
-                && (eastBlock == null || eastBlock.isAirBlock(worldObj, x + 1, y, z)) && (westBlock == null || westBlock.isAirBlock(worldObj, x - 1, y, z)))
+        TSteelworks.loginfo("tempBricks", tempBricks);
+        
+        if (false) return;
+        
+        if  (tempBricks > 9) return;
+        tempBricks = 0;
+        // Scan inner for glass blocks by adjusted Y coordinate
+        for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++)
         {
-            checkValidStructure(x, y, z - 1);
+            block = Block.blocksList[worldObj.getBlockId(x, y, zPos)];
+            if (block != null && validGlassID(block.blockID))
+                tempBricks += checkBricks(x, y, zPos, true);
         }
-
-        else if ((northBlock == null || northBlock.isAirBlock(worldObj, x, y, z + 1)) && (southBlock != null && !southBlock.isAirBlock(worldObj, x, y, z - 1))
-                && (eastBlock == null || eastBlock.isAirBlock(worldObj, x + 1, y, z)) && (westBlock == null || westBlock.isAirBlock(worldObj, x - 1, y, z)))
+        if  (tempBricks > 9) return;
+        tempBricks = 0;
+        // Invalid if glass is even or layer is larger than 9x9
+        
+        // Scan outter for brick/drain blocks by adjusted X coordinate
+        for (int xPos = x - (innerMaxX + 1); xPos <= x + (innerMaxX + 1); xPos++)
         {
-            checkValidStructure(x, y, z + 1);
+            for (int zPos = z - (innerMaxZ); zPos <= z + (innerMaxZ); zPos++)
+            {
+                block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
+                if (block != null && validBlockID(block.blockID))
+                    tempBricks += checkBricks(xPos, y, zPos, false);
+            }
         }
-
-        else if ((northBlock == null || northBlock.isAirBlock(worldObj, x, y, z + 1)) && (southBlock == null || southBlock.isAirBlock(worldObj, x, y, z - 1))
-                && (eastBlock != null && !eastBlock.isAirBlock(worldObj, x + 1, y, z)) && (westBlock == null || westBlock.isAirBlock(worldObj, x - 1, y, z)))
-        {
-            checkValidStructure(x - 1, y, z);
-        }
-
-        else if ((northBlock == null || northBlock.isAirBlock(worldObj, x, y, z + 1)) && (southBlock == null || southBlock.isAirBlock(worldObj, x, y, z - 1))
-                && (eastBlock == null || eastBlock.isAirBlock(worldObj, x + 1, y, z)) && (westBlock != null && !westBlock.isAirBlock(worldObj, x - 1, y, z)))
-        {
-            checkValidStructure(x + 1, y, z);
-        }
-
-        //Not valid, sorry
+//        TSteelworks.loginfo("innerWidth", innerWidth);
+//        TSteelworks.loginfo("innerLength", innerLength);
+//        TSteelworks.loginfo("tempBricks", tempBricks);
+        setCenterPos(x, y, z);
+        
+//        TSteelworks.loginfo("tempBricks", tempBricks);
+//        if (tempBricks >= 6)
+//        {
+            checkValidStructure(centerPos.x, centerPos.y, centerPos.z, tempBricks);
+//            switch (getRenderDirection())
+//            {
+//            case 2: // +z
+//                checkValidStructure(centerPos.x, yCoord, zCoord + (innerLength + 0), tempBricks);
+//                break;
+//            case 3: // -z
+//                checkValidStructure(centerPos.x, yCoord, zCoord - (innerLength + 0), tempBricks);
+//                break;
+//            case 4: // +x
+//                checkValidStructure(xCoord + (innerWidth + 0), yCoord, zCoord, tempBricks);
+//                break;
+//            case 5: // -x
+//                checkValidStructure(xCoord - (innerWidth + 0), yCoord, zCoord, tempBricks);
+//                break;
+//            }
+//        }
+//        else
+//            return;
     }
 
-    public void checkValidStructure (int x, int y, int z)
+    public void setCenterPos (int x, int y, int z)
+    {
+      switch (getRenderDirection())
+      {
+      case 2: // +z
+          centerPos = new CoordTuple(x, y, z + innerMaxZ);
+          break;
+      case 3: // -z
+          centerPos = new CoordTuple(x, y, z - innerMaxZ);
+          break;
+      case 4: // +x
+          centerPos = new CoordTuple(x + innerMaxX, y, z);
+          break;
+      case 5: // -x
+          centerPos = new CoordTuple(x - innerMaxX, y, z);
+          break;
+      }
+        
+    }
+    
+    public void checkValidStructure (int x, int y, int z, int compareBricks)
     {
         int checkLayers = 0;
-        if (checkSameLevel(x, y, z))
+        if (checkSameLevel(x, y, z, compareBricks))
         {
             checkLayers++;
-            checkLayers += recurseStructureUp(x, y + 1, z, 0);
-            checkLayers += recurseStructureDown(x, y - 1, z, 0);
+            int checkUp = recurseStructureUp(x, y + 1, z, 0, compareBricks);
+            int checkDown = recurseStructureDown(x, y - 1, z, 0, compareBricks);
+            
+            checkLayers += checkUp;
+            checkLayers += checkDown;
+            
+            if (checkUp > 0 && !structureHasBottom)
+                validateBottom (x, y, z, 0);
+            if (checkDown > 0 && !structureHasTop)
+                validateTop (x, y, z, 0);
         }
 
         if (structureHasTop != structureHasBottom != validStructure || checkLayers != this.layers)
         {
             if (structureHasBottom && structureHasTop)
             {
+                TSteelworks.loginfo("structureHasBottom", structureHasBottom);
                 adjustLayers(checkLayers, false);
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
                 validStructure = true;
@@ -298,48 +540,57 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
     }
 
-    public boolean checkSameLevel (int x, int y, int z)
+    public boolean checkSameLevel (int x, int y, int z, int compareBricks)
     {
         numBricks = 0;
         Block block;
 
-        //Check inside
-        for (int xPos = x - 1; xPos <= x + 1; xPos++)
+//        for (int xPos = x - blockX; xPos <= x + blockX; xPos++)
+//        {
+//            for (int zPos = z - blockZ; zPos <= z + blockZ; zPos++)
+//            {
+//                block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
+//                if (block != null && !block.isAirBlock(worldObj, xPos, y, zPos) && validBlockID(block.blockID))
+//                    numBricks += checkBricks(xPos, y, zPos, false);
+//            }
+//        }
+        for (int xPos = x - innerMaxX; xPos <= x + innerMaxX; xPos++)
         {
-            for (int zPos = z - 1; zPos <= z + 1; zPos++)
+            block = Block.blocksList[worldObj.getBlockId(xPos, y, z)];
+            if (block != null && validGlassID(block.blockID))
+                numBricks += checkBricks(xPos, y, z, true);
+        }
+        // Scan inner for glass blocks by adjusted Y coordinate
+        for (int zPos = z - innerMaxZ; zPos <= z + innerMaxZ; zPos++)
+        {
+            block = Block.blocksList[worldObj.getBlockId(x, y, zPos)];
+            if (block != null && validGlassID(block.blockID))
+                numBricks += checkBricks(x, y, zPos, true);
+        }
+//        TSteelworks.loginfo("numBricks 1", numBricks);
+        // Scan outter for brick/drain blocks by adjusted X coordinate
+        for (int xPos = x - (innerMaxX + 1); xPos <= x + (innerMaxX + 1); xPos++)
+        {
+            for (int zPos = z - (innerMaxZ + 1); zPos <= z + (innerMaxZ + 1); zPos++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-                if (block != null && !block.isAirBlock(worldObj, xPos, y, zPos))
-                    return false;
+                if (block != null && validBlockID(block.blockID))
+                    numBricks += checkBricks(xPos, y, zPos, false);
             }
         }
-
-        //Check outer layer
-        for (int xPos = x - 2; xPos <= x + 2; xPos++)
-        {
-            numBricks += checkBricks(xPos, y, z - 2);
-            numBricks += checkBricks(xPos, y, z + 2);
-        }
-
-        for (int zPos = z - 1; zPos <= z + 1; zPos++)
-        {
-            numBricks += checkBricks(x - 2, y, zPos);
-            numBricks += checkBricks(x + 2, y, zPos);
-        }
-//        TSteelworks.loginfo("checkSameLevel", numBricks);
-        if (numBricks == 16)
-            return true;
-        else
-            return false;
+        
+//        TSteelworks.loginfo("numBricks 2", numBricks);
+        
+        return (numBricks == compareBricks);
     }
 
-    public int recurseStructureUp (int x, int y, int z, int count)
+    public int recurseStructureUp (int x, int y, int z, int count, int compareBricks)
     {
         numBricks = 0;
         //Check inside
-        for (int xPos = x - 1; xPos <= x + 1; xPos++)
+        for (int xPos = x - innerMaxX; xPos <= x + innerMaxX; xPos++)
         {
-            for (int zPos = z - 1; zPos <= z + 1; zPos++)
+            for (int zPos = z - innerMaxZ; zPos <= z + innerMaxZ; zPos++)
             {
                 final int blockID = worldObj.getBlockId(xPos, y, zPos);
                 final Block block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
@@ -356,26 +607,27 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
 
         //Check outer layer
-        for (int xPos = x - 2; xPos <= x + 2; xPos++)
+        for (int xPos = x - innerMaxX; xPos <= x + innerMaxX; xPos++)
         {
-            numBricks += checkBricks(xPos, y, z - 2);
-            numBricks += checkBricks(xPos, y, z + 2);
+            numBricks += checkBricks(xPos, y, z - innerMaxZ, true);
+            numBricks += checkBricks(xPos, y, z + innerMaxZ, true);
+        }
+        for (int zPos = z - innerMaxZ; zPos <= z + innerMaxZ; zPos++)
+        {
+            numBricks += checkBricks(x - innerMaxX, y, zPos, true);
+            numBricks += checkBricks(x + innerMaxX, y, zPos, true);
         }
 
-        for (int zPos = z - 1; zPos <= z + 1; zPos++)
-        {
-            numBricks += checkBricks(x - 2, y, zPos);
-            numBricks += checkBricks(x + 2, y, zPos);
-        }
-
-        if (numBricks != 16)
+//        TSteelworks.loginfo("numBricks", numBricks);
+        
+        if (numBricks != compareBricks)
             return count;
 
         count++;
-        return recurseStructureUp(x, y + 1, z, count);
+        return recurseStructureUp(x, y + 1, z, count, compareBricks);
     }
 
-    public int recurseStructureDown (int x, int y, int z, int count)
+    public int recurseStructureDown (int x, int y, int z, int count, int compareBricks)
     {
         numBricks = 0;
         //Check inside
@@ -387,7 +639,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 Block block = Block.blocksList[blockID];
                 if (block != null && !block.isAirBlock(worldObj, xPos, y, zPos))
                 {
-                    if (validBlockID(blockID))
+                    if (validGlassID(blockID))
                         return validateBottom(x, y, z, count);
                     else
                         return count;
@@ -398,21 +650,21 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         //Check outer layer
         for (int xPos = x - 2; xPos <= x + 2; xPos++)
         {
-            numBricks += checkBricks(xPos, y, z - 2);
-            numBricks += checkBricks(xPos, y, z + 2);
+            numBricks += checkBricks(xPos, y, z - 2, true);
+            numBricks += checkBricks(xPos, y, z + 2, true);
         }
 
         for (int zPos = z - 1; zPos <= z + 1; zPos++)
         {
-            numBricks += checkBricks(x - 2, y, zPos);
-            numBricks += checkBricks(x + 2, y, zPos);
+            numBricks += checkBricks(x - 2, y, zPos, true);
+            numBricks += checkBricks(x + 2, y, zPos, true);
         }
 
-        if (numBricks != 16)
+        if (numBricks != compareBricks)
             return count;
 
         count++;
-        return recurseStructureDown(x, y - 1, z, count);
+        return recurseStructureDown(x, y - 1, z, count, compareBricks);
     }
 
     /**
@@ -433,25 +685,23 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         int topBricks = 0;
         for (int xPos = x - 1; xPos <= (x + 1); xPos++)
             for (int zPos = z - 1; zPos <= (z + 1); zPos++)
-                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && 
-                        (worldObj.getBlockMetadata(xPos, y, zPos) >= 1))
-                    topBricks += checkBricks(xPos, y, zPos);
+                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)))
+                    topBricks += checkBricks(xPos, y, zPos, false);
         
         //Check outer layer
         for (int xPos = x - 2; xPos <= x + 2; xPos++)
         {
-            topBricks += checkBricks(xPos, y, z - 2);
-            topBricks += checkBricks(xPos, y, z + 2);
+            topBricks += checkBricks(xPos, y, z - 2, false);
+            topBricks += checkBricks(xPos, y, z + 2, false);
         }
         
         for (int zPos = z - 1; zPos <= z + 1; zPos++)
         {
-            topBricks += checkBricks(x - 2, y, zPos);
-            topBricks += checkBricks(x + 2, y, zPos);
+            topBricks += checkBricks(x - 2, y, zPos, false);
+            topBricks += checkBricks(x + 2, y, zPos, false);
         }
         
 //        TSteelworks.loginfo("Top", topBricks);
-        
         structureHasTop = (topBricks == 25);
         return count;
     }
@@ -463,26 +713,23 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         {
             for (int zPos = z - 1; zPos <= z + 1; zPos++)
             {
-                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)) && 
-                        (worldObj.getBlockMetadata(xPos, y, zPos) >= 1) &&
-                        (worldObj.getBlockMetadata(xPos, y, zPos) <= 12))
-                    bottomBricks += checkBricks(xPos, y, zPos);
+                if (validBlockID(worldObj.getBlockId(xPos, y, zPos)))
+                    bottomBricks += checkBricks(xPos, y, zPos, false);
             }
         }
         //Check outer layer
         for (int xPos = x - 2; xPos <= x + 2; xPos++)
         {
-            bottomBricks += checkBricks(xPos, y, z - 2);
-            bottomBricks += checkBricks(xPos, y, z + 2);
+            bottomBricks += checkBricks(xPos, y, z - 2, false);
+            bottomBricks += checkBricks(xPos, y, z + 2, false);
         }
 
         for (int zPos = z - 1; zPos <= z + 1; zPos++)
         {
-            bottomBricks += checkBricks(x - 2, y, zPos);
-            bottomBricks += checkBricks(x + 2, y, zPos);
+            bottomBricks += checkBricks(x - 2, y, zPos, false);
+            bottomBricks += checkBricks(x + 2, y, zPos, false);
         }
         
-//        TSteelworks.loginfo("Bottom", bottomBricks);
         structureHasBottom = (bottomBricks == 25);
         if (structureHasBottom)
             centerPos = new CoordTuple(x, y + 1, z);
@@ -492,11 +739,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     /* Returns whether the brick is a lava tank or not.
      * Increments bricks, sets them as part of the structure, and adds tanks to the list.
      */
-    int checkBricks (int x, int y, int z)
+    int checkBricks (int x, int y, int z, boolean wall)
     {
         int tempBricks = 0;
         int blockID = worldObj.getBlockId(x, y, z);
-        if (validBlockID(blockID) || validTankID(blockID))
+        if (wall && (validGlassID(blockID) || validTankID(blockID)))
+        {
+            tempBricks++;
+        }
+        if (!wall && validBlockID(blockID))
         {
             TileEntity te = worldObj.getBlockTileEntity(x, y, z);
             if (te == this)
@@ -516,15 +767,18 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             }
             else if (te instanceof MultiServantLogic)
             {
-                MultiServantLogic servant = (MultiServantLogic) te;
-                if (servant.hasValidMaster())
+                if (!(te instanceof SmelteryDrainLogic))
                 {
-                    if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
+                    MultiServantLogic servant = (MultiServantLogic) te;
+                    if (servant.hasValidMaster())
+                    {
+                        if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
+                            tempBricks++;
+                    }
+                    else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
+                    {
                         tempBricks++;
-                }
-                else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
-                {
-                    tempBricks++;
+                    }
                 }
             }
         }
@@ -539,6 +793,11 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     boolean validTankID(int blockID)
     {
         return (blockID == TConstruct.content.lavaTank.blockID);
+    }
+    
+    boolean validGlassID(int blockID)
+    {
+        return (blockID == Block.glass.blockID || blockID == TContent.stainedGlassClear.blockID || blockID == TContent.clearGlass.blockID);
     }
 
     public int getCapacity ()

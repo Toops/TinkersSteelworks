@@ -70,6 +70,7 @@ public class TSteelworks
         TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
         
         content = new TSContent();
+        
         events = new TSEventHandler();
         MinecraftForge.EVENT_BUS.register(events);
         
@@ -78,8 +79,8 @@ public class TSteelworks
         proxy.registerRenderer();
         proxy.readManuals();
         proxy.registerSounds();
+        
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
-        // TODO: Make horses like sugar cubes :|
 
         PluginController.getController().preInit();
     }
@@ -93,28 +94,18 @@ public class TSteelworks
     @EventHandler
     public void postInit (FMLPostInitializationEvent event)
     {
+        thermalExpansionAvailable = Loader.isModLoaded("ThermalExpansion");
+        
         content.createEntities();
         content.addCraftingRecipes();
+        
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
-
-        thermalExpansionAvailable = Loader.isModLoaded("ThermalExpansion");
 
         //Initialize dealloying information at the last possible minute, to ensure that other mods have a chance to get their alloying information to TCon.
         AlloyInfo.init();
         //Test ###### REMOVE THIS BEFORE RELEASE ######
-        for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
-        {
-            FluidStack f = AlloyInfo.alloys.get(i).result.copy();
-            f.amount = 1000;
-            ArrayList<FluidStack> result = AlloyInfo.deAlloy(f);
-
-            System.out.println("Alloy " + AlloyInfo.alloys.get(i).result.getFluid().getName() + " produces:");
-            for (int j = 0; j < result.size(); ++j)
-            {
-                System.out.println(result.get(j).amount + " mB of " + result.get(j).getFluid().getName());
-            }
-        }
+        //logAlloyList();
     }
 
     public static void loginfo (String desc)
@@ -135,5 +126,21 @@ public class TSteelworks
     public static void loginfo (String desc, String text)
     {
         logger.info(desc + ": " + text);
+    }
+    
+    void logAlloyList ()
+    {
+        for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
+        {
+            FluidStack f = AlloyInfo.alloys.get(i).result.copy();
+            f.amount = 1000;
+            ArrayList<FluidStack> result = AlloyInfo.deAlloy(f);
+
+            System.out.println("Alloy " + AlloyInfo.alloys.get(i).result.getFluid().getName() + " produces:");
+            for (int j = 0; j < result.size(); ++j)
+            {
+                System.out.println(result.get(j).amount + " mB of " + result.get(j).getFluid().getName());
+            }
+        }
     }
 }
