@@ -22,7 +22,6 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
