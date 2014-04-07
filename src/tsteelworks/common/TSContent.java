@@ -123,13 +123,26 @@ public class TSContent
     
     void registerFluids()
     {
-        steamFluid = new Fluid("steam");
+        steamFluid = new Fluid("Steam");
         if (!FluidRegistry.registerFluid(steamFluid))
-            steamFluid = FluidRegistry.getFluid("steam");
-        steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("water.steam");
-        GameRegistry.registerBlock(steamBlock, "steam");
-        steamBlock.setLightOpacity(3);
-        steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+        {
+//            steamFluid = FluidRegistry.getFluid("steam");
+//            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("water.steam");
+//            GameRegistry.registerBlock(steamBlock, "steam");
+//            steamBlock.setLightOpacity(3);
+//            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+            steamFluid = FluidRegistry.getFluid("Steam");
+            steamBlock = Block.blocksList[steamFluid.getBlockID()];
+            if (steamBlock == null)
+                TSteelworks.logger.info("Attempted to acquire another mod's Steam (fluid) block, but the steam block is missing!");
+        }
+        else
+        {
+            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("Steam");
+            GameRegistry.registerBlock(steamBlock, "Steam");
+            steamBlock.setLightOpacity(3);
+            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+        }
     }
     
     void oreRegistry ()

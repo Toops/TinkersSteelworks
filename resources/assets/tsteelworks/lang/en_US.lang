@@ -19,8 +19,8 @@ entity.HighGolem.name=High Golem
 tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
 block.storage.dust.sugar.name=Sugar Cube
-tile.water.steam.name=Steam
-fluid.water.steam=Steam
+tile.Steam.name=Steam
+fluid.Steam=Steam
 fluid.water=Water
 
 HighOven.Controller.name=High Oven Controller
