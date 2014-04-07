@@ -31,8 +31,10 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
+import tsteelworks.lib.ConfigCore;
 
 public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic
 {
@@ -52,7 +54,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int layers;
     Random rand = new Random();
 
-    public DeepTankLogic() { super(); }
+    public DeepTankLogic() 
+    { 
+        super(); 
+        innerMaxX = 0;
+        innerMaxZ = 0;
+    }
     
     public int xDistanceToRim () { return (innerMaxX / 2) + 1; }
     public int zDistanceToRim () { return (innerMaxZ / 2) + 1; }
@@ -120,8 +127,6 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     /* Updating */
     public void updateEntity ()
     {
-        /*if (worldObj.isRemote)
-            return;*/
         tick++;
         if (tick % 20 == 0)
         {
@@ -671,9 +676,24 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     boolean validGlassID(int blockID)
     {
-        return (blockID == Block.glass.blockID || blockID == TContent.stainedGlassClear.blockID || blockID == TContent.clearGlass.blockID);
+        if (blockID == Block.glass.blockID || blockID == TContent.stainedGlassClear.blockID || blockID == TContent.clearGlass.blockID)
+            return true;
+        else
+            return validModGlassID(blockID);
     }
 
+    boolean validModGlassID(int blockID)
+    {
+        if (ConfigCore.modTankGlassBlocks.length < 1) return false;
+        
+        for (int id : ConfigCore.modTankGlassBlocks)
+        {
+            if (id == blockID)
+                return true;
+        }
+        return false;
+    }
+    
     public int getCapacity () { return maxLiquid; }
 
     public int getTotalLiquid () { return currentLiquid; }
@@ -782,6 +802,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public void readFromNBT (NBTTagCompound tags)
     {
         layers = tags.getInteger("Layers");
+        innerMaxX = tags.getInteger("InnerMaxX");
+        innerMaxZ = tags.getInteger("InnerMaxZ");
         super.readFromNBT(tags);
         validStructure = tags.getBoolean("ValidStructure");
         int[] center = tags.getIntArray("CenterPos");
@@ -818,6 +840,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         tags.setByte("Direction", direction);
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);
+        tags.setInteger("InnerMaxZ", innerMaxZ);
+        tags.setInteger("InnerMaxX", innerMaxX);
         tags.setInteger("Layers", layers);
 
         NBTTagList taglist = new NBTTagList();

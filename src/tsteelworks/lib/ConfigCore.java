@@ -29,6 +29,7 @@ public class ConfigCore
     public static boolean smelteryObsidianAlloy;
     public static boolean enableDuctVacuum;
     public static boolean enableTE3SlagOutput;
+    public static int[] modTankGlassBlocks;
 
     public static void initProps (File configFile)
     {
@@ -58,7 +59,9 @@ public class ConfigCore
         enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present.").getBoolean(true);
         
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false, "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
-
+        
+        modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000, 3001, ... >").getIntList();
+        
         hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod.").getBoolean(false);
         hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot.").getBoolean(false);
         hardcoreAnvil = config.get("TSteelification", "Hardcore Anvil", false, "Anvil requires steel materials.").getBoolean(false);

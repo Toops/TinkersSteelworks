@@ -52,6 +52,8 @@ public class TSContent
     public static Block dustStorageBlock;
     public static Block steamBlock;
     public static Fluid steamFluid;
+    
+    public static ItemStack thaumcraftAlumentum;
 
     /**
      * Content Constructor
@@ -121,11 +123,11 @@ public class TSContent
     
     void registerFluids()
     {
-        steamFluid = new Fluid("water.steam");
+        steamFluid = new Fluid("steam");
         if (!FluidRegistry.registerFluid(steamFluid))
-            steamFluid = FluidRegistry.getFluid("liquid.steam");
+            steamFluid = FluidRegistry.getFluid("steam");
         steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("water.steam");
-        GameRegistry.registerBlock(steamBlock, "water.steam");
+        GameRegistry.registerBlock(steamBlock, "steam");
         steamBlock.setLightOpacity(3);
         steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
     }
@@ -157,14 +159,18 @@ public class TSContent
         AdvancedSmelting.registerMixItem(new ItemStack(Item.sugar,          1, 0), 0, 62);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.blazePowder,    1, 0), 0, 33);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 0, 33);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.coal,           1, 0), 0, 33);
         
         AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 1, 65);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.emerald,        1, 0), 1, 30);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.flint,          1, 0), 1, 30);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.clay,           1, 0), 1, 20);
         
         AdvancedSmelting.registerMixItem(new ItemStack(Item.ghastTear,      1, 0), 2, 30);
         AdvancedSmelting.registerMixItem(new ItemStack(Block.blockClay,     1, 0), 2, 80);
         AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          2, 0), 2, 100);
+        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          1, 0), 2, 100);
+        AdvancedSmelting.registerMixItem(new ItemStack(Block.cobblestone,   1, 0), 2, 100);
         AdvancedSmelting.registerMixItem(new ItemStack(TContent.meatBlock,  1, 0), 2, 100);
     }
     
@@ -213,5 +219,18 @@ public class TSContent
             TSRecipes.changeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil)
             TSRecipes.changeAnvil();
+    }
+    
+    public void modIntegration ()
+    {
+        if (TContent.thaumcraftAvailable)
+        {
+            Object objResource = TContent.getStaticItem("itemResource", "thaumcraft.common.config.ConfigItems");
+            if (objResource != null)
+            {
+                TSteelworks.logger.info("Thaumcraft detected. Registering materials.");
+                thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
+            }
+        }
     }
 }

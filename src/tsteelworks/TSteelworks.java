@@ -98,13 +98,13 @@ public class TSteelworks
         
         content.createEntities();
         content.addCraftingRecipes();
+        content.modIntegration();
         
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
 
         //Initialize dealloying information at the last possible minute, to ensure that other mods have a chance to get their alloying information to TCon.
         AlloyInfo.init();
-        //Test ###### REMOVE THIS BEFORE RELEASE ######
         //logAlloyList();
     }
 

@@ -5,11 +5,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.common.TContent;
 import tsteelworks.common.TSContent;
 import cpw.mods.fml.common.IFuelHandler;
 
 public class TSFuelHandler implements IFuelHandler
 {
+    // Inter-mod generic fuel registry 
     @Override
     public int getBurnTime (ItemStack fuel)
     {
@@ -31,7 +33,7 @@ public class TSFuelHandler implements IFuelHandler
         {
             final Block block = Block.blocksList[i];
             // Chacoal Block
-            if (block == TSContent.charcoalBlock) return 420 * 4;
+            if (block == TSContent.charcoalBlock) return 420 * 6;
         }
         // Charcoal
         if ((fuel.itemID == new ItemStack(Item.coal).itemID) && (fuel.getItemDamage() == 1))
@@ -43,7 +45,12 @@ public class TSFuelHandler implements IFuelHandler
         // Block of Coal Coke ?
         for (final ItemStack blockCoke : OreDictionary.getOres("blockCoke"))
             if (fuel.itemID == blockCoke.itemID)
-                return 420 * 8;
+                return 420 * 12;
+        // Alumentum
+        if (TContent.thaumcraftAvailable)
+            if (fuel.itemID == TSContent.thaumcraftAlumentum.itemID)
+                return 420 * 4;
+        
         return 0;
     }
     
@@ -68,6 +75,9 @@ public class TSFuelHandler implements IFuelHandler
         for (final ItemStack blockCoke : OreDictionary.getOres("blockCoke"))
             if (fuel.itemID == blockCoke.itemID)
                 return 16;
+        if (TContent.thaumcraftAvailable)
+            if (fuel.itemID == TSContent.thaumcraftAlumentum.itemID)
+                return 3;
         return 0;
     }
 }

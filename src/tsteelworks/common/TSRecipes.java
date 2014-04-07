@@ -258,8 +258,10 @@ public class TSRecipes
 
     public static void solidSmeltMixCombos ()
     {
-        final ItemStack out = new ItemStack(Item.netherQuartz, 1);
-        AdvancedSmelting.registerMixComboForSolidOutput(out, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.flint, 1, 0), new ItemStack(Block.blockClay, 1, 0));
+        final ItemStack netherQuartz = new ItemStack(Item.netherQuartz, 1);
+        final ItemStack scorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
+        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.flint, 1, 0), new ItemStack(Block.blockClay, 1, 0));
+        AdvancedSmelting.registerMixComboForSolidOutput(scorchedBrick, FluidType.Stone, new ItemStack(Item.coal, 1, 0), new ItemStack(Item.clay, 1, 0), new ItemStack(Block.sand, 1, 0));
     }
 
     /**
