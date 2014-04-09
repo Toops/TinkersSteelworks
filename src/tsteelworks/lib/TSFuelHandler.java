@@ -6,6 +6,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import cpw.mods.fml.common.IFuelHandler;
 
@@ -42,7 +43,7 @@ public class TSFuelHandler implements IFuelHandler
         for (final ItemStack fuelCoke : OreDictionary.getOres("fuelCoke"))
             if (fuel.itemID == fuelCoke.itemID)
                 return 420 * 2;
-        // Block of Coal Coke ?
+        // Block of Coal Coke ? (Only leaving this here in case other mods introduce this oredict)
         for (final ItemStack blockCoke : OreDictionary.getOres("blockCoke"))
             if (fuel.itemID == blockCoke.itemID)
                 return 420 * 12;
@@ -50,6 +51,10 @@ public class TSFuelHandler implements IFuelHandler
         if (TContent.thaumcraftAvailable)
             if (fuel.itemID == TSContent.thaumcraftAlumentum.itemID)
                 return 420 * 4;
+        // Coal Coke Block - doesn't work -_-
+//        if (TSteelworks.railcraftAvailable && TSContent.railcraftBlockCoalCoke != null)
+//            if (fuel.itemID == TSContent.railcraftBlockCoalCoke.itemID)
+//                return 420 * 12;
         
         return 0;
     }
@@ -78,6 +83,9 @@ public class TSFuelHandler implements IFuelHandler
         if (TContent.thaumcraftAvailable)
             if (fuel.itemID == TSContent.thaumcraftAlumentum.itemID)
                 return 3;
+//        if (TSteelworks.railcraftAvailable)
+//            if (fuel.itemID == TSContent.railcraftBlockCoalCoke.itemID && TSContent.railcraftBlockCoalCoke != null)
+//                return 16;
         return 0;
     }
 }

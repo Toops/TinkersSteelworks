@@ -53,6 +53,7 @@ public class TSteelworks
     public static TSEventHandler events;
     public static TSFuelHandler fuelHandler;
     public static boolean thermalExpansionAvailable;
+    public static boolean railcraftAvailable;
 
     public TSteelworks()
     {
@@ -95,6 +96,7 @@ public class TSteelworks
     public void postInit (FMLPostInitializationEvent event)
     {
         thermalExpansionAvailable = Loader.isModLoaded("ThermalExpansion");
+        railcraftAvailable = Loader.isModLoaded("Railcraft");
         
         content.createEntities();
         content.addCraftingRecipes();

@@ -54,6 +54,7 @@ public class TSContent
     public static Fluid steamFluid;
     
     public static ItemStack thaumcraftAlumentum;
+//    public static ItemStack railcraftBlockCoalCoke;
 
     /**
      * Content Constructor
@@ -123,7 +124,7 @@ public class TSContent
     
     void registerFluids()
     {
-        steamFluid = new Fluid("Steam");
+        steamFluid = new Fluid("steam");
         if (!FluidRegistry.registerFluid(steamFluid))
         {
 //            steamFluid = FluidRegistry.getFluid("steam");
@@ -131,15 +132,25 @@ public class TSContent
 //            GameRegistry.registerBlock(steamBlock, "steam");
 //            steamBlock.setLightOpacity(3);
 //            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
-            steamFluid = FluidRegistry.getFluid("Steam");
-            steamBlock = Block.blocksList[steamFluid.getBlockID()];
-            if (steamBlock == null)
-                TSteelworks.logger.info("Attempted to acquire another mod's Steam (fluid) block, but the steam block is missing!");
+            steamFluid = FluidRegistry.getFluid("steam");
+            if (steamFluid.getBlockID() != -1)
+            {
+                steamBlock = Block.blocksList[steamFluid.getBlockID()];
+            }
+            else
+            {
+                steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
+                GameRegistry.registerBlock(steamBlock, "steam");
+                steamBlock.setLightOpacity(3);
+                steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+            }
+//            if (steamBlock == null)
+//                TSteelworks.logger.info("Attempted to acquire another mod's Steam (fluid) block, but the steam block is missing!");
         }
         else
         {
-            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("Steam");
-            GameRegistry.registerBlock(steamBlock, "Steam");
+            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
+            GameRegistry.registerBlock(steamBlock, "steam");
             steamBlock.setLightOpacity(3);
             steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
         }
@@ -241,9 +252,19 @@ public class TSContent
             Object objResource = TContent.getStaticItem("itemResource", "thaumcraft.common.config.ConfigItems");
             if (objResource != null)
             {
-                TSteelworks.logger.info("Thaumcraft detected. Registering materials.");
+                TSteelworks.logger.info("Thaumcraft detected. Registering fuels.");
                 thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
             }
         }
+//        if (TSteelworks.railcraftAvailable)
+//        {
+//            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
+//            if (objBlockCube != null)
+//            {
+//                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
+//                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
+//            }
+//        }
+        
     }
 }

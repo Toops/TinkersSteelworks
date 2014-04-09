@@ -277,9 +277,10 @@ public class HighOvenGui extends TSContainerGui
         {
             for (int i = 0; i < slotSize; i++) 
             {
-                drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
-//                drawTexturedModalRect(slotX + 16, (slotY + 6) + (iter * 18), 176, 21, 36, 18);
-                
+                if (!logic.isStackInSlot(i+4))
+                {
+                    drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
+                }
             }
         }
     }

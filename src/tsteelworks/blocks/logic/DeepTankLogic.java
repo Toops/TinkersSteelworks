@@ -52,6 +52,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int innerMaxX;
     public int innerMaxZ;
     public int layers;
+    public final int innerMaxSpace = 9;
     Random rand = new Random();
 
     public DeepTankLogic() 
@@ -477,7 +478,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         {
         case 2: // +z
             // Scan to last block
-            for (int z = zCoord + 1; z < zCoord + 10; z++)
+            for (int z = zCoord + 1; z < zCoord + (innerMaxSpace + 1); z++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -519,7 +520,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord + centerZ};
         case 3: // -z
-            for (int z = zCoord - 1; z > zCoord - 10; z--)
+            for (int z = zCoord - 1; z > zCoord - (innerMaxSpace + 1); z--)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -561,7 +562,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord - centerZ};
         case 4: // +x
-            for (int x = xCoord + 1; x < xCoord + 10; x++)
+            for (int x = xCoord + 1; x < xCoord + (innerMaxSpace + 1); x++)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))
@@ -603,7 +604,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerZ == 0) break;
             return new int[] {xCoord + centerX, zCoord};
         case 5: // -x
-            for (int x = xCoord - 1; x > xCoord - 10; x--)
+            for (int x = xCoord - 1; x > xCoord - (innerMaxSpace + 1); x--)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))

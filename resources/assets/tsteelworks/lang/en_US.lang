@@ -19,12 +19,16 @@ entity.HighGolem.name=High Golem
 tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
 block.storage.dust.sugar.name=Sugar Cube
-tile.Steam.name=Steam
-fluid.Steam=Steam
+tile.steam.name=Steam
+fluid.steam=Steam
 fluid.water=Water
 
 HighOven.Controller.name=High Oven Controller
-HighOven.Drain.name=High Oven Drain
+HighOven.TankController.name=Deep Tank Controller
+HighOven.Drain.name=Scorched Drain
+HighOven.Duct.name=Scorched Duct
+HighOven.Valve.name=Scorched Valve
+HighOven.Analyzer.name=Scorched Analyzer
 HighOven.Brick.name=Scorched Bricks
 HighOven.Stone.name=Scorched Stone
 HighOven.Cobblestone.name=Scorched Cobblestone
@@ -34,21 +38,25 @@ HighOven.Road.name=Scorched Road
 HighOven.Brick.Fancy.name=Fancy Scorched Bricks
 HighOven.Brick.Square.name=Chiseled Scorched Bricks
 HighOven.Brick.Creeper.name=Chiseled Creepy Bricks
-HighOven.Duct.name=High Oven Duct
-HighOven.TankController.name=Deep Tank Controller
 
 Machine.Turbine.name=Steam Turbine
 
 highoven.controller.tooltip1=The main component of the High Oven
 highoven.controller.tooltip2=(Caution: Contents under pressure!)
-highoven.drain.tooltip1=Fluid input/output for the High Oven or Deep Tank
-highoven.drain.tooltip2=(For use with faucets or piping)
-highoven.duct.tooltip1=Item input/output for the High Oven
-highoven.duct.tooltip2=(For use with hoppers, chests, or piping)
-highoven.brick.tooltip1=High Oven structure block
-highoven.brick.tooltip2=(Safe for decoration)
 highoven.tankcontroller.tooltip1=The main component of the Deep Tank
 highoven.tankcontroller.tooltip2=(High capacity!)
+highoven.drain.tooltip1=Fluid input/output for High Oven/Deep Tank
+highoven.drain.tooltip2=(For use with faucets or piping)
+highoven.duct.tooltip1=Item input/output for High Oven
+highoven.duct.tooltip2=(For use with hoppers, chests, or piping)
+highoven.valve.tooltip1=Fluid input/output for High Oven/Deep Tank
+highoven.valve.tooltip2=(Eject fluids into the world! Suck them in!)
+highoven.analyzer.tooltip1=Redstone output for High Oven/Deep Tank
+highoven.analyzer.tooltip2=(W.I.P.)
+
+highoven.brick.tooltip1=High Oven structure block
+highoven.brick.tooltip2=(Safe for decoration)
+
 dustblock.gunpowder.tooltip=Fire in the hole!
 dustblock.sugar.tooltip=How sweet!
 machine.turbine.tooltip1=Experimental!
