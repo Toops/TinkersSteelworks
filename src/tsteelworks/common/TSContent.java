@@ -94,7 +94,7 @@ public class TSContent
             GameRegistry.registerItem(bootsSteel, "bootsSteel");
         }
     }
-    
+
     /**
      * Register Blocks and TileEntities (Logic)
      */
@@ -118,36 +118,27 @@ public class TSContent
         charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
         GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
-        
-        
     }
     
     void registerFluids()
     {
+        boolean doRegisterSteamBlock = false;
         steamFluid = new Fluid("steam");
         if (!FluidRegistry.registerFluid(steamFluid))
         {
-//            steamFluid = FluidRegistry.getFluid("steam");
-//            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("water.steam");
-//            GameRegistry.registerBlock(steamBlock, "steam");
-//            steamBlock.setLightOpacity(3);
-//            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
             steamFluid = FluidRegistry.getFluid("steam");
             if (steamFluid.getBlockID() != -1)
-            {
                 steamBlock = Block.blocksList[steamFluid.getBlockID()];
-            }
             else
             {
-                steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
-                GameRegistry.registerBlock(steamBlock, "steam");
-                steamBlock.setLightOpacity(3);
-                steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+                TSteelworks.loginfo("Attempted to acquire another mod's steam block, but it is missing! Obtaining TSteelworks steam block instead.");
+                doRegisterSteamBlock = true;
             }
-//            if (steamBlock == null)
-//                TSteelworks.logger.info("Attempted to acquire another mod's Steam (fluid) block, but the steam block is missing!");
         }
         else
+            doRegisterSteamBlock = true;
+        
+        if (doRegisterSteamBlock)
         {
             steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
             GameRegistry.registerBlock(steamBlock, "steam");
@@ -171,24 +162,26 @@ public class TSContent
         final int oreId = OreDictionary.getOreID(is);
         if (oreId == -1)
             OreDictionary.registerOre(oreName, is);
-        
     }
     
     /**
      * Register mixer materials
      */
-    public static void registerMixerMaterials ()
+    void registerMixerMaterials ()
     {
         AdvancedSmelting.registerMixItem(new ItemStack(Item.gunpowder,      1, 0), 0, 33);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.sugar,          1, 0), 0, 62);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.blazePowder,    1, 0), 0, 33);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 0, 33);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.coal,           1, 0), 0, 33);
+        AdvancedSmelting.registerMixItem(new ItemStack(Item.coal,           1, 0), 0, 56);
         
         AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 1, 65);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.emerald,        1, 0), 1, 30);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.flint,          1, 0), 1, 30);
         AdvancedSmelting.registerMixItem(new ItemStack(Item.clay,           1, 0), 1, 20);
+        AdvancedSmelting.registerMixItem(new ItemStack(TContent.oreBerries, 1, 5), 1, 37);
+        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 22), 1, 26);
+        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 40), 1, 53);
         
         AdvancedSmelting.registerMixItem(new ItemStack(Item.ghastTear,      1, 0), 2, 30);
         AdvancedSmelting.registerMixItem(new ItemStack(Block.blockClay,     1, 0), 2, 80);
@@ -196,6 +189,7 @@ public class TSContent
         AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          1, 0), 2, 100);
         AdvancedSmelting.registerMixItem(new ItemStack(Block.cobblestone,   1, 0), 2, 100);
         AdvancedSmelting.registerMixItem(new ItemStack(TContent.meatBlock,  1, 0), 2, 100);
+        AdvancedSmelting.registerMixItem(new ItemStack(TContent.craftedSoil, 1, 3), 2, 53);
     }
     
     /**
@@ -209,7 +203,7 @@ public class TSContent
     public void createEntities ()
     {
         EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
-        // TODO: Register with registerModEntity instead
+        // TODO: Register with registerModEntity instead. We do this because registerModEntity does not seemingly add a mob spawner egg.
         EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
     }
     
@@ -256,6 +250,7 @@ public class TSContent
                 thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
             }
         }
+        // BlockCube and ItemCube not detected. :/ WTF railcraft?
 //        if (TSteelworks.railcraftAvailable)
 //        {
 //            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");

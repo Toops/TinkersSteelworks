@@ -146,25 +146,39 @@ public class TSClientProxy extends TSCommonProxy
 
     public void initManualIcons ()
     {
-        // TSTL
+        // Blocks
         TSClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
         TSClientRegistry.registerManualIcon("highoven", new ItemStack(TSContent.highoven));
         TSClientRegistry.registerManualIcon("highovendrain", new ItemStack(TSContent.highoven, 1, 1));
         TSClientRegistry.registerManualIcon("highovenduct", new ItemStack(TSContent.highoven, 12, 1));
         TSClientRegistry.registerManualIcon("deeptank", new ItemStack(TSContent.highoven, 13, 1));
-        TSClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
         TSClientRegistry.registerManualIcon("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2));
-        TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
-        TSClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Item.emerald));
-        TSClientRegistry.registerManualIcon("gunpowderdust", new ItemStack(Item.gunpowder));
-        TSClientRegistry.registerManualIcon("sugardust", new ItemStack(Item.sugar));
-        TSClientRegistry.registerManualIcon("charcoal", new ItemStack(Item.coal, 1, 1));
+        // Misc Blocks
         TSClientRegistry.registerManualIcon("charcoalblock", new ItemStack(TSContent.charcoalBlock));
-        TSClientRegistry.registerManualIcon("sandblock", new ItemStack(Block.sand));
         TSClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
         TSClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
         TSClientRegistry.registerManualIcon("spongeblock", new ItemStack(Block.sponge));
-
+        // Builing Materials
+        TSClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
+        TSClientRegistry.registerManualIcon("netherquartz", new ItemStack(Item.netherQuartz, 1));
+        // Component Materials
+        TSClientRegistry.registerManualIcon("charcoal", new ItemStack(Item.coal, 1, 1));
+        TSClientRegistry.registerManualIcon("gunpowderdust", new ItemStack(Item.gunpowder));
+        TSClientRegistry.registerManualIcon("sugardust", new ItemStack(Item.sugar));
+//        TSClientRegistry.registerManualIcon("coal", new ItemStack(Item.coal, 1, 0));
+        
+        TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
+        TSClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TContent.materials, 1, 40));
+        TSClientRegistry.registerManualIcon("essenceberry", new ItemStack(TContent.oreBerries, 1, 5));
+        TSClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Item.emerald));
+        TSClientRegistry.registerManualIcon("clayitem", new ItemStack(Item.clay));
+//        TSClientRegistry.registerManualIcon("aluminumnugget", new ItemStack(TContent.materials, 1, 22));
+        
+        TSClientRegistry.registerManualIcon("sandblock", new ItemStack(Block.sand));
+//        TSClientRegistry.registerManualIcon("clayblock", new ItemStack(Block.blockClay));
+        TSClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TContent.craftedSoil, 1, 3));
+        
+        
         // TCON
         TSClientRegistry.registerManualIcon("smelterybook", TConstructClientRegistry.getManualIcon("smelterybook"));
         TSClientRegistry.registerManualIcon("smeltery", TConstructClientRegistry.getManualIcon("smeltery"));
@@ -251,13 +265,18 @@ public class TSClientProxy extends TSCommonProxy
     public void initManualRecipes ()
     {
         final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
-        new ItemStack(Block.sand, 1, 0);
-        new ItemStack(Item.redstone);
-        new ItemStack(Item.gunpowder);
+        final ItemStack gunpowder = new ItemStack(Item.gunpowder, 1, 0);
+        final ItemStack sugar = new ItemStack(Item.sugar, 1, 0);
+        
+//        new ItemStack(Block.sand, 1, 0);
+//        new ItemStack(Item.redstone);
+//        new ItemStack(Item.gunpowder);
+        
         final ItemStack lapis = new ItemStack(Item.dyePowder, 1, 4);
         final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
-        new ItemStack(TSContent.dustStorageBlock, 1, 0);
-        new ItemStack(TSContent.dustStorageBlock, 1, 1);
+        
+        final ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
+        final ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
 
         final ItemStack brick = new ItemStack(Item.brick);
         final ItemStack brickBlock = new ItemStack(Block.brick);
@@ -292,6 +311,14 @@ public class TSClientProxy extends TSCommonProxy
                                                                     charcoal, charcoal, charcoal, 
                                                                     charcoal, charcoal, charcoal, 
                                                                     charcoal, charcoal, charcoal);
+        TSClientRegistry.registerManualLargeRecipe("gunpowderblock", gunpowderBlock, 
+                                                                    gunpowder, gunpowder, gunpowder, 
+                                                                    gunpowder, gunpowder, gunpowder, 
+                                                                    gunpowder, gunpowder, gunpowder);
+        TSClientRegistry.registerManualLargeRecipe("sugarcube", sugarBlock, 
+                                                                    sugar, sugar, sugar, 
+                                                                    sugar, sugar, sugar, 
+                                                                    sugar, sugar, sugar);
     }
 
     @Override

@@ -362,7 +362,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
     
-    // TODO: Fix this
     void heatFluids()
     {
         if (internalTemp < 1300 || moltenMetal.size() < 1) return;
@@ -716,8 +715,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public void alignInitialPlacement (int x, int y, int z)
     {
-        // TODO: This needs to later search for the absolute center of the structure,
-        // rather than inheriting the coords directly behind the controller.
         checkValidStructure(x, y, z);
     }
 

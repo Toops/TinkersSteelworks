@@ -226,6 +226,7 @@ public class TSRecipes
         if (ConfigCore.hardcoreFlintAndSteel)
             AdvancedSmelting.addMelting(ft, new ItemStack(Item.flintAndSteel, 1, 0), tempMod, ingotLiquidValue);
         AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
+        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(TContent.materials, 1, 40), new ItemStack(Block.sand, 2, 0));
     }
 
     public static void smeltMisc ()
@@ -260,7 +261,7 @@ public class TSRecipes
     {
         final ItemStack netherQuartz = new ItemStack(Item.netherQuartz, 1);
         final ItemStack scorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
-        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.flint, 1, 0), new ItemStack(Block.blockClay, 1, 0));
+        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(TContent.oreBerries, 1, 5), new ItemStack(TContent.craftedSoil, 1, 3));
         AdvancedSmelting.registerMixComboForSolidOutput(scorchedBrick, FluidType.Stone, new ItemStack(Item.coal, 1, 0), new ItemStack(Item.clay, 1, 0), new ItemStack(Block.sand, 1, 0));
     }
 

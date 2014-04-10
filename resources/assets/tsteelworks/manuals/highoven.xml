@@ -33,7 +33,7 @@
 <link>
  <text>Recipes</text>
  <icon>workbench</icon>
- <jump>13</jump>
+ <jump>14</jump>
 </link>
 </page>
 
@@ -74,8 +74,12 @@ The High Oven will be your threshold into this process. It is smaller than the S
  <icon>scorchedbrick</icon>
 </item>
 <item>
- <text>...or High Oven Drains</text>
+ <text>...or Scorched Drains</text>
  <icon>highovendrain</icon>
+</item>
+<item>
+ <text>...or Scorched Ducts</text>
+ <icon>highovenduct</icon>
 </item>
 <item>
  <text>1 Faucet</text>
@@ -112,6 +116,10 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
  <text>Sugar - 62% Dissipation</text>
  <icon>sugardust</icon>
 </item>
+<item>
+ <text>Coal - 56% Dissipation</text>
+ <icon>coal</icon>
+</item>
 </page>
 
 <page type="sidebar">
@@ -121,8 +129,20 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
  <icon>redstonedust</icon>
 </item>
 <item>
+ <text>Aluminum Dust - 53% Dissipation</text>
+ <icon>aluminumdust</icon>
+</item>
+<item>
  <text>Emerald - 30% Dissipation</text>
  <icon>emeraldgem</icon>
+</item>
+<item>
+ <text>Essence Berry - 37% Dissipation</text>
+ <icon>essenceberry</icon>
+</item>
+<item>
+ <text>Clay - 20% Dissipation</text>
+ <icon>clayitem</icon>
 </item>
 </page>
 
@@ -131,6 +151,10 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
 <item>
  <text>Sand - 100% Dissipation</text>
  <icon>sandblock</icon>
+</item>
+<item>
+ <text>Graveyard Soil - 53% Dissipation</text>
+ <icon>graveyardsoil</icon>
 </item>
 <item>
  <text>H$m#o@e - -^% ...(garbled text)...</text>
@@ -145,8 +169,24 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
  <icon>steelingot</icon>
 </item>
 <item>
+ <text>Cast Steel: smelt Iron(1) with Gunpowder(1), Aluminum Dust (1), and Sand(2)</text>
+ <icon>steelingot</icon>
+</item>
+<item>
  <text>Pig Iron: smelt Iron with ...(garbled text)... </text>
  <icon>pigironingot</icon>
+</item>
+</page>
+
+<page type="sidebar">
+<text>In addition to metal working, other compounds may be created within the High Oven.</text>
+<item>
+ <text>Scorched Brick: smelt Stone(1) with Coal(1), Clay (1), and Sand(1)</text>
+ <icon>scorchedbrick</icon>
+</item>
+<item>
+ <text>Nether Quartz: smelt Glass(1) with Gunpowder(1), Essence Berry (1), and Graveyard Soil(1)</text>
+ <icon>netherquartz</icon>
 </item>
 </page>
 
@@ -204,6 +244,22 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
 <text>Block of Charcoal</text>
 <recipe>
  <name>charcoalblock</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>Block of Gunpowder</text>
+<recipe>
+ <name>gunpowderblock</name>
+ <size>three</size>
+</recipe>
+</page>
+
+<page type="crafting">
+<text>Sugarcube</text>
+<recipe>
+ <name>sugarcube</name>
  <size>three</size>
 </recipe>
 </page>
