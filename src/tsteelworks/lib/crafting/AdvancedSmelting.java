@@ -12,7 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.Smeltery;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 public class AdvancedSmelting
 {
@@ -20,7 +22,7 @@ public class AdvancedSmelting
     private final HashMap<List<Integer>, FluidStack> meltingList = new HashMap<List<Integer>, FluidStack>();
     private final HashMap<List<Integer>, Integer> temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<String, List<Integer>> mixItemList = new HashMap<String, List<Integer>>();
-    private final HashMap<FluidType, List> mixerFluidComboList = new HashMap<FluidType, List>();
+    private final Multimap<FluidType, List> mixerFluidComboList = ArrayListMultimap.create();
     private final HashMap<ItemStack, List> mixerSolidComboList = new HashMap<ItemStack, List>();
     private final HashMap<List<Integer>, ItemStack> renderIndex = new HashMap<List<Integer>, ItemStack>();
     
@@ -296,13 +298,14 @@ public class AdvancedSmelting
         if (!doesMixItemMeetRequirements(i1, 0) || !doesMixItemMeetRequirements(i2, 1) || !doesMixItemMeetRequirements(i3, 2))
             return null;
 
-        for (final Entry<FluidType, List> e : instance.mixerFluidComboList.entrySet())
+        for (final Entry<FluidType, List> e : instance.mixerFluidComboList.entries())
         {
             final FluidType key = e.getKey();
             final Object value = e.getValue();
             if (value.equals(inputs))
                 return key;
         }
+        
         return null;
     }
 
@@ -363,7 +366,7 @@ public class AdvancedSmelting
         return instance.mixItemList;
     }
     
-    public static HashMap<FluidType, List> getCombosList ()
+    public static Multimap<FluidType, List> getCombosList ()
     {
         return instance.mixerFluidComboList;
     }

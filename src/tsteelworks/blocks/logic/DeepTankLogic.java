@@ -65,7 +65,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int xDistanceToRim () { return (innerMaxX / 2) + 1; }
     public int zDistanceToRim () { return (innerMaxZ / 2) + 1; }
     public int innerSpaceTotal () { return innerMaxX * innerMaxZ; }
-    public int layerFluidCapacity() { return (FluidContainerRegistry.BUCKET_VOLUME * 4) * innerSpaceTotal(); }
+    public int layerFluidCapacity() { return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); }
     
     void adjustLayers (int lay, boolean forceAdjust)
     {

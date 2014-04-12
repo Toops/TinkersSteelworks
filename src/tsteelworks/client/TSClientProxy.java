@@ -158,15 +158,17 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
         TSClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
         TSClientRegistry.registerManualIcon("spongeblock", new ItemStack(Block.sponge));
+        TSClientRegistry.registerManualIcon("glassBlock", new ItemStack(Block.glass));
+        TSClientRegistry.registerManualIcon("clearGlassBlock", new ItemStack(TContent.clearGlass));
         // Builing Materials
         TSClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
         TSClientRegistry.registerManualIcon("netherquartz", new ItemStack(Item.netherQuartz, 1));
         // Component Materials
+        TSClientRegistry.registerManualIcon("ironingot", new ItemStack(Item.ingotIron, 1, 0));
         TSClientRegistry.registerManualIcon("charcoal", new ItemStack(Item.coal, 1, 1));
         TSClientRegistry.registerManualIcon("gunpowderdust", new ItemStack(Item.gunpowder));
         TSClientRegistry.registerManualIcon("sugardust", new ItemStack(Item.sugar));
-//        TSClientRegistry.registerManualIcon("coal", new ItemStack(Item.coal, 1, 0));
-        
+
         TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
         TSClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TContent.materials, 1, 40));
         TSClientRegistry.registerManualIcon("essenceberry", new ItemStack(TContent.oreBerries, 1, 5));

@@ -5,7 +5,7 @@
 <text>          Steelworking and You
       A beginner's guide to Steelcraft
 
-         By The Tinkerers' Society</text>
+         By The Tinkers' Society</text>
 </page>
 
 <page type="contents">
@@ -35,16 +35,21 @@
  <icon>workbench</icon>
  <jump>14</jump>
 </link>
+<link>
+ <text>Deep Tanks</text>
+ <icon>deeptank</icon>
+ <jump>6</jump>
+</link>
 </page>
 
 <page type="text">
 <text>-Foreword-
 To preserve the sacred art of steelwork, we have written this book in a special invisible ink which is activated on a factor of time. This will help ensure that the people of the age have reached a level of social and technological maturity, so that they may harmoniously benefit from the knowledge contained herein.
 
-The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive cave dweller. Heed my words dear reader: attentive caution must exercised in its production. Steelworking is an art and a hallmark of the master tinkerer. Be your intentions noble and hands deft!
+The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive cave dweller. Heed my words dear reader: attentive caution must exercised in its production. Steelworking is an art and a hallmark of the master tinker. Be your intentions noble and hands deft!
 
         -Slags O'Molten
-        Scribemaster of the Tinkerers' Society</text>
+        Scribemaster of the Tinkers' Society</text>
 </page>
 
 <page type="text">
@@ -101,7 +106,7 @@ The controller must have an active redstone signal to burn fuel. Simply placing 
 </page>
 
 <page type="text">
-<text>The High Oven should only be fuelled with charcoal. Charcoal is a purified fuel and thus does not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.
+<text>The High Oven should only be fuelled with charcoal or other specialized purified fuels which do not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.
 
 The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.</text>
 </page>
@@ -163,19 +168,56 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
 </page>
 
 <page type="sidebar">
-<text>Crystalline structures may be formed within your metals when raw materials are mixed into the metal. The raw materials may or may not be entirely consumed on a basis of their dissipation property.</text>
+<text>Crystalline structures may be formed within your metals when compound agents are mixed into the metal. These raw materials may or may not be entirely consumed on a basis of their dissipation property.</text>
 <item>
- <text>Cast Steel: smelt Iron(1) with Gunpowder(1), Redstone(1), and Sand(2)</text>
+ <text>To obtain Cast Steel...</text>
  <icon>steelingot</icon>
 </item>
 <item>
- <text>Cast Steel: smelt Iron(1) with Gunpowder(1), Aluminum Dust (1), and Sand(2)</text>
- <icon>steelingot</icon>
+ <text>Smelt Iron</text>
+ <icon>ironingot</icon>
 </item>
 <item>
- <text>Pig Iron: smelt Iron with ...(garbled text)... </text>
+ <text>Oxidize with Gunpowder</text>
+ <icon>gunpowderdust</icon>
+</item>
+<item>
+ <text>Reduce with Redstone Dust...</text>
+ <icon>redstonedust</icon>
+</item>
+<item>
+ <text>...or Aluminum Dust</text>
+ <icon>aluminumdust</icon>
+</item>
+<item>
+ <text>and purify with Sand x2</text>
+ <icon>sandblock</icon>
+</item>
+</page>
+
+<page type="sidebar">
+<text>Pig Iron is a very strange substance. It is said to have been formulated in the Nether by a tribe of intelligent pig people, but such fables adorn whimsical children's' books.</text>
+<item>
+ <text>To obtain Pig Iron...</text>
  <icon>pigironingot</icon>
 </item>
+<item>
+ <text>Smelt Iron</text>
+ <icon>ironingot</icon>
+</item>
+<item>
+ <text>Oxidize with Sugar</text>
+ <icon>sugardust</icon>
+</item>
+<item>
+ <text>Reduce with Emerald</text>
+ <icon>emeraldgem</icon>
+</item>
+<item>
+ <text>and purify with H4m!~n> ...(garbled text)... </text>
+ <icon>spongeblock</icon>
+</item>
+
 </page>
 
 <page type="sidebar">
@@ -262,5 +304,89 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
  <name>sugarcube</name>
  <size>three</size>
 </recipe>
+</page>
+
+<page type="text">
+<text> -Chapter 2: Deep Tank
+"Molten metal. It is as beautiful as any natural river. Its glimmer sparks insight; its flow is the harmony of man's industrial opus."
+
+
+
+        -Brog Irontoe
+        Poet, Philosopher, Slime Farmer
+</text>
+</page>
+
+<page type="text">
+<text>Deep Tanks are a a handy way of storing large amounts of molten metals or other liquids. Like the High Oven and Smeltery before it, the Deep Tank is a multi-block structure, and like the Smeltery, it may contain multiple liquids. The similarities end there, however, as the Deep Tank does not mix metals into alloys or melt anything at all. 
+
+Deep Tanks may also be constructed in square or rectangle shapes, and its size may be scaled to fit the needs of the tinker, as long as its width and length are odd in number. It can be built as tall as the heart desires. The smallest possible Deep Tank is 3x3x3, while the largest is 11x11x??. Other configurations include 7x3, 5x9, 9x7, 11x3, and so on. The overall size of the Deep Tank directly correlates to its capacity, naturally!  
+</text>
+</page>
+
+<page type="sidebar">
+<text>As with the High Oven, you will need a Smeltery and the following materials to get started.</text>
+<item>
+ <text>1 Deep Tank Controller</text>
+ <icon>deeptank</icon>
+</item>
+<item>
+ <text>Scorched Bricks </text>
+ <icon>scorchedbrick</icon>
+</item>
+<item>
+ <text>Scorched Drains</text>
+ <icon>highovendrain</icon>
+</item>
+<item>
+ <text>Glass</text>
+ <icon>glassBlock</icon>
+</item>
+<item>
+ <text>...Or Clear/Stained/Seared Glass</text>
+ <icon>clearGlassBlock</icon>
+</item>
+</page>
+
+<page type="text">
+<text>In this tutorial, we will assume the desired size is that of the Smeltery. To begin, lay a 3x3 bed of glass (clear glass, stained glass, or seared glass also work, excepting glass panels). Surround that with scorched bricks, drains, and ensure the Deep Tank Controller is placed in the center of any side of this rim.
+
+Also note that the Deep Tank Controller may be placed on either the top or bottom layers.
+</text>
+</page>
+
+<page type="picture">
+<text>The First Layer</text>
+<location>tsteelworks:manuals/deeptankbuild1.png</location>
+</page>
+
+<page type="text">
+<text>Continue building upwards along this rim with any sort of glass you desire. The height is up to you.
+</text>
+</page>
+
+<page type="picture">
+<text>Glass Walls</text>
+<location>tsteelworks:manuals/deeptankbuild2.png</location>
+</page>
+
+<page type="text">
+<text>When you're satisfied with the height, cap it off with an inner layer of glass and an outer rim of scorched bricks or drains. Don't forget to add upward-facing drains to pour liquids into!
+</text>
+</page>
+
+<page type="picture">
+<text>Cap it off!</text>
+<location>tsteelworks:manuals/deeptankbuild3.png</location>
+</page>
+
+<page type="text">
+<text>The Deep Tank is a perfect companion for Smelteries and High Ovens. Build them below, on top, or beside these structures for convenient liquid storage and transport.
+</text>
+</page>
+
+<page type="picture">
+<text>High Oven, meet Deep Tank</text>
+<location>tsteelworks:manuals/deeptankbuild4.png</location>
 </page>
 </book>

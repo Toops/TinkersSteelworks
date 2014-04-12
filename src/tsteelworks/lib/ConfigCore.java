@@ -26,6 +26,7 @@ public class ConfigCore
     public static boolean hardcoreFlintAndSteel;
     public static boolean hardcoreAnvil;
     public static int ingotsPerOre;
+    public static int deeptankCapacityMultiplier;
     public static boolean smelteryObsidianAlloy;
     public static boolean enableDuctVacuum;
     public static boolean enableTE3SlagOutput;
@@ -56,10 +57,12 @@ public class ConfigCore
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag, tests needed!)").getBoolean(false);
         ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
+        
         enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present.").getBoolean(true);
         
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false, "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
         
+        deeptankCapacityMultiplier = config.get("Deep Tank", "Fluid Capacity Multiplier", 4, "Determines how many buckets of fluid per internal block space.").getInt(4);
         modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000, 3001, ... > (Note: Currently doesn't save properly...)").getIntList();
         
         hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod.").getBoolean(false);
