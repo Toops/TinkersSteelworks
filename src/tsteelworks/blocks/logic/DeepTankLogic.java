@@ -19,7 +19,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
@@ -35,6 +37,7 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.crafting.AlloyInfo;
 
 public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic
 {
@@ -42,6 +45,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     boolean structureHasBottom;
     boolean structureHasTop;
     boolean needsUpdate;
+    boolean containsAlloy;
+    boolean activeTurbineAttached;
     public boolean validStructure;
     byte direction;
     public CoordTuple centerPos;
@@ -60,6 +65,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         super(); 
         innerMaxX = 0;
         innerMaxZ = 0;
+        containsAlloy = false;
+        activeTurbineAttached = false;
     }
     
     public int xDistanceToRim () { return (innerMaxX / 2) + 1; }
@@ -114,11 +121,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         case 1:
             direction = 5;
             break;
-
         case 2:
             direction = 3;
             break;
-
         case 3:
             direction = 4;
             break;
@@ -139,6 +144,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
+        if (tick == 40)
+            if (activeTurbineAttached)
+                dealloyFluids();
         if (tick == 60)
             tick = 0;
     }
@@ -150,13 +158,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         {
             fluidlist.add(liquid.copy());
             currentLiquid += liquid.amount;
+            containsAlloy = containsAlloy();
             return true;
         }
         else
         {
             if (liquid.amount + currentLiquid > maxLiquid)
                 return false;
-
             currentLiquid += liquid.amount;
             boolean added = false;
             for (int i = 0; i < fluidlist.size(); i++)
@@ -180,6 +188,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 else
                     fluidlist.add(liquid.copy());
             }
+            containsAlloy = containsAlloy();
             return true;
         }
     }
@@ -719,6 +728,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                     currentLiquid = 0;
                     needsUpdate = true;
                 }
+                containsAlloy = containsAlloy();
                 return liq;
             }
             else
@@ -730,11 +740,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                     currentLiquid -= maxDrain;
                     needsUpdate = true;
                 }
+                containsAlloy = containsAlloy();
                 return new FluidStack(liquid.fluidID, maxDrain, liquid.tag);
             }
         }
         else
         {
+            containsAlloy = containsAlloy();
             return new FluidStack(0, 0);
         }
     }
@@ -742,7 +754,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     @Override
     public int fill (FluidStack resource, boolean doFill)
     {
-        if (resource != null && currentLiquid < maxLiquid)//resource.amount + currentLiquid < maxLiquid)
+        if (resource != null && currentLiquid < maxLiquid)
         {
             if (resource.amount + currentLiquid > maxLiquid)
                 resource.amount = maxLiquid - currentLiquid;
@@ -751,18 +763,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (amount > 0 && doFill)
             {
                 addFluidToTank(resource, false);
-//                if (addMoltenMetal(resource, false))
-//                {
-//                    ArrayList alloys = Smeltery.mixMetals(moltenMetal);
-//                    for (int al = 0; al < alloys.size(); al++)
-//                    {
-//                        FluidStack liquid = (FluidStack) alloys.get(al);
-//                        addMoltenMetal(liquid, true);
-//                    }
-//                }
                 needsUpdate = true;
                 worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
             }
+            containsAlloy = containsAlloy();
             return amount;
         }
         else
@@ -797,6 +801,49 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return info;
     }
 
+    public void setTurbineAttached (boolean flag)
+    {
+        activeTurbineAttached = flag;
+    }
+    
+    public boolean isTurbineAttached ()
+    {
+        return activeTurbineAttached;
+    }
+    
+    boolean containsAlloy ()
+    {
+        for (FluidStack fluid : fluidlist) if (fluidIsAlloy(fluid)) return true;
+        return false;
+    }
+    
+    boolean fluidIsAlloy (FluidStack fluidstack)
+    {
+        for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
+            if (fluidstack.getFluid() == AlloyInfo.alloys.get(i).result.copy().getFluid())
+                return true;
+        return false;
+    }
+    
+    void dealloyFluids ()
+    {
+        if (!containsAlloy) return;
+        for (int i = 0; i < fluidlist.size(); ++i)
+        {
+            FluidStack alloy = fluidlist.get(i).copy();
+            if (!fluidIsAlloy(alloy)) continue;
+            
+            ArrayList fluids = AlloyInfo.deAlloy(alloy);
+            fluidlist.remove(i);
+            
+            for (int j = 0; j < fluids.size(); j++)
+            {
+                FluidStack liquid = (FluidStack) fluids.get(j);
+                addFluidToTank(liquid, true);
+            }
+        }
+    }
+    
     /* NBT */
 
     @Override
@@ -807,6 +854,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         innerMaxZ = tags.getInteger("InnerMaxZ");
         super.readFromNBT(tags);
         validStructure = tags.getBoolean("ValidStructure");
+        containsAlloy = tags.getBoolean("ContainsAlloy");
         int[] center = tags.getIntArray("CenterPos");
         if (center.length > 2)
             centerPos = new CoordTuple(center[0], center[1], center[2]);
@@ -832,6 +880,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         super.writeToNBT(tags);
         tags.setBoolean("ValidStructure", validStructure);
+        tags.setBoolean("ContainsAlloy", containsAlloy);
         int[] center = new int[3];// { centerPos.x, centerPos.y, centerPos.z };
         if (centerPos == null)
             center = new int[] { xCoord, yCoord, zCoord };

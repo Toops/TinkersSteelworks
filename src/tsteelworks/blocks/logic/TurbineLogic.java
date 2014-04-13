@@ -3,46 +3,135 @@ package tsteelworks.blocks.logic;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import tconstruct.library.util.CoordTuple;
+import tconstruct.TConstruct;
+import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 
-public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFluidHandler
+public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidHandler
 {
     byte direction;
+    int tick;
     public FluidTank tank;
+    boolean active;
+    boolean redstoneActivated;
+    
     
     public TurbineLogic()
     {
         super(0);
+        active = false;
+        redstoneActivated = false;
         tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
     }
+    
+    /* ==================== Redstone Logic ==================== */
+    
+    /**
+     * Get the current state of redstone-connected power
+     * 
+     * @return Redstone powered state
+     */
+    public boolean getRedstoneActive ()
+    {
+        return redstoneActivated;
+    }
 
+    /**
+     * Set the redstone powered state
+     * 
+     * @param flag
+     *          true: powered / false: not powered
+     */
+    public void setRedstoneActive (boolean flag)
+    {
+        redstoneActivated = flag;
+        if (redstoneActivated) setActive(flag);
+    }
+    
+    // ========== IActiveLogic ==========
+    @Override
+    public boolean getActive ()
+    {
+        return active && this.redstoneActivated;
+    }
+
+    @Override
+    public void setActive (boolean flag)
+    {
+        active = flag;
+        activateTurbine(active);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    void activateTurbine (boolean flag)
+    {
+        if (tank.getFluid() != null)
+        {
+            DeepTankLogic tankcontroller = getTankController();
+            if (tankcontroller != null)
+                tankcontroller.setTurbineAttached(flag);
+        }
+    }
+    
+    DeepTankLogic getTankController ()
+    {
+        int x = xCoord, z = zCoord;
+        switch (getRenderDirection())
+        {
+        case 2:
+            z--;
+            break;
+        case 3:
+            z++;
+            break;
+        case 4:
+            x--;    
+            break;
+        case 5:
+            x++;
+            break;
+        }
+
+        TileEntity drainte = worldObj.getBlockTileEntity(x, yCoord, z);
+        if (drainte instanceof HighOvenDrainLogic)
+        {
+            if (((HighOvenDrainLogic) worldObj.getBlockTileEntity(x, yCoord, z)).getControllerLogicType() == 2)
+            {
+                DeepTankLogic tankcontroller = ((HighOvenDrainLogic) worldObj.getBlockTileEntity(x, yCoord, z)).getDeepTankController();
+                return tankcontroller;
+            }
+        } 
+        return null;
+    }
+    
     /* Updating */
     public boolean canUpdate ()
     {
         return true;
     }
 
-    @Override
     public void updateEntity ()
     {
+        tick++;
+        if (tick == 60)
+            tick = 0;
     }
     
     @Override
@@ -97,12 +186,10 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     @Override
     public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
     {
+//        if (resource.getFluid() != FluidRegistry.getFluid("Steam")) return 0;
         int amount = tank.fill(resource, doFill);
         if (amount > 0 && doFill)
-        {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-
         return amount;
     }
 
@@ -117,9 +204,7 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     {
         FluidStack amount = tank.drain(maxDrain, doDrain);
         if (amount != null && doDrain)
-        {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
         return amount;
     }
 
@@ -153,6 +238,8 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     public void readFromNBT (NBTTagCompound tags)
     {
         super.readFromNBT(tags);
+        active = tags.getBoolean("Active");
+        redstoneActivated = tags.getBoolean("RedstoneActivated");
         direction = tags.getByte("Direction");
         if (tags.getBoolean("hasFluid"))
             tank.setFluid(new FluidStack(tags.getInteger("itemID"), tags.getInteger("amount")));
@@ -163,6 +250,8 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
+        tags.setBoolean("Active", active);
+        tags.setBoolean("RedstoneActivated", redstoneActivated);
         super.writeToNBT(tags);
         tags.setByte("Direction", direction);
         FluidStack liquid = tank.getFluid();
