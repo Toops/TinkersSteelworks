@@ -14,7 +14,7 @@ item.tsteelworks.chestplateSteel.name=Corazza d'Acciaio
 item.tsteelworks.leggingsSteel.name=Gambali d'Acciaio
 item.tsteelworks.bootsSteel.name=Stivali d'Acciaio
 
-entity.HighGolem.name=Golem Alto
+entity.HighGolem.name=Golem d'Acciaio
 
 tile.tsteelworks.blocks.charcoal.name=Blocco di Carbonella
 block.storage.dust.gunpowder.name=Blocco di Polvere da Sparo
@@ -25,21 +25,31 @@ fluid.water=Acqua
 
 HighOven.Controller.name=Pannello di Controllo del Forno Alto
 HighOven.TankController.name=Pannello di Controllo del Serbatoio Profondo
-HighOven.Drain.name=Scarico Cotto
-HighOven.Duct.name=Condotto Cotto
-HighOven.Valve.name=Valvola Cotta
-HighOven.Analyzer.name=Analizzatore Cotto
+HighOven.Drain.name=Scarico di Mattoni Cotti
+HighOven.Duct.name=Condotto di Mattoni Cotti
+HighOven.Valve.name=Valvola di Mattoni Cotti
+HighOven.Analyzer.name=Analizzatore di Mattoni Cotti
 HighOven.Brick.name=Mattoni Cotti
 HighOven.Stone.name=Pietra Cotta
 HighOven.Cobblestone.name=Pietrisco Cotto
-HighOven.Paver.name=Piastra Cotta
+HighOven.Paver.name=Piastra di Mattoni Cotti
 HighOven.Brick.Cracked.name=Mattoni Cotti Rotti 
-HighOven.Road.name=Strada Cotta
+HighOven.Road.name=Strada di Mattoni Cotti
 HighOven.Brick.Fancy.name=Mattoni Cotti Decorativi
 HighOven.Brick.Square.name=Mattoni Cotti Cesellati
-HighOven.Brick.Creeper.name=Mattoni Cotti Paurosi
+HighOven.Brick.Creeper.name=Mattoni Cotti Raccapriccianti
 
 Machine.Turbine.name=Turbina a Vapore
+
+Limestone.Stone.name=Calcare
+Limestone.Cobblestone.name=Pietrisco Calcareo
+Limestone.Brick.name=Mattoni di Calcare
+Limestone.Brick.Cracked.name=Mattoni di Calcare Rotti
+Limestone.Paver.name=Pannello di Mattoni di Calcare
+Limestone.Road.name=Strada di Mattoni di Calcare
+Limestone.Brick.Fancy.name=Mattoni di Calcare Decorativi
+Limestone.Brick.Square.name=Mattoni di Calcare Cesellati
+Limestone.Brick.Creeper.name=Mattoni di Calcare Raccapriccianti
 
 highoven.controller.tooltip1=Il componente principale del Forno Alto
 highoven.controller.tooltip2=(Attenzione: Contenuto sotto pressione)
@@ -53,9 +63,10 @@ highoven.valve.tooltip1=Entrata/uscita per fluidi nel Forno Alto/Serbatoio Profo
 highoven.valve.tooltip2=(Eietta fluidi nel mondo! Li risucchia dentro!)
 highoven.analyzer.tooltip1=Uscita di pietrarossa nel Forno Alto/Serbatoio Profondo
 highoven.analyzer.tooltip2=(W.I.P.)
-
 highoven.brick.tooltip1=Blocco di struttura per il Forno Aloto
 highoven.brick.tooltip2=(Usabile anche come decorazione)
+
+limestone.tooltip1=Sedimentario
 
 dustblock.gunpowder.tooltip=Fuoco alle macchine!
 dustblock.sugar.tooltip=Dolcissimo!
