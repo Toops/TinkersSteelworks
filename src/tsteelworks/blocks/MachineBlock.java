@@ -158,6 +158,13 @@ public class MachineBlock extends TSInventoryBlock
         }
     }
     
+    @Override
+    public boolean canConnectRedstone (IBlockAccess world, int x, int y, int z, int side)
+    {
+        final TileEntity logic = world.getBlockTileEntity(x, y, z);
+        return (logic instanceof IMasterLogic);
+    }
+    
     boolean activeRedstone (World world, int x, int y, int z)
     {
         final Block wire = Block.blocksList[world.getBlockId(x, y, z)];

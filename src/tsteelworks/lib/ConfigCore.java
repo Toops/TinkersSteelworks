@@ -17,6 +17,7 @@ public class ConfigCore
     public static int steelBoots;
     // -- Blocks
     public static int highoven;
+    public static int limestone;
     public static int machine;
     public static int charcoalStorageBlock;
     public static int dustStorageBlock;
@@ -53,6 +54,7 @@ public class ConfigCore
         charcoalStorageBlock = config.getBlock("Blocks", "Charcoal Block ID", 3401, "Compressed Charcoal Block (3x3)").getInt(3401);
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
         machine = config.getBlock("Blocks", "Machine Blocks ID", 3403, "Machine Blocks (Turbine, etc)").getInt(3403);
+        limestone = config.getBlock("Blocks", "Limestone Blocks ID", 3404, "Limestone Blocks").getInt(3404);
         steam = config.getBlock("Blocks", "Steam Block ID", 3409, "Steam Fluid 'Block'").getInt(3409);
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag, tests needed!)").getBoolean(false);
@@ -63,7 +65,7 @@ public class ConfigCore
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false, "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
         
         deeptankCapacityMultiplier = config.get("Deep Tank", "Fluid Capacity Multiplier", 4, "Determines how many buckets of fluid per internal block space.").getInt(4);
-        modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000, 3001, ... > (Note: Currently doesn't save properly...)").getIntList();
+        modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000 3001 ... > (Note: Currently doesn't save properly...)").getIntList();
         
         hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod.").getBoolean(false);
         hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot.").getBoolean(false);

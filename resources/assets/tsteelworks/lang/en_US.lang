@@ -41,6 +41,16 @@ HighOven.Brick.Creeper.name=Chiseled Creepy Bricks
 
 Machine.Turbine.name=Steam Turbine
 
+Limestone.Stone.name=Limestone
+Limestone.Cobblestone.name=Limestone Cobble
+Limestone.Brick.name=Limestone Bricks
+Limestone.Brick.Cracked.name=Cracked Limestone Bricks
+Limestone.Paver.name=Limestone Paver
+Limestone.Road.name=Limestone Road
+Limestone.Brick.Fancy.name=Fancy Limestone Bricks
+Limestone.Brick.Square.name=Chiseled Limestone Bricks
+Limestone.Brick.Creeper.name=Chiseled Creepy Bricks
+
 highoven.controller.tooltip1=The main component of the High Oven
 highoven.controller.tooltip2=(Caution: Contents under pressure!)
 highoven.tankcontroller.tooltip1=The main component of the Deep Tank
@@ -53,9 +63,11 @@ highoven.valve.tooltip1=Fluid input/output for High Oven/Deep Tank
 highoven.valve.tooltip2=(Eject fluids into the world! Suck them in!)
 highoven.analyzer.tooltip1=Redstone output for High Oven/Deep Tank
 highoven.analyzer.tooltip2=(W.I.P.)
-
 highoven.brick.tooltip1=High Oven structure block
 highoven.brick.tooltip2=(Safe for decoration)
+
+
+limestone.tooltip1=Sedimentary
 
 dustblock.gunpowder.tooltip=Fire in the hole!
 dustblock.sugar.tooltip=How sweet!

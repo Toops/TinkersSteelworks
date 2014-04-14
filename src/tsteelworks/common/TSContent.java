@@ -14,6 +14,7 @@ import tconstruct.library.TConstructRegistry;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
+import tsteelworks.blocks.LimestoneBlock;
 import tsteelworks.blocks.MachineBlock;
 import tsteelworks.blocks.SteamFluidBlock;
 import tsteelworks.blocks.TSBaseBlock;
@@ -30,6 +31,7 @@ import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
+import tsteelworks.items.blocks.LimestoneItemBlock;
 import tsteelworks.items.blocks.MachineItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
@@ -47,6 +49,7 @@ public class TSContent
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     public static Block highoven;
+    public static Block limestoneBlock;
     public static Block machine;
     public static Block charcoalBlock;
     public static Block dustStorageBlock;
@@ -118,6 +121,9 @@ public class TSContent
         charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
         GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
+        
+        limestoneBlock = new LimestoneBlock(ConfigCore.limestone).setUnlocalizedName("Limestone");
+        GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
     }
     
     void registerFluids()
