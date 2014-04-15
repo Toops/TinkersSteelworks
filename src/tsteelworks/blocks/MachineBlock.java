@@ -185,7 +185,7 @@ public class MachineBlock extends TSInventoryBlock
     {
         final TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TurbineLogic)
-            ((TurbineLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
+            ((TurbineLogic) logic).setActive(world.isBlockIndirectlyGettingPowered(x, y, z));
     }
     
     @Override

@@ -18,10 +18,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import tconstruct.TConstruct;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 
 public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidHandler
@@ -30,46 +28,19 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     int tick;
     public FluidTank tank;
     boolean active;
-    boolean redstoneActivated;
-    
     
     public TurbineLogic()
     {
         super(0);
         active = false;
-        redstoneActivated = false;
         tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
-    }
-    
-    /* ==================== Redstone Logic ==================== */
-    
-    /**
-     * Get the current state of redstone-connected power
-     * 
-     * @return Redstone powered state
-     */
-    public boolean getRedstoneActive ()
-    {
-        return redstoneActivated;
-    }
-
-    /**
-     * Set the redstone powered state
-     * 
-     * @param flag
-     *          true: powered / false: not powered
-     */
-    public void setRedstoneActive (boolean flag)
-    {
-        redstoneActivated = flag;
-        if (redstoneActivated) setActive(flag);
     }
     
     // ========== IActiveLogic ==========
     @Override
     public boolean getActive ()
     {
-        return active && this.redstoneActivated;
+        return (active && tank.getFluidAmount() > 0);
     }
 
     @Override
@@ -82,7 +53,7 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     
     void activateTurbine (boolean flag)
     {
-        if (tank.getFluid() != null)
+        if (tank.getFluidAmount() > 0)
         {
             DeepTankLogic tankcontroller = getTankController();
             if (tankcontroller != null)
@@ -131,7 +102,11 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     {
         tick++;
         if (tick == 60)
+        {
+            if (getActive())
+                tank.drain(10, true);
             tick = 0;
+        }
     }
     
     @Override
@@ -186,7 +161,7 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     @Override
     public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
     {
-//        if (resource.getFluid() != FluidRegistry.getFluid("Steam")) return 0;
+        if (!resource.getFluid().equals(FluidRegistry.getFluid("steam"))) return 0;
         int amount = tank.fill(resource, doFill);
         if (amount > 0 && doFill)
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -239,7 +214,6 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     {
         super.readFromNBT(tags);
         active = tags.getBoolean("Active");
-        redstoneActivated = tags.getBoolean("RedstoneActivated");
         direction = tags.getByte("Direction");
         if (tags.getBoolean("hasFluid"))
             tank.setFluid(new FluidStack(tags.getInteger("itemID"), tags.getInteger("amount")));
@@ -251,7 +225,6 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     public void writeToNBT (NBTTagCompound tags)
     {
         tags.setBoolean("Active", active);
-        tags.setBoolean("RedstoneActivated", redstoneActivated);
         super.writeToNBT(tags);
         tags.setByte("Direction", direction);
         FluidStack liquid = tank.getFluid();
