@@ -75,8 +75,7 @@ public class LimestoneBlock extends TSBaseBlock
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
-        for (int iter = 0; iter < 8; iter++)
-            if (iter != 3)
+        for (int iter = 0; iter < 9; iter++)
                 list.add(new ItemStack(id, 1, iter));
     }
 

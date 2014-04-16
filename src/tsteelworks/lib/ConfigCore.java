@@ -8,8 +8,8 @@ public class ConfigCore
 {
     // --- Items
     public static int materials;
-
     public static int manual;
+    public static int buckets;
     public static boolean enableSteelArmor;
     public static int steelHelmet;
     public static int steelChestplate;
@@ -22,6 +22,7 @@ public class ConfigCore
     public static int charcoalStorageBlock;
     public static int dustStorageBlock;
     public static int steam;
+    public static int moltenLimestone;
     // --- Misc  
     public static boolean hardcorePiston;
     public static boolean hardcoreFlintAndSteel;
@@ -43,7 +44,8 @@ public class ConfigCore
          */
         materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)").getInt(14500);
         manual = config.getItem("Items", "Steelworks Manual ID", 14501, "Manuals (Your First High Oven, Etc)").getInt(14501);
-
+        buckets = config.getItem("Items", "Buckets", 14502).getInt(14502);
+        
         enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enable steel armor").getBoolean(true);
         steelHelmet = config.getItem("Equipables", "Steel Helmet", 14512).getInt(14512);
         steelChestplate = config.getItem("Equipables", "Steel Chestplate", 14513).getInt(14513);
@@ -55,6 +57,7 @@ public class ConfigCore
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
         machine = config.getBlock("Blocks", "Machine Blocks ID", 3403, "Machine Blocks (Turbine, etc)").getInt(3403);
         limestone = config.getBlock("Blocks", "Limestone Blocks ID", 3404, "Limestone Blocks").getInt(3404);
+        moltenLimestone = config.getBlock("Blocks", "Molten Limestone Block ID", 3405, "Limestone Fluid 'Block'").getInt(3405);
         steam = config.getBlock("Blocks", "Steam Block ID", 3409, "Steam Fluid 'Block'").getInt(3409);
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag, tests needed!)").getBoolean(false);

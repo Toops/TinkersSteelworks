@@ -14,20 +14,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
-import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.HighOvenDuctLogic;
-import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.client.block.MachineRender;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class MachineBlock extends TSInventoryBlock
 {
@@ -52,6 +51,49 @@ public class MachineBlock extends TSInventoryBlock
         return new TurbineLogic();
     }
    
+    @Override
+    public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ)
+    {
+        ItemStack heldItem = player.inventory.getCurrentItem();
+        if (heldItem != null)
+        {
+            FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(player.getCurrentEquippedItem());
+            if (!liquid.getFluid().equals(FluidRegistry.getFluid("steam"))) return false;
+            TurbineLogic logic = (TurbineLogic) world.getBlockTileEntity(x, y, z);
+            if (liquid != null)
+            {
+                int amount = logic.fill(ForgeDirection.UNKNOWN, liquid, false);
+                if (amount == liquid.amount)
+                {
+                    logic.fill(ForgeDirection.UNKNOWN, liquid, true);
+                    if (!player.capabilities.isCreativeMode)
+                        player.inventory.setInventorySlotContents(player.inventory.currentItem, consumeItem(heldItem));
+                    return true;
+                }
+                else
+                    return true;
+            }
+        }
+
+        return false;
+    }
+    
+    public static ItemStack consumeItem (ItemStack stack)
+    {
+        if (stack.stackSize == 1)
+        {
+            if (stack.getItem().hasContainerItem())
+                return stack.getItem().getContainerItemStack(stack);
+            else
+                return null;
+        }
+        else
+        {
+            stack.splitStack(1);
+            return stack;
+        }
+    }
+    
     @Override
     public Integer getGui (World world, int x, int y, int z, EntityPlayer entityplayer)
     {

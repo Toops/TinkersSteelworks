@@ -44,7 +44,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {
-    public static final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
+    public final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
     boolean structureHasBottom;
     boolean structureHasTop;
