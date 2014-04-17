@@ -35,11 +35,21 @@ HighOven.Cobblestone.name=Verbrannter Pflasterstein
 HighOven.Paver.name=Verbrannte Pflasterziegel
 HighOven.Brick.Cracked.name=Rissige verbrannte Ziegel
 HighOven.Road.name=Verbrannte Straße
-HighOven.Brick.Fancy.name=Verbrannter Schicker Ziegel
+HighOven.Brick.Fancy.name=Schicke verbrannte Ziegel
 HighOven.Brick.Square.name=Gemeißelte verbrannte Ziegel
 HighOven.Brick.Creeper.name=Ziselierte verbrannte Ziegel
 
 Machine.Turbine.name=Dampfturbine
+
+Limestone.Stone.name=Kalkstein
+Limestone.Cobblestone.name=Kalkpflasterstein
+Limestone.Brick.name=Kalksteinziegel
+Limestone.Brick.Cracked.name=Rissige Kalksteinziegel
+Limestone.Paver.name=Kalsteinpflasterziegel
+Limestone.Road.name=Kalksteinstraße
+Limestone.Brick.Fancy.name=Schicke Kalksteinziegel
+Limestone.Brick.Square.name=Gemeißelte Kalksteinziegel
+Limestone.Brick.Creeper.name=Ziselierte Kalksteinziegel
 
 highoven.controller.tooltip1=Die Hauptkomponente des Hochofens
 highoven.controller.tooltip2=(Vorsicht: Inhalt unter Druck!)
@@ -53,9 +63,11 @@ highoven.valve.tooltip1=Flüssigkeits-Input/Output für Hochöfen/Tiefentänke
 highoven.valve.tooltip2=(Platziere Flüssigkeiten in der Welt! Sauge sie wieder ein!)
 highoven.analyzer.tooltip1=Redstone-Output für Hochöfen/Tiefentänke
 highoven.analyzer.tooltip2=(W.I.P.)
-
 highoven.brick.tooltip1=Hochofen-Strukturblock
 highoven.brick.tooltip2=(Sicher zum Dekorieren)
+
+
+limestone.tooltip1=Sedimentär
 
 dustblock.gunpowder.tooltip=Geht in Deckung!
 dustblock.sugar.tooltip=Wie süß!
