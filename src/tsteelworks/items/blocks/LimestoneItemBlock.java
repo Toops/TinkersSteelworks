@@ -1,6 +1,3 @@
-/**
- * 
- */
 package tsteelworks.items.blocks;
 
 import java.util.List;
@@ -33,7 +30,6 @@ public class LimestoneItemBlock extends ItemBlock
     public void addInformation (ItemStack stack, EntityPlayer player, List list, boolean par4)
     {
         list.add(StatCollector.translateToLocal("limestone.tooltip1"));
-        list.add(StatCollector.translateToLocal("limestone.tooltip2"));
     }
     
     @Override

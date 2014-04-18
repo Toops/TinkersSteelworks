@@ -12,9 +12,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TSMaterialItem extends TSCraftingItem
 {
-    static String[] materialNames = new String[] { "ScorchedBrick" };
+    static String[] materialNames = new String[] { "ScorchedBrick", "LimestoneBrick" };
 
-    static String[] craftingTextures = new String[] { "scorchedbrick" };
+    static String[] craftingTextures = new String[] { "scorchedbrick", "limestonebrick" };
 
     private static String[] getTextures ()
     {
@@ -40,6 +40,9 @@ public class TSMaterialItem extends TSCraftingItem
         {
         case 0:
             list.add(StatCollector.translateToLocal("material.scorchedbrick.tooltip1"));
+            break;
+        case 1:
+            list.add(StatCollector.translateToLocal("material.limestonebrick.tooltip1"));
             break;
         default:
             break;

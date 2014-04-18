@@ -6,8 +6,8 @@ tank.DeepTank=Deep Tank
 gui.button.next=>
 gui.button.prev=<
 
-
 item.tsteelworks.Materials.ScorchedBrick.name=Scorched Brick
+item.tsteelworks.Materials.LimestoneBrick.name=Limestone Brick
 item.tsteelworks.manual.highoven.name=Steelworking and You
 item.tsteelworks.helmetSteel.name=Steel Helmet
 item.tsteelworks.chestplateSteel.name=Steel Chestplate
@@ -16,7 +16,6 @@ item.tsteelworks.bootsSteel.name=Steel Boots
 
 item.tsteelworks.bucket.Steam.name=Bucket 'O Steam
 item.tsteelworks.bucket.Limestone.name=Molten Limestone Bucket
-
 
 entity.HighGolem.name=High Golem
 
@@ -78,5 +77,6 @@ dustblock.sugar.tooltip=How sweet!
 machine.turbine.tooltip1=Experimental!
 machine.turbine.tooltip2=(Wittisism)
 material.scorchedbrick.tooltip1=Use for crafting, or throwing!
+material.limestonebrick.tooltip1=Stone, with a lime twist.
 
 manual.steelworks.tooltip1=By: The Tinkers' Society

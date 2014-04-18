@@ -102,6 +102,7 @@ public class TSFilledBucket extends ItemBucket
 
     public boolean tryPlaceContainedLiquid (World world, int clickX, int clickY, int clickZ, int type)
     {
+        if (type == 0) return false; // Disallow placement of steam, until steam is done proper
         if (!world.isAirBlock(clickX, clickY, clickZ) && world.getBlockMaterial(clickX, clickY, clickZ).isSolid())
         {
             return false;

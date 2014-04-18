@@ -58,6 +58,7 @@ public class MachineBlock extends TSInventoryBlock
         if (heldItem != null)
         {
             FluidStack liquid = FluidContainerRegistry.getFluidForFilledItem(player.getCurrentEquippedItem());
+            if (liquid == null) return false;
             if (!liquid.getFluid().equals(FluidRegistry.getFluid("steam"))) return false;
             TurbineLogic logic = (TurbineLogic) world.getBlockTileEntity(x, y, z);
             if (liquid != null)

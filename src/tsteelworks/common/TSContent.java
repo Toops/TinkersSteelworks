@@ -168,7 +168,7 @@ public class TSContent
             fluids[0] = steamFluid;
             fluidBlocks[0] = steamBlock;
             GameRegistry.registerBlock(steamBlock, "steam");
-            steamBlock.setLightOpacity(3);
+            steamBlock.setLightOpacity(0);
             steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
             FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), new ItemStack(bucketsTS, 1, 0), new ItemStack(Item.bucketEmpty)));
         }
@@ -191,9 +191,12 @@ public class TSContent
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
         OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
-        OreDictionary.registerOre("cobble", new ItemStack(limestoneBlock, 1, 1));
+        
+        OreDictionary.registerOre("stone", new ItemStack(limestoneBlock, 1, 0));
+        OreDictionary.registerOre("cobblestone", new ItemStack(limestoneBlock, 1, 1));
 
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
+        ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
     }
 
     void ensureOreIsRegistered (String oreName, ItemStack is)
