@@ -32,7 +32,7 @@ import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
 
 // TODO: Lots
-public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory, IFacingLogic, Hopper
+public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
     byte direction = 0;
     int mode = 0;
@@ -45,7 +45,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IInventory
     @Override
     public void updateEntity ()
     {
-        if ((worldObj != null) && !worldObj.isRemote) return;
+        if (worldObj == null) return;
         --transferCooldown;
         updateDuct();
 
