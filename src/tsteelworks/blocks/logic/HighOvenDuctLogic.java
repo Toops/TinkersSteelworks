@@ -45,29 +45,46 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
     @Override
     public void updateEntity ()
     {
-        if (worldObj == null) return;
-        --transferCooldown;
-        updateDuct();
+//        if (worldObj == null) return;
+//        --transferCooldown;
+//        updateDuct();
+        if (this.worldObj != null && !this.worldObj.isRemote)
+        {
+            --this.transferCooldown;
 
+            if (!this.isCoolingDown())
+            {
+                this.setTransferCooldown(0);
+                this.updateDuct();
+            }
+        }
     }
     
     public boolean updateDuct ()
     {
-        if (!isCoolingDown())
+        if (this.worldObj != null && !this.worldObj.isRemote)
         {
-            setTransferCooldown(0);
-
-            boolean flag = insertItemToInventory();
-            flag = suckItemsIntoDuct(this) || flag;
-
-            if (flag)
+            if (!isCoolingDown())
             {
-                setTransferCooldown(8);
-                onInventoryChanged();
-                return true;
+                setTransferCooldown(0);
+    
+                boolean flag = insertItemToInventory();
+                flag = suckItemsIntoDuct(this) || flag;
+    
+                if (flag)
+                {
+                    setTransferCooldown(8);
+                    onInventoryChanged();
+                    return true;
+                }   
+                else
+                    return false;
             }
+            else
+                return false;
         }
-        return false;
+        else
+            return false;
     }
 
     @Override
@@ -106,7 +123,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         redstoneActivated = flag;
     }
 
-    /* Duct Logic */
+    /* ==================== Duct Logic ==================== */
 
     public int getMode ()
     {
@@ -127,8 +144,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         final int mz = getMasterPosition().z;
         return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
-    
-
 
     private boolean insertItemToInventory ()
     {
@@ -420,6 +435,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
                 .areItemStackTagsEqual(stack1, stack2)));
     }
 
+    /* ==================== TileEntity ==================== */
+    
     /**
      * Gets the world X position for this hopper entity.
      */
@@ -447,9 +464,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         return zCoord;
     }
 
-    public void setTransferCooldown (int par1)
+    public void setTransferCooldown (int value)
     {
-        transferCooldown = par1;
+        transferCooldown = value;
     }
 
     public boolean isCoolingDown ()
@@ -457,9 +474,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         return transferCooldown > 0;
     }
 
-
-
-    /* IInventory */
+    /* ==================== IInventory ==================== */
 
     @Override
     public void onInventoryChanged ()
@@ -554,13 +569,14 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
+        if (itemstack == null) return false;
         if (slot < getSizeInventory())
             if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit()))
                 return true;
         return false;
     }
 
-    /* IFacingLogic */
+    /* ==================== IFacingLogic ==================== */
 
     @Override
     public byte getRenderDirection ()
@@ -607,7 +623,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         }
     }
 
-    /* NBT */
+    /* ==================== NBT ==================== */
 
     @Override
     public void readFromNBT (NBTTagCompound tags)

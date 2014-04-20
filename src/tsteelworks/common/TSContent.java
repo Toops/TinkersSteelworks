@@ -12,13 +12,18 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.blocks.SearedSlab;
 import tconstruct.common.TContent;
+import tconstruct.items.blocks.SearedSlabItem;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.util.config.PHConstruct;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.LimestoneBlock;
+import tsteelworks.blocks.LimestoneSlab;
 import tsteelworks.blocks.MachineBlock;
+import tsteelworks.blocks.ScorchedSlab;
 import tsteelworks.blocks.SteamFluidBlock;
 import tsteelworks.blocks.TSBaseBlock;
 import tsteelworks.blocks.TSBaseFluid;
@@ -37,7 +42,9 @@ import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.items.blocks.LimestoneItemBlock;
+import tsteelworks.items.blocks.LimestoneSlabItemBlock;
 import tsteelworks.items.blocks.MachineItemBlock;
+import tsteelworks.items.blocks.ScorchedSlabItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -55,7 +62,9 @@ public class TSContent
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     public static Block highoven;
+    public static Block scorchedSlab;
     public static Block limestoneBlock;
+    public static Block limestoneSlab;
     public static Block machine;
     public static Block charcoalBlock;
     public static Block dustStorageBlock;
@@ -126,6 +135,10 @@ public class TSContent
         GameRegistry.registerTileEntity(HighOvenDuctLogic.class, "TSteelworks.HighOvenDuct");
         GameRegistry.registerTileEntity(DeepTankLogic.class, "TSteelworks.DeepTank");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
+        
+        scorchedSlab = new ScorchedSlab(ConfigCore.scorchedSlab).setUnlocalizedName("ScorchedSlab");
+        scorchedSlab.stepSound = Block.soundStoneFootstep;
+        GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
         /* Machines */
         machine = new MachineBlock(ConfigCore.machine).setUnlocalizedName("Machine");
         GameRegistry.registerBlock(machine, MachineItemBlock.class, "Machine");
@@ -139,6 +152,10 @@ public class TSContent
         
         limestoneBlock = new LimestoneBlock(ConfigCore.limestone).setUnlocalizedName("Limestone");
         GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
+        
+        limestoneSlab = new LimestoneSlab(ConfigCore.limestoneSlab).setUnlocalizedName("LimestoneSlab");
+        limestoneSlab.stepSound = Block.soundStoneFootstep;
+        GameRegistry.registerBlock(limestoneSlab, LimestoneSlabItemBlock.class, "LimestoneSlab");
     }
     
     void registerFluids()

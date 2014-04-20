@@ -659,18 +659,19 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     }
     
     // TODO: Algorithms, man. 
-    public boolean validateRimmedLayer(int innerBricks, int outerBricks)
+    public boolean validateRimmedLayer(int innerbricks, int outerbricks)
     {
+        final int total = innerbricks + outerbricks;
         if (innerMaxX == 1 || innerMaxZ == 1)
-            return Arrays.asList(9, 15, 21, 27, 33).contains(innerBricks + outerBricks);
+            return Arrays.asList(9, 15, 21, 27, 33).contains(total);
         else if (innerMaxX == 3 || innerMaxZ == 3)
-            return Arrays.asList(25, 35, 45, 55).contains(innerBricks + outerBricks);
+            return Arrays.asList(25, 35, 45, 55).contains(total);
         else if (innerMaxX == 5 || innerMaxZ == 5)
-            return Arrays.asList(49, 63, 77).contains(innerBricks + outerBricks);
+            return Arrays.asList(49, 63, 77).contains(total);
         else if (innerMaxX == 7 || innerMaxZ == 7)
-            return Arrays.asList(81, 99).contains(innerBricks + outerBricks);
+            return Arrays.asList(81, 99).contains(total);
         else if (innerMaxX == 9 || innerMaxZ == 9)
-            return innerBricks + outerBricks == 121;
+            return (total == 121);
         return false;
     }
     
@@ -681,7 +682,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     boolean validTankID(int blockID)
     {
-        return (blockID == TConstruct.content.lavaTank.blockID);
+        return (blockID == TContent.lavaTank.blockID || blockID == TContent.lavaTankNether.blockID);
     }
     
     boolean validGlassID(int blockID)
@@ -754,12 +755,14 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     @Override
     public int fill (FluidStack resource, boolean doFill)
     {
-        if (resource != null && currentLiquid < maxLiquid)
+        if (resource == null) return 0;
+        int amount = resource.amount;
+        if (amount + currentLiquid < maxLiquid)
         {
-            if (resource.amount + currentLiquid > maxLiquid)
-                resource.amount = maxLiquid - currentLiquid;
-            int amount = resource.amount;
-
+            if (amount + currentLiquid > maxLiquid)
+                amount = maxLiquid - currentLiquid;
+            resource.amount = amount;
+            
             if (amount > 0 && doFill)
             {
                 addFluidToTank(resource, false);

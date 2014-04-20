@@ -41,10 +41,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         final int mx = getMasterPosition().x;
         final int my = getMasterPosition().y;
         final int mz = getMasterPosition().z;
-        if (worldObj.getBlockTileEntity(mx,my, mz) instanceof HighOvenLogic)
-            return 1;
-        else if (worldObj.getBlockTileEntity(mx,my, mz) instanceof DeepTankLogic)
-            return 2;
+        if (worldObj.getBlockTileEntity(mx,my, mz) instanceof HighOvenLogic) return 1;
+        if (worldObj.getBlockTileEntity(mx,my, mz) instanceof DeepTankLogic) return 2;
         return 0;
     }
     
@@ -117,28 +115,25 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         boolean containsFluid = fluid == null;
         if (fluid != null)
         {
-            if (getControllerLogicType() == 1)
+            int type = getControllerLogicType();
+            if (type == 1)
             {
-                final HighOvenLogic logic = getHighOvenController();
-                for (final FluidStack fstack : logic.moltenMetal)
+                for (final FluidStack fstack : getHighOvenController().moltenMetal)
                     if (fstack.fluidID == fluid.getID())
                     {
                         containsFluid = true;
                         break;
                     }
             }
-            else
+            if (type == 2)
             {
-                final DeepTankLogic logic = getDeepTankController();
-                for (final FluidStack fstack : logic.fluidlist)
+                for (final FluidStack fstack : getDeepTankController().fluidlist)
                     if (fstack.fluidID == fluid.getID())
                     {
                         containsFluid = true;
                         break;
                     }
             }
-            
-
         }
         return containsFluid;
     }
@@ -154,16 +149,11 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     {
         if (hasValidMaster() && canDrain(from, null))
         {
-            if (getControllerLogicType() == 1)
-            {
-                final HighOvenLogic logic = getHighOvenController();
-                return logic.drain(maxDrain, doDrain);
-            }
-            else
-            {
-                final DeepTankLogic logic = getDeepTankController();
-                return logic.drain(maxDrain, doDrain);
-            }
+            int type = getControllerLogicType();
+            if (type == 1) return getHighOvenController().drain(maxDrain, doDrain);
+            if (type == 2) return getDeepTankController().drain(maxDrain, doDrain);
+            return null;
+
         }
         else
             return null;
@@ -182,16 +172,10 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         {
             if (doFill)
             {
-                if (getControllerLogicType() == 1)
-                {
-                    final HighOvenLogic logic = getHighOvenController();
-                    return logic.fill(resource, doFill);
-                }
-                else
-                {
-                    final DeepTankLogic logic = getDeepTankController();
-                    return logic.fill(resource, doFill);
-                }
+                int type = getControllerLogicType();
+                if (type == 1) return getHighOvenController().fill(resource, doFill);
+                if (type == 2) return getDeepTankController().fill(resource, doFill);
+                return 0;
             }
             else
                 return resource.amount;
@@ -205,16 +189,10 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     {
         if (hasValidMaster() && ((from == getForgeDirection()) || (from == getForgeDirection().getOpposite()) || (from == ForgeDirection.UNKNOWN)))
         {
-            if (getControllerLogicType() == 1)
-            {
-                final HighOvenLogic logic = getHighOvenController();
-                return new FluidTankInfo[] { logic.getInfo() };
-            }
-            else
-            {
-                final DeepTankLogic logic = getDeepTankController();
-                return new FluidTankInfo[] { logic.getInfo() };
-            }
+            int type = getControllerLogicType();
+            if (type == 1) return new FluidTankInfo[] { getHighOvenController().getInfo() };
+            if (type == 2) return new FluidTankInfo[] { getDeepTankController().getInfo() };
+            return null;
         }
         return null;
     }

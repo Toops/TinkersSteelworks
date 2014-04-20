@@ -17,7 +17,9 @@ public class ConfigCore
     public static int steelBoots;
     // -- Blocks
     public static int highoven;
+    public static int scorchedSlab;
     public static int limestone;
+    public static int limestoneSlab;
     public static int machine;
     public static int charcoalStorageBlock;
     public static int dustStorageBlock;
@@ -57,8 +59,10 @@ public class ConfigCore
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
         machine = config.getBlock("Blocks", "Machine Blocks ID", 3403, "Machine Blocks (Turbine, etc)").getInt(3403);
         limestone = config.getBlock("Blocks", "Limestone Blocks ID", 3404, "Limestone Blocks").getInt(3404);
-        moltenLimestone = config.getBlock("Blocks", "Molten Limestone Block ID", 3405, "Limestone Fluid 'Block'").getInt(3405);
+        scorchedSlab = config.getBlock("Blocks", "Scorched Slabs Block ID", 3407, "Scorched Slabs").getInt(3407);
+        limestoneSlab = config.getBlock("Blocks", "Limestone Slabs Block ID", 3408, "Limestone Slabs").getInt(3408);
         steam = config.getBlock("Blocks", "Steam Block ID", 3409, "Steam Fluid 'Block'").getInt(3409);
+        moltenLimestone = config.getBlock("Blocks", "Molten Limestone Block ID", 3410, "Limestone Fluid 'Block'").getInt(3410);
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag, tests needed!)").getBoolean(false);
         ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
