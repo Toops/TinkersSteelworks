@@ -24,7 +24,9 @@ import org.w3c.dom.Document;
 
 import tconstruct.TConstruct;
 import tconstruct.common.TContent;
+import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
+import tconstruct.library.tools.ToolCore;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
@@ -287,6 +289,20 @@ public class TSClientProxy extends TSCommonProxy
                                                                     sugar, sugar, sugar);
     }
 
+    void addRenderMappings ()
+    {
+        String[] effectTypes = { "hopper" };
+
+        for (ToolCore tool : TConstructRegistry.getToolMapping())
+        {
+            for (int i = 0; i < 0 + effectTypes.length; i++)
+            {
+                TConstructClientRegistry.addEffectRenderMapping(tool, i + 50, "tsteelworks", effectTypes[i], true);
+            }
+        }
+    }
+    
+    
     @Override
     public void postInit ()
     {
@@ -312,6 +328,8 @@ public class TSClientProxy extends TSCommonProxy
         RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
+        
+        addRenderMappings();
     }
 
     @Override

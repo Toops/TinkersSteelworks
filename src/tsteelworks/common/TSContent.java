@@ -12,11 +12,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import tconstruct.blocks.SearedSlab;
 import tconstruct.common.TContent;
-import tconstruct.items.blocks.SearedSlabItem;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.util.config.PHConstruct;
+import tconstruct.library.client.TConstructClientRegistry;
+import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.tools.ToolCore;
+import tconstruct.modifiers.tools.ModInteger;
+import tconstruct.modifiers.tools.ModPiston;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
@@ -48,6 +50,8 @@ import tsteelworks.items.blocks.ScorchedSlabItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.modifiers.tools.ModHopper;
+import tsteelworks.modifiers.tools.TSActiveOmniMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -90,6 +94,7 @@ public class TSContent
         oreRegistry();
         registerMixerMaterials();
         setupCreativeTabs();
+        registerModifiers();
     }
     
     /**
@@ -319,6 +324,17 @@ public class TSContent
 //                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
 //            }
 //        }
+    }
+    
+    void registerModifiers()
+    {
+        ToolBuilder tb = ToolBuilder.instance;
+        ItemStack hopper = new ItemStack(Block.hopperBlock);
+        ItemStack enderpearl = new ItemStack(Item.enderPearl);
         
+        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Hopper", 5, "\u00A7a", "Vacuous"));
+//        tb.registerToolMod(new ModHopper(3, new ItemStack[] { hopper }, new int[] { 1 }));
+        
+        TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
     }
 }
