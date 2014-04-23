@@ -34,8 +34,15 @@ import tsteelworks.lib.ConfigCore;
 // TODO: Lots
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
+    public static final int MODE_0 = 0; //??
+    public static final int MODE_1 = 1; //??
+    public static final int MODE_2 = 2; //??
+    public static final int MODE_3 = 3; //??
+    public static final int MODE_INGOT = 4; //TO BE CONFIRMED
+    public static final int MODE_OUTPUT = 5;
+    
     byte direction = 0;
-    int mode = 0;
+    int mode = MODE_0;
     boolean redstoneActivated = false;
     private ItemStack[] inventory = new ItemStack[9];
     private int transferCooldown = -1;
@@ -132,8 +139,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
     public void setMode (int newMode)
     {
-        mode = (newMode < 6) ? newMode : 5;
-        if (mode == 5)
+        mode = (newMode < 6) ? newMode : MODE_OUTPUT;
+        if (mode == MODE_OUTPUT)
             getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
     }
 
@@ -173,7 +180,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
     public boolean suckItemsIntoDuct (Hopper localInventory)
     {
-        if (mode == 5 || !redstoneActivated)
+        if (mode == MODE_OUTPUT || !redstoneActivated)
             return false;
         final IInventory outsideInventory = getExternalInventory(localInventory, direction);
 
@@ -263,7 +270,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
             for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
                 stack = sendItemsToLocation(iiventory, stack, slot[i], side);
         }
-        else if (transferMode == 4)
+        else if (transferMode == MODE_INGOT)
             for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
                 stack = sendItemsToLocation(iiventory, stack, slot, side);
         else
@@ -324,7 +331,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
     private IInventory getOutputInventory ()
     {
-        return (mode == 5) ? getExternalInventory(this, direction) : getHighOvenController();
+        return (mode == MODE_OUTPUT) ? getExternalInventory(this, direction) : getHighOvenController();
     }
 
     public static IInventory getExternalInventory (Hopper localInventory, byte facing)
