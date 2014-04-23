@@ -32,6 +32,7 @@ import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
 
 // TODO: Lots
+// Wisthy - 2014/04/23 - is it possible to replace MODE_0 .. MODE_OUTPUT contancts by a enum?
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
     public static final int MODE_0 = 0; //??
@@ -168,13 +169,16 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
                     final ItemStack copyStack = getStackInSlot(slot).copy();
                     final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection(), mode);
                     
-                    // @TODO: check the following test statement to ensure we don't have to add a "not" to it.
                     if ((outputStack == null) || (outputStack.stackSize == 0))
                     {
+						//all the content of decrStackSize(slot, 1) has been moved inside masterInventory
                         masterInventory.onInventoryChanged();
                         return true;
                     }
-                    setInventorySlotContents(slot, copyStack);
+					
+					//we didn't manage to insert the item from the slot into the masterInv. 
+					//Putting back the item back into the origin slot
+                    setInventorySlotContents(slot, copyStack); 
                 }
             return false;
         }
@@ -262,6 +266,15 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         }
     }
 
+	
+	/**
+	* Insert item from stack inside the iinventory
+	* @param iinventory the destination inventory
+	* @param stack the source stack
+	* @param side ??
+	* @param transferMode the mode of the duct. @see MODE_* constants
+	* @return the remaining stack after items have been pulled off of it into iinventory
+	*/
     public static ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
     {
         if ((iiventory instanceof ISidedInventory) && (side > -1))
@@ -273,9 +286,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
                 stack = sendItemsToLocation(iiventory, stack, slot[i], side);
         }
         else if (transferMode == MODE_INGOT)
+			//The transfer mode for ingot match the slot 4 and 5
             for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
                 stack = sendItemsToLocation(iiventory, stack, slot, side);
         else
+			//The transfer modes other than ingot correspond to the same slot number.
             stack = sendItemsToLocation(iiventory, stack, transferMode, side);
 
         if ((stack != null) && (stack.stackSize == 0))
@@ -294,6 +309,14 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         return !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canExtractItem(slot, stack, side);
     }
 
+	/**
+	* add as much item (from stack) as possible inside the iinventory
+	* @param iinventory the destination inventory
+	* @param stack the source stack
+	* @param slot 0..3 = ?? // 4..5 = "ingot" slot 
+	* @param side ??
+	* @return the remaining stack after items have been pulled off of it into iinventory
+	*/
     private static ItemStack sendItemsToLocation (IInventory iinventory, ItemStack stack, int slot, int side)
     {
         final ItemStack masterStack = iinventory.getStackInSlot(slot);
