@@ -6,21 +6,44 @@ tank.DeepTank=Serbatoio Profondo
 gui.button.next=>
 gui.button.prev=<
 
-
 item.tsteelworks.Materials.ScorchedBrick.name=Mattone Cotto
+item.tsteelworks.Materials.LimestoneBrick.name=Mattone di Calcare
 item.tsteelworks.manual.highoven.name=Lavorazione del Ferro e Tu
 item.tsteelworks.helmetSteel.name=Elmo d'Acciaio
 item.tsteelworks.chestplateSteel.name=Corazza d'Acciaio
 item.tsteelworks.leggingsSteel.name=Gambali d'Acciaio
 item.tsteelworks.bootsSteel.name=Stivali d'Acciaio
 
+item.tsteelworks.bucket.Steam.name=Secchio di Vapore
+item.tsteelworks.bucket.Limestone.name=Secchio di Calcare Fuso
+
 entity.HighGolem.name=Golem d'Acciaio
 
 tile.tsteelworks.blocks.charcoal.name=Blocco di Carbonella
 block.storage.dust.gunpowder.name=Blocco di Polvere da Sparo
 block.storage.dust.sugar.name=Zolletta di Zucchero
+
+block.scorchedstone.slab.brick.name=Lastra di Mattoni Cotti
+block.scorchedstone.slab.stone.name=Lastra di Pietra Cotta
+block.scorchedstone.slab.cobble.name=Lastra di Pietrisco Cotto
+block.scorchedstone.slab.paver.name=Lastra di Pannello in Mattoni Cotti
+block.scorchedstone.slab.road.name=Lastra di Strada in Mattoni Cotti
+block.scorchedstone.slab.fancy.name=Lastra di Mattoni Cotti Decorativi
+block.scorchedstone.slab.square.name=Lastra di Mattoni Cotti Cesellati
+block.scorchedstone.slab.creeper.name=Lastra di Mattoni Cotti Raccapriccianti
+
+block.limestone.slab.brick.name=Lastra di Mattoni di Calcare
+block.limestone.slab.stone.name=Lastra di Calcare
+block.limestone.slab.cobble.name=Lastra di Pietrisco Calcareo
+block.limestone.slab.paver.name=Lastra di Pannello in Mattoni di Calcare
+block.limestone.slab.road.name=Lastra di Strada in Mattoni di Calcare
+block.limestone.slab.fancy.name=Lastra di Mattoni di Calcare Decorativi
+block.limestone.slab.square.name=Lastra di Mattoni di Calcare Cesellati
+block.limestone.slab.creeper.name=Lastra di Mattoni di Calcare Raccapriccianti
+
 tile.steam.name=Vapore
 fluid.steam=Vapore
+tile.molten.limestone.name=Calcare Fuso
 fluid.water=Acqua
 
 HighOven.Controller.name=Pannello di Controllo del Forno Alto
@@ -32,7 +55,7 @@ HighOven.Analyzer.name=Analizzatore in Mattoni Cotti
 HighOven.Brick.name=Mattoni Cotti
 HighOven.Stone.name=Pietra Cotta
 HighOven.Cobblestone.name=Pietrisco Cotto
-HighOven.Paver.name=Piastra in Mattoni Cotti
+HighOven.Paver.name=Pannello in Mattoni Cotti
 HighOven.Brick.Cracked.name=Mattoni Cotti Rotti 
 HighOven.Road.name=Strada in Mattoni Cotti
 HighOven.Brick.Fancy.name=Mattoni Cotti Decorativi
@@ -70,8 +93,9 @@ limestone.tooltip1=Sedimentario
 
 dustblock.gunpowder.tooltip=Fuoco alle macchine!
 dustblock.sugar.tooltip=Dolcissimo!
-machine.turbine.tooltip1=Un esperimento!
-machine.turbine.tooltip2=(Un assaggio din qualcosa di nuovo)
+machine.turbine.tooltip1=Rotazione ad alta velocità a vapore
+machine.turbine.tooltip2=(Và attaccato agli scarichi di Serbatoi Profondi)
 material.scorchedbrick.tooltip1=Usato per fabbricare, o per essere lanciato!
+material.limestonebrick.tooltip1=Pietra con una punta di lime.
 
 manual.steelworks.tooltip1=Di: La Società degli Armeggiatori
