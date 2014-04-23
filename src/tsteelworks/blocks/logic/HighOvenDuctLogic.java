@@ -32,7 +32,6 @@ import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
 
 // TODO: Lots
-// Wisthy - 2014/04/23 - is it possible to replace MODE_0 .. MODE_OUTPUT contancts by a enum?
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
     public static final int MODE_0 = 0; //??
