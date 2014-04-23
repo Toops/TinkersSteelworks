@@ -285,7 +285,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
                 stack = sendItemsToLocation(iiventory, stack, slot[i], side);
         }
         else if (transferMode == MODE_INGOT)
-			//The transfer mode for ingot match the slot 4 and 5
+			//The transfer mode for ingot match the slot 4 and 5 
+			// /!\ iiventory (= HighOvenLogic) is define with item[4] as inventory so there are never any slot 4 or 5
             for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
                 stack = sendItemsToLocation(iiventory, stack, slot, side);
         else
