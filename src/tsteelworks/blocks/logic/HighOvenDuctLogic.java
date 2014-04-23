@@ -167,6 +167,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
                 {
                     final ItemStack copyStack = getStackInSlot(slot).copy();
                     final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection(), mode);
+                    
+                    // @TODO: check the following test statement to ensure we don't have to add a "not" to it.
                     if ((outputStack == null) || (outputStack.stackSize == 0))
                     {
                         masterInventory.onInventoryChanged();
