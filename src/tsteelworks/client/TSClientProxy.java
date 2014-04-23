@@ -24,7 +24,9 @@ import org.w3c.dom.Document;
 
 import tconstruct.TConstruct;
 import tconstruct.common.TContent;
+import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
+import tconstruct.library.tools.ToolCore;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
@@ -89,43 +91,7 @@ public class TSClientProxy extends TSCommonProxy
         pageClasses.put(type, clazz);
     }
 
-    public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
-    {
-        if (mc == null)
-            mc = Minecraft.getMinecraft();
 
-        if ((mc.renderViewEntity != null) && (mc.effectRenderer != null))
-        {
-            int i = mc.gameSettings.particleSetting;
-
-            if ((i == 1) && (mc.theWorld.rand.nextInt(3) == 0))
-                i = 2;
-
-            final double d6 = mc.renderViewEntity.posX - par2;
-            final double d7 = mc.renderViewEntity.posY - par4;
-            final double d8 = mc.renderViewEntity.posZ - par6;
-            EntityFX entityfx = null;
-
-            final double d9 = 16.0D;
-
-            if (((d6 * d6) + (d7 * d7) + (d8 * d8)) > (d9 * d9))
-                return null;
-            else if (i > 1)
-                return null;
-            else
-            {
-                if (par1Str.equals("scorchedbrick"))
-                    entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
-
-                if (entityfx != null)
-                    mc.effectRenderer.addEffect(entityfx);
-
-                return entityfx;
-            }
-        }
-        else
-            return null;
-    }
 
     @Override
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -323,6 +289,20 @@ public class TSClientProxy extends TSCommonProxy
                                                                     sugar, sugar, sugar);
     }
 
+    void addRenderMappings ()
+    {
+        String[] effectTypes = { "hopper" };
+
+        for (ToolCore tool : TConstructRegistry.getToolMapping())
+        {
+            for (int i = 0; i < 0 + effectTypes.length; i++)
+            {
+                TConstructClientRegistry.addEffectRenderMapping(tool, i + 50, "tsteelworks", effectTypes[i], true);
+            }
+        }
+    }
+    
+    
     @Override
     public void postInit ()
     {
@@ -348,6 +328,8 @@ public class TSClientProxy extends TSCommonProxy
         RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
+        
+        addRenderMappings();
     }
 
     @Override
@@ -362,6 +344,44 @@ public class TSClientProxy extends TSCommonProxy
             TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
         else
             doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+    }
+    
+    public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
+    {
+        if (mc == null)
+            mc = Minecraft.getMinecraft();
+
+        if ((mc.renderViewEntity != null) && (mc.effectRenderer != null))
+        {
+            int i = mc.gameSettings.particleSetting;
+
+            if ((i == 1) && (mc.theWorld.rand.nextInt(3) == 0))
+                i = 2;
+
+            final double d6 = mc.renderViewEntity.posX - par2;
+            final double d7 = mc.renderViewEntity.posY - par4;
+            final double d8 = mc.renderViewEntity.posZ - par6;
+            EntityFX entityfx = null;
+
+            final double d9 = 16.0D;
+
+            if (((d6 * d6) + (d7 * d7) + (d8 * d8)) > (d9 * d9))
+                return null;
+            else if (i > 1)
+                return null;
+            else
+            {
+                if (par1Str.equals("scorchedbrick"))
+                    entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
+
+                if (entityfx != null)
+                    mc.effectRenderer.addEffect(entityfx);
+
+                return entityfx;
+            }
+        }
+        else
+            return null;
     }
 
     void initManualPages ()

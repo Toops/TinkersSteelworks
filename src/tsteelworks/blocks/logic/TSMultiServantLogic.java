@@ -136,10 +136,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Deprecated
     public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
     {
-        if (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta))
-            return true;
-        else
-            return false;
+        return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
     }
 
     @Override

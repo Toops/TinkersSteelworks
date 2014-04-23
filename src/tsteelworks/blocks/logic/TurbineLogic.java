@@ -3,46 +3,110 @@ package tsteelworks.blocks.logic;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import tconstruct.library.util.CoordTuple;
+import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 
-public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFluidHandler
+public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidHandler
 {
     byte direction;
+    int tick;
     public FluidTank tank;
+    boolean active;
     
     public TurbineLogic()
     {
         super(0);
+        active = false;
         tank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
     }
+    
+    // ========== IActiveLogic ==========
+    @Override
+    public boolean getActive ()
+    {
+        return (active && tank.getFluidAmount() > 0);
+    }
 
+    @Override
+    public void setActive (boolean flag)
+    {
+        active = flag;
+        activateTurbine(active);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    void activateTurbine (boolean flag)
+    {
+        if (tank.getFluidAmount() > 0)
+        {
+            DeepTankLogic tankcontroller = getTankController();
+            if (tankcontroller != null)
+                tankcontroller.setTurbineAttached(flag);
+        }
+    }
+    
+    DeepTankLogic getTankController ()
+    {
+        int x = xCoord, z = zCoord;
+        switch (getRenderDirection())
+        {
+        case 2:
+            z--;
+            break;
+        case 3:
+            z++;
+            break;
+        case 4:
+            x--;    
+            break;
+        case 5:
+            x++;
+            break;
+        }
+
+        TileEntity drainte = worldObj.getBlockTileEntity(x, yCoord, z);
+        if (drainte instanceof HighOvenDrainLogic)
+        {
+            if (((HighOvenDrainLogic) worldObj.getBlockTileEntity(x, yCoord, z)).getControllerLogicType() == 2)
+            {
+                DeepTankLogic tankcontroller = ((HighOvenDrainLogic) worldObj.getBlockTileEntity(x, yCoord, z)).getDeepTankController();
+                return tankcontroller;
+            }
+        } 
+        return null;
+    }
+    
     /* Updating */
     public boolean canUpdate ()
     {
         return true;
     }
 
-    @Override
     public void updateEntity ()
     {
+        tick++;
+        if (tick == 60)
+        {
+            if (getActive())
+                tank.drain(10, true);
+            tick = 0;
+        }
     }
     
     @Override
@@ -97,12 +161,10 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     @Override
     public int fill (ForgeDirection from, FluidStack resource, boolean doFill)
     {
+        if (!resource.getFluid().equals(FluidRegistry.getFluid("steam"))) return 0;
         int amount = tank.fill(resource, doFill);
         if (amount > 0 && doFill)
-        {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
-
         return amount;
     }
 
@@ -117,9 +179,7 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     {
         FluidStack amount = tank.drain(maxDrain, doDrain);
         if (amount != null && doDrain)
-        {
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
         return amount;
     }
 
@@ -153,6 +213,7 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     public void readFromNBT (NBTTagCompound tags)
     {
         super.readFromNBT(tags);
+        active = tags.getBoolean("Active");
         direction = tags.getByte("Direction");
         if (tags.getBoolean("hasFluid"))
             tank.setFluid(new FluidStack(tags.getInteger("itemID"), tags.getInteger("amount")));
@@ -163,6 +224,7 @@ public class TurbineLogic extends TSInventoryLogic implements IFacingLogic, IFlu
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
+        tags.setBoolean("Active", active);
         super.writeToNBT(tags);
         tags.setByte("Direction", direction);
         FluidStack liquid = tank.getFluid();

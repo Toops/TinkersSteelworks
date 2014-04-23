@@ -107,7 +107,7 @@ public class TSteelworks
 
         //Initialize dealloying information at the last possible minute, to ensure that other mods have a chance to get their alloying information to TCon.
         AlloyInfo.init();
-        //logAlloyList();
+//        logAlloyList();
     }
 
     public static void loginfo (String desc) { logger.info(desc); }

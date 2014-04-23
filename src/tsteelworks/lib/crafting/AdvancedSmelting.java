@@ -23,7 +23,7 @@ public class AdvancedSmelting
     private final HashMap<List<Integer>, Integer> temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<String, List<Integer>> mixItemList = new HashMap<String, List<Integer>>();
     private final Multimap<FluidType, List> mixerFluidComboList = ArrayListMultimap.create();
-    private final HashMap<ItemStack, List> mixerSolidComboList = new HashMap<ItemStack, List>();
+    private final Multimap<ItemStack, List> mixerSolidComboList = ArrayListMultimap.create();
     private final HashMap<List<Integer>, ItemStack> renderIndex = new HashMap<List<Integer>, ItemStack>();
     
     /* ========== Normal Smelting  ========== */
@@ -319,7 +319,7 @@ public class AdvancedSmelting
         if (!doesMixItemMeetRequirements(i1, 0) || !doesMixItemMeetRequirements(i2, 1) || !doesMixItemMeetRequirements(i3, 2))
             return null;
 
-        for (final Entry<ItemStack, List> e : instance.mixerSolidComboList.entrySet())
+        for (final Entry<ItemStack, List> e : instance.mixerSolidComboList.entries())
         {
             final ItemStack key = e.getKey();
             final Object value = e.getValue();

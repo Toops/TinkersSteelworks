@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -235,6 +236,7 @@ public class TSRecipes
         smeltWater();
         smeltGlass();
         smeltStone();
+        limestoneCrafting();
         AdvancedSmelting.addMelting(Block.blockEmerald, 0, getFluidTempMod(FluidType.Emerald), new FluidStack(TContent.moltenEmeraldFluid, 320 * 9));
         AdvancedSmelting.addMelting(TContent.glueBlock, 0, getFluidTempMod(FluidType.Glue), new FluidStack(TContent.glueFluid, blockLiquidValue));
     }
@@ -286,6 +288,32 @@ public class TSRecipes
             Smeltery.addMelting(ft, new ItemStack(TContent.smeltery, 1, meta), 0, ingotLiquidValue);
             AdvancedSmelting.addMelting(ft, new ItemStack(TContent.smeltery, 1, meta), getFluidTempMod(ft), ingotLiquidValue);
         }
+    }
+    
+    public static void limestoneCrafting ()
+    {
+        final Detailing chiseling = TConstructRegistry.getChiselDetailing();
+        final Fluid fluid = TSContent.moltenLimestoneFluid;
+        
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), "##", "##", '#', new ItemStack(TSContent.materialsTS, 1, 1));
+        
+        FurnaceRecipes.smelting().addSmelting(TSContent.limestoneBlock.blockID, 1, new ItemStack(TSContent.limestoneBlock, 0, 1), 2f);
+        FurnaceRecipes.smelting().addSmelting(TSContent.limestoneBlock.blockID, 0, new ItemStack(TSContent.materialsTS, 1, 1), 2f);
+        
+        Smeltery.addMelting(TSContent.limestoneBlock, 0, 0, new FluidStack(fluid, ingotLiquidValue / 18));
+        Smeltery.addMelting(TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, ingotLiquidValue / 18));
+        AdvancedSmelting.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, ingotLiquidValue / 18));
+        AdvancedSmelting.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, ingotLiquidValue / 18));
+        Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 0, new FluidStack(fluid, ingotLiquidValue));
+        AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 825, new FluidStack(fluid, ingotLiquidValue));
+    
+        chiseling.addDetailing(TSContent.limestoneBlock, 2, TSContent.limestoneBlock, 3, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 3, TSContent.limestoneBlock, 4, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 4, TSContent.limestoneBlock, 5, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 5, TSContent.limestoneBlock, 6, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 6, TSContent.limestoneBlock, 7, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 7, TSContent.limestoneBlock, 8, TContent.chisel);
+        chiseling.addDetailing(TSContent.limestoneBlock, 8, TSContent.limestoneBlock, 3, TContent.chisel);
     }
 
     public static void smeltWater ()

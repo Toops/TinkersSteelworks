@@ -8,8 +8,8 @@ public class ConfigCore
 {
     // --- Items
     public static int materials;
-
     public static int manual;
+    public static int buckets;
     public static boolean enableSteelArmor;
     public static int steelHelmet;
     public static int steelChestplate;
@@ -17,10 +17,14 @@ public class ConfigCore
     public static int steelBoots;
     // -- Blocks
     public static int highoven;
+    public static int scorchedSlab;
+    public static int limestone;
+    public static int limestoneSlab;
     public static int machine;
     public static int charcoalStorageBlock;
     public static int dustStorageBlock;
     public static int steam;
+    public static int moltenLimestone;
     // --- Misc  
     public static boolean hardcorePiston;
     public static boolean hardcoreFlintAndSteel;
@@ -42,7 +46,8 @@ public class ConfigCore
          */
         materials = config.getItem("Items", "Crafting Materials ID", 14500, "Materials (Ingots, Nuggets, Etc)").getInt(14500);
         manual = config.getItem("Items", "Steelworks Manual ID", 14501, "Manuals (Your First High Oven, Etc)").getInt(14501);
-
+        buckets = config.getItem("Items", "Buckets", 14502).getInt(14502);
+        
         enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enable steel armor").getBoolean(true);
         steelHelmet = config.getItem("Equipables", "Steel Helmet", 14512).getInt(14512);
         steelChestplate = config.getItem("Equipables", "Steel Chestplate", 14513).getInt(14513);
@@ -53,7 +58,11 @@ public class ConfigCore
         charcoalStorageBlock = config.getBlock("Blocks", "Charcoal Block ID", 3401, "Compressed Charcoal Block (3x3)").getInt(3401);
         dustStorageBlock = config.getBlock("Blocks", "Compressed Powder Blocks ID", 3402, "Powder Blocks (Gunpowder, etc)").getInt(3402);
         machine = config.getBlock("Blocks", "Machine Blocks ID", 3403, "Machine Blocks (Turbine, etc)").getInt(3403);
+        limestone = config.getBlock("Blocks", "Limestone Blocks ID", 3404, "Limestone Blocks").getInt(3404);
+        scorchedSlab = config.getBlock("Blocks", "Scorched Slabs Block ID", 3407, "Scorched Slabs").getInt(3407);
+        limestoneSlab = config.getBlock("Blocks", "Limestone Slabs Block ID", 3408, "Limestone Slabs").getInt(3408);
         steam = config.getBlock("Blocks", "Steam Block ID", 3409, "Steam Fluid 'Block'").getInt(3409);
+        moltenLimestone = config.getBlock("Blocks", "Molten Limestone Block ID", 3410, "Limestone Fluid 'Block'").getInt(3410);
         
         enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper (potential lag, tests needed!)").getBoolean(false);
         ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
@@ -63,7 +72,7 @@ public class ConfigCore
         smelteryObsidianAlloy = config.get("Smeltery", "Obsidian Alloy", false, "Enables mixing lava and water in the Smeltery for obsidian").getBoolean(false);
         
         deeptankCapacityMultiplier = config.get("Deep Tank", "Fluid Capacity Multiplier", 4, "Determines how many buckets of fluid per internal block space.").getInt(4);
-        modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000, 3001, ... > (Note: Currently doesn't save properly...)").getIntList();
+        modTankGlassBlocks = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify block ids for additional Deep Tank walls. EX: < 3000 3001 ... > (Note: Currently doesn't save properly...)").getIntList();
         
         hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod.").getBoolean(false);
         hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot.").getBoolean(false);

@@ -7,16 +7,28 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.client.TConstructClientRegistry;
+import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.tools.ToolCore;
+import tconstruct.modifiers.tools.ModInteger;
+import tconstruct.modifiers.tools.ModPiston;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
+import tsteelworks.blocks.LimestoneBlock;
+import tsteelworks.blocks.LimestoneSlab;
 import tsteelworks.blocks.MachineBlock;
+import tsteelworks.blocks.ScorchedSlab;
 import tsteelworks.blocks.SteamFluidBlock;
 import tsteelworks.blocks.TSBaseBlock;
+import tsteelworks.blocks.TSBaseFluid;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
@@ -26,20 +38,27 @@ import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.items.TSArmorBasic;
+import tsteelworks.items.TSFilledBucket;
 import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
+import tsteelworks.items.blocks.LimestoneItemBlock;
+import tsteelworks.items.blocks.LimestoneSlabItemBlock;
 import tsteelworks.items.blocks.MachineItemBlock;
+import tsteelworks.items.blocks.ScorchedSlabItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.modifiers.tools.ModHopper;
+import tsteelworks.modifiers.tools.TSActiveOmniMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class TSContent
 {
     public static Item materialsTS;
+    public static Item bucketsTS;    
     public static Item bookManual;
     public static Item helmetSteel;
     public static Item chestplateSteel;
@@ -47,15 +66,23 @@ public class TSContent
     public static Item bootsSteel;
     public static EnumArmorMaterial materialSteel;
     public static Block highoven;
+    public static Block scorchedSlab;
+    public static Block limestoneBlock;
+    public static Block limestoneSlab;
     public static Block machine;
     public static Block charcoalBlock;
     public static Block dustStorageBlock;
     public static Block steamBlock;
+    public static Block moltenLimestone;
     public static Fluid steamFluid;
+    public static Fluid moltenLimestoneFluid;
     
     public static ItemStack thaumcraftAlumentum;
 //    public static ItemStack railcraftBlockCoalCoke;
 
+    public static Fluid[] fluids = new Fluid[2];
+    public static Block[] fluidBlocks = new Block[2];
+    
     /**
      * Content Constructor
      */
@@ -67,6 +94,7 @@ public class TSContent
         oreRegistry();
         registerMixerMaterials();
         setupCreativeTabs();
+        registerModifiers();
     }
     
     /**
@@ -77,10 +105,14 @@ public class TSContent
         materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
         GameRegistry.registerItem(materialsTS, "Materials");
         TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
-
+        
         bookManual = new TSManual(ConfigCore.manual);
         GameRegistry.registerItem(bookManual, "tsteelManual");
 
+        bucketsTS = new TSFilledBucket(ConfigCore.buckets);
+        GameRegistry.registerItem(bucketsTS, "buckets");
+        
+        
         if (ConfigCore.enableSteelArmor)
         {
             materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[] { 3, 7, 5, 3 }, 10);
@@ -108,6 +140,10 @@ public class TSContent
         GameRegistry.registerTileEntity(HighOvenDuctLogic.class, "TSteelworks.HighOvenDuct");
         GameRegistry.registerTileEntity(DeepTankLogic.class, "TSteelworks.DeepTank");
         GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
+        
+        scorchedSlab = new ScorchedSlab(ConfigCore.scorchedSlab).setUnlocalizedName("ScorchedSlab");
+        scorchedSlab.stepSound = Block.soundStoneFootstep;
+        GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
         /* Machines */
         machine = new MachineBlock(ConfigCore.machine).setUnlocalizedName("Machine");
         GameRegistry.registerBlock(machine, MachineItemBlock.class, "Machine");
@@ -118,6 +154,13 @@ public class TSContent
         charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
         dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
         GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
+        
+        limestoneBlock = new LimestoneBlock(ConfigCore.limestone).setUnlocalizedName("Limestone");
+        GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
+        
+        limestoneSlab = new LimestoneSlab(ConfigCore.limestoneSlab).setUnlocalizedName("LimestoneSlab");
+        limestoneSlab.stepSound = Block.soundStoneFootstep;
+        GameRegistry.registerBlock(limestoneSlab, LimestoneSlabItemBlock.class, "LimestoneSlab");
     }
     
     void registerFluids()
@@ -128,7 +171,11 @@ public class TSContent
         {
             steamFluid = FluidRegistry.getFluid("steam");
             if (steamFluid.getBlockID() != -1)
+            {
                 steamBlock = Block.blocksList[steamFluid.getBlockID()];
+                fluids[0] = steamFluid;
+                fluidBlocks[0] = steamBlock;
+            }
             else
             {
                 TSteelworks.loginfo("Attempted to acquire another mod's steam block, but it is missing! Obtaining TSteelworks steam block instead.");
@@ -137,14 +184,26 @@ public class TSContent
         }
         else
             doRegisterSteamBlock = true;
-        
         if (doRegisterSteamBlock)
         {
             steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
+            fluids[0] = steamFluid;
+            fluidBlocks[0] = steamBlock;
             GameRegistry.registerBlock(steamBlock, "steam");
-            steamBlock.setLightOpacity(3);
+            steamBlock.setLightOpacity(0);
             steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
+            FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), new ItemStack(bucketsTS, 1, 0), new ItemStack(Item.bucketEmpty)));
         }
+        
+        moltenLimestoneFluid = new Fluid("limestone.molten");
+        if (!FluidRegistry.registerFluid(moltenLimestoneFluid))
+            moltenLimestoneFluid = FluidRegistry.getFluid("limestone.molten");
+        moltenLimestone = new TSBaseFluid(ConfigCore.moltenLimestone, moltenLimestoneFluid, Material.lava, "liquid_limestone").setUnlocalizedName("molten.limestone");
+        GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
+        fluids[1] = moltenLimestoneFluid;
+        fluidBlocks[1] = moltenLimestone;
+        moltenLimestoneFluid.setBlockID(moltenLimestone).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
+        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), new ItemStack(Item.bucketEmpty)));
     }
     
     void oreRegistry ()
@@ -153,8 +212,13 @@ public class TSContent
         OreDictionary.registerOre("blockCharcoal", new ItemStack(charcoalBlock)); // Mekanism compat
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
+        OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
+        
+        OreDictionary.registerOre("stone", new ItemStack(limestoneBlock, 1, 0));
+        OreDictionary.registerOre("cobblestone", new ItemStack(limestoneBlock, 1, 1));
 
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
+        ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
     }
 
     void ensureOreIsRegistered (String oreName, ItemStack is)
@@ -260,6 +324,17 @@ public class TSContent
 //                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
 //            }
 //        }
+    }
+    
+    void registerModifiers()
+    {
+        ToolBuilder tb = ToolBuilder.instance;
+        ItemStack hopper = new ItemStack(Block.hopperBlock);
+        ItemStack enderpearl = new ItemStack(Item.enderPearl);
         
+        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Hopper", 5, "\u00A7a", "Vacuous"));
+//        tb.registerToolMod(new ModHopper(3, new ItemStack[] { hopper }, new int[] { 1 }));
+        
+        TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
     }
 }

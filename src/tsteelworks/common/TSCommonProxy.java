@@ -31,9 +31,9 @@ public class TSCommonProxy implements IGuiHandler
             final TileEntity tile = world.getBlockTileEntity(x, y, z);
             if ((tile != null) && (tile instanceof TSInventoryLogic))
                 return ((TSInventoryLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
-            if ((tile != null) && (tile instanceof HighOvenDuctLogic))
+            else if ((tile != null) && (tile instanceof HighOvenDuctLogic))
                 return ((HighOvenDuctLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
-            if ((tile != null) && (tile instanceof DeepTankLogic))
+            else if ((tile != null) && (tile instanceof DeepTankLogic))
                 return ((DeepTankLogic) tile).getGuiContainer(player.inventory, world, x, y, z);
         }
         return null;

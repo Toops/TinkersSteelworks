@@ -22,11 +22,11 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
 import tsteelworks.lib.Repo;
-import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class HighOvenGui extends TSContainerGui
 {
@@ -115,61 +115,61 @@ public class HighOvenGui extends TSContainerGui
         return list;
     }
 
-//    @Override
-//    public void mouseClicked (int mouseX, int mouseY, int mouseButton)
-//    {
-//        super.mouseClicked(mouseX, mouseY, mouseButton);
-//        int base = 0;
-//        final int cornerX = ((width - xSize) / 2) + 36;
-//        final int cornerY = (height - ySize) / 2;
-//        int fluidToBeBroughtUp = -1;
-//        for (final FluidStack liquid : logic.moltenMetal)
-//        {
-//            final int basePos = 54;
-//            int liquidSize = 0;// liquid.amount * 52 / liquidLayers;
-//            if (logic.getCapacity() > 0)
-//            {
-//                final int total = logic.getTotalLiquid();
-//                final int liquidLayers = ((total / 20000) + 1) * 20000;
-//                if (liquidLayers > 0)
-//                {
-//                    liquidSize = (liquid.amount * 52) / liquidLayers;
-//                    if (liquidSize == 0)
-//                        liquidSize = 1;
-//                    base += liquidSize;
-//                }
-//            }
-//            final int leftX = cornerX + basePos;
-//            final int topY = (cornerY + 68) - base;
-//            final int sizeX = 52;
-//            final int sizeY = liquidSize;
-//            if ((mouseX >= leftX) && (mouseX <= (leftX + sizeX)) && (mouseY >= topY) && (mouseY < (topY + sizeY)))
-//            {
-//                fluidToBeBroughtUp = liquid.fluidID;
-//                final Packet250CustomPayload packet = new Packet250CustomPayload();
-//                final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                final DataOutputStream dos = new DataOutputStream(bos);
-//                try
-//                {
-//                    dos.write(1);
-//                    dos.writeInt(logic.worldObj.provider.dimensionId);
-//                    dos.writeInt(logic.xCoord);
-//                    dos.writeInt(logic.yCoord);
-//                    dos.writeInt(logic.zCoord);
-//                    dos.writeBoolean(isShiftKeyDown());
-//                    dos.writeInt(fluidToBeBroughtUp);
-//                }
-//                catch (final Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
-//                packet.channel = Repo.modChan;
-//                packet.data = bos.toByteArray();
-//                packet.length = bos.size();
-//                PacketDispatcher.sendPacketToServer(packet);
-//            }
-//        }
-//    }
+    @Override
+    public void mouseClicked (int mouseX, int mouseY, int mouseButton)
+    {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        int base = 0;
+        final int cornerX = ((width - xSize) / 2);
+        final int cornerY = (height - ySize) / 2;
+        int fluidToBeBroughtUp = -1;
+        for (final FluidStack liquid : logic.moltenMetal)
+        {
+            final int basePos = 179;
+            int liquidSize = 0;// liquid.amount * 52 / liquidLayers;
+            if (logic.getCapacity() > 0)
+            {
+                final int total = logic.getTotalLiquid();
+                final int liquidLayers = ((total / 20000) + 1) * 20000;
+                if (liquidLayers > 0)
+                {
+                    liquidSize = (liquid.amount * 52) / liquidLayers;
+                    if (liquidSize == 0)
+                        liquidSize = 1;
+                    base += liquidSize;
+                }
+            }
+            final int leftX = cornerX + basePos;
+            final int topY = (cornerY + 68) - base;
+            final int sizeX = 52;
+            final int sizeY = liquidSize;
+            if ((mouseX >= leftX) && (mouseX <= (leftX + sizeX)) && (mouseY >= topY) && (mouseY < (topY + sizeY)))
+            {
+                fluidToBeBroughtUp = liquid.fluidID;
+                final Packet250CustomPayload packet = new Packet250CustomPayload();
+                final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                final DataOutputStream dos = new DataOutputStream(bos);
+                try
+                {
+                    dos.write(Repo.ovenPacketID);
+                    dos.writeInt(logic.worldObj.provider.dimensionId);
+                    dos.writeInt(logic.xCoord);
+                    dos.writeInt(logic.yCoord);
+                    dos.writeInt(logic.zCoord);
+                    dos.writeBoolean(isShiftKeyDown());
+                    dos.writeInt(fluidToBeBroughtUp);
+                }
+                catch (final Exception e)
+                {
+                    e.printStackTrace();
+                }
+                packet.channel = Repo.modChan;
+                packet.data = bos.toByteArray();
+                packet.length = bos.size();
+                PacketDispatcher.sendPacketToServer(packet);
+            }
+        }
+    }
 
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
     {
