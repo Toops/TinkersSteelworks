@@ -38,7 +38,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
     public static final int MODE_1 = 1; //??
     public static final int MODE_2 = 2; //??
     public static final int MODE_3 = 3; //??
-    public static final int MODE_INGOT = 4; //TO BE CONFIRMED
+    public static final int MODE_MELTABLE = 4; //TO BE CONFIRMED
     public static final int MODE_OUTPUT = 5;
     
     byte direction = 0;
@@ -49,7 +49,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
     /* ==================== Update ==================== */
 
-    @Override
+    //@Override
     public void updateEntity ()
     {
 //        if (worldObj == null) return;
@@ -137,6 +137,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         return mode;
     }
 
+    /**
+     * changing the transfer mode of the duct
+     * 
+     * @param newMode 
+     * 			the new mode to use
+     */
     public void setMode (int newMode)
     {
         mode = (newMode < 6) ? newMode : MODE_OUTPUT;
@@ -144,6 +150,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
             getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
     }
 
+    
     public HighOvenLogic getHighOvenController ()
     {
         final int mx = getMasterPosition().x;
@@ -152,6 +159,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
 
+    /**
+     * Trying to transfer one item from one of the internal stot into the High Oven 
+     * 
+     * @return 
+     * 				true: item transfered / false: no item transfered
+     */
     private boolean insertItemToInventory ()
     {
         if (!hasValidMaster() || !redstoneActivated)
@@ -183,6 +196,15 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         }
     }
 
+    
+    /**
+     * Trying to transfer one item from attached inventory into one of the internal stot 
+     * 
+     * @param localInventory
+     * 			the attached inventory
+     * @return 
+     * 			true: item transfered / false: no item transfered
+     */
     public boolean suckItemsIntoDuct (Hopper localInventory)
     {
         if (mode == MODE_OUTPUT || !redstoneActivated)
@@ -284,7 +306,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
             for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
                 stack = sendItemsToLocation(iiventory, stack, slot[i], side);
         }
-        else if (transferMode == MODE_INGOT)
+        else if (transferMode == MODE_MELTABLE)
 			//The transfer mode for ingot match the slot 4 and 5 
 			// /!\ iiventory (= HighOvenLogic) is define with item[4] as inventory so there are never any slot 4 or 5
             for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
@@ -313,7 +335,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	* add as much item (from stack) as possible inside the iinventory
 	* @param iinventory the destination inventory
 	* @param stack the source stack
-	* @param slot 0..3 = ?? // 4..5 = "ingot" slot 
+	* @param slot 0..3 = ?? // "> 4" = "meltable" slot 
 	* @param side ??
 	* @return the remaining stack after items have been pulled off of it into iinventory
 	*/
@@ -713,4 +735,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
         readFromNBT(packet.data);
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
+
+	
 }
