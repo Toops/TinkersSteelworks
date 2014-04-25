@@ -38,12 +38,20 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
-{
+{	
+	public static final int SLOT_OXIDIZER = 0; // ex: gunpowder, sugar, coal
+	public static final int SLOT_REDUCER = 1; // ex: redstone dust, aluminum dust, clay
+	public static final int SLOT_PURIFIER = 2; // ex: sand, graveyard soil
+	public static final int SLOT_FUEL = 3; // ex: coal, charcoal, coal block
+	public static final int SLOT_FIRST_MELTABLE = 4; // the first meltable slot. All slots after this one will be meltable too. ex of meltable: iron ingot
+	
+	
     public final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
     boolean structureHasBottom;
@@ -97,15 +105,19 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             layers = lay;
             maxLiquid = 20000 * lay;
             final int[] tempActive = activeTemps;
-            activeTemps = new int[4 + lay];
+            activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
             final int activeLength = tempActive.length > activeTemps.length ? activeTemps.length : tempActive.length;
             System.arraycopy(tempActive, 0, activeTemps, 0, activeLength);
             final int[] tempMelting = meltingTemps;
-            meltingTemps = new int[4 + lay];
+            meltingTemps = new int[SLOT_FIRST_MELTABLE + lay];
             final int meltingLength = tempMelting.length > meltingTemps.length ? meltingTemps.length : tempMelting.length;
             System.arraycopy(tempMelting, 0, meltingTemps, 0, meltingLength);
             final ItemStack[] tempInv = inventory;
-            inventory = new ItemStack[4 + lay];
+            
+            //maybe we should try to split inventory (and the others arrays) it two. 
+            // One fixed inventory for slot 0..3 which will remains the same
+            // and a variable size inventory depending on the number of layers for the (s)meltable.
+            inventory = new ItemStack[SLOT_FIRST_MELTABLE + lay];
             final int invLength = tempInv.length > inventory.length ? inventory.length : tempInv.length;
             System.arraycopy(tempInv, 0, inventory, 0, invLength);
             if ((activeTemps.length > 0) && (activeTemps.length > tempActive.length))
@@ -286,6 +298,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             if (isBurning())
             {
                 fuelBurnTime -= 3;
+                // replace by a min(x, y)?
                 if (internalTemp > 3000)
                     internalTemp = 3000;
                 if (internalTemp < 3000)
@@ -294,13 +307,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             else
             {
+            	// replace by a max(x, y)?
                 if (internalTemp > 20)
                     internalTemp -= internalCoolDownRate;
                 if (internalTemp < 20)
                     internalTemp = 20;
             }
             if (validStructure && (fuelBurnTime <= 0))
-                updateFuelGague();
+                updateFuelGauge();
             if (needsUpdate)
             {
                 needsUpdate = false;
@@ -321,7 +335,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (internalTemp > 20)
         {
             boolean hasUse = false;
-            for (int i = 4; i < (layers + 4); i += 1)
+            for (int i = SLOT_FIRST_MELTABLE; i < (layers + SLOT_FIRST_MELTABLE); i += 1)
                 // If an item is present and meltable
                 if (isStackInSlot(i) && (meltingTemps[i] > 20))
                 {
@@ -431,13 +445,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public FluidStack getNormalResultFor (ItemStack stack)
     {
-        return AdvancedSmelting.instance.getMeltingResult(stack);
+        return AdvancedSmelting.getMeltingResult(stack);
     }
 
     public FluidStack getLiquidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final FluidType mixResult = AdvancedSmelting.instance.getMixSmeltingFluidResult(resultType, inventory[0], inventory[1], inventory[2]);
+        final FluidType mixResult = AdvancedSmelting.getMixSmeltingFluidResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
         if (mixResult != null)
             return new FluidStack(mixResult.fluid, stack.amount);
         return null;
@@ -446,7 +460,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public ItemStack getSolidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final ItemStack mixResult = AdvancedSmelting.instance.getMixSmeltingSolidResult(resultType, inventory[0], inventory[1], inventory[2]);
+        final ItemStack mixResult = AdvancedSmelting.getMixSmeltingSolidResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
         if (mixResult != null)
             return new ItemStack(mixResult.itemID, mixResult.stackSize, mixResult.getItemDamage());
         return null;
@@ -464,11 +478,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     private void removeMixItems ()
     {
+    	// using SLOT_0 and SLOT_FIRST_MELTABLE - 1? another reason to split inventory between FixedSizeInventoy for 0..3 and VariableSizeInventory for meltables
         for (int i = 0; i < 3; i++)
             if (inventory[i] != null)
             {
-                final int consumeChance = AdvancedSmelting.instance.getMixItemConsumeChance(inventory[i]);
-                final int consumeAmount = AdvancedSmelting.instance.getMixItemConsumeAmount(inventory[i]);
+                final int consumeChance = AdvancedSmelting.getMixItemConsumeChance(inventory[i]);
+                final int consumeAmount = AdvancedSmelting.getMixItemConsumeAmount(inventory[i]);
                 if (new Random().nextInt(100) <= consumeChance)
                     if (inventory[i].stackSize >= consumeAmount)
                         inventory[i].stackSize -= consumeAmount;
@@ -508,15 +523,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     void updateTemperatures ()
     {
         isMeltingItems = true;
-        for (int i = 4; i < (layers + 4); i += 1)
-            meltingTemps[i] = AdvancedSmelting.instance.getLiquifyTemperature(inventory[i]);
+        for (int i = SLOT_FIRST_MELTABLE; i < (layers + SLOT_FIRST_MELTABLE); i += 1)
+            meltingTemps[i] = AdvancedSmelting.getLiquifyTemperature(inventory[i]);
     }
 
     /* ==================== Fuel Handling ==================== */
     
     public boolean isBurning () { return fuelBurnTime > 0; }
 
-    public boolean hasFuel () { return getFuelBurnTime(inventory[3]) > 0; }
+    public boolean hasFuel () { return getFuelBurnTime(inventory[SLOT_FUEL]) > 0; }
 
     /**
      * Get fuel gauge scaled for display
@@ -530,26 +545,35 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (ret < 1) ret = 1;
         return ret;
     }
-
+    
+    //you can keep the typo for the lol but it's better to have the good one next to it
     /**
      * Update fuel gauge (keeping typo just cuz)
      */
-    void updateFuelGague ()
+    @Deprecated
+    void updateFuelGague(){
+    	updateFuelGauge();
+    }
+
+    /**
+     * Update fuel gauge
+     */
+    void updateFuelGauge ()
     {
         if (isBurning() || !redstoneActivated) return;
-        if (inventory[3] == null)
+        if (inventory[SLOT_FUEL] == null)
         {
             fuelBurnTime = 0;
             return;
         }
-        if (getFuelBurnTime(inventory[3]) > 0)
+        if (getFuelBurnTime(inventory[SLOT_FUEL]) > 0)
         {
             needsUpdate = true;
             fuelBurnTime = getFuelBurnTime(inventory[3]);
             fuelHeatRate = getFuelHeatRate(inventory[3]);
-            inventory[3].stackSize--;
-            if (inventory[3].stackSize <= 0)
-                inventory[3] = null;
+            inventory[SLOT_FUEL].stackSize--;
+            if (inventory[SLOT_FUEL].stackSize <= 0)
+                inventory[SLOT_FUEL] = null;
         }
     }
     
@@ -558,7 +582,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public void updateFuelDisplay ()
     {
-        if (getFuelBurnTime(inventory[3]) > 0)
+        if (getFuelBurnTime(inventory[SLOT_FUEL]) > 0)
         {
             needsUpdate = true;
             worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -580,7 +604,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public static int getFuelHeatRate (ItemStack stack)
     {
         if (stack == null) return 0;
-        return TSteelworks.fuelHandler.getHighOvenFuelHeatRate(stack);
+        return TSFuelHandler.getHighOvenFuelHeatRate(stack);
     }
     
     /* ==================== Inventory ==================== */
@@ -666,18 +690,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Multiblock ==================== */
 
-    /**
-     * Called when servants change their state
-     * 
-     * @param servant
-     *            Servant Tile Entity
-     * @param x
-     *            Servant X
-     * @param y
-     *            Servant Y
-     * @param z
-     *            Servant Z
-     */
+    
+    
+    
     @Override
     public void notifyChange (IServantLogic servant, int x, int y, int z) { checkValidPlacement(); }
 
@@ -956,6 +971,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     if (servant.verifyMaster(this, worldObj, xCoord, yCoord, zCoord))
                         tempBricks++;
                 }
+                // TODO : wisthy 2014/04/25 - check if the deprecated method still need to be called
                 else if (servant.setMaster(xCoord, yCoord, zCoord))
                     tempBricks++;
             }
@@ -1047,7 +1063,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
         if (ibehaviordispenseitem != IBehaviorDispenseItem.itemDispenseBehaviorProvider)
         {
-            final ItemStack itemstack1 = ibehaviordispenseitem.dispense(blocksourceimpl, stack);
+            //final ItemStack itemstack1 = ibehaviordispenseitem.dispense(blocksourceimpl, stack);
+        	ibehaviordispenseitem.dispense(blocksourceimpl, stack);
         }
     }
 
@@ -1082,7 +1099,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         effective = flag;
                     }
                 }
-                else if (duct.areItemStacksEqualItem(getstack, copystack))
+                else if (HighOvenDuctLogic.areItemStacksEqualItem(getstack, copystack))
                 {
                     final int max = Math.min(copystack.getMaxStackSize(), duct.getInventoryStackLimit());
                     if (max > getstack.stackSize)

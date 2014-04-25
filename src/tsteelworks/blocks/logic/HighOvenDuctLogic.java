@@ -34,13 +34,11 @@ import tsteelworks.lib.ConfigCore;
 // TODO: Lots
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
-	// TODO: Wisthy 2014/04/24 - define the same kind of constants in HighOvenLogic and refer to them from here
-	// TODO: Wisthy 2014/04/24 - check in the HighOvenLogic for which item goes in which slot (for slot 0..3)
-	public static final int MODE_0 = 0; //??
-	public static final int MODE_1 = 1; //??
-	public static final int MODE_2 = 2; //??
-	public static final int MODE_3 = 3; //??
-	public static final int MODE_MELTABLE = 4; //TO BE CONFIRMED
+	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER; 
+	public static final int MODE_REDUCER = HighOvenLogic.SLOT_REDUCER;
+	public static final int MODE_PURIFIER = HighOvenLogic.SLOT_PURIFIER;
+	public static final int MODE_FUEL = HighOvenLogic.SLOT_FUEL;
+	public static final int MODE_MELTABLE = HighOvenLogic.SLOT_FIRST_MELTABLE;
 	public static final int MODE_OUTPUT = 5;
 
 	byte direction = 0;
@@ -58,7 +56,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * 3 = ?, 
 	 * 4 = meltable (ex: iron ingot)
 	 */
-	int mode = MODE_0;
+	int mode = MODE_OXIDIZER;
 	boolean redstoneActivated = false;
 
 	//why not using TSInventoryLogic to manage the internal inventory? because this class already extends TSMultiServantLogic? 
@@ -344,7 +342,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param iinventory the destination inventory
 	 * @param stack the source stack
 	 * @param side ??
-	 * @param transferMode the mode of the duct. See MODE_* constants
+	 * @param transferMode the mode of the duct. See HighOvenDuctLogic.mode 
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
 	public static ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
@@ -389,7 +387,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * add as much item (from stack) as possible inside the iinventory
 	 * @param iinventory the destination inventory
 	 * @param stack the source stack
-	 * @param slot 0..3 = ?? // "> 4" = "meltable" slot 
+	 * @param slot the destination slot of the items
 	 * @param side ??
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
@@ -504,7 +502,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		default:
 			break;
 		}
-		final List list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
+		final List<EntityItem> list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
 		return list.size() > 0 ? (EntityItem) list.get(0) : null;
 	}
 
@@ -531,7 +529,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 		if (iinventory == null)
 		{
-			final List list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
+			final List<IInventory> list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
 					IEntitySelector.selectInventories);
 			if ((list != null) && (list.size() > 0))
 				iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
