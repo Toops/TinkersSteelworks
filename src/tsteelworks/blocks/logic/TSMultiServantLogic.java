@@ -22,22 +22,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     {
         return false;
     }
-
-    /* Packets */
-    @Override
-    public Packet getDescriptionPacket ()
-    {
-        final NBTTagCompound tag = new NBTTagCompound();
-        writeCustomNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-    }
-
-    @Override
-    public CoordTuple getMasterPosition ()
-    {
-        return master;
-    }
-
+    
     public boolean hasValidMaster ()
     {
         if (!hasMaster)
@@ -53,29 +38,11 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
             return false;
         }
     }
-
+    
     @Override
-    public void invalidateMaster (IMasterLogic master, World world, int x, int y, int z)
+    public CoordTuple getMasterPosition ()
     {
-        hasMaster = false;
-        master = null;
-    }
-
-    @Override
-    public void notifyMasterOfChange ()
-    {
-        if (hasValidMaster())
-        {
-            final IMasterLogic logic = (IMasterLogic) worldObj.getBlockTileEntity(master.x, master.y, master.z);
-            logic.notifyChange(this, xCoord, yCoord, zCoord);
-        }
-    }
-
-    @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
-    {
-        readCustomNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        return master;
     }
 
     public void overrideMaster (int x, int y, int z)
@@ -85,28 +52,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         masterID = (short) worldObj.getBlockId(x, y, z);
         masterMeta = (byte) worldObj.getBlockMetadata(x, y, z);
     }
-
-    public void readCustomNBT (NBTTagCompound tags)
-    {
-        hasMaster = tags.getBoolean("TiedToMaster");
-        if (hasMaster)
-        {
-            final int xCenter = tags.getInteger("xCenter");
-            final int yCenter = tags.getInteger("yCenter");
-            final int zCenter = tags.getInteger("zCenter");
-            master = new CoordTuple(xCenter, yCenter, zCenter);
-            masterID = tags.getShort("MasterID");
-            masterMeta = tags.getByte("masterMeta");
-        }
-    }
-
-    @Override
-    public void readFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
-        readCustomNBT(tags);
-    }
-
+    
     public void removeMaster ()
     {
         hasMaster = false;
@@ -114,6 +60,22 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         masterID = 0;
         masterMeta = 0;
     }
+    
+    @Override
+    public void notifyMasterOfChange ()
+    {
+        if (hasValidMaster())
+        {
+            final IMasterLogic logic = (IMasterLogic) worldObj.getBlockTileEntity(master.x, master.y, master.z);
+            logic.notifyChange(this, xCoord, yCoord, zCoord);
+        }
+    }
+    
+    @Deprecated
+    public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
+    {
+        return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
+    }   
 
     @Deprecated
     public boolean setMaster (int x, int y, int z)
@@ -133,12 +95,6 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return !hasMaster;
     }
 
-    @Deprecated
-    public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
-    {
-        return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
-    }
-
     @Override
     public boolean verifyMaster (IMasterLogic logic, World world, int x, int y, int z)
     {
@@ -150,7 +106,42 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
             return true;
         }
     }
+    
+    @Override
+    public void invalidateMaster (IMasterLogic master, World world, int x, int y, int z)
+    {
+        hasMaster = false;
+        master = null;
+    }
 
+    @Override
+    public void readFromNBT (NBTTagCompound tags)
+    {
+        super.readFromNBT(tags);
+        readCustomNBT(tags);
+    }
+    
+    public void readCustomNBT (NBTTagCompound tags)
+    {
+        hasMaster = tags.getBoolean("TiedToMaster");
+        if (hasMaster)
+        {
+            final int xCenter = tags.getInteger("xCenter");
+            final int yCenter = tags.getInteger("yCenter");
+            final int zCenter = tags.getInteger("zCenter");
+            master = new CoordTuple(xCenter, yCenter, zCenter);
+            masterID = tags.getShort("MasterID");
+            masterMeta = tags.getByte("masterMeta");
+        }
+    }
+    
+    @Override
+    public void writeToNBT (NBTTagCompound tags)
+    {
+        super.writeToNBT(tags);
+        writeCustomNBT(tags);
+    }
+    
     public void writeCustomNBT (NBTTagCompound tags)
     {
         tags.setBoolean("TiedToMaster", hasMaster);
@@ -164,10 +155,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
 
+    /* Packets */
+    
     @Override
-    public void writeToNBT (NBTTagCompound tags)
+    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
-        super.writeToNBT(tags);
-        writeCustomNBT(tags);
+        readCustomNBT(packet.data);
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+    }
+    
+    @Override
+    public Packet getDescriptionPacket ()
+    {
+        final NBTTagCompound tag = new NBTTagCompound();
+        writeCustomNBT(tag);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 }

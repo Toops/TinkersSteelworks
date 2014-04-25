@@ -18,23 +18,12 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 {
     byte direction;
     
-    @Override
-    public void updateEntity ()
-    {
-    }
+    // ========== TileEntity ===========
     
     @Override
-    public boolean canUpdate ()
-    {
-        return false;
-    }
+    public boolean canUpdate () { return false; }
     
-    @Override
-    public void onInventoryChanged ()
-    {
-        updateEntity();
-        super.onInventoryChanged();
-    }
+    // ========== HighOvenDrainLogic ===========
     
     public int getControllerLogicType ()
     {
@@ -62,16 +51,18 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return (DeepTankLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
 
-    @Override
-    public ForgeDirection getForgeDirection ()
-    {
-        return ForgeDirection.VALID_DIRECTIONS[direction];
-    }
-
+    // ========== IFacingLogic ===========
+    
     @Override
     public byte getRenderDirection ()
     {
         return direction;
+    }
+    
+    @Override
+    public ForgeDirection getForgeDirection ()
+    {
+        return ForgeDirection.VALID_DIRECTIONS[direction];
     }
 
     @Override
@@ -107,6 +98,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         }
     }
 
+    // ========== IFluidHandler ===========
+    
     @Override
     public boolean canDrain (ForgeDirection from, Fluid fluid)
     {
@@ -197,6 +190,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return null;
     }
     
+    // ========== NBT ===========
+    
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -211,7 +206,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         tags.setByte("Direction", direction);
     }
     
-    /* Packets */
+    // ========== Packet Handling ===========
+    
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {

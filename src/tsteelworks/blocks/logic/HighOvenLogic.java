@@ -28,6 +28,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
@@ -45,6 +46,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
 {	
+    
 	public static final int SLOT_OXIDIZER = 0; // ex: gunpowder, sugar, coal
 	public static final int SLOT_REDUCER = 1; // ex: redstone dust, aluminum dust, clay
 	public static final int SLOT_PURIFIER = 2; // ex: sand, graveyard soil
@@ -52,7 +54,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	public static final int SLOT_FIRST_MELTABLE = 4; // the first meltable slot. All slots after this one will be meltable too. ex of meltable: iron ingot
 	
 	
-    public final IRegistry dispenseBehaviorRegistry = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
+    public final IRegistry dispenseBehavior = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
     boolean structureHasBottom;
     boolean structureHasTop;
@@ -431,10 +433,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         onInventoryChanged();
     }
 
-    public boolean itemIsOre (ItemStack stack)
-    {
-        return (stack.getDisplayName().endsWith("Ore"));
-    }
+
     
     /**
      * Get molten result for given item
@@ -469,8 +468,16 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     private void outputTE3Slag ()
     {
         if (TSteelworks.thermalExpansionAvailable && ConfigCore.enableTE3SlagOutput)
-            if (new Random().nextInt(100) <= 15)
+            if (new Random().nextInt(100) <= 10) // 2014/04/25 - Reduced from 15% to 10%
                     addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
+    }
+    
+    public boolean itemIsOre (ItemStack stack)
+    {
+        // No!
+        //return (stack.getDisplayName().endsWith("Ore"));
+        // Yes! Also covers oreberries, as intended.
+        return (OreDictionary.getOreName(stack.itemID).startsWith("ore"));
     }
     
     /**
@@ -547,6 +554,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
     
     //you can keep the typo for the lol but it's better to have the good one next to it
+    // Toops note: yeah, I forgot about this. Removing before next release. I only kept it because lol TConstruct's typo
     /**
      * Update fuel gauge (keeping typo just cuz)
      */
@@ -615,7 +623,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param slot
      * @return True if slot is valid
      */
-    public boolean isSmeltingSlot (int slot) { return (slot > 3); }
+    public boolean isSmeltingSlot (int slot) { return (slot > SLOT_FUEL); }
 
     /**
      * Get (& Set) Inventory slot stack limit Returns the maximum stack size for
@@ -690,9 +698,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Multiblock ==================== */
 
-    
-    
-    
     @Override
     public void notifyChange (IServantLogic servant, int x, int y, int z) { checkValidPlacement(); }
 
@@ -1001,6 +1006,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     boolean addFluidToTank (FluidStack liquid, boolean first)
     {
+        // TODO: Tank should only hold multiple fluids under certain special circumstances ex water & steam, anything & slag 
         needsUpdate = true;
         if (moltenMetal.size() == 0)
         {
@@ -1042,30 +1048,18 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     void addSolidItem (ItemStack stack)
     {
         boolean transferred = false;
-        // Dispense item if no duct is present
+        // If we have an output duct...
         if (outputDuct != null)
         {
             final TileEntity te = worldObj.getBlockTileEntity(outputDuct.x, outputDuct.y, outputDuct.z);
-            if (te instanceof HighOvenDuctLogic)
-            {
-                final HighOvenDuctLogic duct = (HighOvenDuctLogic) worldObj.getBlockTileEntity(te.xCoord, te.yCoord, te.zCoord);
-                transferred = sendItemToDuct(duct, stack);
-            }
+            if (te != null && te instanceof HighOvenDuctLogic)
+                transferred = sendItemToDuct((HighOvenDuctLogic) te, stack);
+            else
+                outputDuct = null; // If duct no longer exists, get rid of it!
         }
+        // Dispense item if no duct is present
         if (!transferred)
             dispenseSolidItem(stack);
-    }
-
-    void dispenseSolidItem (ItemStack stack)
-    {
-        final BlockSourceImpl blocksourceimpl = new BlockSourceImpl(worldObj, xCoord, yCoord, zCoord);
-        final IBehaviorDispenseItem ibehaviordispenseitem = (IBehaviorDispenseItem)dispenseBehaviorRegistry.getObject(stack.getItem());
-
-        if (ibehaviordispenseitem != IBehaviorDispenseItem.itemDispenseBehaviorProvider)
-        {
-            //final ItemStack itemstack1 = ibehaviordispenseitem.dispense(blocksourceimpl, stack);
-        	ibehaviordispenseitem.dispense(blocksourceimpl, stack);
-        }
     }
 
     boolean sendItemToDuct (HighOvenDuctLogic duct, ItemStack stack)
@@ -1120,6 +1114,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return effective;
     }
 
+    void dispenseSolidItem (ItemStack stack)
+    {
+        final BlockSourceImpl blocksourceimpl = new BlockSourceImpl(worldObj, xCoord, yCoord, zCoord);
+        final IBehaviorDispenseItem ibehaviordispenseitem = (IBehaviorDispenseItem)dispenseBehavior.getObject(stack.getItem());
+
+        if (ibehaviordispenseitem != IBehaviorDispenseItem.itemDispenseBehaviorProvider)
+            ibehaviordispenseitem.dispense(blocksourceimpl, stack);
+    }
+    
     /**
      * Get max liquid capacity
      */
