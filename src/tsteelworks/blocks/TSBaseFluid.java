@@ -1,10 +1,13 @@
 package tsteelworks.blocks;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
@@ -14,6 +17,7 @@ public class TSBaseFluid extends BlockFluidClassic
     boolean alpha;
     public Icon stillIcon;
     public Icon flowIcon;
+    public int renderColor = 16777215;
     
     public TSBaseFluid(int id, Fluid fluid, Material material, String texture)
     {
@@ -34,6 +38,36 @@ public class TSBaseFluid extends BlockFluidClassic
         return alpha ? 1 : 0;
     }
 
+//    @Override
+//    public int getBlockColor()
+//    {
+//        return renderColor;
+//    }
+//
+//    @Override
+//    /**
+//     * Returns the color this block should be rendered. Used by leaves.
+//     */
+//    public int getRenderColor(int par1)
+//    {
+//        return renderColor;
+//    }
+
+//    @Override
+    /**
+     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
+     * when first determining what to render.
+     */
+//    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+//    {
+//        return renderColor;
+//    }
+//    
+//    public void setRenderColor(int colorvalue)
+//    {
+//        renderColor = colorvalue;
+//    }
+    
     @Override
     public void registerIcons (IconRegister iconRegister)
     {

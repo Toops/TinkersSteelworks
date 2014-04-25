@@ -155,7 +155,7 @@ public class TSFilledBucket extends ItemBucket
         return getUnlocalizedName() + "." + materialNames[arr];
     }
 
-    public static final String[] materialNames = new String[] { "Steam", "Limestone" };
+    public static final String[] materialNames = new String[] { "Steam", "Limestone", "Cement" };
 
-    public static final String[] textureNames = new String[] { "steam", "limestone" };
+    public static final String[] textureNames = new String[] { "steam", "limestone", "cement" };
 }
