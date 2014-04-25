@@ -32,15 +32,15 @@ import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
 
 // TODO: Lots
+//TODO: wisthy 2014/04/25 - regroup static helper method? at the end of the class? on a separate helper class?
+//TODO: wisthy 2014/04/25 - replace calls to "x = this / f(x){y=x.a}" by "f(){y=this.a}" 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
-	// TODO: Wisthy 2014/04/24 - define the same kind of constants in HighOvenLogic and refer to them from here
-	// TODO: Wisthy 2014/04/24 - check in the HighOvenLogic for which item goes in which slot (for slot 0..3)
-	public static final int MODE_0 = 0; //??
-	public static final int MODE_1 = 1; //??
-	public static final int MODE_2 = 2; //??
-	public static final int MODE_3 = 3; //??
-	public static final int MODE_MELTABLE = 4; //TO BE CONFIRMED
+	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER; 
+	public static final int MODE_REDUCER = HighOvenLogic.SLOT_REDUCER;
+	public static final int MODE_PURIFIER = HighOvenLogic.SLOT_PURIFIER;
+	public static final int MODE_FUEL = HighOvenLogic.SLOT_FUEL;
+	public static final int MODE_MELTABLE = HighOvenLogic.SLOT_FIRST_MELTABLE;
 	public static final int MODE_OUTPUT = 5;
 
 	byte direction = 0;
@@ -58,7 +58,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * 3 = ?, 
 	 * 4 = meltable (ex: iron ingot)
 	 */
-	int mode = MODE_0;
+	int mode = MODE_OXIDIZER;
 	boolean redstoneActivated = false;
 
 	//why not using TSInventoryLogic to manage the internal inventory? because this class already extends TSMultiServantLogic? 
@@ -69,6 +69,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/* ==================== Update ==================== */
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.tileentity.TileEntity#updateEntity()
+	 */
 	@Override
 	public void updateEntity ()
 	{
@@ -118,6 +122,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#canUpdate()
+	 */
 	@Override
 	public boolean canUpdate ()
 	{
@@ -265,10 +273,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		else if (ConfigCore.enableDuctVacuum)
 		{
 			// all the parameters come from "this", why a public method with 5 params when it can be a private without param?
-					final EntityItem entityitem = getExternalItemEntity(localInventory.getWorldObj(), localInventory.getXPos(), localInventory.getYPos(), localInventory.getZPos(), direction);
+			final EntityItem entityitem = getExternalItemEntity(localInventory.getWorldObj(), localInventory.getXPos(), localInventory.getYPos(), localInventory.getZPos(), direction);
 
-					if (entityitem != null)
-						return insertStackFromEntity(localInventory, entityitem, mode);
+			if (entityitem != null)
+				return insertStackFromEntity(localInventory, entityitem, mode);
 		}
 
 		return false;
@@ -344,7 +352,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param iinventory the destination inventory
 	 * @param stack the source stack
 	 * @param side ??
-	 * @param transferMode the mode of the duct. See MODE_* constants
+	 * @param transferMode the mode of the duct. See HighOvenDuctLogic.mode 
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
 	public static ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
@@ -389,7 +397,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * add as much item (from stack) as possible inside the iinventory
 	 * @param iinventory the destination inventory
 	 * @param stack the source stack
-	 * @param slot 0..3 = ?? // "> 4" = "meltable" slot 
+	 * @param slot the destination slot of the items
 	 * @param side ??
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
@@ -445,8 +453,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		switch (facing)
 		{
 		case 0: // Down
-		checkYPos = localInventory.getYPos() - 1.0D;
-		break;
+			checkYPos = localInventory.getYPos() - 1.0D;
+			break;
 		case 1: // Up
 			checkYPos = localInventory.getYPos() + 1.0D;
 			break;
@@ -481,9 +489,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		switch (facing)
 		{
 		case 0: // Down
-		y = minY - 1.0D;
-		maxY = minY - 1.0D;
-		break;
+			y = minY - 1.0D;
+			maxY = minY - 1.0D;
+			break;
 		case 1: // Up
 			maxY = minY + 1.0D;
 			break;
@@ -504,7 +512,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		default:
 			break;
 		}
-		final List list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
+		final List<EntityItem> list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
 		return list.size() > 0 ? (EntityItem) list.get(0) : null;
 	}
 
@@ -531,7 +539,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 		if (iinventory == null)
 		{
-			final List list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
+			final List<IInventory> list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
 					IEntitySelector.selectInventories);
 			if ((list != null) && (list.size() > 0))
 				iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
@@ -552,6 +560,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	/**
 	 * Gets the world X position for this hopper entity.
 	 */
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.tileentity.Hopper#getXPos()
+	 */
 	@Override
 	public double getXPos ()
 	{
@@ -561,6 +573,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	/**
 	 * Gets the world Y position for this hopper entity.
 	 */
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.tileentity.Hopper#getYPos()
+	 */
 	@Override
 	public double getYPos ()
 	{
@@ -569,6 +585,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/**
 	 * Gets the world Z position for this hopper entity.
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.tileentity.Hopper#getZPos()
 	 */
 	@Override
 	public double getZPos ()
@@ -588,6 +608,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/* ==================== IInventory ==================== */
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
+	 */
 	@Override
 	public void onInventoryChanged ()
 	{
@@ -595,18 +619,30 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		super.onInventoryChanged();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#getSizeInventory()
+	 */
 	@Override
 	public int getSizeInventory ()
 	{
 		return inventory.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#getStackInSlot(int)
+	 */
 	@Override
 	public ItemStack getStackInSlot (int slot)
 	{
 		return inventory[slot];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#decrStackSize(int, int)
+	 */
 	@Override
 	public ItemStack decrStackSize (int slot, int quantity)
 	{
@@ -627,12 +663,20 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#getStackInSlotOnClosing(int)
+	 */
 	@Override
 	public ItemStack getStackInSlotOnClosing (int slot)
 	{
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#setInventorySlotContents(int, net.minecraft.item.ItemStack)
+	 */
 	@Override
 	public void setInventorySlotContents (int slot, ItemStack itemstack)
 	{
@@ -641,6 +685,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			itemstack.stackSize = getInventoryStackLimit();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#isUseableByPlayer(net.minecraft.entity.player.EntityPlayer)
+	 */
 	@Override
 	public boolean isUseableByPlayer (EntityPlayer entityplayer)
 	{
@@ -650,34 +698,58 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#getInvName()
+	 */
 	@Override
 	public String getInvName ()
 	{
 		return "container.HighOvenDuct";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#isInvNameLocalized()
+	 */
 	@Override
 	public boolean isInvNameLocalized ()
 	{
 		return (getInvName() != null) && (getInvName().length() > 0);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#getInventoryStackLimit()
+	 */
 	@Override
 	public int getInventoryStackLimit ()
 	{
 		return 64;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#openChest()
+	 */
 	@Override
 	public void openChest ()
 	{
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#closeChest()
+	 */
 	@Override
 	public void closeChest ()
 	{
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see net.minecraft.inventory.IInventory#isItemValidForSlot(int, net.minecraft.item.ItemStack)
+	 */
 	@Override
 	public boolean isItemValidForSlot (int slot, ItemStack itemstack)
 	{
@@ -690,109 +762,141 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/* ==================== IFacingLogic ==================== */
 
-			@Override
-			public byte getRenderDirection ()
+	/*
+	 * (non-Javadoc)
+	 * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
+	 */
+	@Override
+	public byte getRenderDirection ()
+	{
+		return direction;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
+	 */
+	@Override
+	public ForgeDirection getForgeDirection ()
+	{
+		return ForgeDirection.VALID_DIRECTIONS[direction];
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tconstruct.library.util.IFacingLogic#setDirection(int)
+	 */
+	@Override
+	public void setDirection (int side)
+	{
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tconstruct.library.util.IFacingLogic#setDirection(float, float, net.minecraft.entity.EntityLivingBase)
+	 */
+	@Override
+	public void setDirection (float yaw, float pitch, EntityLivingBase player)
+	{
+		if (pitch > 45)
+			direction = 1;
+		else if (pitch < -45)
+			direction = 0;
+		else
+		{
+			final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
+			switch (facing)
 			{
-				return direction;
+			case 0:
+				direction = 2;
+				break;
+			case 1:
+				direction = 5;
+				break;
+			case 2:
+				direction = 3;
+				break;
+			case 3:
+				direction = 4;
+				break;
 			}
+		}
+	}
 
-			@Override
-			public ForgeDirection getForgeDirection ()
+	/* ==================== NBT ==================== */
+
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+	 */
+	@Override
+	public void readFromNBT (NBTTagCompound tags)
+	{
+		mode = tags.getInteger("Mode");
+		redstoneActivated = tags.getBoolean("RedstoneActivated");
+		super.readFromNBT(tags);
+		final NBTTagList itemList = tags.getTagList("Items");
+		inventory = new ItemStack[getSizeInventory()];
+		transferCooldown = tags.getInteger("TransferCooldown");
+		direction = tags.getByte("Direction");
+
+		for (int iter = 0; iter < itemList.tagCount(); iter++)
+		{
+			final NBTTagCompound tagList = (NBTTagCompound) itemList.tagAt(iter);
+			final byte slotID = tagList.getByte("Slot");
+			if ((slotID >= 0) && (slotID < inventory.length))
+				inventory[slotID] = ItemStack.loadItemStackFromNBT(tagList);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+	 */
+	@Override
+	public void writeToNBT (NBTTagCompound tags)
+	{
+
+		super.writeToNBT(tags);
+		final NBTTagList nbttaglist = new NBTTagList();
+		for (int iter = 0; iter < inventory.length; iter++)
+			if (inventory[iter] != null)
 			{
-				return ForgeDirection.VALID_DIRECTIONS[direction];
+				final NBTTagCompound tagList = new NBTTagCompound();
+				tagList.setByte("Slot", (byte) iter);
+				inventory[iter].writeToNBT(tagList);
+				nbttaglist.appendTag(tagList);
 			}
+		tags.setInteger("TransferCooldown", transferCooldown);
+		tags.setTag("Items", nbttaglist);
+		tags.setByte("Direction", direction);
+		tags.setBoolean("RedstoneActivated", redstoneActivated);
+		tags.setInteger("Mode", mode);
+	}
 
-			@Override
-			public void setDirection (int side)
-			{
-			}
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#getDescriptionPacket()
+	 */
+	@Override
+	public Packet getDescriptionPacket ()
+	{
+		final NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+	}
 
-			@Override
-			public void setDirection (float yaw, float pitch, EntityLivingBase player)
-			{
-				if (pitch > 45)
-					direction = 1;
-				else if (pitch < -45)
-					direction = 0;
-				else
-				{
-					final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
-					switch (facing)
-					{
-					case 0:
-						direction = 2;
-						break;
-					case 1:
-						direction = 5;
-						break;
-					case 2:
-						direction = 3;
-						break;
-					case 3:
-						direction = 4;
-						break;
-					}
-				}
-			}
-
-			/* ==================== NBT ==================== */
-
-					@Override
-					public void readFromNBT (NBTTagCompound tags)
-			{
-				mode = tags.getInteger("Mode");
-				redstoneActivated = tags.getBoolean("RedstoneActivated");
-				super.readFromNBT(tags);
-				final NBTTagList itemList = tags.getTagList("Items");
-				inventory = new ItemStack[getSizeInventory()];
-				transferCooldown = tags.getInteger("TransferCooldown");
-				direction = tags.getByte("Direction");
-
-				for (int iter = 0; iter < itemList.tagCount(); iter++)
-				{
-					final NBTTagCompound tagList = (NBTTagCompound) itemList.tagAt(iter);
-					final byte slotID = tagList.getByte("Slot");
-					if ((slotID >= 0) && (slotID < inventory.length))
-						inventory[slotID] = ItemStack.loadItemStackFromNBT(tagList);
-				}
-
-			}
-
-					@Override
-					public void writeToNBT (NBTTagCompound tags)
-					{
-
-						super.writeToNBT(tags);
-						final NBTTagList nbttaglist = new NBTTagList();
-						for (int iter = 0; iter < inventory.length; iter++)
-							if (inventory[iter] != null)
-							{
-								final NBTTagCompound tagList = new NBTTagCompound();
-								tagList.setByte("Slot", (byte) iter);
-								inventory[iter].writeToNBT(tagList);
-								nbttaglist.appendTag(tagList);
-							}
-						tags.setInteger("TransferCooldown", transferCooldown);
-						tags.setTag("Items", nbttaglist);
-						tags.setByte("Direction", direction);
-						tags.setBoolean("RedstoneActivated", redstoneActivated);
-						tags.setInteger("Mode", mode);
-					}
-
-					@Override
-					public Packet getDescriptionPacket ()
-					{
-						final NBTTagCompound tag = new NBTTagCompound();
-						writeToNBT(tag);
-						return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-					}
-
-					@Override
-					public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
-					{
-						readFromNBT(packet.data);
-						worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-					}
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#onDataPacket(net.minecraft.network.INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
+	 */
+	@Override
+	public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
+	{
+		readFromNBT(packet.data);
+		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+	}
 
 
 }
