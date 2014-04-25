@@ -133,6 +133,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return !hasMaster;
     }
 
+    // replaced by something else? no needed anymore?
     @Deprecated
     public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
     {

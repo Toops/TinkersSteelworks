@@ -469,6 +469,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return getExternalItemEntity(block.getWorldObj(), block.getXPos(), block.getYPos(), block.getZPos(), facing);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static EntityItem getExternalItemEntity (World world, double minX, double minY, double minZ, byte facing)
 	{
 		double x = minX;
@@ -507,6 +508,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return list.size() > 0 ? (EntityItem) list.get(0) : null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
 	{
 		IInventory iinventory = null;

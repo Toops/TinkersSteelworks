@@ -593,7 +593,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     //you can keep the typo for the lol but it's better to have the good one next to it
     /**
      * Update fuel gauge (keeping typo just cuz)
+     * @See {@link HighOvenLogic#updateFuelGauge()}
      */
+    
     @Deprecated
     void updateFuelGague(){
     	updateFuelGauge();
