@@ -181,6 +181,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#canUpdate()
+     */
     @Override
     public boolean canUpdate ()
     {
@@ -189,18 +193,30 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Misc ==================== */
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getDefaultName()
+     */
     @Override
     public String getDefaultName ()
     {
         return "crafters.HighOven";
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getGuiContainer(net.minecraft.entity.player.InventoryPlayer, net.minecraft.world.World, int, int, int)
+     */
     @Override
     public Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z)
     {
         return new HighOvenContainer(inventoryplayer, this);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#isUseableByPlayer(net.minecraft.entity.player.EntityPlayer)
+     */
     @Override
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
@@ -212,23 +228,39 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     /* ==================== Facing Logic ==================== */
     
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
+     */
     @Override
     public byte getRenderDirection ()
     {
         return direction;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
+     */
     @Override
     public ForgeDirection getForgeDirection ()
     {
         return ForgeDirection.VALID_DIRECTIONS[direction];
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#setDirection(int)
+     */
     @Override
     public void setDirection (int side)
     {
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#setDirection(float, float, net.minecraft.entity.EntityLivingBase)
+     */
     @Override
     public void setDirection (float yaw, float pitch, EntityLivingBase player)
     {
@@ -244,12 +276,20 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Active Logic ==================== */
     
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IActiveLogic#getActive()
+     */
     @Override
     public boolean getActive ()
     {
         return validStructure && isBurning();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IActiveLogic#setActive(boolean)
+     */
     @Override
     public void setActive (boolean flag)
     {
@@ -284,6 +324,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Update Tile Entity
+     */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#updateEntity()
      */
     @Override
     public void updateEntity ()
@@ -621,11 +665,19 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * Get (& Set) Inventory slot stack limit Returns the maximum stack size for
      * a inventory slot.
      */
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getInventoryStackLimit()
+     */
     @Override
     public int getInventoryStackLimit () { return 64; }
 
     /**
      * Called when an the contents of Inventory change
+     */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
      */
     @Override
     public void onInventoryChanged ()
@@ -636,12 +688,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         needsUpdate = true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getSizeInventory()
+     */
     @Override
     public int getSizeInventory () { return inventory.length; }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getStackInSlot(int)
+     */
     @Override
     public ItemStack getStackInSlot (int slot) { return inventory[slot]; }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#decrStackSize(int, int)
+     */
     @Override
     public ItemStack decrStackSize (int slot, int quantity)
     {
@@ -662,9 +726,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getStackInSlotOnClosing(int)
+     */
     @Override
     public ItemStack getStackInSlotOnClosing (int slot) { return null; }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#setInventorySlotContents(int, net.minecraft.item.ItemStack)
+     */
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemstack)
     {
@@ -673,12 +745,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             itemstack.stackSize = getInventoryStackLimit();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#getInvName()
+     */
     @Override
     public String getInvName () { return isInvNameLocalized() ? invName : getDefaultName(); }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#isInvNameLocalized()
+     */
     @Override
     public boolean isInvNameLocalized () { return (invName != null) && (invName.length() > 0); }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#isItemValidForSlot(int, net.minecraft.item.ItemStack)
+     */
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
@@ -692,7 +776,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     
     
-    
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IMasterLogic#notifyChange(tconstruct.library.util.IServantLogic, int, int, int)
+     */
     @Override
     public void notifyChange (IServantLogic servant, int x, int y, int z) { checkValidPlacement(); }
 
@@ -1123,6 +1210,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     /**
      * Get max liquid capacity
      */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
+     */
     @Override
     public int getCapacity () { return maxLiquid; }
 
@@ -1133,6 +1224,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int getTotalLiquid () { return currentLiquid; }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#drain(int, boolean)
+     */
     @Override
     public FluidStack drain (int maxDrain, boolean doDrain)
     {
@@ -1168,6 +1263,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return new FluidStack(0, 0);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#fill(net.minecraftforge.fluids.FluidStack, boolean)
+     */
     @Override
     public int fill (FluidStack resource, boolean doFill)
     {
@@ -1189,6 +1288,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             return 0;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluid()
+     */
     @Override
     public FluidStack getFluid ()
     {
@@ -1196,9 +1299,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return moltenMetal.get(0);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
+     */
     @Override
     public int getFluidAmount () { return currentLiquid; }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getInfo()
+     */
     @Override
     public FluidTankInfo getInfo () { return new FluidTankInfo(this); }
 
@@ -1216,6 +1327,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== NBT ==================== */
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -1254,6 +1369,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
@@ -1291,6 +1410,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         tags.setTag("Liquids", taglist);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#getDescriptionPacket()
+     */
     @Override
     public Packet getDescriptionPacket ()
     {
@@ -1299,6 +1422,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#onDataPacket(net.minecraft.network.INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
+     */
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
@@ -1310,9 +1437,17 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /* ==================== Other ==================== */
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#openChest()
+     */
     @Override
     public void openChest () {}
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#closeChest()
+     */
     @Override
     public void closeChest () {}
 }
