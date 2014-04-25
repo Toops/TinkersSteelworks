@@ -18,6 +18,13 @@ public class TSBaseBlock extends Block
     public String[] textureNames;
     public Icon[] icons;
 
+    public TSBaseBlock(int id, Material material, float hardness)
+    {
+        super(id, material);
+        setHardness(hardness);
+        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+    }
+    
     public TSBaseBlock(int id, Material material, float hardness, String[] tex)
     {
         super(id, material);
@@ -42,11 +49,8 @@ public class TSBaseBlock extends Block
     @SideOnly(Side.CLIENT)
     public int getSideTextureIndex (int side)
     {
-        if (side == 0)
-            return 2;
-        if (side == 1)
-            return 0;
-
+        if (side == 0)  return 2;
+        if (side == 1) return 0;
         return 1;
     }
 

@@ -12,14 +12,22 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.blocks.GlassBlockConnected;
+import tconstruct.blocks.GlassBlockConnectedMeta;
+import tconstruct.blocks.GlassPaneConnected;
 import tconstruct.common.TContent;
+import tconstruct.items.blocks.GlassBlockItem;
+import tconstruct.items.blocks.GlassPaneItem;
+import tconstruct.items.blocks.StainedGlassClearItem;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.modifiers.tools.ModPiston;
+import tconstruct.util.config.PHConstruct;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.CementBlock;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.LimestoneBlock;
@@ -41,6 +49,7 @@ import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSFilledBucket;
 import tsteelworks.items.TSManual;
 import tsteelworks.items.TSMaterialItem;
+import tsteelworks.items.blocks.CementItemBlock;
 import tsteelworks.items.blocks.DustStorageItemBlock;
 import tsteelworks.items.blocks.HighOvenItemBlock;
 import tsteelworks.items.blocks.LimestoneItemBlock;
@@ -69,19 +78,22 @@ public class TSContent
     public static Block scorchedSlab;
     public static Block limestoneBlock;
     public static Block limestoneSlab;
+    public static Block cementBlock;
     public static Block machine;
     public static Block charcoalBlock;
     public static Block dustStorageBlock;
     public static Block steamBlock;
     public static Block moltenLimestone;
+    public static Block liquidCement;
     public static Fluid steamFluid;
     public static Fluid moltenLimestoneFluid;
+    public static Fluid liquidCementFluid;
     
     public static ItemStack thaumcraftAlumentum;
 //    public static ItemStack railcraftBlockCoalCoke;
 
-    public static Fluid[] fluids = new Fluid[2];
-    public static Block[] fluidBlocks = new Block[2];
+    public static Fluid[] fluids = new Fluid[3];
+    public static Block[] fluidBlocks = new Block[3];
     
     /**
      * Content Constructor
@@ -161,6 +173,10 @@ public class TSContent
         limestoneSlab = new LimestoneSlab(ConfigCore.limestoneSlab).setUnlocalizedName("LimestoneSlab");
         limestoneSlab.stepSound = Block.soundStoneFootstep;
         GameRegistry.registerBlock(limestoneSlab, LimestoneSlabItemBlock.class, "LimestoneSlab");
+
+        cementBlock = new CementBlock(ConfigCore.cement).setUnlocalizedName("tsteelworks.cement");
+        cementBlock.stepSound = Block.soundStoneFootstep;
+        GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");
     }
     
     void registerFluids()
@@ -186,7 +202,7 @@ public class TSContent
             doRegisterSteamBlock = true;
         if (doRegisterSteamBlock)
         {
-            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab).setUnlocalizedName("steam");
+            steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setUnlocalizedName("steam");
             fluids[0] = steamFluid;
             fluidBlocks[0] = steamBlock;
             GameRegistry.registerBlock(steamBlock, "steam");
@@ -204,6 +220,16 @@ public class TSContent
         fluidBlocks[1] = moltenLimestone;
         moltenLimestoneFluid.setBlockID(moltenLimestone).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
         FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), new ItemStack(Item.bucketEmpty)));
+    
+        liquidCementFluid = new Fluid("cement.liquid");
+        if (!FluidRegistry.registerFluid(liquidCementFluid))
+            liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
+        liquidCement = new TSBaseFluid(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
+        GameRegistry.registerBlock(liquidCement, "liquid.cement");
+        fluids[2] = liquidCementFluid;
+        fluidBlocks[2] = liquidCement;
+        liquidCementFluid.setBlockID(liquidCement).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
+        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), new ItemStack(Item.bucketEmpty)));
     }
     
     void oreRegistry ()
@@ -276,31 +302,7 @@ public class TSContent
      */
     public void addCraftingRecipes ()
     {
-        TSRecipes.smeltOreDict();
-        TSRecipes.smeltIron();
-        TSRecipes.smeltSteel();
-        TSRecipes.solidSmeltMixCombos();
-        TSRecipes.smeltPigIron();
-        TSRecipes.smeltGold();
-        TSRecipes.smeltMisc();
-        TSRecipes.alloyMisc();
-        TSRecipes.castScorchedBrick();
-        TSRecipes.castManuals();
-        TSRecipes.craftHighOven();
-        TSRecipes.craftStorageBlocks();
-        changeCraftingRecipes();
-    }
-
-    public void changeCraftingRecipes ()
-    {
-        if (ConfigCore.enableSteelArmor)
-            TSRecipes.craftSteelArmor();
-        if (ConfigCore.hardcorePiston)
-            TSRecipes.changePiston();
-        if (ConfigCore.hardcoreFlintAndSteel)
-            TSRecipes.changeFlintAndSteel();
-        if (ConfigCore.hardcoreAnvil)
-            TSRecipes.changeAnvil();
+        TSRecipes.setupCrafting();
     }
     
     public void modIntegration ()

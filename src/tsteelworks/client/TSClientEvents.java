@@ -16,5 +16,7 @@ public class TSClientEvents
     public void postStitch (TextureStitchEvent.Post event)
     {
         TSContent.steamFluid.setIcons(TSContent.steamBlock.getIcon(0,0), TSContent.steamBlock.getIcon(2, 0));
+        TSContent.moltenLimestoneFluid.setIcons(TSContent.moltenLimestone.getIcon(0,0), TSContent.moltenLimestone.getIcon(2, 0));
+        TSContent.liquidCementFluid.setIcons(TSContent.liquidCement.getIcon(0,0), TSContent.liquidCement.getIcon(2, 0));
     }
 }

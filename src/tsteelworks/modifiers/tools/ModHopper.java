@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.modifiers.tools.ToolModTypeFilter;
 
@@ -16,7 +17,7 @@ public class ModHopper extends ToolModTypeFilter
     public ModHopper(int effect, ItemStack[] items, int[] values)
     {
         super(effect, "Hopper", items, values);
-        tooltipName = "\u00a77Vacuous";
+        tooltipName = "\u00a77" + StatCollector.translateToLocal("modifier.tool.vacuous");
     }
     
     @Override
@@ -71,7 +72,7 @@ public class ModHopper extends ToolModTypeFilter
             int modifiers = tags.getInteger("Modifiers");
             modifiers -= 1;
             tags.setInteger("Modifiers", modifiers);
-            String modName = "\u00a74Vacuous (" + increase + "/" + max + ")";
+            String modName = "\u00a74" + StatCollector.translateToLocal("modifier.tool.vacuous") + "(" + increase + "/" + max + ")";
             int tooltipIndex = addToolTip(tool, tooltipName, modName);
             int[] keyPair = new int[] { increase, max, tooltipIndex };
             tags.setIntArray(key, keyPair);
@@ -87,7 +88,7 @@ public class ModHopper extends ToolModTypeFilter
     {
         NBTTagCompound tags = tool.getTagCompound().getCompoundTag("InfiTool");
         String tip = "ModifierTip" + keys[2];
-        String modName = "\u00a77Vacuous (" + keys[0] + "/" + keys[1] + ")";
+        String modName = "\u00a77" + StatCollector.translateToLocal("modifier.tool.vacuous") + "(" + keys[0] + "/" + keys[1] + ")";
         tags.setString(tip, modName);
     }
 
