@@ -17,35 +17,16 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 {
     byte direction;
     
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.tileentity.TileEntity#updateEntity()
-     */
-    @Override
-    public void updateEntity ()
-    {
-    }
+    // ========== TileEntity ===========
     
     /*
      * (non-Javadoc)
      * @see tsteelworks.blocks.logic.TSMultiServantLogic#canUpdate()
      */
     @Override
-    public boolean canUpdate ()
-    {
-        return false;
-    }
+    public boolean canUpdate () { return false; }
     
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
-     */
-    @Override
-    public void onInventoryChanged ()
-    {
-        updateEntity();
-        super.onInventoryChanged();
-    }
+    // ========== HighOvenDrainLogic ===========
     
     public int getControllerLogicType ()
     {
@@ -73,16 +54,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return (DeepTankLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
-     */
-    @Override
-    public ForgeDirection getForgeDirection ()
-    {
-        return ForgeDirection.VALID_DIRECTIONS[direction];
-    }
-
+    // ========== IFacingLogic ===========
+    
     /*
      * (non-Javadoc)
      * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
@@ -91,6 +64,16 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     public byte getRenderDirection ()
     {
         return direction;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
+     */
+    @Override
+    public ForgeDirection getForgeDirection ()
+    {
+        return ForgeDirection.VALID_DIRECTIONS[direction];
     }
 
     /*
@@ -134,6 +117,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         }
     }
 
+    // ========== IFluidHandler ===========
+    
     /*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidHandler#canDrain(net.minecraftforge.common.ForgeDirection, net.minecraftforge.fluids.Fluid)
@@ -248,6 +233,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return null;
     }
     
+    // ========== NBT ===========
+    
     /*
      * (non-Javadoc)
      * @see tsteelworks.blocks.logic.TSMultiServantLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
@@ -270,10 +257,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         tags.setByte("Direction", direction);
     }
     
-    
-    
-    
-    /* Packets */
+    // ========== Packet Handling ===========
     
     /*
      * (non-Javadoc)

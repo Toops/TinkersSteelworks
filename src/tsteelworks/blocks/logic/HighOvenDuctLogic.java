@@ -1,11 +1,5 @@
 package tsteelworks.blocks.logic;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +14,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.Hopper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -30,6 +21,7 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.util.InventoryHelper;
 
 // TODO: Lots
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
@@ -60,8 +52,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	boolean redstoneActivated = false;
 
 	//why not using TSInventoryLogic to manage the internal inventory? because this class already extends TSMultiServantLogic? 
-	//if so, We can use a delegated item that extends TSInventoryLogic 
-	// => delegated TSInventoryLogic created on branch wisthy-0
+	//if so, We can use a delegated item that extends TSInventoryLogic - Could you elaborate, please?
+	// TODO - Toops - 2014/04/26 - Check in wisthy-0 branch, I've done that on an "experimental" branch. If it suits you, I'll adapt it for the main branch and pull a request
 	private ItemStack[] inventory = new ItemStack[9];
 
 	private int transferCooldown = -1;
@@ -75,9 +67,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	@Override
 	public void updateEntity ()
 	{
-		//        if (worldObj == null) return;
-		//        --transferCooldown;
-		//        updateDuct();
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			--this.transferCooldown;
@@ -96,29 +85,24 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	public boolean updateDuct ()
 	{
+	    boolean flag = false;
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			if (!isCoolingDown())
 			{
 				setTransferCooldown(0);
 
-				boolean flag = insertItemToInventory();
+				flag = insertItemToInventory();
 				flag = suckItemsIntoDuct() || flag;
 
 				if (flag)
 				{
 					setTransferCooldown(8);
 					onInventoryChanged();
-					return true;
 				}   
-				else
-					return false;
 			}
-			else
-				return false;
 		}
-		else
-			return false;
+		return flag;
 	}
 
 	/*
@@ -179,7 +163,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	public void setMode (int newMode)
 	{
-		mode = (newMode < 6) ? newMode : MODE_OUTPUT;
+		mode = (newMode < MODE_OUTPUT + 1) ? newMode : MODE_OUTPUT;
 		if (mode == MODE_OUTPUT)
 			getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
 	}
@@ -201,11 +185,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	private boolean insertItemToInventory ()
 	{
-		if (!hasValidMaster() || !redstoneActivated)
+	    // 2014/4/25 - reverse redstone logic: active signal stops transfers
+		if (!hasValidMaster() || redstoneActivated)
 			return false;
-		final IInventory destinationInventory = getOutputInventory();
-
-		if (destinationInventory == null)
+		final IInventory masterInventory = getOutputInventory();
+		
+		if (masterInventory == null)
 			return false;
 		else
 		{
@@ -213,13 +198,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 				if (getStackInSlot(slot) != null)
 				{
 					final ItemStack copyStack = getStackInSlot(slot).copy();
-					//final ItemStack outputStack = insertStack(destinationInventory, decrStackSize(slot, 1), getRenderDirection(), mode);
-					final ItemStack outputStack = insertStack(destinationInventory, decrStackSize(slot, 1), getRenderDirection());
+					final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection());
 
 					if ((outputStack == null) || (outputStack.stackSize == 0))
 					{
 						//all the content of decrStackSize(slot, 1) has been moved inside masterInventory
-						destinationInventory.onInventoryChanged();
+						masterInventory.onInventoryChanged();
 						return true;
 					}
 
@@ -231,6 +215,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 	}
 
+
 	/**
 	 * Trying to transfer one item from attached inventory into one of the internal stot 
 	 * 
@@ -239,41 +224,40 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @return 
 	 * 			true: item transfered / false: no item transfered
 	 */
-	public boolean suckItemsIntoDuct ()
+	boolean suckItemsIntoDuct ()
 	{
-		if (mode == MODE_OUTPUT || !redstoneActivated)
+		if (mode == MODE_OUTPUT || redstoneActivated)
 			return false;
-		final IInventory outsideInventory = getExternalInventory(direction);
+		final IInventory inventory = getExternalInventory(direction);
 
-		if (outsideInventory != null)
+		if (inventory != null)
 		{
 			final byte side = 0;
 
-			if ((outsideInventory instanceof ISidedInventory) && (side > -1))
+			if ((inventory instanceof ISidedInventory) && (side > -1))
 			{
-				final ISidedInventory isidedinventory = (ISidedInventory) outsideInventory;
+				final ISidedInventory isidedinventory = (ISidedInventory) inventory;
 				final int[] slots = isidedinventory.getAccessibleSlotsFromSide(side);
 
 				for (final int slot : slots)
-					if (insertStackFromInventory(this, outsideInventory, slot, side))
+					if (pullStackFromInventory(inventory, slot, side))
 						return true;
 			}
 			else
 			{
-				final int j = outsideInventory.getSizeInventory();
-
+				final int j = inventory.getSizeInventory();
+				if (j == 0) return false;
 				for (int k = 0; k < j; ++k)
-					if (insertStackFromInventory(this, outsideInventory, k, side))
+					if (pullStackFromInventory(inventory, k, side))
 						return true;
 			}
 		}
 		else if (ConfigCore.enableDuctVacuum)
 		{
-			final EntityItem entityitem = getExternalItemEntity(this, direction);
-			
+			final EntityItem entityitem = InventoryHelper.getItemEntityAtLocation(this.getWorldObj(), this.getXPos(), getYPos(), getZPos(), direction);
 
 			if (entityitem != null)
-				return insertStackFromEntity(entityitem);
+				return pullStackFromEntity(entityitem, mode);
 		}
 
 		return false;
@@ -281,41 +265,44 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/**
 	 * trying to insert a stack from an outside inventory into the internal inventory
-	 * @param destinationInventory the target inventory where we will try to insert the stack
-	 * @param outsideInventory the source inventory where we will take the stack from
+	 * @param inventory the source inventory where we will take the stack from
 	 * @param slot the slot of the source inventory
 	 * @param side ??
+	 * @param transferMode the mode that will determine where to put the stack in the target inventory
 	 * @return true: item transfered / false: no item transfered
 	 */
-	private boolean insertStackFromInventory (Hopper destinationInventory, IInventory outsideInventory, int slot, int side)
+	private boolean pullStackFromInventory (IInventory inventory, int slot, int side)
 	{
-		final ItemStack itemstack = outsideInventory.getStackInSlot(slot);
+		final ItemStack itemstack = inventory.getStackInSlot(slot);
 
-		if ((itemstack != null) && canExtractItemFromInventory(outsideInventory, itemstack, slot, side))
+		if ((itemstack != null) && InventoryHelper.canExtractItemFromInventory(inventory, itemstack, slot, side));
 		{
-			final ItemStack itemstack1 = itemstack.copy();
-			final ItemStack outputStack = insertStack(destinationInventory, outsideInventory.decrStackSize(slot, 1), -1);
+		    if (itemstack == null) return false; //TODO: Figure out why we're crashing without this? o_O 
+		    // only reason I can see is that the itemstack become null between the check and here. Maybe you need a synchronize?
+			
+		    
+		    final ItemStack itemstack1 = itemstack.copy();
+			final ItemStack outputStack = insertStack(this, inventory.decrStackSize(slot, 1), -1);
 
 			if ((outputStack == null) || (outputStack.stackSize == 0))
 			{
-				outsideInventory.onInventoryChanged();
+				inventory.onInventoryChanged();
 				return true;
 			}
 
-			outsideInventory.setInventorySlotContents(slot, itemstack1);
+			inventory.setInventorySlotContents(slot, itemstack1);
 		}
 
 		return false;
 	}
 
-	
 	/**
 	 * trying to insert an outside entity "item" into the internal inventory
-	 * @param localInventory the target inventory where we will try to insert the stack
 	 * @param item the item entity
+	 * @param transferMode the mode that will determine where to put the item in the target inventory
 	 * @return true: item transfered / false: no item transfered
 	 */
-	public boolean insertStackFromEntity (EntityItem item)
+	public boolean pullStackFromEntity (EntityItem item, int transferMode)
 	{
 		boolean flag = false;
 
@@ -337,35 +324,91 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 	}
 
-	// destinationInventory == HigHOvenController. Can it be something else?
+	// can iiventory be something else than "this"? - yes, it can be the high oven's inventory
+	// my bad, I've found that myself yesterday too.
 	/**
 	 * Insert item from stack inside the iinventory
-	 * @param iinventory the destination inventory
+	 * @param inventory the destination inventory
 	 * @param stack the source stack
 	 * @param side ??
+	 * @param transferMode the mode of the duct. See HighOvenDuctLogic.mode 
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
-	public ItemStack insertStack (IInventory destinationIventory, ItemStack stack, int side)
+	public ItemStack insertStack (IInventory inventory, ItemStack stack, int side)
 	{
-		if ((destinationIventory instanceof ISidedInventory) && (side > -1))
+	    
+		if ((inventory instanceof ISidedInventory) && (side > -1))
 		{
-			final ISidedInventory isidedinventory = (ISidedInventory) destinationIventory;
+			final ISidedInventory isidedinventory = (ISidedInventory) inventory;
 			final int[] slot = isidedinventory.getAccessibleSlotsFromSide(side);
 
 			for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
-				stack = sendItemsToLocation(destinationIventory, stack, slot[i], side);
+				stack = sendItemsToLocation(inventory, stack, slot[i], side);
 		}
-		else if (this.mode == MODE_MELTABLE)
+		else  if (mode == MODE_MELTABLE)
 			//The transfer mode for "meltable" match the slot 4 and 5 
-			for (int slot = 4; (slot < destinationIventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
-				stack = sendItemsToLocation(destinationIventory, stack, slot, side);
-		else
+			for (int slot = 4; (slot < inventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
+				stack = sendItemsToLocation(inventory, stack, slot, side);
+		else if (mode == MODE_OUTPUT)
+		{
 			//The transfer modes other than "meltable" correspond to the same slot number.
-			stack = sendItemsToLocation(destinationIventory, stack, this.mode, side);
+		    int k = inventory.getSizeInventory();
 
+            for (int slot = 0; slot < k && stack != null && stack.stackSize > 0; ++slot)
+                stack = sendItemsToLocation(inventory, stack, slot, side);
+		}
+		else if (mode < MODE_MELTABLE)
+        {
+            stack = sendItemsToLocation(inventory, stack, mode, side);
+        }
 		if ((stack != null) && (stack.stackSize == 0))
 			stack = null;
 
+		return stack;
+	}
+
+	/**
+	 * add as much item (from stack) as possible inside the iinventory
+	 * @param iinventory the destination inventory
+	 * @param stack the source stack
+	 * @param slot the destination slot of the items
+	 * @param side ??
+	 * @return the remaining stack after items have been pulled off of it into iinventory
+	 */
+	private ItemStack sendItemsToLocation (IInventory iinventory, ItemStack stack, int slot, int side)
+	{
+		final ItemStack masterStack = iinventory.getStackInSlot(slot);
+
+		if (InventoryHelper.canInsertItemToInventory(iinventory, stack, slot, side))
+		{
+			boolean flag = false;
+
+			if (masterStack == null)
+			{
+				final int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
+				if (max >= stack.stackSize)
+				{
+					iinventory.setInventorySlotContents(slot, stack);
+					stack = null;
+				}
+				else
+					iinventory.setInventorySlotContents(slot, stack.splitStack(max));
+				flag = true;
+			}
+			else if (InventoryHelper.areItemStacksEqualItem(masterStack, stack))
+			{
+				final int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
+				if (max > masterStack.stackSize)
+				{
+					final int l = Math.min(stack.stackSize, max - masterStack.stackSize);
+					stack.stackSize -= l;
+					masterStack.stackSize += l;
+					flag = l > 0;
+				}
+			}
+			if (flag)
+				iinventory.onInventoryChanged();
+		}
 		return stack;
 	}
 
@@ -403,154 +446,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		default:
 			break;
 		}
-
-		return getInventoryAtLocation(this.getWorldObj(), checkXPos, checkYPos, checkZPos);
-	}
-
-	/* ==================== Helper Method ==================== */
-	// move to an external dedicated helper class?
-	
-	/**
-	 * add as much item (from stack) as possible inside the iinventory
-	 * @param destinationInventory the destination inventory
-	 * @param stack the source stack
-	 * @param slot the destination slot of the items
-	 * @param side ??
-	 * @return the remaining stack after items have been pulled off of it into iinventory
-	 */
-	private static ItemStack sendItemsToLocation (IInventory destinationInventory, ItemStack stack, int slot, int side)
-	{
-		final ItemStack masterStack = destinationInventory.getStackInSlot(slot);
-
-		if (canInsertItemToInventory(destinationInventory, stack, slot, side))
-		{
-			boolean flag = false;
-
-			if (masterStack == null)
-			{
-				final int max = Math.min(stack.getMaxStackSize(), destinationInventory.getInventoryStackLimit());
-				if (max >= stack.stackSize)
-				{
-					destinationInventory.setInventorySlotContents(slot, stack);
-					stack = null;
-				}
-				else
-					destinationInventory.setInventorySlotContents(slot, stack.splitStack(max));
-				flag = true;
-			}
-			else if (areItemStacksEqualItem(masterStack, stack))
-			{
-				final int max = Math.min(stack.getMaxStackSize(), destinationInventory.getInventoryStackLimit());
-				if (max > masterStack.stackSize)
-				{
-					final int l = Math.min(stack.stackSize, max - masterStack.stackSize);
-					stack.stackSize -= l;
-					masterStack.stackSize += l;
-					flag = l > 0;
-				}
-			}
-			if (flag)
-				destinationInventory.onInventoryChanged();
-		}
-		return stack;
-	}
-
-	private static boolean canInsertItemToInventory (IInventory iiventory, ItemStack stack, int slot, int side)
-	{
-		return !iiventory.isItemValidForSlot(slot, stack) ? false : !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canInsertItem(slot, stack, side);
-	}
-
-	private static boolean canExtractItemFromInventory (IInventory iiventory, ItemStack stack, int slot, int side)
-	{
-		return !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canExtractItem(slot, stack, side);
-	}
-	
-	public static EntityItem getExternalItemEntity (HighOvenDuctLogic block, byte facing){
-		return getExternalItemEntity(block.getWorldObj(), block.getXPos(), block.getYPos(), block.getZPos(), facing);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static EntityItem getExternalItemEntity (World world, double minX, double minY, double minZ, byte facing)
-	{
-		double x = minX;
-		double maxX = minX;
-		double y = minY;
-		double maxY = minY;
-		double z = minZ;
-		double maxZ = minZ;
-		switch (facing)
-		{
-		case 0: // Down
-			y = minY - 1.0D;
-			maxY = minY - 1.0D;
-			break;
-		case 1: // Up
-			maxY = minY + 1.0D;
-			break;
-		case 2: // North
-			z = minZ - 1.0D;
-			maxZ = minZ - 1.0D;
-			break;
-		case 3: // South
-			maxZ = minZ + 1.0D;
-			break;
-		case 4: // West
-			x = minX - 1.0D;
-			maxX = minX - 1.0D;
-			break;
-		case 5: // East
-			maxX = minX + 1.0D;
-			break;
-		default:
-			break;
-		}
-		final List<EntityItem> list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
-		return list.size() > 0 ? (EntityItem) list.get(0) : null;
-	}
-
-	@SuppressWarnings("unchecked")
-	public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
-	{
-		IInventory iinventory = null;
-		final int i = MathHelper.floor_double(minX);
-		final int j = MathHelper.floor_double(minY);
-		final int k = MathHelper.floor_double(maxX);
-		final TileEntity tileentity = world.getBlockTileEntity(i, j, k);
-
-		if ((tileentity != null) && (tileentity instanceof IInventory))
-		{
-			iinventory = (IInventory) tileentity;
-			if (iinventory instanceof TileEntityChest)
-			{
-				final int l = world.getBlockId(i, j, k);
-				final Block block = Block.blocksList[l];
-
-				if (block instanceof BlockChest)
-					iinventory = ((BlockChest) block).getInventory(world, i, j, k);
-			}
-		}
-		if (iinventory == null)
-		{
-			final List<IInventory> list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
-					IEntitySelector.selectInventories);
-			if ((list != null) && (list.size() > 0))
-				iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
-		}
-
-		return iinventory;
-	}
-
-	public static boolean areItemStacksEqualItem (ItemStack stack1, ItemStack stack2)
-	{
-		return stack1.itemID != stack2.itemID ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack
-				.areItemStackTagsEqual(stack1, stack2)));
+		
+		return InventoryHelper.getInventoryAtLocation(this.getWorldObj(), checkXPos, checkYPos, checkZPos);
 	}
 
 	/* ==================== TileEntity ==================== */
 
-	/**
-	 * Gets the world X position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getXPos()
@@ -561,9 +462,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return xCoord;
 	}
 
-	/**
-	 * Gets the world Y position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getYPos()
@@ -574,9 +472,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return yCoord;
 	}
 
-	/**
-	 * Gets the world Z position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getZPos()
