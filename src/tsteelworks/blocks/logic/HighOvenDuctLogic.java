@@ -1,11 +1,5 @@
 package tsteelworks.blocks.logic;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,9 +14,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.Hopper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -30,9 +21,9 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.util.InventoryHelper;
 
 // TODO: Lots
-//TODO: wisthy 2014/04/25 - regroup static helper method? at the end of the class? on a separate helper class?
 //TODO: wisthy 2014/04/25 - replace calls to "x = this / f(x){y=x.a}" by "f(){y=this.a}" 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
@@ -62,7 +53,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	boolean redstoneActivated = false;
 
 	//why not using TSInventoryLogic to manage the internal inventory? because this class already extends TSMultiServantLogic? 
-	//if so, We can use a delegated item that extends TSInventoryLogic 
+	//if so, We can use a delegated item that extends TSInventoryLogic - Could you elaborate, please?
 	private ItemStack[] inventory = new ItemStack[9];
 
 	private int transferCooldown = -1;
@@ -76,9 +67,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	@Override
 	public void updateEntity ()
 	{
-		//        if (worldObj == null) return;
-		//        --transferCooldown;
-		//        updateDuct();
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			--this.transferCooldown;
@@ -97,29 +85,24 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	public boolean updateDuct ()
 	{
+	    boolean flag = false;
 		if (this.worldObj != null && !this.worldObj.isRemote)
 		{
 			if (!isCoolingDown())
 			{
 				setTransferCooldown(0);
 
-				boolean flag = insertItemToInventory();
-				flag = suckItemsIntoDuct(this) || flag;
+				flag = insertItemToInventory();
+				flag = suckItemsIntoDuct() || flag;
 
 				if (flag)
 				{
 					setTransferCooldown(8);
 					onInventoryChanged();
-					return true;
 				}   
-				else
-					return false;
 			}
-			else
-				return false;
 		}
-		else
-			return false;
+		return flag;
 	}
 
 	/*
@@ -180,7 +163,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	public void setMode (int newMode)
 	{
-		mode = (newMode < 6) ? newMode : MODE_OUTPUT;
+		mode = (newMode < MODE_OUTPUT + 1) ? newMode : MODE_OUTPUT;
 		if (mode == MODE_OUTPUT)
 			getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
 	}
@@ -202,10 +185,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	private boolean insertItemToInventory ()
 	{
-		if (!hasValidMaster() || !redstoneActivated)
+	    // 2014/4/25 - reverse redstone logic: active signal stops transfers
+		if (!hasValidMaster() || redstoneActivated)
 			return false;
 		final IInventory masterInventory = getOutputInventory();
-
+		
 		if (masterInventory == null)
 			return false;
 		else
@@ -242,88 +226,82 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @return 
 	 * 			true: item transfered / false: no item transfered
 	 */
-	public boolean suckItemsIntoDuct (Hopper localInventory)
+	boolean suckItemsIntoDuct ()
 	{
-		if (mode == MODE_OUTPUT || !redstoneActivated)
+		if (mode == MODE_OUTPUT || redstoneActivated)
 			return false;
-		final IInventory outsideInventory = getExternalInventory(localInventory, direction);
+		final IInventory inventory = getExternalInventory(direction);
 
-		if (outsideInventory != null)
+		if (inventory != null)
 		{
 			final byte side = 0;
 
-			if ((outsideInventory instanceof ISidedInventory) && (side > -1))
+			if ((inventory instanceof ISidedInventory) && (side > -1))
 			{
-				final ISidedInventory isidedinventory = (ISidedInventory) outsideInventory;
+				final ISidedInventory isidedinventory = (ISidedInventory) inventory;
 				final int[] slots = isidedinventory.getAccessibleSlotsFromSide(side);
 
 				for (final int slot : slots)
-					if (insertStackFromInventory(localInventory, outsideInventory, slot, side, mode))
+					if (pullStackFromInventory(inventory, slot, side, mode))
 						return true;
 			}
 			else
 			{
-				final int j = outsideInventory.getSizeInventory();
-
+				final int j = inventory.getSizeInventory();
+				if (j == 0) return false;
 				for (int k = 0; k < j; ++k)
-					if (insertStackFromInventory(localInventory, outsideInventory, k, side, mode))
+					if (pullStackFromInventory(inventory, k, side, mode))
 						return true;
 			}
 		}
 		else if (ConfigCore.enableDuctVacuum)
 		{
-			// all the parameters come from "this", why a public method with 5 params when it can be a private without param?
-			final EntityItem entityitem = getExternalItemEntity(localInventory.getWorldObj(), localInventory.getXPos(), localInventory.getYPos(), localInventory.getZPos(), direction);
+			final EntityItem entityitem = InventoryHelper.getItemEntityAtLocation(this.getWorldObj(), this.getXPos(), getYPos(), getZPos(), direction);
 
 			if (entityitem != null)
-				return insertStackFromEntity(localInventory, entityitem, mode);
+				return pullStackFromEntity(entityitem, mode);
 		}
 
 		return false;
 	}
 
-	// private + static? why?
-	// all possible calls to this method come with "this" as localInventory. 
-	// Should be refactored to remove the static and use "this.*" instead of localInventory
 	/**
 	 * trying to insert a stack from an outside inventory into the internal inventory
-	 * @param localInventory the target inventory where we will try to insert the stack
-	 * @param outsideInventory the source inventory where we will take the stack from
+	 * @param inventory the source inventory where we will take the stack from
 	 * @param slot the slot of the source inventory
 	 * @param side ??
 	 * @param transferMode the mode that will determine where to put the stack in the target inventory
 	 * @return true: item transfered / false: no item transfered
 	 */
-	private static boolean insertStackFromInventory (Hopper localInventory, IInventory outsideInventory, int slot, int side, int transferMode)
+	private boolean pullStackFromInventory (IInventory inventory, int slot, int side, int transferMode)
 	{
-		final ItemStack itemstack = outsideInventory.getStackInSlot(slot);
+		final ItemStack itemstack = inventory.getStackInSlot(slot);
 
-		if ((itemstack != null) && canExtractItemFromInventory(outsideInventory, itemstack, slot, side))
+		if ((itemstack != null) && InventoryHelper.canExtractItemFromInventory(inventory, itemstack, slot, side));
 		{
+		    if (itemstack == null) return false; //TODO: Figure out why we're crashing without this? o_O
 			final ItemStack itemstack1 = itemstack.copy();
-			final ItemStack outputStack = insertStack(localInventory, outsideInventory.decrStackSize(slot, 1), -1, transferMode);
+			final ItemStack outputStack = insertStack(this, inventory.decrStackSize(slot, 1), -1, transferMode);
 
 			if ((outputStack == null) || (outputStack.stackSize == 0))
 			{
-				outsideInventory.onInventoryChanged();
+				inventory.onInventoryChanged();
 				return true;
 			}
 
-			outsideInventory.setInventorySlotContents(slot, itemstack1);
+			inventory.setInventorySlotContents(slot, itemstack1);
 		}
 
 		return false;
 	}
 
-	// can localInventory be something else than "this"?
 	/**
 	 * trying to insert an outside entity "item" into the internal inventory
-	 * @param localInventory the target inventory where we will try to insert the stack
 	 * @param item the item entity
 	 * @param transferMode the mode that will determine where to put the item in the target inventory
 	 * @return true: item transfered / false: no item transfered
 	 */
-	public static boolean insertStackFromEntity (IInventory localInventory, EntityItem item, int transferMode)
+	public boolean pullStackFromEntity (EntityItem item, int transferMode)
 	{
 		boolean flag = false;
 
@@ -332,7 +310,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		else
 		{
 			final ItemStack itemstack = item.getEntityItem().copy();
-			final ItemStack itemstack1 = insertStack(localInventory, itemstack, -1, transferMode);
+			final ItemStack itemstack1 = insertStack(this, itemstack, -1, transferMode);
 
 			if ((itemstack1 != null) && (itemstack1.stackSize != 0))
 				item.setEntityItemStack(itemstack1);
@@ -345,8 +323,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 	}
 
-
-	// can iiventory be something else than "this"?
+	// can iiventory be something else than "this"? - yes, it can be the high oven's inventory
 	/**
 	 * Insert item from stack inside the iinventory
 	 * @param iinventory the destination inventory
@@ -355,7 +332,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param transferMode the mode of the duct. See HighOvenDuctLogic.mode 
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
-	public static ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
+	public ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
 	{
 		if ((iiventory instanceof ISidedInventory) && (side > -1))
 		{
@@ -365,7 +342,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
 				stack = sendItemsToLocation(iiventory, stack, slot[i], side);
 		}
-		else if (transferMode == MODE_MELTABLE)
+		else  if (transferMode == MODE_MELTABLE)
 			//The transfer mode for "meltable" match the slot 4 and 5 
 			for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
 				stack = sendItemsToLocation(iiventory, stack, slot, side);
@@ -379,20 +356,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return stack;
 	}
 
-	// what's the link between this method and this class? move it to an "helper" class?
-	private static boolean canInsertItemToInventory (IInventory iiventory, ItemStack stack, int slot, int side)
-	{
-		return !iiventory.isItemValidForSlot(slot, stack) ? false : !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canInsertItem(slot, stack, side);
-	}
-
-	// what's the link between this method and this class? move it to an "helper" class?
-	private static boolean canExtractItemFromInventory (IInventory iiventory, ItemStack stack, int slot, int side)
-	{
-		return !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canExtractItem(slot, stack, side);
-	}
-
-	// can iinventory be something else than "this"?
-	// why static?
+	// can iinventory be something else than "this"? - yes, see insertStack
 	/**
 	 * add as much item (from stack) as possible inside the iinventory
 	 * @param iinventory the destination inventory
@@ -401,11 +365,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param side ??
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
-	private static ItemStack sendItemsToLocation (IInventory iinventory, ItemStack stack, int slot, int side)
+	private ItemStack sendItemsToLocation (IInventory iinventory, ItemStack stack, int slot, int side)
 	{
 		final ItemStack masterStack = iinventory.getStackInSlot(slot);
 
-		if (canInsertItemToInventory(iinventory, stack, slot, side))
+		if (InventoryHelper.canInsertItemToInventory(iinventory, stack, slot, side))
 		{
 			boolean flag = false;
 
@@ -421,7 +385,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 					iinventory.setInventorySlotContents(slot, stack.splitStack(max));
 				flag = true;
 			}
-			else if (areItemStacksEqualItem(masterStack, stack))
+			else if (InventoryHelper.areItemStacksEqualItem(masterStack, stack))
 			{
 				final int max = Math.min(stack.getMaxStackSize(), iinventory.getInventoryStackLimit());
 				if (max > masterStack.stackSize)
@@ -440,126 +404,44 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	private IInventory getOutputInventory ()
 	{
-		return (mode == MODE_OUTPUT) ? getExternalInventory(this, direction) : getHighOvenController();
+		return (mode == MODE_OUTPUT) ? getExternalInventory(direction) : getHighOvenController();
 	}
 
-	// can localInventory be something else than "this"?
-	public static IInventory getExternalInventory (Hopper localInventory, byte facing)
+	public IInventory getExternalInventory (byte facing)
 	{
-		double checkXPos = localInventory.getXPos();
-		double checkYPos = localInventory.getYPos();
-		double checkZPos = localInventory.getZPos();
+		double checkXPos = this.getXPos();
+		double checkYPos = this.getYPos();
+		double checkZPos = this.getZPos();
 
 		switch (facing)
 		{
 		case 0: // Down
-			checkYPos = localInventory.getYPos() - 1.0D;
+			checkYPos = this.getYPos() - 1.0D;
 			break;
 		case 1: // Up
-			checkYPos = localInventory.getYPos() + 1.0D;
+			checkYPos = this.getYPos() + 1.0D;
 			break;
 		case 2: // North
-			checkZPos = localInventory.getZPos() - 1.0D;
+			checkZPos = this.getZPos() - 1.0D;
 			break;
 		case 3: // South
-			checkZPos = localInventory.getZPos() + 1.0D;
+			checkZPos = this.getZPos() + 1.0D;
 			break;
 		case 4: // West
-			checkXPos = localInventory.getXPos() - 1.0D;
+			checkXPos = this.getXPos() - 1.0D;
 			break;
 		case 5: // East
-			checkXPos = localInventory.getXPos() + 1.0D;
+			checkXPos = this.getXPos() + 1.0D;
 			break;
 		default:
 			break;
 		}
-
-		return getInventoryAtLocation(localInventory.getWorldObj(), checkXPos, checkYPos, checkZPos);
-	}
-
-	// what's the link between this method and this class? move it to an "helper" class?
-	public static EntityItem getExternalItemEntity (World world, double minX, double minY, double minZ, byte facing)
-	{
-		double x = minX;
-		double maxX = minX;
-		double y = minY;
-		double maxY = minY;
-		double z = minZ;
-		double maxZ = minZ;
-		switch (facing)
-		{
-		case 0: // Down
-			y = minY - 1.0D;
-			maxY = minY - 1.0D;
-			break;
-		case 1: // Up
-			maxY = minY + 1.0D;
-			break;
-		case 2: // North
-			z = minZ - 1.0D;
-			maxZ = minZ - 1.0D;
-			break;
-		case 3: // South
-			maxZ = minZ + 1.0D;
-			break;
-		case 4: // West
-			x = minX - 1.0D;
-			maxX = minX - 1.0D;
-			break;
-		case 5: // East
-			maxX = minX + 1.0D;
-			break;
-		default:
-			break;
-		}
-		final List<EntityItem> list = world.selectEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getAABBPool().getAABB(x, y, z, maxX + 1.0D, maxY + 1.0D, maxZ + 1.0D), IEntitySelector.selectAnything);
-		return list.size() > 0 ? (EntityItem) list.get(0) : null;
-	}
-
-	// what's the link between this method and this class? move it to an "helper" class?
-	public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
-	{
-		IInventory iinventory = null;
-		final int i = MathHelper.floor_double(minX);
-		final int j = MathHelper.floor_double(minY);
-		final int k = MathHelper.floor_double(maxX);
-		final TileEntity tileentity = world.getBlockTileEntity(i, j, k);
-
-		if ((tileentity != null) && (tileentity instanceof IInventory))
-		{
-			iinventory = (IInventory) tileentity;
-			if (iinventory instanceof TileEntityChest)
-			{
-				final int l = world.getBlockId(i, j, k);
-				final Block block = Block.blocksList[l];
-
-				if (block instanceof BlockChest)
-					iinventory = ((BlockChest) block).getInventory(world, i, j, k);
-			}
-		}
-		if (iinventory == null)
-		{
-			final List<IInventory> list = world.getEntitiesWithinAABBExcludingEntity((Entity) null, AxisAlignedBB.getAABBPool().getAABB(minX, minY, maxX, minX + 1.0D, minY + 1.0D, maxX + 1.0D),
-					IEntitySelector.selectInventories);
-			if ((list != null) && (list.size() > 0))
-				iinventory = (IInventory) list.get(world.rand.nextInt(list.size()));
-		}
-
-		return iinventory;
-	}
-
-	// what's the link between this method and this class? move it to an "helper" class?
-	public static boolean areItemStacksEqualItem (ItemStack stack1, ItemStack stack2)
-	{
-		return stack1.itemID != stack2.itemID ? false : (stack1.getItemDamage() != stack2.getItemDamage() ? false : (stack1.stackSize > stack1.getMaxStackSize() ? false : ItemStack
-				.areItemStackTagsEqual(stack1, stack2)));
+		
+		return InventoryHelper.getInventoryAtLocation(this.getWorldObj(), checkXPos, checkYPos, checkZPos);
 	}
 
 	/* ==================== TileEntity ==================== */
 
-	/**
-	 * Gets the world X position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getXPos()
@@ -570,9 +452,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return xCoord;
 	}
 
-	/**
-	 * Gets the world Y position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getYPos()
@@ -583,9 +462,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return yCoord;
 	}
 
-	/**
-	 * Gets the world Z position for this hopper entity.
-	 */
 	/*
 	 * (non-Javadoc)
 	 * @see net.minecraft.tileentity.Hopper#getZPos()

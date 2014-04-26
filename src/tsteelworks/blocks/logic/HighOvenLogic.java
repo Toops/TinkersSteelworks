@@ -42,6 +42,7 @@ import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.util.InventoryHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
@@ -1093,7 +1094,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         effective = flag;
                     }
                 }
-                else if (HighOvenDuctLogic.areItemStacksEqualItem(getstack, copystack))
+                else if (InventoryHelper.areItemStacksEqualItem(getstack, copystack))
                 {
                     final int max = Math.min(copystack.getMaxStackSize(), duct.getInventoryStackLimit());
                     if (max > getstack.stackSize)
