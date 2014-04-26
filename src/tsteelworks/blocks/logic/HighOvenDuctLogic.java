@@ -198,7 +198,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 				if (getStackInSlot(slot) != null)
 				{
 					final ItemStack copyStack = getStackInSlot(slot).copy();
-					final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection(), mode);
+					final ItemStack outputStack = insertStack(masterInventory, decrStackSize(slot, 1), getRenderDirection());
 
 					if ((outputStack == null) || (outputStack.stackSize == 0))
 					{
@@ -242,7 +242,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 				final int[] slots = isidedinventory.getAccessibleSlotsFromSide(side);
 
 				for (final int slot : slots)
-					if (pullStackFromInventory(inventory, slot, side, mode))
+					if (pullStackFromInventory(inventory, slot, side))
 						return true;
 			}
 			else
@@ -250,7 +250,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 				final int j = inventory.getSizeInventory();
 				if (j == 0) return false;
 				for (int k = 0; k < j; ++k)
-					if (pullStackFromInventory(inventory, k, side, mode))
+					if (pullStackFromInventory(inventory, k, side))
 						return true;
 			}
 		}
@@ -273,7 +273,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param transferMode the mode that will determine where to put the stack in the target inventory
 	 * @return true: item transfered / false: no item transfered
 	 */
-	private boolean pullStackFromInventory (IInventory inventory, int slot, int side, int transferMode)
+	private boolean pullStackFromInventory (IInventory inventory, int slot, int side)
 	{
 		final ItemStack itemstack = inventory.getStackInSlot(slot);
 
@@ -281,7 +281,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		{
 		    if (itemstack == null) return false; //TODO: Figure out why we're crashing without this? o_O
 			final ItemStack itemstack1 = itemstack.copy();
-			final ItemStack outputStack = insertStack(this, inventory.decrStackSize(slot, 1), -1, transferMode);
+			final ItemStack outputStack = insertStack(this, inventory.decrStackSize(slot, 1), -1);
 
 			if ((outputStack == null) || (outputStack.stackSize == 0))
 			{
@@ -310,7 +310,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		else
 		{
 			final ItemStack itemstack = item.getEntityItem().copy();
-			final ItemStack itemstack1 = insertStack(this, itemstack, -1, transferMode);
+			final ItemStack itemstack1 = insertStack(this, itemstack, -1);
 
 			if ((itemstack1 != null) && (itemstack1.stackSize != 0))
 				item.setEntityItemStack(itemstack1);
@@ -326,30 +326,39 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	// can iiventory be something else than "this"? - yes, it can be the high oven's inventory
 	/**
 	 * Insert item from stack inside the iinventory
-	 * @param iinventory the destination inventory
+	 * @param inventory the destination inventory
 	 * @param stack the source stack
 	 * @param side ??
 	 * @param transferMode the mode of the duct. See HighOvenDuctLogic.mode 
 	 * @return the remaining stack after items have been pulled off of it into iinventory
 	 */
-	public ItemStack insertStack (IInventory iiventory, ItemStack stack, int side, int transferMode)
+	public ItemStack insertStack (IInventory inventory, ItemStack stack, int side)
 	{
-		if ((iiventory instanceof ISidedInventory) && (side > -1))
+	    
+		if ((inventory instanceof ISidedInventory) && (side > -1))
 		{
-			final ISidedInventory isidedinventory = (ISidedInventory) iiventory;
+			final ISidedInventory isidedinventory = (ISidedInventory) inventory;
 			final int[] slot = isidedinventory.getAccessibleSlotsFromSide(side);
 
 			for (int i = 0; (i < slot.length) && (stack != null) && (stack.stackSize > 0); ++i)
-				stack = sendItemsToLocation(iiventory, stack, slot[i], side);
+				stack = sendItemsToLocation(inventory, stack, slot[i], side);
 		}
-		else  if (transferMode == MODE_MELTABLE)
+		else  if (mode == MODE_MELTABLE)
 			//The transfer mode for "meltable" match the slot 4 and 5 
-			for (int slot = 4; (slot < iiventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
-				stack = sendItemsToLocation(iiventory, stack, slot, side);
-		else
+			for (int slot = 4; (slot < inventory.getSizeInventory()) && (stack != null) && (stack.stackSize > 0); slot += 1)
+				stack = sendItemsToLocation(inventory, stack, slot, side);
+		else if (mode == MODE_OUTPUT)
+		{
 			//The transfer modes other than "meltable" correspond to the same slot number.
-			stack = sendItemsToLocation(iiventory, stack, transferMode, side);
+		    int k = inventory.getSizeInventory();
 
+            for (int slot = 0; slot < k && stack != null && stack.stackSize > 0; ++slot)
+                stack = sendItemsToLocation(inventory, stack, slot, side);
+		}
+		else if (mode < MODE_MELTABLE)
+        {
+            stack = sendItemsToLocation(inventory, stack, mode, side);
+        }
 		if ((stack != null) && (stack.stackSize == 0))
 			stack = null;
 
