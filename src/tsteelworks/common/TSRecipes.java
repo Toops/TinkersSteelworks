@@ -19,6 +19,7 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.util.RecipeRemover;
+import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -220,10 +221,12 @@ public class TSRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
         }
         
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustGunpowder", "dustRedstone", "blockSand");
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustGunpowder", "dustAluminum", "blockSand");
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustGunpowder", "dustAluminium", "blockSand");
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustSulfur", "dustManganese", "blockSand");
+        String[] oxidizers = {"dustGunpowder", "dustSulfur"};
+        String[] reducers = {"dustRedstone", "dustSaltpeter", "dustManganese", "dustAluminum", "dustAluminium" };
+        
+        for (String o : oxidizers)
+            for (String r : reducers)
+                AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, o, r, "blockSand");
     }
 
     public static void craftPigIron ()

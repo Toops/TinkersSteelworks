@@ -274,7 +274,6 @@ public class TSContent
      */
     void registerMixerMaterials ()
     {
-        
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
         AdvancedSmelting.registerMixItem("dustSulfur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
         AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
@@ -287,34 +286,12 @@ public class TSContent
         AdvancedSmelting.registerMixItem("oreManganese", HighOvenLogic.SLOT_PURIFIER, 1, 51);
         AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
         AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
-        //AdvancedSmelting.registerMixItem("itemClay", HighOvenLogic.SLOT_PURIFIER, 1, 20);
         AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 30);
         AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         
         AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 2, 100);
         AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 80);
         AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 80);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.gunpowder,      1, 0), 0, 33);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.sugar,          1, 0), 0, 62);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.blazePowder,    1, 0), 0, 33);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 0, 33);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.coal,           1, 0), 0, 56);
-//        
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 1, 65);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.emerald,        1, 0), 1, 30);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.flint,          1, 0), 1, 30);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.clay,           1, 0), 1, 20);
-//        AdvancedSmelting.registerMixItem(new ItemStack(TContent.oreBerries, 1, 5), 1, 37);
-//        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 22), 1, 26);
-//        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 40), 1, 53);
-//        
-//        AdvancedSmelting.registerMixItem(new ItemStack(Item.ghastTear,      1, 0), 2, 30);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Block.blockClay,     1, 0), 2, 80);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          2, 0), 2, 100);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          1, 0), 2, 100);
-//        AdvancedSmelting.registerMixItem(new ItemStack(Block.cobblestone,   1, 0), 2, 100);
-//        AdvancedSmelting.registerMixItem(new ItemStack(TContent.meatBlock,  1, 0), 2, 100);
-//        AdvancedSmelting.registerMixItem(new ItemStack(TContent.craftedSoil, 1, 3), 2, 53);
     }
     
     /**
