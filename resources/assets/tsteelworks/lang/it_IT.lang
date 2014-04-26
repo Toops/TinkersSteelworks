@@ -16,6 +16,7 @@ item.tsteelworks.bootsSteel.name=Stivali d'Acciaio
 
 item.tsteelworks.bucket.Steam.name=Secchio di Vapore
 item.tsteelworks.bucket.Limestone.name=Secchio di Calcare Fuso
+item.tsteelworks.bucket.Cement.name=Secchio di Cemento
 
 entity.HighGolem.name=Golem d'Acciaio
 
@@ -74,6 +75,22 @@ Limestone.Brick.Fancy.name=Mattoni di Calcare Decorativi
 Limestone.Brick.Square.name=Mattoni di Calcare Cesellati
 Limestone.Brick.Creeper.name=Mattoni di Calcare Raccapriccianti
 
+Cement.white.name=Cemento Bianco
+Cement.orange.name=Cemento Arancione
+Cement.magenta.name=Cemento Magenta
+Cement.lightblue.name=Cemento Blu Chiaro
+Cement.yellow.name=Cemento Giallo
+Cement.lime.name=Cemento Lime
+Cement.pink.name=Cemento Rosa
+Cement.gray.name=Cemento Grigio
+Cement.lightgray.name=Cemento Grigio Chiaro
+Cement.cyan.name=Cemento Ciano
+Cement.purple.name=Cemento Viola
+Cement.blue.name=Cemento Blu
+Cement.green.name=Cemento Verde
+Cement.red.name=Cemento Rosso
+Cement.black.name=Cemento Nero
+
 highoven.controller.tooltip1=Il componente principale del Forno Alto
 highoven.controller.tooltip2=(Attenzione: Contenuto sotto pressione)
 highoven.tankcontroller.tooltip1=Il componente principale del Serbatoio Profondo
@@ -90,6 +107,7 @@ highoven.brick.tooltip1=Blocco di struttura per il Forno Aloto
 highoven.brick.tooltip2=(Usabile anche come decorazione)
 
 limestone.tooltip1=Sedimentario
+cement.tooltip1=Forma e funzione!
 
 dustblock.gunpowder.tooltip=Fuoco alle macchine!
 dustblock.sugar.tooltip=Dolcissimo!
