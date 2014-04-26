@@ -1,10 +1,9 @@
 package tsteelworks.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.lib.TSteelworksRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class CementFluidBlock extends TSBaseFluid
 {

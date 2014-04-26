@@ -19,13 +19,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.TConstruct;
 import tconstruct.blocks.logic.MultiServantLogic;
 import tconstruct.blocks.logic.SmelteryDrainLogic;
 import tconstruct.common.TContent;
@@ -33,7 +30,6 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
@@ -100,15 +96,31 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     public String getDefaultName () { return "tank.DeepTank"; }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
+     */
     @Override
     public byte getRenderDirection () { return direction; }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
+     */
     @Override
     public ForgeDirection getForgeDirection () { return ForgeDirection.VALID_DIRECTIONS[direction]; }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#setDirection(int)
+     */
     @Override
     public void setDirection (int side) {}
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IFacingLogic#setDirection(float, float, net.minecraft.entity.EntityLivingBase)
+     */
     @Override
     public void setDirection (float yaw, float pitch, EntityLivingBase player)
     {
@@ -193,6 +205,11 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
+     */
+    @Override
     public void onInventoryChanged ()
     {
         updateEntity();
@@ -200,7 +217,14 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         needsUpdate = true;
     }
 
+    
+    
     /* Multiblock */
+    
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IMasterLogic#notifyChange(tconstruct.library.util.IServantLogic, int, int, int)
+     */
     @Override
     public void notifyChange (IServantLogic servant, int x, int y, int z)
     {
@@ -280,6 +304,77 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 validStructure = false;
         }
     }
+    
+    
+	 // trying to refactor the following methods to use only one
+    
+    // TODO Toops - 2014/04/26 - could you have a look at the following methods? if it sounds good to you, use them instead of the version without the "2" in the name
+
+	 public boolean checkSameLevel2(int x, int y, int z, int compareBricks)
+	 {
+		 return checkStructureGlobal(x, y, z, compareBricks, -1, 0, 0, 0)==0;
+	 }
+
+	 public int recurseStructureUp2(int x, int y, int z, int count, int compareBricks)
+	 {
+		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, 1, -1); // add count somewhere
+	 }
+	 
+	 public int recurseStructureDown2(int x, int y, int z, int count, int compareBricks)
+	 {
+		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, -1, -1); // add count somewhere
+	 }
+
+	 public int checkStructureGlobal(int x, int y, int z, int compareBricks, int count, int modX, int modY, int modZ)
+	 {
+		 numBricks = 0;
+		 Block block = null;
+		 int innerCenterX = xDistanceToRim();
+		 int innerCenterZ = zDistanceToRim();
+		 
+		 boolean isMiddleLayer = (count > -1);
+
+		 for(int xPos = x - (innerCenterX + modX); xPos <= x + (innerCenterX + modX); xPos++)
+		 {
+			 for(int zPos = z - (innerCenterZ + modZ); zPos <= z + (innerCenterZ + modZ); zPos++)
+			 {
+				 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
+				 if (block != null && validGlassID(block.blockID))
+				 {
+					 if(! isMiddleLayer)
+					 {
+						 numBricks += checkBricks(xPos, y, zPos, true);
+					 }else
+					 {
+						 if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 
+							 return (validGlassID(block.blockID)) ? validateTop(x, y, z, count, compareBricks) : count;
+					 }
+				 }
+			 }
+		 }
+		 for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
+		 {
+			 numBricks += checkBricks(xPos, y, z - (innerCenterZ), isMiddleLayer);
+			 numBricks += checkBricks(xPos, y, z + (innerCenterZ), isMiddleLayer);
+		 }
+		 for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+		 {
+			 numBricks += checkBricks(x - innerCenterX, y, zPos, isMiddleLayer);
+			 numBricks += checkBricks(x + innerCenterX, y, zPos, isMiddleLayer);
+		 }
+		 if(!isMiddleLayer)
+		 {
+			 return (numBricks == compareBricks)?0:1;
+		 }else{
+			 if (numBricks != compareBricks - innerSpaceTotal())
+				 return count;
+
+			 count++;
+			 return checkStructureGlobal(x, y + modY, z, compareBricks, count, modX, modY, modZ);
+		 }
+	 }
+    
+    
     // Redundancy at its finest.
     public boolean checkSameLevel (int x, int y, int z, int compareBricks)
     {
@@ -380,7 +475,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         count++;
         return recurseStructureDown(x, y - 1, z, count, compareBricks);
     }
-
+    
+    // TODO Wisthy - 2014/04/26 - can it be fitted in the "global" method too? Need more reflexion time on this
     public int validateTop (int x, int y, int z, int count, int compareBricks)
     {
         int topBricks = 0;
@@ -408,6 +504,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return count;
     }
     
+    // TODO Wisthy - 2014/04/26 - can it be fitted in the "global" method too? Need more reflexion time on this
     public int validateBottom (int x, int y, int z, int count, int compareBricks)
     {
         int bottomBricks = 0;
@@ -705,10 +802,19 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return false;
     }
     
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
+     */
+    @Override
     public int getCapacity () { return maxLiquid; }
 
     public int getTotalLiquid () { return currentLiquid; }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#drain(int, boolean)
+     */
     @Override
     public FluidStack drain (int maxDrain, boolean doDrain)
     {
@@ -752,6 +858,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#fill(net.minecraftforge.fluids.FluidStack, boolean)
+     */
     @Override
     public int fill (FluidStack resource, boolean doFill)
     {
@@ -776,6 +886,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             return 0;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluid()
+     */
     @Override
     public FluidStack getFluid ()
     {
@@ -786,9 +900,17 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     public List<FluidStack> getAllFluids () { return fluidlist; }
     
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
+     */
     @Override
     public int getFluidAmount () { return currentLiquid; }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getInfo()
+     */
     @Override
     public FluidTankInfo getInfo () { return new FluidTankInfo(this); }
 
@@ -836,7 +958,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             FluidStack alloy = fluidlist.get(i).copy();
             if (!fluidIsAlloy(alloy)) continue;
             
-            ArrayList fluids = AlloyInfo.deAlloy(alloy);
+            ArrayList<FluidStack> fluids = AlloyInfo.deAlloy(alloy);
             fluidlist.remove(i);
             
             for (int j = 0; j < fluids.size(); j++)
@@ -849,6 +971,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     /* NBT */
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -878,6 +1004,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
@@ -908,7 +1038,14 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         tags.setTag("Liquids", taglist);
     }
 
+    
+    
     /* Packets */
+    
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#getDescriptionPacket()
+     */
     @Override
     public Packet getDescriptionPacket ()
     {
@@ -917,6 +1054,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#onDataPacket(net.minecraft.network.INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
+     */
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {

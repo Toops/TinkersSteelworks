@@ -24,7 +24,6 @@ import tsteelworks.lib.ConfigCore;
 import tsteelworks.util.InventoryHelper;
 
 // TODO: Lots
-//TODO: wisthy 2014/04/25 - replace calls to "x = this / f(x){y=x.a}" by "f(){y=this.a}" 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
 {
 	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER; 
@@ -54,6 +53,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	//why not using TSInventoryLogic to manage the internal inventory? because this class already extends TSMultiServantLogic? 
 	//if so, We can use a delegated item that extends TSInventoryLogic - Could you elaborate, please?
+	// TODO - Toops - 2014/04/26 - Check in wisthy-0 branch, I've done that on an "experimental" branch. If it suits you, I'll adapt it for the main branch and pull a request
 	private ItemStack[] inventory = new ItemStack[9];
 
 	private int transferCooldown = -1;
@@ -216,8 +216,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	}
 
 
-	//localInventory == this => can it be something else? 
-	//if not, can it be removed from the parameter and called with "this" inside the method
 	/**
 	 * Trying to transfer one item from attached inventory into one of the internal stot 
 	 * 
@@ -279,8 +277,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 		if ((itemstack != null) && InventoryHelper.canExtractItemFromInventory(inventory, itemstack, slot, side));
 		{
-		    if (itemstack == null) return false; //TODO: Figure out why we're crashing without this? o_O
-			final ItemStack itemstack1 = itemstack.copy();
+		    if (itemstack == null) return false; //TODO: Figure out why we're crashing without this? o_O 
+		    // only reason I can see is that the itemstack become null between the check and here. Maybe you need a synchronize?
+			
+		    
+		    final ItemStack itemstack1 = itemstack.copy();
 			final ItemStack outputStack = insertStack(this, inventory.decrStackSize(slot, 1), -1);
 
 			if ((outputStack == null) || (outputStack.stackSize == 0))
@@ -324,6 +325,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	}
 
 	// can iiventory be something else than "this"? - yes, it can be the high oven's inventory
+	// my bad, I've found that myself yesterday too.
 	/**
 	 * Insert item from stack inside the iinventory
 	 * @param inventory the destination inventory
@@ -365,7 +367,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return stack;
 	}
 
-	// can iinventory be something else than "this"? - yes, see insertStack
 	/**
 	 * add as much item (from stack) as possible inside the iinventory
 	 * @param iinventory the destination inventory

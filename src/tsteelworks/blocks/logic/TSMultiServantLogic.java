@@ -17,6 +17,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     short masterID;
     byte masterMeta;
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#canUpdate()
+     */
     @Override
     public boolean canUpdate ()
     {
@@ -39,6 +43,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
     
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IServantLogic#getMasterPosition()
+     */
     @Override
     public CoordTuple getMasterPosition ()
     {
@@ -61,6 +69,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         masterMeta = 0;
     }
     
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IServantLogic#notifyMasterOfChange()
+     */
     @Override
     public void notifyMasterOfChange ()
     {
@@ -71,12 +83,18 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
     
+    // I assume it's replace by the other verifyMaster
+    /**
+     * @see {@link TSMultiServantLogic#verifyMaster(IMasterLogic, World, int, int, int)}
+     */
     @Deprecated
     public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
     {
-        return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
+        //return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
+    	return verifyMaster(logic, null, x, y, z);
     }   
 
+    // not needed anymore? replaced by something else somewhere else?
     @Deprecated
     public boolean setMaster (int x, int y, int z)
     {
@@ -89,12 +107,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
             return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IServantLogic#setPotentialMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
+     */
     @Override
     public boolean setPotentialMaster (IMasterLogic master, World world, int x, int y, int z)
     {
         return !hasMaster;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IServantLogic#verifyMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
+     */
     @Override
     public boolean verifyMaster (IMasterLogic logic, World world, int x, int y, int z)
     {
@@ -107,6 +133,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
     
+    /*
+     * (non-Javadoc)
+     * @see tconstruct.library.util.IServantLogic#invalidateMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
+     */
     @Override
     public void invalidateMaster (IMasterLogic master, World world, int x, int y, int z)
     {
@@ -114,6 +144,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         master = null;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -135,6 +169,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
     
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
@@ -155,8 +193,14 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         }
     }
 
+    
+    
     /* Packets */
     
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#onDataPacket(net.minecraft.network.INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
+     */
     @Override
     public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
     {
@@ -164,6 +208,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
     
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#getDescriptionPacket()
+     */
     @Override
     public Packet getDescriptionPacket ()
     {
