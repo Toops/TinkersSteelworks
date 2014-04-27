@@ -539,17 +539,19 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     private void removeMixItems ()
     {
     	// using SLOT_0 and SLOT_FIRST_MELTABLE - 1? another reason to split inventory between FixedSizeInventoy for 0..3 and VariableSizeInventory for meltables
-        for (int i = 0; i < 3; i++)
-            if (inventory[i] != null)
-            {
-                final int consumeChance = AdvancedSmelting.getMixItemConsumeChance(inventory[i]);
-                final int consumeAmount = AdvancedSmelting.getMixItemConsumeAmount(inventory[i]);
-                if (new Random().nextInt(100) <= consumeChance)
-                    if (inventory[i].stackSize >= consumeAmount)
-                        inventory[i].stackSize -= consumeAmount;
-                if ((inventory[i] != null) && (inventory[i].stackSize == 0))
-                    inventory[i] = null;
-            }
+        for (int i = SLOT_OXIDIZER; i < SLOT_FUEL; i++)
+        {
+            if (inventory[i] == null)
+                continue;
+
+            final int consumeChance = AdvancedSmelting.getMixItemConsumeChance(inventory[i]);
+            final int consumeAmount = AdvancedSmelting.getMixItemConsumeAmount(inventory[i]);
+            if (new Random().nextInt(100) <= consumeChance)
+                if (inventory[i].stackSize >= consumeAmount)
+                    inventory[i].stackSize -= consumeAmount;
+            if ((inventory[i] != null) && (inventory[i].stackSize == 0))
+                inventory[i] = null;
+        }
     }
 
     /* ==================== Temperatures ==================== */
@@ -604,16 +606,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         int ret = fuelBurnTime / scale;
         if (ret < 1) ret = 1;
         return ret;
-    }
-    
-    //you can keep the typo for the lol but it's better to have the good one next to it
-    // Toops note: yeah, I forgot about this. Removing before next release. I only kept it because lol TConstruct's typo
-    /**
-     * Update fuel gauge (keeping typo just cuz)
-     */
-    @Deprecated
-    void updateFuelGague(){
-    	updateFuelGauge();
     }
 
     /**

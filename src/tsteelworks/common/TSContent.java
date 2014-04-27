@@ -234,17 +234,31 @@ public class TSContent
     
     void oreRegistry ()
     {
+        // Vanilla
+        ensureOreIsRegistered("blockSand", new ItemStack(Block.sand));
+        ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
+        ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
+        ensureOreIsRegistered("dustSugar", new ItemStack(Item.sugar));
+        ensureOreIsRegistered("fuelCoal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
+        ensureOreIsRegistered("fuelCharcoal", new ItemStack(Item.coal, 1, 1));
+        ensureOreIsRegistered("itemClay", new ItemStack(Item.clay));
+        // TSteelworks
         OreDictionary.registerOre("blockCoal", new ItemStack(charcoalBlock));
         OreDictionary.registerOre("blockCharcoal", new ItemStack(charcoalBlock)); // Mekanism compat
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
         OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
-        
         OreDictionary.registerOre("stone", new ItemStack(limestoneBlock, 1, 0));
         OreDictionary.registerOre("cobblestone", new ItemStack(limestoneBlock, 1, 1));
-
-        ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
-        ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
+        // TConstuct
+        OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TContent.craftedSoil, 1, 3));
+        // * Dual registry for smelting (slag) purposes (we need the ore prefix)
+        OreDictionary.registerOre("oreberryIron", new ItemStack(TContent.oreBerries, 1, 0));
+        OreDictionary.registerOre("oreberryCopper", new ItemStack(TContent.oreBerries, 1, 2));
+        OreDictionary.registerOre("oreberryTin", new ItemStack(TContent.oreBerries, 1, 3));
+        OreDictionary.registerOre("oreberryluminum", new ItemStack(TContent.oreBerries, 1, 4));
+        OreDictionary.registerOre("oreberryAluminium", new ItemStack(TContent.oreBerries, 1, 4));
+        OreDictionary.registerOre("oreberryEssence", new ItemStack(TContent.oreBerries, 1, 5));
     }
 
     void ensureOreIsRegistered (String oreName, ItemStack is)
@@ -252,6 +266,7 @@ public class TSContent
         final int oreId = OreDictionary.getOreID(is);
         if (oreId == -1)
             OreDictionary.registerOre(oreName, is);
+//        TSteelworks.loginfo("OreDict Name", OreDictionary.getOreName(id));
     }
     
     /**
@@ -259,27 +274,24 @@ public class TSContent
      */
     void registerMixerMaterials ()
     {
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.gunpowder,      1, 0), 0, 33);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.sugar,          1, 0), 0, 62);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.blazePowder,    1, 0), 0, 33);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 0, 33);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.coal,           1, 0), 0, 56);
+        AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
+        AdvancedSmelting.registerMixItem("dustSulfur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
+        AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
+        AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
+        AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
         
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.redstone,       1, 0), 1, 65);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.emerald,        1, 0), 1, 30);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.flint,          1, 0), 1, 30);
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.clay,           1, 0), 1, 20);
-        AdvancedSmelting.registerMixItem(new ItemStack(TContent.oreBerries, 1, 5), 1, 37);
-        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 22), 1, 26);
-        AdvancedSmelting.registerMixItem(new ItemStack(TContent.materials, 1, 40), 1, 53);
+        AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
+        AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 53);
+        AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
+        AdvancedSmelting.registerMixItem("oreManganese", HighOvenLogic.SLOT_PURIFIER, 1, 51);
+        AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
+        AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
+        AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 30);
+        AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         
-        AdvancedSmelting.registerMixItem(new ItemStack(Item.ghastTear,      1, 0), 2, 30);
-        AdvancedSmelting.registerMixItem(new ItemStack(Block.blockClay,     1, 0), 2, 80);
-        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          2, 0), 2, 100);
-        AdvancedSmelting.registerMixItem(new ItemStack(Block.sand,          1, 0), 2, 100);
-        AdvancedSmelting.registerMixItem(new ItemStack(Block.cobblestone,   1, 0), 2, 100);
-        AdvancedSmelting.registerMixItem(new ItemStack(TContent.meatBlock,  1, 0), 2, 100);
-        AdvancedSmelting.registerMixItem(new ItemStack(TContent.craftedSoil, 1, 3), 2, 53);
+        AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 2, 100);
+        AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 80);
+        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 80);
     }
     
     /**

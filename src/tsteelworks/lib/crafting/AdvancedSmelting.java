@@ -8,10 +8,13 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import tconstruct.common.TContent;
 import tconstruct.library.crafting.FluidType;
+import tsteelworks.TSteelworks;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -193,19 +196,21 @@ public class AdvancedSmelting
      * @param type
      * @param chance
      */
-    public static void registerMixItem (ItemStack item, int type, int chance)
+    public static void registerMixItem (String item, int type, int consume, int chance)
     {
-        instance.mixItemList.put(getInternalMixKey(item), Arrays.asList(type, item.stackSize, chance));
+        instance.mixItemList.put(item, Arrays.asList(type, consume, chance));
     }
     
-    public static void registerMixComboForFluidOutput (FluidType fluidout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
+    public static void registerMixComboForFluidOutput (FluidType fluidout, FluidType fluidin, String i1, String i2, String i3)
     {
-        instance.mixerFluidComboList.put(fluidout, Arrays.asList(fluidin, getInternalMixKey(item1), getInternalMixKey(item2), getInternalMixKey(item3)));
+//        instance.mixerFluidComboList.put(fluidout, Arrays.asList(fluidin, getInternalMixKey(item1), getInternalMixKey(item2), getInternalMixKey(item3)));
+        instance.mixerFluidComboList.put(fluidout, Arrays.asList(fluidin, i1, i2, i3));
     }
 
-    public static void registerMixComboForSolidOutput (ItemStack stackout, FluidType fluidin, ItemStack item1, ItemStack item2, ItemStack item3)
+    public static void registerMixComboForSolidOutput (ItemStack stackout, FluidType fluidin, String i1, String i2, String i3)
     {
-        instance.mixerSolidComboList.put(stackout, Arrays.asList(fluidin, getInternalMixKey(item1), getInternalMixKey(item2), getInternalMixKey(item3)));
+        instance.mixerSolidComboList.put(stackout, Arrays.asList(fluidin, i1, i2, i3));
+//        instance.mixerSolidComboList.put(stackout, Arrays.asList(fluidin, getInternalMixKey(item1), getInternalMixKey(item2), getInternalMixKey(item3)));
     }
     
     public static void getMixComboForFluidOutput (FluidType fluid)
@@ -226,7 +231,8 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemMixType (ItemStack item)
     {
-        final List<Integer> list = instance.mixItemList.get(getInternalMixKey(item));
+        if (item == null) return null;
+        final List<Integer> list = instance.mixItemList.get(getOreDictionaryKey(item));
         return list.get(0);
     }
     
@@ -238,7 +244,7 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemConsumeAmount (ItemStack item)
     {
-        final List<Integer> list = instance.mixItemList.get(getInternalMixKey(item));
+        final List<Integer> list = instance.mixItemList.get(getOreDictionaryKey(item));
         return list.get(1);
     }
     
@@ -250,7 +256,7 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemConsumeChance (ItemStack item)
     {
-        final List<Integer> list = instance.mixItemList.get(getInternalMixKey(item));
+        final List<Integer> list = instance.mixItemList.get(getOreDictionaryKey(item));
         return list.get(2);
     }
     
@@ -262,20 +268,19 @@ public class AdvancedSmelting
      */
     public static Boolean isMixItemListed (ItemStack item)
     {
-        return instance.mixItemList.containsKey(getInternalMixKey(item));
+        
+        return instance.mixItemList.containsKey(getOreDictionaryKey(item));
     }
     
     public static Boolean isMixItemValidForSlot (ItemStack item, int slot)
     {
-        if (!isMixItemListed(item))
-            return false;
-        if (getMixItemMixType(item) != slot)
-            return false;
-        return true;
+        if (item == null) return true;
+        return ((isMixItemListed(item)) || (getMixItemMixType(item) == slot));
     }
     
     public static Boolean doesMixItemMeetRequirements (ItemStack item, int slot)
     {
+        if (item == null) return true;
         return (isMixItemValidForSlot(item, slot) && (item.stackSize >= getMixItemConsumeAmount(item)));
     }
 
@@ -290,10 +295,7 @@ public class AdvancedSmelting
      */
     public static FluidType getMixSmeltingFluidResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getInternalMixKey(i1), getInternalMixKey(i2), getInternalMixKey(i3)));
-
-        if (inputs.contains(null))
-            return null;
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getOreDictionaryKey(i1), getOreDictionaryKey(i2), getOreDictionaryKey(i3)));
 
         if (!doesMixItemMeetRequirements(i1, 0) || !doesMixItemMeetRequirements(i2, 1) || !doesMixItemMeetRequirements(i3, 2))
             return null;
@@ -311,10 +313,7 @@ public class AdvancedSmelting
 
     public static ItemStack getMixSmeltingSolidResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getInternalMixKey(i1), getInternalMixKey(i2), getInternalMixKey(i3)));
-
-        if (inputs.contains(null))
-            return null;
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getOreDictionaryKey(i1), getOreDictionaryKey(i2), getOreDictionaryKey(i3)));
 
         if (!doesMixItemMeetRequirements(i1, 0) || !doesMixItemMeetRequirements(i2, 1) || !doesMixItemMeetRequirements(i3, 2))
             return null;
@@ -337,11 +336,10 @@ public class AdvancedSmelting
      * @param item
      * @return
      */
-    private static String getInternalMixKey (ItemStack item)
+    private static String getOreDictionaryKey (ItemStack item)
     {
-        if (item == null)
-            return null;
-        return (item.itemID + ":" + item.getItemDamage());
+        int oreId = OreDictionary.getOreID(item);
+        return (oreId != -1) ?  OreDictionary.getOreName(oreId) : null;
     }
 
     /* ========== Get Lists ========== */

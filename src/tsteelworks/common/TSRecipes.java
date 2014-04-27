@@ -19,6 +19,7 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.util.RecipeRemover;
+import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -107,7 +108,7 @@ public class TSRecipes
         AdvancedSmelting.addMelting(Block.blockEmerald, 0, getFluidTempMod(FluidType.Emerald), new FluidStack(TContent.moltenEmeraldFluid, 320 * 9));
         AdvancedSmelting.addMelting(TContent.glueBlock, 0, getFluidTempMod(FluidType.Glue), new FluidStack(TContent.glueFluid, blockLiquidValue));
         final ItemStack netherQuartz = new ItemStack(Item.netherQuartz, 1);
-        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(TContent.oreBerries, 1, 5), new ItemStack(TContent.craftedSoil, 1, 3));
+        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
     }
     
     public static void craftManual ()
@@ -137,7 +138,8 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 12), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 13), patSurround, '#', itemScorchedBrick, 'm', new ItemStack(Item.dyePowder, 1, 4));
 
-        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, new ItemStack(Item.coal, 1, 0), new ItemStack(Item.clay, 1, 0), new ItemStack(Block.sand, 1, 0));
+        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "fuelCoal", null, "blockSand");
+        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "coal", null, "blockSand");
         
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
@@ -219,14 +221,18 @@ public class TSRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
         }
         
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(Item.redstone, 1, 0), new ItemStack(Block.sand, 2, 0));
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.gunpowder, 1, 0), new ItemStack(TContent.materials, 1, 40), new ItemStack(Block.sand, 2, 0));
+        String[] oxidizers = {"dustGunpowder", "dustSulfur"};
+        String[] reducers = {"dustRedstone", "dustSaltpeter", "dustManganese", "dustAluminum", "dustAluminium" };
+        
+        for (String o : oxidizers)
+            for (String r : reducers)
+                AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, o, r, "blockSand");
     }
 
     public static void craftPigIron ()
     {
         final FluidType ft = FluidType.PigIron;
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, new ItemStack(Item.sugar, 1, 0), new ItemStack(Item.emerald, 1, 0), new ItemStack(TContent.meatBlock, 1, 0));
+        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustSugar", "dyeWhite", "hambone");
     }
 
     public static void craftObsidian ()
