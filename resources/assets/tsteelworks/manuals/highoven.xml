@@ -40,6 +40,11 @@
  <icon>deeptank</icon>
  <jump>6</jump>
 </link>
+<link>
+ <text>Modifiers</text>
+ <icon>lavacrystal</icon>
+ <jump>4</jump>
+</link>
 </page>
 
 <page type="text">
@@ -371,6 +376,22 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
 <page type="picture">
 <text>High Oven, meet Deep Tank</text>
 <location>tsteelworks:manuals/deeptankbuild4.png</location>
+</page>
+
+<page type="sectionpage">
+<title>Vacuous</title>
+<text>Strangely, attaching an ender pearl onto the base of a hopper and fastening it to a tool or weapon causes nearby items to gather toward you!
+
+Effects:
+- Pulls in nearby items
+
+Type: Single-use
+Stackable: Yes</text>
+</page>
+
+<page type="modifier">
+<tooltype>tool</tooltype>
+<recipe>vacuousmod</recipe>
 </page>
 
 <page type="picture">

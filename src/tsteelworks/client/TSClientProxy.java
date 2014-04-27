@@ -26,6 +26,7 @@ import tconstruct.TConstruct;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
+import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
@@ -260,6 +261,10 @@ public class TSClientProxy extends TSCommonProxy
 
         TSClientRegistry.registerManualHighOvenRecipe("netherquartzsmelting", netherquartz, new ItemStack(Block.sand, 1, 0), dustGunpwoder, essenceberry, graveyardsoil);
 
+        // Modifier recipes
+        ItemStack ironpick = ToolBuilder.instance.buildTool(new ItemStack(TContent.pickaxeHead, 1, 6), new ItemStack(TContent.toolRod, 1, 2), new ItemStack(TContent.binding, 1, 6), "");
+        TSClientRegistry.registerManualIcon("ironpick", ironpick);
+        TSClientRegistry.registerManualModifier("vacuousmod", ironpick.copy(), new ItemStack(Block.hopperBlock), new ItemStack(Item.enderPearl));
         
         final ItemStack lapis = new ItemStack(Item.dyePowder, 1, 4);
         

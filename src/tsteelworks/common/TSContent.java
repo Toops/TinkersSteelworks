@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -12,20 +13,10 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import tconstruct.blocks.GlassBlockConnected;
-import tconstruct.blocks.GlassBlockConnectedMeta;
-import tconstruct.blocks.GlassPaneConnected;
 import tconstruct.common.TContent;
-import tconstruct.items.blocks.GlassBlockItem;
-import tconstruct.items.blocks.GlassPaneItem;
-import tconstruct.items.blocks.StainedGlassClearItem;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.crafting.ToolBuilder;
-import tconstruct.library.tools.ToolCore;
 import tconstruct.modifiers.tools.ModInteger;
-import tconstruct.modifiers.tools.ModPiston;
-import tconstruct.util.config.PHConstruct;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.CementBlock;
 import tsteelworks.blocks.DustStorageBlock;
@@ -347,9 +338,8 @@ public class TSContent
         ItemStack hopper = new ItemStack(Block.hopperBlock);
         ItemStack enderpearl = new ItemStack(Item.enderPearl);
         
-        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Hopper", 5, "\u00A7a", "Vacuous"));
-//        tb.registerToolMod(new ModHopper(3, new ItemStack[] { hopper }, new int[] { 1 }));
-        
+        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Vacuous", 5, "\u00A7a", StatCollector.translateToLocal("modifier.tool.vacuous")));
+
         TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
     }
 }

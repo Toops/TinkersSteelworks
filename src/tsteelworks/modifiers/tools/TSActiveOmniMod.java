@@ -26,13 +26,13 @@ public class TSActiveOmniMod extends ActiveToolMod
     @Override
     public void updateTool (ToolCore tool, ItemStack stack, World world, Entity entity)
     {
-        
+        // TODO: Move this off of update tool? Seems unnecessary here...
         if (!world.isRemote && entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isSwingInProgress && stack.getTagCompound() != null)
         {
             if (((EntityLivingBase)entity).getHeldItem() == null || !(((EntityLivingBase)entity).getHeldItem().equals(stack))) return;
             NBTTagCompound tags = stack.getTagCompound().getCompoundTag("InfiTool");
-            if (tags.hasKey("Hopper"))
-                TSAbilityHelper.drawItemsToEntity(world, (EntityLivingBase)entity, tags.getInteger("Hopper"));
+            if (tags.hasKey("Vacuous"))
+                TSAbilityHelper.drawItemsToEntity(world, (EntityLivingBase)entity, tags.getInteger("Vacuous"));
         }
     }
 }
