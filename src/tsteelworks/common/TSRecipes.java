@@ -91,6 +91,7 @@ public class TSRecipes
     public static void createRecipes ()
     {
         craftManual();
+        craftMachines();
         craftScorchedStone();
         craftLimestone();
         craftStone();
@@ -121,6 +122,14 @@ public class TSRecipes
         tableCasting.addCastingRecipe(manual1, fluidStoneMinor, new ItemStack(Item.book, 1), true, 50);
     }
 
+    public static void craftMachines ()
+    {
+        //final ItemStack blankPattern = TConstructRegistry.getItemStack("blankPattern");
+        //final ItemStack heavyPlate = TConstructRegistry.getItemStack("heavyPlate");
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.machine, 1, 0), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', "ingotSteel", 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Block.pistonBase)));
+
+    }
+    
     public static void craftScorchedStone ()
     {
         final LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();
