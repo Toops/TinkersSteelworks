@@ -43,11 +43,19 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#closeChest()
+     */
     @Override
     public void closeChest ()
     {
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#decrStackSize(int, int)
+     */
     @Override
     public ItemStack decrStackSize (int slot, int quantity)
     {
@@ -70,24 +78,40 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
 
     public abstract Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z);
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getInventoryStackLimit()
+     */
     @Override
     public int getInventoryStackLimit ()
     {
         return stackSizeLimit;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getInvName()
+     */
     @Override
     public String getInvName ()
     {
         return isInvNameLocalized() ? invName : getDefaultName();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getSizeInventory()
+     */
     @Override
     public int getSizeInventory ()
     {
         return inventory.length;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getStackInSlot(int)
+     */
     @Override
     public ItemStack getStackInSlot (int slot)
     {
@@ -95,33 +119,54 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
     }
 
     /* Default implementations of hardly used methods */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getStackInSlotOnClosing(int)
+     */
     @Override
     public ItemStack getStackInSlotOnClosing (int slot)
     {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isInvNameLocalized()
+     */
     @Override
     public boolean isInvNameLocalized ()
     {
         return (invName != null) && (invName.length() > 0);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isItemValidForSlot(int, net.minecraft.item.ItemStack)
+     */
     @Override
     public boolean isItemValidForSlot (int slot, ItemStack itemstack)
     {
-        if (slot < getSizeInventory())
-            if ((inventory[slot] == null) || ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit()))
+    	if(inventory == null || itemstack == null) return false;
+    	
+        if (slot >= 0 && slot < getSizeInventory())
+            if ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())
                 return true;
         return false;
     }
 
     public boolean isStackInSlot (int slot)
     {
-        return inventory[slot] != null;
+    	if(inventory == null) return false;
+    	if(slot >= 0 && slot < inventory.length)
+    		return inventory[slot] != null;
+    	return false;
     }
 
     /* Supporting methods */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isUseableByPlayer(net.minecraft.entity.player.EntityPlayer)
+     */
     @Override
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
@@ -133,6 +178,10 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
 
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#openChest()
+     */
     @Override
     public void openChest ()
     {
@@ -144,6 +193,10 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
     }
 
     /* NBT */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -171,12 +224,22 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
 
     }
 
+    //uncheck ArrayIndexOutOfBounds
+    //uncheck NullPointer
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#setInventorySlotContents(int, net.minecraft.item.ItemStack)
+     */
     @Override
     public void setInventorySlotContents (int slot, ItemStack itemstack)
     {
-        inventory[slot] = itemstack;
-        if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
-            itemstack.stackSize = getInventoryStackLimit();
+    	if(inventory == null) return;
+    	if(slot >= 0 && slot < inventory.length)
+    	{
+    		inventory[slot] = itemstack;
+    		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
+    			itemstack.stackSize = getInventoryStackLimit();
+    	}
     }
 
     public void setInvName (String name)
@@ -201,6 +264,10 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
         tags.setTag("Items", nbttaglist);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
