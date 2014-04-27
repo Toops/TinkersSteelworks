@@ -48,25 +48,37 @@ public class TSHighOvenPage extends TSBookPage
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.enableGUIStandardItemLighting();
         manual.renderitem.zLevel = 100;
-
         manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, TSClientRegistry.getManualIcon("charcoal"), (localWidth + 50) / 2, (localHeight + 110) / 2);
-        manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[0], (localWidth + 120) / 2, (localHeight + 72) / 2);
-        manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[1], (localWidth + 52) / 2, (localHeight + 36) / 2);
-        manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[2], (localWidth + 6) / 2, (localHeight + 36) / 2);
-        manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[3], (localWidth + 6) / 2, (localHeight + 74) / 2);
-        manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2);
-
-        if (icons[0].stackSize > 1)
-            manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[0], (localWidth + 120) / 2, (localHeight + 72) / 2, String.valueOf(icons[0].stackSize));
-        if (icons[1].stackSize > 1)
-            manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[1], (localWidth + 52) / 2, (localHeight + 36) / 2, String.valueOf(icons[1].stackSize));
-        if (icons[2].stackSize > 1)
-            manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[2], (localWidth + 6) / 2, (localHeight + 36) / 2, String.valueOf(icons[2].stackSize));
-        if (icons[3].stackSize > 1)
-            manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[3], (localWidth + 6) / 2, (localHeight + 74) / 2, String.valueOf(icons[3].stackSize));
-        if (icons[4].stackSize > 1)
-            manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2, String.valueOf(icons[4].stackSize));    
-                        
+        if (icons[0] != null)
+        {
+            manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[0], (localWidth + 120) / 2, (localHeight + 72) / 2);
+            if (icons[0].stackSize > 1)
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[0], (localWidth + 120) / 2, (localHeight + 72) / 2, String.valueOf(icons[0].stackSize));
+        }
+        if (icons[1] != null)
+        {
+            manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[1], (localWidth + 52) / 2, (localHeight + 36) / 2);
+            if (icons[1].stackSize > 1)
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[1], (localWidth + 52) / 2, (localHeight + 36) / 2, String.valueOf(icons[1].stackSize));
+        }
+        if (icons[2] != null)
+        {
+            manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[2], (localWidth + 6) / 2, (localHeight + 36) / 2);
+            if (icons[2].stackSize > 1)
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[2], (localWidth + 6) / 2, (localHeight + 36) / 2, String.valueOf(icons[2].stackSize));
+        }
+        if (icons[3] != null)
+        {
+            manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[3], (localWidth + 6) / 2, (localHeight + 74) / 2);
+            if (icons[3].stackSize > 1)
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[3], (localWidth + 6) / 2, (localHeight + 74) / 2, String.valueOf(icons[3].stackSize));
+        }
+        if (icons[4] != null)
+        {
+            manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2);
+            if (icons[4].stackSize > 1)
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2, String.valueOf(icons[4].stackSize));  
+        }       
         manual.renderitem.zLevel = 0;
         GL11.glScalef(0.5F, 0.5F, 0.5F);
         RenderHelper.disableStandardItemLighting();

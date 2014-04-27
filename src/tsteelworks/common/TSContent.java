@@ -275,24 +275,24 @@ public class TSContent
     void registerMixerMaterials ()
     {
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
-        AdvancedSmelting.registerMixItem("dustSulfur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
+        AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
+        AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 30);
         AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
-        AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
-        AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
+        AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
+        AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("dustCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
         
         AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
-        AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 53);
         AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
         AdvancedSmelting.registerMixItem("oreManganese", HighOvenLogic.SLOT_PURIFIER, 1, 51);
         AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
         AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
-        AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 30);
+        AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         
         AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 2, 100);
         AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 80);
-        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 80);
+        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 67);
     }
     
     /**

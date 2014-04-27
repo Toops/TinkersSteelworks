@@ -42,6 +42,7 @@ import tsteelworks.client.gui.TSManualGui;
 import tsteelworks.client.pages.TSBlankPage;
 import tsteelworks.client.pages.TSBlockCastPage;
 import tsteelworks.client.pages.TSBookPage;
+import tsteelworks.client.pages.TSCompound;
 import tsteelworks.client.pages.TSContentsTablePage;
 import tsteelworks.client.pages.TSCraftingPage;
 import tsteelworks.client.pages.TSFurnacePage;
@@ -133,18 +134,16 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("charcoal", new ItemStack(Item.coal, 1, 1));
         TSClientRegistry.registerManualIcon("gunpowderdust", new ItemStack(Item.gunpowder));
         TSClientRegistry.registerManualIcon("sugardust", new ItemStack(Item.sugar));
+        TSClientRegistry.registerManualIcon("bonemeal", new ItemStack(Item.dyePowder, 1, 15));
 
         TSClientRegistry.registerManualIcon("redstonedust", new ItemStack(Item.redstone));
         TSClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TContent.materials, 1, 40));
         TSClientRegistry.registerManualIcon("essenceberry", new ItemStack(TContent.oreBerries, 1, 5));
         TSClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Item.emerald));
         TSClientRegistry.registerManualIcon("clayitem", new ItemStack(Item.clay));
-//        TSClientRegistry.registerManualIcon("aluminumnugget", new ItemStack(TContent.materials, 1, 22));
-        
         TSClientRegistry.registerManualIcon("sandblock", new ItemStack(Block.sand));
-//        TSClientRegistry.registerManualIcon("clayblock", new ItemStack(Block.blockClay));
         TSClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TContent.craftedSoil, 1, 3));
-        
+        TSClientRegistry.registerManualIcon("hambone", new ItemStack(TContent.meatBlock, 1, 0));
         
         // TCON
         TSClientRegistry.registerManualIcon("smelterybook", TConstructClientRegistry.getManualIcon("smelterybook"));
@@ -232,29 +231,46 @@ public class TSClientProxy extends TSCommonProxy
     public void initManualRecipes ()
     {
         final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
-        final ItemStack gunpowder = new ItemStack(Item.gunpowder, 1, 0);
-        final ItemStack redstone = new ItemStack(Item.redstone, 1, 0);
-        final ItemStack sugar = new ItemStack(Item.sugar, 1, 0);
-        final ItemStack sand = new ItemStack(Block.sand, 1, 0);
         
+        final ItemStack ingotIron = new ItemStack(Item.ingotIron, 1);
+        final ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
+        final ItemStack dustGunpwoder = new ItemStack(Item.gunpowder, 1, 0);
+        final ItemStack dustRedstone = new ItemStack(Item.redstone, 1, 0);
+        final ItemStack dustAluminum = TConstructRegistry.getItemStack("dustAluminum");
+        final ItemStack blockSand = new ItemStack(Block.sand, 2, 0);
         
-//        new ItemStack(Block.sand, 1, 0);
-//        new ItemStack(Item.redstone);
-//        new ItemStack(Item.gunpowder);
+        TSClientRegistry.registerManualHighOvenRecipe("steelsmelting", ingotSteel, ingotIron, dustGunpwoder, dustRedstone, blockSand);
+        
+        final ItemStack ingotPigIron = TConstructRegistry.getItemStack("ingotPigIron");
+        final ItemStack dustSugar = new ItemStack(Item.sugar, 1, 0);
+        final ItemStack bonemeal = new ItemStack(Item.dyePowder, 1, 15);
+        final ItemStack blockHambone = new ItemStack(TContent.meatBlock, 1, 0);
+        
+        TSClientRegistry.registerManualHighOvenRecipe("pigironsmelting", ingotPigIron, ingotIron, dustSugar, bonemeal, blockHambone);
+        
+        final ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
+        final ItemStack stoneBlock = new ItemStack(Block.stone);
+        final ItemStack coal = new ItemStack(Item.coal, 1, 0);
+        
+        TSClientRegistry.registerManualHighOvenRecipe("scorchedbricksmelting", scorchedbrick, stoneBlock, coal, null, new ItemStack(Block.sand, 1, 0));
+        
+        final ItemStack netherquartz = new ItemStack(Item.netherQuartz);
+        final ItemStack essenceberry = new ItemStack(TContent.oreBerries, 1, 5);
+        final ItemStack graveyardsoil = new ItemStack(TContent.craftedSoil, 1, 3);
+
+        TSClientRegistry.registerManualHighOvenRecipe("netherquartzsmelting", netherquartz, new ItemStack(Block.sand, 1, 0), dustGunpwoder, essenceberry, graveyardsoil);
+
         
         final ItemStack lapis = new ItemStack(Item.dyePowder, 1, 4);
-        final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
         
+        final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
         final ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
         final ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
 
         final ItemStack brick = new ItemStack(Item.brick);
         final ItemStack brickBlock = new ItemStack(Block.brick);
-
-        final ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
+        
         final ItemStack scorchedbrickBlock = new ItemStack(TSContent.highoven, 1, 2);
-
-        TSClientRegistry.registerManualHighOvenRecipe("steelsmelting", TConstructRegistry.getItemStack("ingotSteel"), new ItemStack(Item.ingotIron, 1), gunpowder, redstone, new ItemStack(Block.sand, 2, 0));
         
         TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TContent.moltenStone, 1), brick);
         TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TContent.moltenStone, 1), brickBlock);
@@ -284,13 +300,13 @@ public class TSClientProxy extends TSCommonProxy
                                                                     charcoal, charcoal, charcoal, 
                                                                     charcoal, charcoal, charcoal);
         TSClientRegistry.registerManualLargeRecipe("gunpowderblock", gunpowderBlock, 
-                                                                    gunpowder, gunpowder, gunpowder, 
-                                                                    gunpowder, gunpowder, gunpowder, 
-                                                                    gunpowder, gunpowder, gunpowder);
+                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder, 
+                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder, 
+                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder);
         TSClientRegistry.registerManualLargeRecipe("sugarcube", sugarBlock, 
-                                                                    sugar, sugar, sugar, 
-                                                                    sugar, sugar, sugar, 
-                                                                    sugar, sugar, sugar);
+                                                                    dustSugar, dustSugar, dustSugar, 
+                                                                    dustSugar, dustSugar, dustSugar, 
+                                                                    dustSugar, dustSugar, dustSugar);
     }
 
     void addRenderMappings ()
@@ -397,6 +413,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientProxy.registerManualPage("intro", TSTitlePage.class);
         TSClientProxy.registerManualPage("contents", TSContentsTablePage.class);
         TSClientProxy.registerManualPage("sidebar", TSSidebarPage.class);
+        TSClientProxy.registerManualPage("compound", TSCompound.class);
         TSClientProxy.registerManualPage("crafting", TSCraftingPage.class);
         TSClientProxy.registerManualPage("furnace", TSFurnacePage.class);
         TSClientProxy.registerManualPage("highoven", TSHighOvenPage.class);
