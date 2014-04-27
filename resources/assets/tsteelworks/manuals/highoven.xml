@@ -195,6 +195,11 @@ The High Oven may be used to process any normal metal as the Smeltery. It cannot
 </item>
 </page>
 
+<page type="highoven">
+<text>Steel</text>
+<recipe>steelsmelting</recipe>
+</page>
+
 <page type="sidebar">
 <text>Pig Iron is a very strange substance. It is said to have been formulated in the Nether by a tribe of intelligent pig people, but such fables adorn whimsical children's' books.</text>
 <item>

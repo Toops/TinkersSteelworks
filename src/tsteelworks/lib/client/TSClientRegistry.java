@@ -52,6 +52,17 @@ public class TSClientRegistry
         recipe[1] = input;
         recipeIcons.put(name, recipe);
     }
+    
+    public static void registerManualHighOvenRecipe (String name, ItemStack output, ItemStack input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier)
+    {
+        final ItemStack[] recipe = new ItemStack[5];
+        recipe[0] = output;
+        recipe[1] = input;
+        recipe[2] = oxidizer;
+        recipe[3] = reducer;
+        recipe[4] = purifier;
+        recipeIcons.put(name, recipe);
+    }
 
     public static void registerManualIcon (String name, ItemStack stack)
     {

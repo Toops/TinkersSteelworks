@@ -45,6 +45,7 @@ import tsteelworks.client.pages.TSBookPage;
 import tsteelworks.client.pages.TSContentsTablePage;
 import tsteelworks.client.pages.TSCraftingPage;
 import tsteelworks.client.pages.TSFurnacePage;
+import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSMaterialPage;
 import tsteelworks.client.pages.TSModifierPage;
 import tsteelworks.client.pages.TSPicturePage;
@@ -90,8 +91,6 @@ public class TSClientProxy extends TSCommonProxy
     {
         pageClasses.put(type, clazz);
     }
-
-
 
     @Override
     public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -234,7 +233,10 @@ public class TSClientProxy extends TSCommonProxy
     {
         final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
         final ItemStack gunpowder = new ItemStack(Item.gunpowder, 1, 0);
+        final ItemStack redstone = new ItemStack(Item.redstone, 1, 0);
         final ItemStack sugar = new ItemStack(Item.sugar, 1, 0);
+        final ItemStack sand = new ItemStack(Block.sand, 1, 0);
+        
         
 //        new ItemStack(Block.sand, 1, 0);
 //        new ItemStack(Item.redstone);
@@ -252,6 +254,8 @@ public class TSClientProxy extends TSCommonProxy
         final ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
         final ItemStack scorchedbrickBlock = new ItemStack(TSContent.highoven, 1, 2);
 
+        TSClientRegistry.registerManualHighOvenRecipe("steelsmelting", TConstructRegistry.getItemStack("ingotSteel"), new ItemStack(Item.ingotIron, 1), gunpowder, redstone, new ItemStack(Block.sand, 2, 0));
+        
         TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TContent.moltenStone, 1), brick);
         TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TContent.moltenStone, 1), brickBlock);
 
@@ -395,6 +399,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientProxy.registerManualPage("sidebar", TSSidebarPage.class);
         TSClientProxy.registerManualPage("crafting", TSCraftingPage.class);
         TSClientProxy.registerManualPage("furnace", TSFurnacePage.class);
+        TSClientProxy.registerManualPage("highoven", TSHighOvenPage.class);
         TSClientProxy.registerManualPage("materialstats", TSMaterialPage.class);
         TSClientProxy.registerManualPage("toolpage", TSToolPage.class);
         TSClientProxy.registerManualPage("modifier", TSModifierPage.class);

@@ -221,7 +221,7 @@ public class TSRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
         }
         
-        String[] oxidizers = {"dustGunpowder", "dustSulfur"};
+        String[] oxidizers = {"dustGunpowder", "dustSulfur", "dustCoal"};
         String[] reducers = {"dustRedstone", "dustSaltpeter", "dustManganese", "dustAluminum", "dustAluminium" };
         
         for (String o : oxidizers)
