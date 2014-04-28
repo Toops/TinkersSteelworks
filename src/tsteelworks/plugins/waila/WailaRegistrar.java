@@ -5,6 +5,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.DeepTankLogic;
 
 
 public class WailaRegistrar
@@ -15,6 +16,7 @@ public class WailaRegistrar
 
         // Tanks
         //registrar.registerBodyProvider(new SearedTankDataProvider(), LavaTankBlock.class);
+        registrar.registerBodyProvided(new HighOvenTankDataProvider(), DeepTankLogic.class);
         
         
     }
