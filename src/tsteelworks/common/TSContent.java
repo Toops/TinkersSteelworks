@@ -19,6 +19,7 @@ import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.modifiers.tools.ModInteger;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.CementBlock;
+import tsteelworks.blocks.CementFluidBlock;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.LimestoneBlock;
@@ -50,7 +51,6 @@ import tsteelworks.items.blocks.ScorchedSlabItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import tsteelworks.modifiers.tools.ModHopper;
 import tsteelworks.modifiers.tools.TSActiveOmniMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -215,7 +215,7 @@ public class TSContent
         liquidCementFluid = new Fluid("cement.liquid");
         if (!FluidRegistry.registerFluid(liquidCementFluid))
             liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
-        liquidCement = new TSBaseFluid(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
+        liquidCement = new CementFluidBlock(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
         GameRegistry.registerBlock(liquidCement, "liquid.cement");
         fluids[2] = liquidCementFluid;
         fluidBlocks[2] = liquidCement;
