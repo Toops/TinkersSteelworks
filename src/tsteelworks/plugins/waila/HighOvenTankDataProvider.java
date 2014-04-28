@@ -2,10 +2,14 @@ package tsteelworks.plugins.waila;
 
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidStack;
+import tsteelworks.blocks.logic.DeepTankLogic;
 
 // inspired from the one from TConstruct
 public class HighOvenTankDataProvider implements IWailaDataProvider {
@@ -15,7 +19,6 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	 */
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -24,7 +27,6 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	 */
 	@Override
 	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		// TODO Auto-generated method stub
 		return currenttip;
 	}
 	
@@ -33,7 +35,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	 */
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {	
-		TileEntity te = accessor.getTileEntity()
+		TileEntity te = accessor.getTileEntity();
 		if (te instanceof DeepTankLogic)
 		{
 			DeepTankLogic dtl = (DeepTankLogic) te;
@@ -48,7 +50,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 				{
 					for(FluidStack stack : fls)
 					{
-						currenttip.add(WailaRegistrar.fluidNameHelper(st) + " (" + st.amount + "mB)");
+						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
 					}
 				}
 			}
