@@ -1,6 +1,9 @@
 package tsteelworks.plugins.waila;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.blocks.logic.DeepTankLogic;
 
 public class WailaRegistrar
@@ -14,9 +17,9 @@ public class WailaRegistrar
 	}
 
 	// needed too? Let's assume not for the moment.
-	//    public static String fluidNameHelper (FluidStack f)
-	//    {
-	//        return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
-	//    }
+	    public static String fluidNameHelper (FluidStack f)
+	    {
+	        return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
+	    }
 
 }
