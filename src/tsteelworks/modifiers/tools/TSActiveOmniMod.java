@@ -1,22 +1,15 @@
 package tsteelworks.modifiers.tools;
 
-import java.util.List;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import tconstruct.library.ActiveToolMod;
 import tconstruct.library.tools.ToolCore;
-import tsteelworks.TSteelworks;
 import tsteelworks.lib.TSAbilityHelper;
-import tsteelworks.util.InventoryHelper;
-import codechicken.nei.NEISPH;
-import codechicken.nei.NEIServerUtils;
 
 public class TSActiveOmniMod extends ActiveToolMod
 {

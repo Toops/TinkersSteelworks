@@ -337,8 +337,8 @@ public class TSContent
         ToolBuilder tb = ToolBuilder.instance;
         ItemStack hopper = new ItemStack(Block.hopperBlock);
         ItemStack enderpearl = new ItemStack(Item.enderPearl);
-        
-        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Vacuous", 5, "\u00A7a", StatCollector.translateToLocal("modifier.tool.vacuous")));
+        String local = StatCollector.translateToLocal("modifier.tool.vacuous");
+        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Vacuous", 5, "\u00A7a", local));
 
         TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
     }

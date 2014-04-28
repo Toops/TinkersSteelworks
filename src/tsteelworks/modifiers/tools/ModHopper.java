@@ -12,9 +12,10 @@ import tconstruct.modifiers.tools.ModInteger;
 //TODO: During migration into TConstruct, actually use a separate class like this.
 // Sadly, this is acting up - possibly due to ModInteger having tooltipName, increase, ect private?
 // For now, we're registering Vacuous through ModInteger, which actually works.
-
-public class ModHopper extends ModInteger
+// -- Had to comment everything out due to build errors
+public class ModHopper //extends ModInteger
 {
+    /*
     int max = 3;
     String color;
     String tooltipName;
@@ -159,4 +160,6 @@ public class ModHopper extends ModInteger
 //        List list = Arrays.asList(tool.toolCategories());
 //        return list.contains("weapon") || list.contains("harvest");
 //    }
+ * 
+ */
 }
