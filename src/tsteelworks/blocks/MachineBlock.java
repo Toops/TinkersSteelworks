@@ -28,6 +28,7 @@ import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
 
+//TODO: Keep steam on block removal
 public class MachineBlock extends TSInventoryBlock
 {
     static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
@@ -123,8 +124,7 @@ public class MachineBlock extends TSInventoryBlock
     {
         if (meta == 0)
         {
-            final int sideTex = side == 3 ? 1 : 0;
-            return icons[sideTex + (meta * 3)];
+            return icons[getTextureIndex(side)];
         }
         return icons[0];
     }

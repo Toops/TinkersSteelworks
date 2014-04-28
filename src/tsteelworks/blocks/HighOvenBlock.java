@@ -10,8 +10,10 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -55,13 +57,60 @@ public class HighOvenBlock extends TSInventoryBlock
         this(id);
         texturePrefix = prefix;
     }
-
+    
+    /**
+     * Called on server worlds only when the block has been replaced by a different block ID, or the same block with a
+     * different metadata value, but before the new metadata value is set. Args: World, x, y, z, old block ID, old
+     * metadata
+     */
     @Override
     public void breakBlock (World world, int x, int y, int z, int blockID, int meta)
     {
         final TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof IServantLogic)
             ((IServantLogic) logic).notifyMasterOfChange();
+        if (logic instanceof HighOvenDuctLogic)
+        {
+            if (logic != null)
+            {
+                for (int j1 = 0; j1 < ((HighOvenDuctLogic)logic).getSizeInventory(); ++j1)
+                {
+                    ItemStack itemstack = ((HighOvenDuctLogic)logic).getStackInSlot(j1);
+
+                    if (itemstack != null)
+                    {
+                        float f = rand.nextFloat() * 0.8F + 0.1F;
+                        float f1 = rand.nextFloat() * 0.8F + 0.1F;
+                        float f2 = rand.nextFloat() * 0.8F + 0.1F;
+
+                        while (itemstack.stackSize > 0)
+                        {
+                            int k1 = this.rand.nextInt(21) + 10;
+
+                            if (k1 > itemstack.stackSize)
+                            {
+                                k1 = itemstack.stackSize;
+                            }
+
+                            itemstack.stackSize -= k1;
+                            EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.itemID, k1, itemstack.getItemDamage()));
+
+                            if (itemstack.hasTagCompound())
+                            {
+                                entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+                            }
+
+                            float f3 = 0.05F;
+                            entityitem.motionX = (double)((float)rand.nextGaussian() * f3);
+                            entityitem.motionY = (double)((float)rand.nextGaussian() * f3 + 0.2F);
+                            entityitem.motionZ = (double)((float)rand.nextGaussian() * f3);
+                            world.spawnEntityInWorld(entityitem);
+                        }
+                    }
+                }
+                world.func_96440_m(x, y, z, blockID);
+            }
+        }
         super.breakBlock(world, x, y, z, blockID, meta);
     }
 

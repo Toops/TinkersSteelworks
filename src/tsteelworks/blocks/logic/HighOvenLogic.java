@@ -120,6 +120,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             //maybe we should try to split inventory (and the others arrays) it two. 
             // One fixed inventory for slot 0..3 which will remains the same
             // and a variable size inventory depending on the number of layers for the (s)meltable.
+            // Toops notes: Agreed...
             inventory = new ItemStack[SLOT_FIRST_MELTABLE + lay];
             final int invLength = tempInv.length > inventory.length ? inventory.length : tempInv.length;
             System.arraycopy(tempInv, 0, inventory, 0, invLength);
@@ -327,6 +328,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void setRedstoneActive (boolean flag)
     {
         redstoneActivated = flag;
+        setActive(true);
     }
     
     
@@ -348,6 +350,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             heatItems();
         if ((tick % 20) == 0)
         {
+            //TSteelworks.loginfo("what's goin on big guy?", validStructure);
             if (!validStructure)
                 checkValidPlacement();
             if (isBurning())
@@ -851,6 +854,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             checkLayers += recurseStructureDown(x, y - 1, z, 0);
         }
         if ((structureHasTop != structureHasBottom != validStructure) || (checkLayers != layers))
+        {
             if (structureHasBottom && structureHasTop)
             {
                 adjustLayers(checkLayers, false);
@@ -862,6 +866,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 internalTemp = 20;
                 validStructure = false;
             }
+        }
     }
 
     /**

@@ -28,8 +28,8 @@
     <available file=".git" type="dir" property="git.present"/>
 
     <property name="build.dependencies.file" value="${build.dir}/dependencies.properties" />
-    <property name="tcon.version" value="2e99697" />
-    <property name="tcon.name" value="TConstruct-${mc.version}-DEV.${tcon.version}-Deobf.jar" />
+    <property name="tcon.version" value="bfd2291" />
+    <property name="tcon.name" value="TConstruct-${mc.version}-DEV.${tcon.version}-deobf.jar" />
     <available property="tcon-downloaded" file="${download.dir}/${tcon.name}" />
     <condition property="tcon-installed">
         <and>

@@ -779,7 +779,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     boolean validTankID(int blockID)
     {
-        return (blockID == TContent.lavaTank.blockID || blockID == TContent.lavaTankNether.blockID);
+        return (blockID == TContent.lavaTank.blockID);// || blockID == TContent.lavaTankNether.blockID);
     }
     
     boolean validGlassID(int blockID)

@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -12,22 +13,13 @@ import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import tconstruct.blocks.GlassBlockConnected;
-import tconstruct.blocks.GlassBlockConnectedMeta;
-import tconstruct.blocks.GlassPaneConnected;
 import tconstruct.common.TContent;
-import tconstruct.items.blocks.GlassBlockItem;
-import tconstruct.items.blocks.GlassPaneItem;
-import tconstruct.items.blocks.StainedGlassClearItem;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.crafting.ToolBuilder;
-import tconstruct.library.tools.ToolCore;
 import tconstruct.modifiers.tools.ModInteger;
-import tconstruct.modifiers.tools.ModPiston;
-import tconstruct.util.config.PHConstruct;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.CementBlock;
+import tsteelworks.blocks.CementFluidBlock;
 import tsteelworks.blocks.DustStorageBlock;
 import tsteelworks.blocks.HighOvenBlock;
 import tsteelworks.blocks.LimestoneBlock;
@@ -59,7 +51,6 @@ import tsteelworks.items.blocks.ScorchedSlabItemBlock;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import tsteelworks.modifiers.tools.ModHopper;
 import tsteelworks.modifiers.tools.TSActiveOmniMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -224,7 +215,7 @@ public class TSContent
         liquidCementFluid = new Fluid("cement.liquid");
         if (!FluidRegistry.registerFluid(liquidCementFluid))
             liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
-        liquidCement = new TSBaseFluid(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
+        liquidCement = new CementFluidBlock(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
         GameRegistry.registerBlock(liquidCement, "liquid.cement");
         fluids[2] = liquidCementFluid;
         fluidBlocks[2] = liquidCement;
@@ -275,23 +266,24 @@ public class TSContent
     void registerMixerMaterials ()
     {
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
-        AdvancedSmelting.registerMixItem("dustSulfur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
+        AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
+        AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 30);
         AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
-        AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
-        AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
+        AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
+        AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
+        AdvancedSmelting.registerMixItem("dustCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
         
         AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
-        AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 53);
         AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
         AdvancedSmelting.registerMixItem("oreManganese", HighOvenLogic.SLOT_PURIFIER, 1, 51);
         AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
         AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
-        AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 30);
+        AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 37);
         
         AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 2, 100);
         AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 80);
-        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 80);
+        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 67);
     }
     
     /**
@@ -345,10 +337,9 @@ public class TSContent
         ToolBuilder tb = ToolBuilder.instance;
         ItemStack hopper = new ItemStack(Block.hopperBlock);
         ItemStack enderpearl = new ItemStack(Item.enderPearl);
-        
-        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Hopper", 5, "\u00A7a", "Vacuous"));
-//        tb.registerToolMod(new ModHopper(3, new ItemStack[] { hopper }, new int[] { 1 }));
-        
+        String local = StatCollector.translateToLocal("modifier.tool.vacuous");
+        tb.registerToolMod(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Vacuous", 5, "\u00A7a", local));
+
         TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
     }
 }
