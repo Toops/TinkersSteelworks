@@ -5,6 +5,7 @@ import java.util.List;
 
 import tsteelworks.TSteelworks;
 import tsteelworks.plugins.fmp.ForgeMultiPart;
+import tsteelworks.plugins.waila.Waila;
 import cpw.mods.fml.common.Loader;
 
 public class PluginController
@@ -57,6 +58,7 @@ public class PluginController
     public void registerBuiltins ()
     {
         registerPlugin(new ForgeMultiPart());
+        registerPlugin(new Waila());
     }
 
     public void registerPlugin (ICompatPlugin plugin)
