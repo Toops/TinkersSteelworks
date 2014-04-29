@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.blocks.logic.TurbineLogic;
 
 public class WailaRegistrar
 {
@@ -17,6 +18,7 @@ public class WailaRegistrar
 		// Tanks
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), DeepTankLogic.class);
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
+		registrar.registerBodyProvider(new SteamTurbineDataProvider(), TurbineLogic.class);
 	}
 
 	// needed too? Let's assume not for the moment.
