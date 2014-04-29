@@ -16,7 +16,7 @@ item.tsteelworks.bootsSteel.name=Stivali d'Acciaio
 
 item.tsteelworks.bucket.Steam.name=Secchio di Vapore
 item.tsteelworks.bucket.Limestone.name=Secchio di Calcare Fuso
-item.tsteelworks.bucket.Cement.name=Secchio di Cemento
+item.tsteelworks.bucket.Cement.name=Secchio di Cemento Fresco
 
 entity.HighGolem.name=Golem d'Acciaio
 
@@ -43,9 +43,14 @@ block.limestone.slab.square.name=Lastra di Mattoni di Calcare Cesellati
 block.limestone.slab.creeper.name=Lastra di Mattoni di Calcare Raccapriccianti
 
 tile.steam.name=Vapore
-fluid.steam=Vapore
 tile.molten.limestone.name=Calcare Fuso
-fluid.water=Acqua
+tile.liquid.cement.name=Cemento Fresco
+fluid.steam=Vapore
+fluid.limestone.molten=Calcare Fuso
+fluid.cement.liquid=Cemento Fresco
+steam=Vapore
+limestone.molten=Molten Limestone
+cement.liquid=Cemento Fresco
 
 HighOven.Controller.name=Pannello di Controllo del Forno Alto
 HighOven.TankController.name=Pannello di Controllo del Serbatoio Profondo
@@ -118,4 +123,34 @@ material.limestonebrick.tooltip1=Pietra con una punta di lime.
 
 manual.steelworks.tooltip1=Di: La Società degli Armeggiatori
 
-modifier.tool.vacuous=Raccolta
+modifier.tool.vacuous=Vacuo
+
+fluid.water=Acqua
+fluid.lava=Lava
+iron.molten=Ferro Fuso
+gold.molten=Oro Fuso
+copper.molten=Rame Fuso
+tin.molten=Stagno Fuso
+aluminum.molten=Alluminio Fuso
+cobalt.molten=Cobalto Fuso
+ardite.molten=Ardite Fusa
+bronze.molten=Bronzo Fuso
+aluminumbrass.molten=Ottone Fuso
+manyullyn.molten=Manyullyn Fuso
+alumite.molten=Alumite Fusa
+obsidian.molten=Ossidiana Fusa
+steel.molten=Acciaio Fuso
+glass.molten=Vetro Fuso
+stone.seared=Pietra Bruciata Fusa
+emerald.liquid=Smeraldo Liquefatto
+blood=Sangue
+nickel.molten=Nichel Fuso
+lead.molten=Piombo Fuso
+silver.molten=Argento Fuso
+fluid.shiny.molten=Platino Fuso
+invar.molten=Invaro Fuso
+electrum.molten=Elettro Fuso
+ender=Ender Liquido
+slime.blue=Slime Blu Liquido
+pigiron.molten=Ferro Suino Fuso
+glue=Colla
