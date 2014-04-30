@@ -163,11 +163,13 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 */
 	public void setMode (int newMode)
 	{
-		mode = (newMode < MODE_OUTPUT + 1) ? newMode : MODE_OUTPUT;
-		if (mode == MODE_OUTPUT)
-			getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
-	}
+	    if (newMode == MODE_OUTPUT && !isOutputDuct())
+	        getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
+	    else if (newMode != MODE_OUTPUT && isOutputDuct())
+	        getHighOvenController().outputDuct = null;
 
+		mode = (newMode < MODE_OUTPUT) ? newMode : MODE_OUTPUT;
+	}
 
 	public HighOvenLogic getHighOvenController ()
 	{
@@ -177,6 +179,17 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
 	}
 
+	boolean isOutputDuct ()
+	{
+	    if (getHighOvenController().outputDuct == null) return false;
+	    int x = getHighOvenController().outputDuct.x;
+	    int y = getHighOvenController().outputDuct.y;
+	    int z = getHighOvenController().outputDuct.z;
+	    CoordTuple compare = new CoordTuple(x, y, z);
+	    CoordTuple pos = new CoordTuple(xCoord, yCoord, zCoord);
+	    return (mode == MODE_OUTPUT && compare == pos);
+	}
+	
 	/**
 	 * Trying to transfer one item from one of the internal stot into the High Oven 
 	 * 
@@ -781,6 +794,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
 	{
 		readFromNBT(packet.data);
+		onInventoryChanged();
 		worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
 	}
 

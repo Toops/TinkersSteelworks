@@ -21,10 +21,9 @@ public class WailaRegistrar
 		registrar.registerBodyProvider(new SteamTurbineDataProvider(), TurbineLogic.class);
 	}
 
-	// needed too? Let's assume not for the moment.
-	    public static String fluidNameHelper (FluidStack f)
-	    {
-	        return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
-	    }
+	public static String fluidNameHelper (FluidStack f)
+	{
+	    return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
+	}
 
 }

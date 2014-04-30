@@ -350,7 +350,7 @@ public class TSClientProxy extends TSCommonProxy
         MinecraftForge.EVENT_BUS.register(new TSClientEvents());
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
-        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
+        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS, 0));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
         

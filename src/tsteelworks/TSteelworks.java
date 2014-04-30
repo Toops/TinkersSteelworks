@@ -101,6 +101,8 @@ public class TSteelworks
         content.createEntities();
         content.addCraftingRecipes();
         content.modIntegration();
+        content.oreRegistry();
+        content.registerMixerMaterials();
         
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
@@ -111,9 +113,9 @@ public class TSteelworks
     }
 
     public static void loginfo (String desc) { logger.info(desc); }
-    public static void loginfo (String desc, int value) { logger.info(desc + ": " + value); }
-    public static void loginfo (String desc, float value) { logger.info(desc + ": " + value); }
-    public static void loginfo (String desc, String text) { logger.info(desc + ": " + text); }
+    public static void loginfo (String desc, int value)    { logger.info(desc + ": " + value); }
+    public static void loginfo (String desc, float value)  { logger.info(desc + ": " + value); }
+    public static void loginfo (String desc, String text)  { logger.info(desc + ": " + text); }
     public static void loginfo (String desc, boolean flag) { logger.info(desc + ": " + flag); }
     
     void logAlloyList ()

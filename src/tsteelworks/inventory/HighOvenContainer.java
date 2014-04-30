@@ -18,13 +18,13 @@ public class HighOvenContainer extends TSActiveContainer
         playerInv = inventoryplayer;
 
         /* HighOven Misc inventory */
-        addSlotToContainer(new Slot(highoven, 0, 55, 16)); // oxidizer
-        addSlotToContainer(new Slot(highoven, 1, 55, 34)); // reducer
-        addSlotToContainer(new Slot(highoven, 2, 55, 52)); // purifier
-        addSlotToContainer(new Slot(highoven, 3, 126, 52)); // fuel        
+        addSlotToContainer(new Slot(highoven, logic.SLOT_OXIDIZER, 55, 16)); // oxidizer
+        addSlotToContainer(new Slot(highoven, logic.SLOT_REDUCER, 55, 34)); // reducer
+        addSlotToContainer(new Slot(highoven, logic.SLOT_PURIFIER, 55, 52)); // purifier
+        addSlotToContainer(new Slot(highoven, logic.SLOT_FUEL, 126, 52)); // fuel        
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.layers; y++)
-            addDualSlotToContainer(new TSActiveSlot(highoven, 4 + y, 28, 7 + (y * 18), y < 6));
+            addDualSlotToContainer(new TSActiveSlot(highoven, logic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
 
         /* Player inventory */
         for (int column = 0; column < 3; column++)

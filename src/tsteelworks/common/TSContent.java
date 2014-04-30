@@ -94,8 +94,6 @@ public class TSContent
         registerItems();
         registerBlocks();
         registerFluids();
-        oreRegistry();
-        registerMixerMaterials();
         setupCreativeTabs();
         registerModifiers();
     }
@@ -223,14 +221,15 @@ public class TSContent
         FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), new ItemStack(Item.bucketEmpty)));
     }
     
-    void oreRegistry ()
+    public void oreRegistry ()
     {
         // Vanilla
         ensureOreIsRegistered("blockSand", new ItemStack(Block.sand));
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
         ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
         ensureOreIsRegistered("dustSugar", new ItemStack(Item.sugar));
-        ensureOreIsRegistered("fuelCoal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
+        ensureOreIsRegistered("coal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
+        OreDictionary.registerOre("fuelCoal", new ItemStack(Item.coal, 1, 0));
         ensureOreIsRegistered("fuelCharcoal", new ItemStack(Item.coal, 1, 1));
         ensureOreIsRegistered("itemClay", new ItemStack(Item.clay));
         // TSteelworks
@@ -247,7 +246,7 @@ public class TSContent
         OreDictionary.registerOre("oreberryIron", new ItemStack(TContent.oreBerries, 1, 0));
         OreDictionary.registerOre("oreberryCopper", new ItemStack(TContent.oreBerries, 1, 2));
         OreDictionary.registerOre("oreberryTin", new ItemStack(TContent.oreBerries, 1, 3));
-        OreDictionary.registerOre("oreberryluminum", new ItemStack(TContent.oreBerries, 1, 4));
+        OreDictionary.registerOre("oreberryAluminum", new ItemStack(TContent.oreBerries, 1, 4));
         OreDictionary.registerOre("oreberryAluminium", new ItemStack(TContent.oreBerries, 1, 4));
         OreDictionary.registerOre("oreberryEssence", new ItemStack(TContent.oreBerries, 1, 5));
     }
@@ -255,15 +254,13 @@ public class TSContent
     void ensureOreIsRegistered (String oreName, ItemStack is)
     {
         final int oreId = OreDictionary.getOreID(is);
-        if (oreId == -1)
-            OreDictionary.registerOre(oreName, is);
-//        TSteelworks.loginfo("OreDict Name", OreDictionary.getOreName(id));
+        if (oreId == -1) OreDictionary.registerOre(oreName, is);
     }
     
     /**
      * Register mixer materials
      */
-    void registerMixerMaterials ()
+    public void registerMixerMaterials ()
     {
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
         AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
@@ -316,7 +313,7 @@ public class TSContent
             Object objResource = TContent.getStaticItem("itemResource", "thaumcraft.common.config.ConfigItems");
             if (objResource != null)
             {
-                TSteelworks.logger.info("Thaumcraft detected. Registering fuels.");
+                TSteelworks.loginfo("Thaumcraft detected. Registering fuels.");
                 thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
             }
         }
