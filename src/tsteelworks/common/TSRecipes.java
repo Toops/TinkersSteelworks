@@ -31,6 +31,7 @@ public class TSRecipes
      */
     static String[] patBlock = { "###", "###", "###" };
     static String[] patSmallBlock = { "##", "##" };
+    static String[] patSlab = { "###" };
     static String[] patHollow = { "###", "# #", "###" };
     static String[] patSurround = { "###", "#m#", "###" };
     static String[] patHead = { "###", "# #" };
@@ -56,8 +57,7 @@ public class TSRecipes
         final List<FluidType> exceptions = Arrays.asList(new FluidType[] { FluidType.Water, FluidType.Stone, FluidType.Ender, FluidType.Glass, FluidType.Slime, FluidType.Obsidian });
         for (final FluidType ft : FluidType.values())
         {
-            if (exceptions.contains(ft))
-                continue;
+            if (exceptions.contains(ft)) continue;
             final int tempMod = getFluidTempMod(ft);
             AdvancedSmelting.addDictionaryMelting("nugget" + ft.toString(), ft, tempMod, nuggetLiquidValue);
             AdvancedSmelting.addDictionaryMelting("ingot" + ft.toString(), ft, tempMod, ingotLiquidValue);
@@ -127,7 +127,6 @@ public class TSRecipes
         //final ItemStack blankPattern = TConstructRegistry.getItemStack("blankPattern");
         //final ItemStack heavyPlate = TConstructRegistry.getItemStack("heavyPlate");
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.machine, 1, 0), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', "ingotSteel", 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Block.pistonBase)));
-
     }
     
     public static void craftScorchedStone ()
@@ -140,19 +139,29 @@ public class TSRecipes
         final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
         final FluidStack fluidStoneMinor = new FluidStack(TContent.moltenStoneFluid, 8);
         final FluidStack fluidStoneChunk = new FluidStack(TContent.moltenStoneFluid, 32);
-        
+        // High Oven / Deep Tank Components
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(blockScorchedBrick, patSmallBlock, '#', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 12), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
         GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 13), patSurround, '#', itemScorchedBrick, 'm', new ItemStack(Item.dyePowder, 1, 4));
-
+        // Slabs
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), patSlab, '#', new ItemStack(TSContent.highoven, 1, 2));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), patSlab, '#', new ItemStack(TSContent.highoven, 1, 4));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 2), patSlab, '#', new ItemStack(TSContent.highoven, 1, 5));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 3), patSlab, '#', new ItemStack(TSContent.highoven, 1, 6));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 4), patSlab, '#', new ItemStack(TSContent.highoven, 1, 8));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 5), patSlab, '#', new ItemStack(TSContent.highoven, 1, 9));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.highoven, 1, 10));
+        GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.highoven, 1, 11));
+        // Recipes to obtain bricks from high oven
         AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "fuelCoal", null, "blockSand");
         AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "coal", null, "blockSand");
-        
+        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "dustCoal", null, "blockSand");
+        // Casting
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
-        
+        // Chiseling
         chiseling.addDetailing(TSContent.highoven, 4, TSContent.highoven, 6, TContent.chisel);
         chiseling.addDetailing(TSContent.highoven, 6, TSContent.highoven, 11, TContent.chisel);
         chiseling.addDetailing(TSContent.highoven, 11, TSContent.highoven, 2, TContent.chisel);
@@ -178,7 +187,18 @@ public class TSRecipes
         AdvancedSmelting.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, ingotLiquidValue / 18));
         Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 0, new FluidStack(fluid, ingotLiquidValue));
         AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 825, new FluidStack(fluid, ingotLiquidValue));
-    
+        
+        AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), FluidType.Stone, "dyeLime", null, "blockSand");
+        
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 0), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 1), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 1));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 2), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 2));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 3), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 4));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 4), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 5));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 5), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 6));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 7));
+        GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 8));
+        
         chiseling.addDetailing(TSContent.limestoneBlock, 2, TSContent.limestoneBlock, 3, TContent.chisel);
         chiseling.addDetailing(TSContent.limestoneBlock, 3, TSContent.limestoneBlock, 4, TContent.chisel);
         chiseling.addDetailing(TSContent.limestoneBlock, 4, TSContent.limestoneBlock, 5, TContent.chisel);

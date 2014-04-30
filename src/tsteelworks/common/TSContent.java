@@ -269,6 +269,7 @@ public class TSContent
         AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("dustCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
+        AdvancedSmelting.registerMixItem("dyeLime", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
         
         AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
         AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
