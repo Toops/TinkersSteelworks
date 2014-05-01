@@ -16,6 +16,7 @@ import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.util.TSEventHandler;
+import tsteelworks.worldgen.TSBaseWorldGenerator;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -80,6 +81,8 @@ public class TSteelworks
         proxy.registerRenderer();
         proxy.readManuals();
         proxy.registerSounds();
+        
+        GameRegistry.registerWorldGenerator(new TSBaseWorldGenerator());
         
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
 

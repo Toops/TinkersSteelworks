@@ -64,7 +64,7 @@ public class TSContent
     public static Item chestplateSteel;
     public static Item leggingsSteel;
     public static Item bootsSteel;
-    public static EnumArmorMaterial materialSteel;
+    
     public static Block highoven;
     public static Block scorchedSlab;
     public static Block limestoneBlock;
@@ -81,10 +81,11 @@ public class TSContent
     public static Fluid liquidCementFluid;
     
     public static ItemStack thaumcraftAlumentum;
-//    public static ItemStack railcraftBlockCoalCoke;
-
+    //public static ItemStack railcraftBlockCoalCoke;
+    
     public static Fluid[] fluids = new Fluid[3];
     public static Block[] fluidBlocks = new Block[3];
+    public static EnumArmorMaterial materialSteel;
     
     /**
      * Content Constructor
@@ -112,7 +113,6 @@ public class TSContent
 
         bucketsTS = new TSFilledBucket(ConfigCore.buckets);
         GameRegistry.registerItem(bucketsTS, "buckets");
-        
         
         if (ConfigCore.enableSteelArmor)
         {
@@ -319,15 +319,15 @@ public class TSContent
             }
         }
         // BlockCube and ItemCube not detected. :/ WTF railcraft?
-//        if (TSteelworks.railcraftAvailable)
-//        {
-//            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
-//            if (objBlockCube != null)
-//            {
-//                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
-//                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
-//            }
-//        }
+        /*if (TSteelworks.railcraftAvailable)
+        {
+            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
+            if (objBlockCube != null)
+            {
+                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
+                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
+            }
+        }*/
     }
     
     void registerModifiers()

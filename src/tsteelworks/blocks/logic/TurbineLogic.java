@@ -104,7 +104,7 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
         if (tick == 60)
         {
             if (getActive())
-                tank.drain(10, true);
+                tank.drain(25, true);
             tick = 0;
         }
     }
