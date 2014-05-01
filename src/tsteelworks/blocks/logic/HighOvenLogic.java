@@ -73,6 +73,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     int maxLiquid;
     int currentLiquid;
     int numBricks;
+    int maxTemp = 3000;
+    int maxTempUserSet = 3000;
     public int layers;
     public int fuelBurnTime;
     public int[] activeTemps;
@@ -107,6 +109,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             needsUpdate = true;
             layers = lay;
             maxLiquid = 20000 * lay;
+            maxTemp = 3000 + ((lay - 3) * 1000);
             final int[] tempActive = activeTemps;
             activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
             final int activeLength = tempActive.length > activeTemps.length ? activeTemps.length : tempActive.length;
@@ -357,9 +360,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             {
                 fuelBurnTime -= 3;
                 // replace by a min(x, y)?
-                if (internalTemp > 3000)
-                    internalTemp = 3000;
-                if (internalTemp < 3000)
+                if (internalTemp > maxTemp)
+                    internalTemp = maxTemp;
+                if (internalTemp < maxTemp)
                     internalTemp += fuelHeatRate;
 
             }
@@ -506,7 +509,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public FluidStack getLiquidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final FluidType mixResult = AdvancedSmelting.getMixSmeltingFluidResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
+        final FluidType mixResult = AdvancedSmelting.getMixFluidSmeltingResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
         if (mixResult != null)
             return new FluidStack(mixResult.fluid, stack.amount);
         return null;
@@ -515,7 +518,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public ItemStack getSolidMixedResultFor (FluidStack stack)
     {
         final FluidType resultType = FluidType.getFluidType(stack.getFluid());
-        final ItemStack mixResult = AdvancedSmelting.getMixSmeltingSolidResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
+        final ItemStack mixResult = AdvancedSmelting.getMixItemSmeltingResult(resultType, inventory[SLOT_OXIDIZER], inventory[SLOT_REDUCER], inventory[SLOT_PURIFIER]);
         if (mixResult != null)
             return new ItemStack(mixResult.itemID, mixResult.stackSize, mixResult.getItemDamage());
         return null;
@@ -625,8 +628,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if (getFuelBurnTime(inventory[SLOT_FUEL]) > 0)
         {
             needsUpdate = true;
-            fuelBurnTime = getFuelBurnTime(inventory[3]);
-            fuelHeatRate = getFuelHeatRate(inventory[3]);
+            fuelBurnTime = getFuelBurnTime(inventory[SLOT_FUEL]);
+            fuelHeatRate = getFuelHeatRate(inventory[SLOT_FUEL]);
             inventory[SLOT_FUEL].stackSize--;
             if (inventory[SLOT_FUEL].stackSize <= 0)
                 inventory[SLOT_FUEL] = null;
@@ -1351,6 +1354,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void readFromNBT (NBTTagCompound tags)
     {
         layers = tags.getInteger("Layers");
+        maxTemp = tags.getInteger("MaxTemp");
         inventory = new ItemStack[4 + layers];
         
         int[] duct = tags.getIntArray("OutputDuct");
@@ -1414,6 +1418,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);
         tags.setInteger("Layers", layers);
+        tags.setInteger("MaxTemp", maxTemp);
         tags.setIntArray("MeltingTemps", meltingTemps);
         tags.setIntArray("ActiveTemps", activeTemps);
         final NBTTagList taglist = new NBTTagList();

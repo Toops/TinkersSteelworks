@@ -57,7 +57,6 @@ public class HighOvenDuctGui extends TSContainerGui
             mode++;
         if ((button.id == 0) && (mode > 0))
             mode--;
-        //logic.setMode(mode);
         final Packet250CustomPayload packet = new Packet250CustomPayload();
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final DataOutputStream dos = new DataOutputStream(bos);

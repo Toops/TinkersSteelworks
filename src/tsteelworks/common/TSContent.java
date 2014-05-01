@@ -64,7 +64,7 @@ public class TSContent
     public static Item chestplateSteel;
     public static Item leggingsSteel;
     public static Item bootsSteel;
-    public static EnumArmorMaterial materialSteel;
+    
     public static Block highoven;
     public static Block scorchedSlab;
     public static Block limestoneBlock;
@@ -81,10 +81,11 @@ public class TSContent
     public static Fluid liquidCementFluid;
     
     public static ItemStack thaumcraftAlumentum;
-//    public static ItemStack railcraftBlockCoalCoke;
-
+    //public static ItemStack railcraftBlockCoalCoke;
+    
     public static Fluid[] fluids = new Fluid[3];
     public static Block[] fluidBlocks = new Block[3];
+    public static EnumArmorMaterial materialSteel;
     
     /**
      * Content Constructor
@@ -94,8 +95,6 @@ public class TSContent
         registerItems();
         registerBlocks();
         registerFluids();
-        oreRegistry();
-        registerMixerMaterials();
         setupCreativeTabs();
         registerModifiers();
     }
@@ -114,7 +113,6 @@ public class TSContent
 
         bucketsTS = new TSFilledBucket(ConfigCore.buckets);
         GameRegistry.registerItem(bucketsTS, "buckets");
-        
         
         if (ConfigCore.enableSteelArmor)
         {
@@ -223,14 +221,15 @@ public class TSContent
         FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), new ItemStack(Item.bucketEmpty)));
     }
     
-    void oreRegistry ()
+    public void oreRegistry ()
     {
         // Vanilla
         ensureOreIsRegistered("blockSand", new ItemStack(Block.sand));
         ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
         ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
         ensureOreIsRegistered("dustSugar", new ItemStack(Item.sugar));
-        ensureOreIsRegistered("fuelCoal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
+        ensureOreIsRegistered("coal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
+        OreDictionary.registerOre("fuelCoal", new ItemStack(Item.coal, 1, 0));
         ensureOreIsRegistered("fuelCharcoal", new ItemStack(Item.coal, 1, 1));
         ensureOreIsRegistered("itemClay", new ItemStack(Item.clay));
         // TSteelworks
@@ -247,7 +246,7 @@ public class TSContent
         OreDictionary.registerOre("oreberryIron", new ItemStack(TContent.oreBerries, 1, 0));
         OreDictionary.registerOre("oreberryCopper", new ItemStack(TContent.oreBerries, 1, 2));
         OreDictionary.registerOre("oreberryTin", new ItemStack(TContent.oreBerries, 1, 3));
-        OreDictionary.registerOre("oreberryluminum", new ItemStack(TContent.oreBerries, 1, 4));
+        OreDictionary.registerOre("oreberryAluminum", new ItemStack(TContent.oreBerries, 1, 4));
         OreDictionary.registerOre("oreberryAluminium", new ItemStack(TContent.oreBerries, 1, 4));
         OreDictionary.registerOre("oreberryEssence", new ItemStack(TContent.oreBerries, 1, 5));
     }
@@ -255,15 +254,13 @@ public class TSContent
     void ensureOreIsRegistered (String oreName, ItemStack is)
     {
         final int oreId = OreDictionary.getOreID(is);
-        if (oreId == -1)
-            OreDictionary.registerOre(oreName, is);
-//        TSteelworks.loginfo("OreDict Name", OreDictionary.getOreName(id));
+        if (oreId == -1) OreDictionary.registerOre(oreName, is);
     }
     
     /**
      * Register mixer materials
      */
-    void registerMixerMaterials ()
+    public void registerMixerMaterials ()
     {
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
         AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
@@ -272,6 +269,7 @@ public class TSContent
         AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("dustCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
+        AdvancedSmelting.registerMixItem("dyeLime", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
         
         AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
         AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
@@ -316,20 +314,20 @@ public class TSContent
             Object objResource = TContent.getStaticItem("itemResource", "thaumcraft.common.config.ConfigItems");
             if (objResource != null)
             {
-                TSteelworks.logger.info("Thaumcraft detected. Registering fuels.");
+                TSteelworks.loginfo("Thaumcraft detected. Registering fuels.");
                 thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
             }
         }
         // BlockCube and ItemCube not detected. :/ WTF railcraft?
-//        if (TSteelworks.railcraftAvailable)
-//        {
-//            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
-//            if (objBlockCube != null)
-//            {
-//                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
-//                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
-//            }
-//        }
+        /*if (TSteelworks.railcraftAvailable)
+        {
+            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
+            if (objBlockCube != null)
+            {
+                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
+                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
+            }
+        }*/
     }
     
     void registerModifiers()

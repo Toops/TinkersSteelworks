@@ -1,5 +1,6 @@
 package tsteelworks.plugins.waila;
 
+import tsteelworks.TSteelworks;
 import tsteelworks.plugins.ICompatPlugin;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
@@ -33,7 +34,7 @@ public class Waila implements ICompatPlugin
     @Override
     public void init ()
     {
-        //TSteelworks.logger.info("Waila detected. Registering TSteelwork tank blocks with Waila registry.");
+        TSteelworks.logger.info("Waila detected. Registering TSteelworks with Waila registry.");
         FMLInterModComms.sendMessage("Waila", "register", "tsteelworks.plugins.waila.WailaRegistrar.wailaCallback");
     }  
 

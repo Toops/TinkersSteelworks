@@ -16,6 +16,7 @@ import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.util.TSEventHandler;
+import tsteelworks.worldgen.TSBaseWorldGenerator;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -81,6 +82,8 @@ public class TSteelworks
         proxy.readManuals();
         proxy.registerSounds();
         
+        GameRegistry.registerWorldGenerator(new TSBaseWorldGenerator());
+        
         NetworkRegistry.instance().registerGuiHandler(instance, proxy);
 
         PluginController.getController().preInit();
@@ -101,6 +104,8 @@ public class TSteelworks
         content.createEntities();
         content.addCraftingRecipes();
         content.modIntegration();
+        content.oreRegistry();
+        content.registerMixerMaterials();
         
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
@@ -111,9 +116,9 @@ public class TSteelworks
     }
 
     public static void loginfo (String desc) { logger.info(desc); }
-    public static void loginfo (String desc, int value) { logger.info(desc + ": " + value); }
-    public static void loginfo (String desc, float value) { logger.info(desc + ": " + value); }
-    public static void loginfo (String desc, String text) { logger.info(desc + ": " + text); }
+    public static void loginfo (String desc, int value)    { logger.info(desc + ": " + value); }
+    public static void loginfo (String desc, float value)  { logger.info(desc + ": " + value); }
+    public static void loginfo (String desc, String text)  { logger.info(desc + ": " + text); }
     public static void loginfo (String desc, boolean flag) { logger.info(desc + ": " + flag); }
     
     void logAlloyList ()

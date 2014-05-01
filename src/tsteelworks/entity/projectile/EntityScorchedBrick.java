@@ -16,19 +16,19 @@ public class EntityScorchedBrick extends EntityThrowable
     private final int knockbackStrength = 3;
     private final String particleEffect = "scorchedbrick";
 
-    public EntityScorchedBrick(World par1World)
+    public EntityScorchedBrick(World world)
     {
-        super(par1World);
+        super(world);
     }
 
-    public EntityScorchedBrick(World par1World, double par2, double par4, double par6)
+    public EntityScorchedBrick(World world, double x, double y, double z)
     {
-        super(par1World, par2, par4, par6);
+        super(world, x, y, z);
     }
 
-    public EntityScorchedBrick(World par1World, EntityLivingBase par2EntityLivingBase)
+    public EntityScorchedBrick(World world, EntityLivingBase entity)
     {
-        super(par1World, par2EntityLivingBase);
+        super(world, entity);
     }
 
     public boolean canBreakBlock (int blockid)

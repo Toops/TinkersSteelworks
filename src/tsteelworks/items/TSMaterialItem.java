@@ -66,6 +66,6 @@ public class TSMaterialItem extends TSCraftingItem
             return itemstack;
         }
         else
-            return null;
+            return itemstack;
     }
 }
