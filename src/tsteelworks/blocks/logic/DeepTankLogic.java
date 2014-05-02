@@ -294,15 +294,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     	structureHasTop = false;
     	validStructure = false;
     	
-        int checkLayers = 0;
+        int checkedLayers = 0;
         if (checkSameLevel(x, y, z, compareBricks))
         {
-            checkLayers++;
+            checkedLayers++;
             int checkUp = recurseStructureUp(x, y + 1, z, 0, compareBricks);
             int checkDown = recurseStructureDown(x, y - 1, z, 0, compareBricks);
             
-            checkLayers += checkUp;
-            checkLayers += checkDown;
+            checkedLayers += checkUp;
+            checkedLayers += checkDown;
             
             /* 
              * count checkUp and checkDown work the same
@@ -317,13 +317,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 validateTop (x, y, z, 0, compareBricks);
         }
         
-        if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop))
+        if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
         {
-        	if(structureHasBottom && structureHasTop && checkLayers != this.layers)
+        	if(structureHasBottom && structureHasTop && checkedLayers > 0)
         	{
         		// what if checkLayers == 0? <0?
         		// adjustLayers but set to validStructure = false?
-        		adjustLayers(checkLayers, false);
+        		adjustLayers(checkedLayers, false);
         		validStructure = true;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
