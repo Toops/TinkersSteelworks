@@ -55,6 +55,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int layers;
     public final int innerMaxSpace = 9;
     Random rand = new Random();
+	
 
     public DeepTankLogic() 
     { 
@@ -88,7 +89,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
-        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+        
+		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
             return false;
         else
             return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
@@ -274,41 +276,76 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         checkValidStructure(x, y, z, glassCounter + brickCounter);
     }
     
+    
+    // Wisthy - 2014/05/02 - solution for issue Toops#21, refactoring of the method
     public void checkValidStructure (int x, int y, int z, int compareBricks)
     {
-        int checkLayers = 0;
+    	/*
+    	 * store old validation variables
+    	 */
+    	boolean oldStructureHasBottom = structureHasBottom;
+    	boolean oldStructureHasTop = structureHasTop;
+    	//boolean oldValidStructure = validStructure;
+    	
+    	/*
+    	 * reset all validation variables
+    	 */
+    	structureHasBottom = false;
+    	structureHasTop = false;
+    	validStructure = false;
+    	
+        int checkedLayers = 0;
         if (checkSameLevel(x, y, z, compareBricks))
         {
-            checkLayers++;
+            checkedLayers++;
             int checkUp = recurseStructureUp(x, y + 1, z, 0, compareBricks);
             int checkDown = recurseStructureDown(x, y - 1, z, 0, compareBricks);
             
-            checkLayers += checkUp;
-            checkLayers += checkDown;
+            checkedLayers += checkUp;
+            checkedLayers += checkDown;
             
-            if (checkUp > 1 && !structureHasBottom)
+            /* 
+             * count checkUp and checkDown work the same
+             * it returns the number of layers without including the topLayer or bottomLayer
+             * So, for a 3-high tank, the max value can be only 1.
+             * So, the test below should be done "greater than 0" instead of "greater than 1" 
+             */
+            
+            if (checkUp > 0 && !structureHasBottom)
                 validateBottom (x, y, z, 0, compareBricks);
-            if (checkDown > 1 && !structureHasTop)
+            if (checkDown > 0 && !structureHasTop)
                 validateTop (x, y, z, 0, compareBricks);
         }
-
-        if (structureHasTop != structureHasBottom != validStructure || checkLayers != this.layers)
+        
+        if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
         {
-            if (structureHasBottom && structureHasTop)
-            {
-                adjustLayers(checkLayers, false);
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                validStructure = true;
-            }
-            else
-                validStructure = false;
+        	if(structureHasBottom && structureHasTop && checkedLayers > 0)
+        	{
+        		// what if checkLayers == 0? <0?
+        		// adjustLayers but set to validStructure = false?
+        		adjustLayers(checkedLayers, false);
+        		validStructure = true;
+        	}
+        	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
+//        if (structureHasTop != structureHasBottom != validStructure || checkLayers != this.layers)
+//        {
+//            if (structureHasBottom && structureHasTop)
+//            {
+//                adjustLayers(checkLayers, false);
+//                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+//                validStructure = true;
+//            }
+//            else
+//                validStructure = false;
+//        }
     }
     
     
-	 // trying to refactor the following methods to use only one
+	// trying to refactor the following methods to use only one - not ready yet
+    // TODO wisthy - 2014/05/02 - check again the "recurse down" that use validateBottom instead of top
+    // TODO wisthy - 2014/05/02 - use enum+switch to separate more clearly the distinct behavior
     
-    // TODO Toops - 2014/04/26 - could you have a look at the following methods? if it sounds good to you, use them instead of the version without the "2" in the name
 
 	 public boolean checkSameLevel2(int x, int y, int z, int compareBricks)
 	 {
@@ -317,12 +354,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 
 	 public int recurseStructureUp2(int x, int y, int z, int count, int compareBricks)
 	 {
-		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, 1, -1); // add count somewhere
+		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, 1, -1); 
 	 }
 	 
 	 public int recurseStructureDown2(int x, int y, int z, int count, int compareBricks)
 	 {
-		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, -1, -1); // add count somewhere
+		 return checkStructureGlobal(x, y, z, compareBricks, count, -1, -1, -1); 
 	 }
 
 	 public int checkStructureGlobal(int x, int y, int z, int compareBricks, int count, int modX, int modY, int modZ)
@@ -418,6 +455,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
                 if ((block != null) && validGlassID(block.blockID)) 
+                	// previous line: validGlassId(block) <==> next line: !block.isAirBlock
+                	// so, it's a glass block that is not an air block. Is there any glass blocks that are air blocks?  
                     if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 
                         return (validGlassID(block.blockID)) ? validateTop(x, y, z, count, compareBricks) : count;
             }
