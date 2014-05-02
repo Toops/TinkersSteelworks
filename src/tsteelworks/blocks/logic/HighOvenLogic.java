@@ -837,6 +837,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         checkValidStructure(x, y, z);
     }
 
+    // TODO Wisthy - 2014/05/02 - solution for issue Toops#22 should be somewhere there. Method should be refactored the same way DTL has been updated
     /**
      * Determine if structure is valid
      * 
@@ -846,8 +847,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      *            coordinate from controller
      * @param z
      *            coordinate from controller
+     * @see {@link HighOvenLogic#checkValidStructure(int, int, int)}
      */
-    public void checkValidStructure (int x, int y, int z)
+    @Deprecated
+    public void checkValidStructureOld (int x, int y, int z)
     {
         int checkLayers = 0;
         if (checkSameLevel(x, y, z))
@@ -869,6 +872,58 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 internalTemp = 20;
                 validStructure = false;
             }
+        }
+    }
+    
+    // Wisthy - 2014/05/02 - new method as solution for issue Toops#22 
+    /**
+     * Determine if structure is valid
+     * 
+     * @param x
+     *            coordinate from controller
+     * @param y
+     *            coordinate from controller
+     * @param z
+     *            coordinate from controller
+     */
+    public void checkValidStructure(int x, int y, int z)
+    {
+    	/*
+    	 * store old validation variables
+    	 */
+    	boolean oldStructureHasBottom = structureHasBottom;
+    	boolean oldStructureHasTop = structureHasTop;
+    	//boolean oldValidStructure = validStructure;
+    	
+    	/*
+    	 * reset all validation variables
+    	 */
+    	structureHasBottom = false;
+    	structureHasTop = false;
+    	validStructure = false;
+    	
+        int checkedLayers = 0;
+        
+        if (checkSameLevel(x, y, z))
+        {
+        	checkedLayers++;
+        	checkedLayers += recurseStructureUp(x, y + 1, z, 0);
+            checkedLayers += recurseStructureDown(x, y - 1, z, 0);
+        }
+       
+        
+        if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
+        {
+        	if(structureHasBottom && structureHasTop && checkedLayers > 0)
+        	{
+        		adjustLayers(checkedLayers, false);
+        		validStructure = true;
+        	}
+        	else
+        	{
+        		internalTemp = 20;
+        	}
+        	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
