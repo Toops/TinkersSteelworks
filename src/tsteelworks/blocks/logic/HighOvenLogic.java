@@ -353,7 +353,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             heatItems();
         if ((tick % 20) == 0)
         {
-            //TSteelworks.loginfo("what's goin on big guy?", validStructure);
+            TSteelworks.loginfo("what's goin on big guy?", validStructure);
             if (!validStructure)
                 checkValidPlacement();
             if (isBurning())
@@ -888,6 +888,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public void checkValidStructure(int x, int y, int z)
     {
+    	TSteelworks.loginfo("HOL - checkValidStructure(x="+x+", y="+y+", z="+z+")");
     	/*
     	 * store old validation variables
     	 */
@@ -900,17 +901,30 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     	 */
     	structureHasBottom = false;
     	structureHasTop = false;
-    	validStructure = false;
+    	//validStructure = false;
     	
         int checkedLayers = 0;
         
         if (checkSameLevel(x, y, z))
         {
+        	TSteelworks.loginfo("HOL - checkValidStructure - same level ok");
         	checkedLayers++;
         	checkedLayers += recurseStructureUp(x, y + 1, z, 0);
+        	TSteelworks.loginfo("HOL - checkValidStructure - up: "+checkedLayers);
             checkedLayers += recurseStructureDown(x, y - 1, z, 0);
+            TSteelworks.loginfo("HOL - checkValidStructure - down: "+checkedLayers);
         }
        
+        TSteelworks.loginfo("HOL - checkValidStructure - hasBottom: "+structureHasBottom);
+        TSteelworks.loginfo("HOL - checkValidStructure - oldHasBottom: "+oldStructureHasBottom);
+        
+        TSteelworks.loginfo("HOL - checkValidStructure - hasTop: "+structureHasTop);
+        TSteelworks.loginfo("HOL - checkValidStructure - oldHasTop: "+oldStructureHasTop);
+        
+        
+        TSteelworks.loginfo("HOL - checkValidStructure - oldLayers: "+this.layers);
+        
+        
         
         if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
         {
@@ -922,6 +936,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         	else
         	{
         		internalTemp = 20;
+        		validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
