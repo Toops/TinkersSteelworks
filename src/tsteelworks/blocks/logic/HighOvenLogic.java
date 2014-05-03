@@ -531,12 +531,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
     }
     
-    public boolean itemIsOre (ItemStack stack)
+    public boolean itemIsOre (ItemStack itemstack)
     {
-        // No!
-        //return (stack.getDisplayName().endsWith("Ore"));
-        // Yes! Also covers oreberries, as intended.
-        return (OreDictionary.getOreName(stack.itemID).startsWith("ore"));
+        String oreName = InventoryHelper.getOreDictionaryName(itemstack);
+        return (oreName == null ? false : (oreName.startsWith("ore")));
     }
     
     /**

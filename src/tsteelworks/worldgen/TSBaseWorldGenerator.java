@@ -37,10 +37,13 @@ public class TSBaseWorldGenerator implements IWorldGenerator
         generateLimestone(random, xChunk, zChunk, world);
     }
     
+    
+    //TODO: Generate in underground ponds
+    // This currently generates under oceans, rivers, etc, around the same places you find sandstone
     void generateLimestone (Random random, int xChunk, int zChunk, World world)
     {
         int xPos, yPos, zPos;
-        int maxamt = 16;
+        int maxamt = 32;
         int miny = 12;
         int maxy = 64;
         for (int q = 0; q <= maxamt; q++)

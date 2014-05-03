@@ -67,10 +67,10 @@ public class WorldGenLimestone extends WorldGenerator
             return false;
         }
         float f = random.nextFloat() * (float)Math.PI;
-        double d0 = (double)((float)(startX + 16) + MathHelper.sin(f) * (float)this.radius / 8.0F);
-        double d1 = (double)((float)(startX + 16) - MathHelper.sin(f) * (float)this.radius / 8.0F);
-        double d2 = (double)((float)(startZ + 16) + MathHelper.cos(f) * (float)this.radius / 8.0F);
-        double d3 = (double)((float)(startZ + 16) - MathHelper.cos(f) * (float)this.radius / 8.0F);
+        double d0 = (double)((float)(startX + 16) + MathHelper.sin(f) * (float)this.radius / 16.0F);
+        double d1 = (double)((float)(startX + 16) - MathHelper.sin(f) * (float)this.radius / 16.0F);
+        double d2 = (double)((float)(startZ + 16) + MathHelper.cos(f) * (float)this.radius / 16.0F);
+        double d3 = (double)((float)(startZ + 16) - MathHelper.cos(f) * (float)this.radius / 16.0F);
         double d4 = (double)(startY + random.nextInt(3) - 2);
         double d5 = (double)(startY + random.nextInt(3) - 2);
 
@@ -106,7 +106,7 @@ public class WorldGenLimestone extends WorldGenerator
                                 double d14 = ((double)i3 + 0.5D - d8) / (d10 / 2.0D);
 
                                 Block block = Block.blocksList[world.getBlockId(k2, l2, i3)];
-                                if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.isGenMineableReplaceable(world, k2, l2, i3, Block.stone.blockID)))
+                                if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.blockID ==  Block.stone.blockID))
                                 {
                                     world.setBlock(k2, l2, i3, this.limestoneID, limestoneMeta, 2);
                                 }
