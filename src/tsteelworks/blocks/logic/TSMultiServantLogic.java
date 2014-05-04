@@ -9,15 +9,11 @@ import net.minecraft.world.World;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.lib.IMaster;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic
-{
-    boolean hasMaster;
-    CoordTuple master;
-    short masterID;
-    byte masterMeta;
-    
+{    
     private IMaster imaster;
 
     /*
@@ -30,39 +26,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return false;
     }
     
-//    public boolean hasValidMaster()
-//    {
-//    	if(imaster == null) return false;
-//    	
-//    	CoordTuple coord = imaster.getCoord();
-//		if((worldObj.getBlockId(coord.x, coord.y, coord.z) == masterID) && (worldObj.getBlockMetadata(coord.x, coord.y, coord.z) == masterMeta))
-//		{
-//			hasMaster = true;
-//			return true;
-//		}
-//		else
-//		{
-//			hasMaster = false;
-//			imaster = null;
-//			return false;
-//		}
-//    }
-    
-    
     public boolean hasValidMaster()
     {
-        if (!hasMaster)
-            return false;
-
-        if ((worldObj.getBlockId(master.x, master.y, master.z) == masterID) && (worldObj.getBlockMetadata(master.x, master.y, master.z) == masterMeta))
-            return true;
-
-        else
-        {
-            hasMaster = false;
-            master = null;
-            return false;
-        }
+    	if(imaster == null) return false;
+    	
+    	CoordTuple coord = imaster.getCoord();
+		if((worldObj.getBlockId(coord.x, coord.y, coord.z) == imaster.getBlockId()) && (worldObj.getBlockMetadata(coord.x, coord.y, coord.z) == imaster.getBlockMetadata()))
+		{
+			return imaster.isValid();
+		}
+		else
+		{
+			imaster = null;
+			return false;
+		}
     }
     
     /*
@@ -72,23 +49,26 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Override
     public CoordTuple getMasterPosition ()
     {
-        return master;
+        return (imaster != null)?imaster.getCoord():null;
     }
-
-    public void overrideMaster (int x, int y, int z)
+    
+    public void overrideMaster(int x, int y, int z)
     {
-        hasMaster = true;
-        master = new CoordTuple(x, y, z);
-        masterID = (short) worldObj.getBlockId(x, y, z);
-        masterMeta = (byte) worldObj.getBlockMetadata(x, y, z);
+    	final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+    	if(te instanceof IMaster)
+    	{
+    		imaster = (IMaster)te;
+    	}
+    	else
+    	{
+    		// it's not normal
+    		TSteelworks.loginfo("TSMSLogic - overrideMaster - it's not a IMaster - "+te.getClass());
+    	}
     }
     
     public void removeMaster ()
     {
-        hasMaster = false;
-        master = null;
-        masterID = 0;
-        masterMeta = 0;
+        imaster = null;
     }
     
     /*
@@ -100,7 +80,8 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     {
         if (hasValidMaster())
         {
-            final IMasterLogic logic = (IMasterLogic) worldObj.getBlockTileEntity(master.x, master.y, master.z);
+            CoordTuple masterCoord = imaster.getCoord();
+			final IMasterLogic logic = (IMasterLogic) worldObj.getBlockTileEntity(masterCoord .x, masterCoord.y, masterCoord.z);
             logic.notifyChange(this, xCoord, yCoord, zCoord);
         }
     }
@@ -120,7 +101,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Deprecated
     public boolean setMaster (int x, int y, int z)
     {
-        if (!hasMaster || (worldObj.getBlockId(master.x, master.y, master.z) != masterID) || (worldObj.getBlockMetadata(master.x, master.y, master.z) != masterMeta))
+        if (!hasValidMaster())
         {
             overrideMaster(x, y, z);
             return true;
@@ -136,7 +117,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Override
     public boolean setPotentialMaster (IMasterLogic master, World world, int x, int y, int z)
     {
-        return !hasMaster;
+        return imaster == null;
     }
 
     /*
@@ -146,7 +127,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Override
     public boolean verifyMaster (IMasterLogic logic, World world, int x, int y, int z)
     {
-        if (hasMaster)
+        if (imaster != null)
             return hasValidMaster();
         else
         {
@@ -162,8 +143,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     @Override
     public void invalidateMaster (IMasterLogic master, World world, int x, int y, int z)
     {
-        hasMaster = false;
-        master = null;
+        imaster = null;
     }
 
     /*
@@ -179,15 +159,18 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     
     public void readCustomNBT (NBTTagCompound tags)
     {
-        hasMaster = tags.getBoolean("TiedToMaster");
+        boolean hasMaster = tags.getBoolean("TiedToMaster");
         if (hasMaster)
         {
             final int xCenter = tags.getInteger("xCenter");
             final int yCenter = tags.getInteger("yCenter");
             final int zCenter = tags.getInteger("zCenter");
-            master = new CoordTuple(xCenter, yCenter, zCenter);
+            
+            overrideMaster(xCenter, yCenter, zCenter);
+            
+            /*master = new CoordTuple(xCenter, yCenter, zCenter);
             masterID = tags.getShort("MasterID");
-            masterMeta = tags.getByte("masterMeta");
+            masterMeta = tags.getByte("masterMeta");*/
         }
     }
     
@@ -204,14 +187,16 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     
     public void writeCustomNBT (NBTTagCompound tags)
     {
+    	boolean hasMaster = (imaster != null);
         tags.setBoolean("TiedToMaster", hasMaster);
         if (hasMaster)
         {
-            tags.setInteger("xCenter", master.x);
-            tags.setInteger("yCenter", master.y);
-            tags.setInteger("zCenter", master.z);
-            tags.setShort("MasterID", masterID);
-            tags.setByte("masterMeta", masterMeta);
+        	CoordTuple coord = imaster.getCoord();
+            tags.setInteger("xCenter", coord.x);
+            tags.setInteger("yCenter", coord.y);
+            tags.setInteger("zCenter", coord.z);
+            tags.setShort("MasterID", (short)imaster.getBlockId());
+            tags.setByte("masterMeta", (byte)imaster.getBlockMetadata());
         }
     }
 

@@ -39,13 +39,14 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.IMaster;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.util.InventoryHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic
+public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IMaster
 {	
     
 	public static final int SLOT_OXIDIZER = 0; // ex: gunpowder, sugar, coal
@@ -1543,4 +1544,34 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     @Override
     public void closeChest () {}
+
+    
+    /* =============== IMaster =============== */
+    
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.lib.IMaster#getCoord()
+     */
+	@Override
+	public CoordTuple getCoord() {
+		return new CoordTuple(xCoord, yCoord, zCoord);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.lib.IMaster#isValid()
+	 */
+	@Override
+	public boolean isValid() {
+		return validStructure;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see tsteelworks.lib.IMaster#getBlockId()
+	 */
+	@Override
+	public int getBlockId() {
+		return this.worldObj.getBlockId(xCoord, yCoord, zCoord);
+	}
 }

@@ -14,4 +14,8 @@ public interface IMaster {
 	 * @return true = the master is valid / false = the master is not valid
 	 */
 	public boolean isValid();
+
+	public int getBlockMetadata();
+
+	public int getBlockId();
 }
