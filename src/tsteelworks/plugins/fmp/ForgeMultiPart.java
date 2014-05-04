@@ -21,6 +21,8 @@ public class ForgeMultiPart implements ICompatPlugin
         RegisterWithFMP.registerBlock(TSContent.dustStorageBlock, 0, 1);
         RegisterWithFMP.registerBlock(TSContent.highoven, 2, 2);
         RegisterWithFMP.registerBlock(TSContent.highoven, 4, 11);
+        RegisterWithFMP.registerBlock(TSContent.limestoneBlock, 0, 8);
+        RegisterWithFMP.registerBlock(TSContent.cementBlock, 0, 15);
     }
 
     @Override

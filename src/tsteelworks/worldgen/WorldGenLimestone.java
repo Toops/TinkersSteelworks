@@ -23,7 +23,8 @@ public class WorldGenLimestone extends WorldGenerator
         this.limestoneMeta = blockMeta;
         this.radius = area;
     }
-
+    
+    // This producing interesting results, might tweak this a bit and add it in as well
 //    public boolean generate(World world, Random rand, int x, int y, int z)
 //    {
 //        if (world.getBlockMaterial(x, y, z) != Material.water)
