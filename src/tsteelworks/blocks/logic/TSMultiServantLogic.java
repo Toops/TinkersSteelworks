@@ -52,18 +52,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return (imaster != null)?imaster.getCoord():null;
     }
     
-    public void overrideMaster(int x, int y, int z)
+    public boolean overrideMaster(int x, int y, int z)
     {
     	final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
     	if(te instanceof IMaster)
     	{
     		imaster = (IMaster)te;
+    		return true;
     	}
     	else
     	{
     		// it's not normal
     		TSteelworks.loginfo("TSMSLogic - overrideMaster - it's not a IMaster - "+te.getClass());
     	}
+    	return false;
     }
     
     public void removeMaster ()
@@ -102,10 +104,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     public boolean setMaster (int x, int y, int z)
     {
         if (!hasValidMaster())
-        {
-            overrideMaster(x, y, z);
-            return true;
-        }
+            return overrideMaster(x, y, z);
         else
             return false;
     }
@@ -130,10 +129,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         if (imaster != null)
             return hasValidMaster();
         else
-        {
-            overrideMaster(x, y, z);
-            return true;
-        }
+            return overrideMaster(x, y, z);
     }
     
     /*

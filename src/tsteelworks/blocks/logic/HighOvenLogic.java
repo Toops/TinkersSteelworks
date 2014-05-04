@@ -699,7 +699,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void onInventoryChanged ()
     {
         updateTemperatures();
-        updateEntity();
+        //updateEntity();
         super.onInventoryChanged();
         needsUpdate = true;
     }
@@ -1431,7 +1431,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             outputDuct = new CoordTuple(duct[0], duct[1], duct[2]);
         
         super.readFromNBT(tags);
-        validStructure = tags.getBoolean("ValidStructure");
+        //validStructure = tags.getBoolean("ValidStructure");
         redstoneActivated = tags.getBoolean("RedstoneActivated");
         internalTemp = tags.getInteger("InternalTemp");
         isMeltingItems = tags.getBoolean("InUse");
@@ -1466,7 +1466,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void writeToNBT (NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setBoolean("ValidStructure", validStructure);
+        //tags.setBoolean("ValidStructure", validStructure);
         tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("InternalTemp", internalTemp);
         tags.setBoolean("InUse", isMeltingItems);
