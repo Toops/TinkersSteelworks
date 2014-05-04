@@ -97,6 +97,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     }
     
     public String getDefaultName () { return "tank.DeepTank"; }
+    
+    // TODO wisthy - 2014/05/04 - trying to fix the Deep Tank for issue toops#26
+    /**
+     * 
+     * @return true structure is valid / false structure is not valid
+     */
+    public boolean isStructureValid(){
+    	return this.validStructure;
+    }
 
     /*
      * (non-Javadoc)
@@ -167,6 +176,16 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 
     boolean addFluidToTank (FluidStack liquid, boolean first)
     {
+    	if(!isStructureValid())
+    	{
+    		//TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
+    		return false;
+    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
+//    	}
+    	
         needsUpdate = true;
         if (fluidlist.size() == 0)
         {
@@ -292,7 +311,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     	 */
     	structureHasBottom = false;
     	structureHasTop = false;
-    	validStructure = false;
+    	//validStructure = false;
     	
         int checkedLayers = 0;
         if (checkSameLevel(x, y, z, compareBricks))
@@ -304,7 +323,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             checkedLayers += checkUp;
             checkedLayers += checkDown;
             
-            /* 
+            /*
              * count checkUp and checkDown work the same
              * it returns the number of layers without including the topLayer or bottomLayer
              * So, for a 3-high tank, the max value can be only 1.
@@ -325,6 +344,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         		// adjustLayers but set to validStructure = false?
         		adjustLayers(checkedLayers, false);
         		validStructure = true;
+        	}
+        	else
+        	{
+        		validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -857,6 +880,16 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     @Override
     public FluidStack drain (int maxDrain, boolean doDrain)
     {
+    	if(!isStructureValid())
+    	{
+    	//	TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
+    		return null;
+    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
+//    	}
+    	
         if (fluidlist.size() == 0)
             return null;
 
@@ -904,6 +937,16 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     @Override
     public int fill (FluidStack resource, boolean doFill)
     {
+    	if(!isStructureValid())
+    	{
+    		//TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
+    		return 0;
+    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
+//    	}
+    	
         if (resource == null) return 0;
         int amount = resource.amount;
         if (amount + currentLiquid < maxLiquid)
@@ -932,6 +975,17 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     @Override
     public FluidStack getFluid ()
     {
+    	if(!isStructureValid())
+    	{
+    		//TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
+    		return null;
+    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
+//    	}
+    	
+    	
         if (fluidlist.size() == 0)
             return null;
         return fluidlist.get(0);
@@ -991,6 +1045,17 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     
     void dealloyFluids ()
     {
+    	if(!isStructureValid())
+    	{
+    		//TSteelworks.loginfo("DTL - dealloyFluids - invalid strucutre, refused");
+    		return;
+    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - dealloyFluids - valid strucutre, allowed");
+//    	}
+    	
+    	
         if (!containsAlloy) return;
         for (int i = 0; i < fluidlist.size(); ++i)
         {
