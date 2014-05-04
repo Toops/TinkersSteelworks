@@ -312,7 +312,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     	 */
     	structureHasBottom = false;
     	structureHasTop = false;
-    	validStructure = false;
+    	//validStructure = false;
     	
         int checkedLayers = 0;
         if (checkSameLevel(x, y, z, compareBricks))
@@ -345,6 +345,10 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         		// adjustLayers but set to validStructure = false?
         		adjustLayers(checkedLayers, false);
         		validStructure = true;
+        	}
+        	else
+        	{
+        		validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
