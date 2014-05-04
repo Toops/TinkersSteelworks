@@ -30,7 +30,6 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
@@ -179,13 +178,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
     	if(!isStructureValid())
     	{
-    		TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
+    		//TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
     		return false;
     	}
-    	else
-    	{
-    		TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
-    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
+//    	}
     	
         needsUpdate = true;
         if (fluidlist.size() == 0)
@@ -324,7 +323,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             checkedLayers += checkUp;
             checkedLayers += checkDown;
             
-            /* 
+            /*
              * count checkUp and checkDown work the same
              * it returns the number of layers without including the topLayer or bottomLayer
              * So, for a 3-high tank, the max value can be only 1.
@@ -883,13 +882,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
     	if(!isStructureValid())
     	{
-    		TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
+    	//	TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
     		return null;
     	}
-    	else
-    	{
-    		TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
-    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
+//    	}
     	
         if (fluidlist.size() == 0)
             return null;
@@ -940,13 +939,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
     	if(!isStructureValid())
     	{
-    		TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
+    		//TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
     		return 0;
     	}
-    	else
-    	{
-    		TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
-    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
+//    	}
     	
         if (resource == null) return 0;
         int amount = resource.amount;
@@ -978,13 +977,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
     	if(!isStructureValid())
     	{
-    		TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
+    		//TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
     		return null;
     	}
-    	else
-    	{
-    		TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
-    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
+//    	}
     	
     	
         if (fluidlist.size() == 0)
@@ -1048,13 +1047,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
     	if(!isStructureValid())
     	{
-    		TSteelworks.loginfo("DTL - dealloyFluids - invalid strucutre, refused");
+    		//TSteelworks.loginfo("DTL - dealloyFluids - invalid strucutre, refused");
     		return;
     	}
-    	else
-    	{
-    		TSteelworks.loginfo("DTL - dealloyFluids - valid strucutre, allowed");
-    	}
+//    	else
+//    	{
+//    		TSteelworks.loginfo("DTL - dealloyFluids - valid strucutre, allowed");
+//    	}
     	
     	
         if (!containsAlloy) return;
