@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.lib.IMaster;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic
 {
@@ -16,6 +17,8 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     CoordTuple master;
     short masterID;
     byte masterMeta;
+    
+    private IMaster imaster;
 
     /*
      * (non-Javadoc)
@@ -27,7 +30,26 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return false;
     }
     
-    public boolean hasValidMaster ()
+//    public boolean hasValidMaster()
+//    {
+//    	if(imaster == null) return false;
+//    	
+//    	CoordTuple coord = imaster.getCoord();
+//		if((worldObj.getBlockId(coord.x, coord.y, coord.z) == masterID) && (worldObj.getBlockMetadata(coord.x, coord.y, coord.z) == masterMeta))
+//		{
+//			hasMaster = true;
+//			return true;
+//		}
+//		else
+//		{
+//			hasMaster = false;
+//			imaster = null;
+//			return false;
+//		}
+//    }
+    
+    
+    public boolean hasValidMaster()
     {
         if (!hasMaster)
             return false;
