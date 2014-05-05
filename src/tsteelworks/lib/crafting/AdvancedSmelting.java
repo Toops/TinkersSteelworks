@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
+import tsteelworks.util.InventoryHelper;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -193,7 +194,7 @@ public class AdvancedSmelting
     public static void registerMixItem (String oreName, int type, int consume, int chance)
     {
         for (final ItemStack is : OreDictionary.getOres(oreName))
-            instance.mixItemList.put(getOreDictName(is), Arrays.asList(type, consume, chance));
+            instance.mixItemList.put(InventoryHelper.getOreDictionaryName(is), Arrays.asList(type, consume, chance));
     }
     
     public static void registerMixComboForFluidOutput (FluidType fluidout, FluidType fluidin, String i1, String i2, String i3)
@@ -224,7 +225,7 @@ public class AdvancedSmelting
      */
     public static Boolean isMixItemListed (ItemStack itemstack)
     {
-        return instance.mixItemList.containsKey(getOreDictName(itemstack));
+        return instance.mixItemList.containsKey(InventoryHelper.getOreDictionaryName(itemstack));
     }
     
     /**
@@ -235,7 +236,7 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemType (ItemStack itemstack)
     {
-        final List<Integer> list = instance.mixItemList.get(getOreDictName(itemstack));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(itemstack));
         return list.get(0);
     }
     
@@ -247,7 +248,7 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemConsumeAmount (ItemStack item)
     {
-        final List<Integer> list = instance.mixItemList.get(getOreDictName(item));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(item));
         return list.get(1);
     }
     
@@ -259,7 +260,7 @@ public class AdvancedSmelting
      */
     public static Integer getMixItemConsumeChance (ItemStack itemstack)
     {
-        final List<Integer> list = instance.mixItemList.get(getOreDictName(itemstack));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(itemstack));
         return list.get(2);
     }
     
@@ -289,7 +290,10 @@ public class AdvancedSmelting
      */
     public static FluidType getMixFluidSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getOreDictName(i1), getOreDictName(i2), getOreDictName(i3)));
+        String ox = InventoryHelper.getOreDictionaryName(i1);
+        String re = InventoryHelper.getOreDictionaryName(i2);
+        String pu = InventoryHelper.getOreDictionaryName(i3);
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, ox, re, pu));
         for (final Entry<FluidType, List> e : instance.fluidComboList.entries())
         {
             final FluidType key = e.getKey();
@@ -298,7 +302,6 @@ public class AdvancedSmelting
                 if (doesMixItemMeetRequirements(i1) && doesMixItemMeetRequirements(i2) && doesMixItemMeetRequirements(i3))
                     return key;
         }
-        
         return null;
     }
 
@@ -313,10 +316,12 @@ public class AdvancedSmelting
      */
     public static ItemStack getMixItemSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, getOreDictName(i1), getOreDictName(i2), getOreDictName(i3)));
+        String ox = InventoryHelper.getOreDictionaryName(i1);
+        String re = InventoryHelper.getOreDictionaryName(i2);
+        String pu = InventoryHelper.getOreDictionaryName(i3);
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, ox, re, pu));
         for (final Entry<ItemStack, List> e : instance.itemComboList.entries())
         {
-            
             final ItemStack key = e.getKey();
             final List value = e.getValue();
             if (value.equals(inputs))
@@ -324,18 +329,6 @@ public class AdvancedSmelting
                     return key.copy();
         }
         return null;
-    }
-
-    /**
-     * Obtains a OreDictionary name of a given item.
-     * 
-     * @param itemstack
-     * @return String name if valid, null if no such item exists
-     */
-    private static String getOreDictName (ItemStack itemstack)
-    {
-        int oreID = OreDictionary.getOreID(itemstack);
-        return (oreID != -1) ?  OreDictionary.getOreName(oreID) : null;
     }
 
     /* ========== Get Lists ========== */

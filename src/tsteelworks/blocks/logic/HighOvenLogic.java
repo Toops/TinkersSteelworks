@@ -46,7 +46,7 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.util.InventoryHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IMaster
+public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic //, IMaster
 {	
     
 	public static final int SLOT_OXIDIZER = 0; // ex: gunpowder, sugar, coal
@@ -109,8 +109,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {
             needsUpdate = true;
             layers = lay;
+            TSteelworks.loginfo("layers", layers);
             maxLiquid = 20000 * lay;
-            maxTemp = 3000 + ((lay - 3) * 1000);
+            maxTemp = maxTempByLayer();
             final int[] tempActive = activeTemps;
             activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
             final int activeLength = tempActive.length > activeTemps.length ? activeTemps.length : tempActive.length;
@@ -189,6 +190,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
+    public int maxTempByLayer ()
+    {
+        return 3000 + ((layers - 1) * 1000);
+    }
+    
     /*
      * (non-Javadoc)
      * @see net.minecraft.tileentity.TileEntity#canUpdate()
@@ -361,9 +367,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             {
                 fuelBurnTime -= 3;
                 // replace by a min(x, y)?
-                if (internalTemp > maxTemp)
-                    internalTemp = maxTemp;
-                if (internalTemp < maxTemp)
+                if (internalTemp > maxTempByLayer())
+                    internalTemp = maxTempByLayer();
+                if (internalTemp < maxTempByLayer())
                     internalTemp += fuelHeatRate;
 
             }
@@ -532,12 +538,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
     }
     
-    public boolean itemIsOre (ItemStack stack)
+    public boolean itemIsOre (ItemStack itemstack)
     {
-        // No!
-        //return (stack.getDisplayName().endsWith("Ore"));
-        // Yes! Also covers oreberries, as intended.
-        return (OreDictionary.getOreName(stack.itemID).startsWith("ore"));
+        String oreName = InventoryHelper.getOreDictionaryName(itemstack);
+        return (oreName == null ? false : (oreName.startsWith("ore")));
     }
     
     /**
@@ -701,7 +705,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void onInventoryChanged ()
     {
         updateTemperatures();
-        updateEntity();
+        //updateEntity();
         super.onInventoryChanged();
         needsUpdate = true;
     }
@@ -1433,7 +1437,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             outputDuct = new CoordTuple(duct[0], duct[1], duct[2]);
         
         super.readFromNBT(tags);
-        validStructure = tags.getBoolean("ValidStructure");
+        //validStructure = tags.getBoolean("ValidStructure");
         redstoneActivated = tags.getBoolean("RedstoneActivated");
         internalTemp = tags.getInteger("InternalTemp");
         isMeltingItems = tags.getBoolean("InUse");
@@ -1468,7 +1472,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void writeToNBT (NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setBoolean("ValidStructure", validStructure);
+        //tags.setBoolean("ValidStructure", validStructure);
         tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("InternalTemp", internalTemp);
         tags.setBoolean("InUse", isMeltingItems);
@@ -1552,7 +1556,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * (non-Javadoc)
      * @see tsteelworks.lib.IMaster#getCoord()
      */
-	@Override
+	//@Override
 	public CoordTuple getCoord() {
 		return new CoordTuple(xCoord, yCoord, zCoord);
 	}
@@ -1561,7 +1565,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 * (non-Javadoc)
 	 * @see tsteelworks.lib.IMaster#isValid()
 	 */
-	@Override
+	//@Override
 	public boolean isValid() {
 		return validStructure;
 	}
@@ -1570,7 +1574,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 * (non-Javadoc)
 	 * @see tsteelworks.lib.IMaster#getBlockId()
 	 */
-	@Override
+	//@Override
 	public int getBlockId() {
 		return this.worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}

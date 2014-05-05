@@ -36,7 +36,7 @@ import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.IMaster;
 import tsteelworks.lib.crafting.AlloyInfo;
 
-public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic, IMaster
+public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic //, IMaster
 {
     public ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
     boolean structureHasBottom;
@@ -1179,7 +1179,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * (non-Javadoc)
      * @see tsteelworks.lib.IMaster#getCoord()
      */
-	@Override
+	//@Override
 	public CoordTuple getCoord() {
 		return new CoordTuple(xCoord, yCoord, zCoord);
 	}
@@ -1188,7 +1188,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 	 * (non-Javadoc)
 	 * @see tsteelworks.lib.IMaster#isValid()
 	 */
-	@Override
+	//@Override
 	public boolean isValid() {
 		return validStructure;
 	}
@@ -1197,7 +1197,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 	 * (non-Javadoc)
 	 * @see tsteelworks.lib.IMaster#getBlockId()
 	 */
-	@Override
+	//@Override
 	public int getBlockId() {
 		return this.worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}

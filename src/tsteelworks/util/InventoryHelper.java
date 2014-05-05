@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class InventoryHelper
 {
@@ -131,5 +132,17 @@ public class InventoryHelper
        }
 
        return iinventory;
+   }
+   
+   /**
+    * Obtains a OreDictionary name of a given item.
+    * 
+    * @param itemstack
+    * @return String name if valid, null if no such item exists
+    */
+   public static String getOreDictionaryName (ItemStack itemstack)
+   {
+       int oreID = OreDictionary.getOreID(itemstack);
+       return (oreID != -1) ?  OreDictionary.getOreName(oreID) : null;
    }
 }

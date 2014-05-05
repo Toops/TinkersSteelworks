@@ -38,7 +38,9 @@ public class ConfigCore
     public static boolean enableDuctVacuum;
     public static boolean enableTE3SlagOutput;
     public static int[] modTankGlassBlocks;
-
+    // --- Worldgen
+    public static boolean enableLimestoneWorldgen;
+    
     public static void initProps (File configFile)
     {
         final Configuration config = new Configuration(configFile);
@@ -82,6 +84,8 @@ public class ConfigCore
         hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);
         hardcoreAnvil = config.get("TSteelification", "Hardcore Anvil", false, "Anvil requires steel materials").getBoolean(false);
 
+        enableLimestoneWorldgen = config.get("World Generation", "Limestone", true, "Allow limestone to generate (usually under rivers and oceans)").getBoolean(true);
+        
         config.save();
     }
 }

@@ -78,6 +78,7 @@ public class TSteelworks
         
         fuelHandler = new TSFuelHandler();
         
+        content.oreRegistry();
         proxy.registerRenderer();
         proxy.readManuals();
         proxy.registerSounds();
@@ -104,7 +105,6 @@ public class TSteelworks
         content.createEntities();
         content.addCraftingRecipes();
         content.modIntegration();
-        content.oreRegistry();
         content.registerMixerMaterials();
         
         GameRegistry.registerFuelHandler(fuelHandler);

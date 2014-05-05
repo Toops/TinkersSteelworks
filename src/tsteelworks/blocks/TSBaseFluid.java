@@ -23,7 +23,6 @@ public class TSBaseFluid extends BlockFluidClassic
     {
         super(id, fluid, material);
         this.texture = texture;
-        //this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
     }
 
     public TSBaseFluid(int id, Fluid fluid, Material material, String texture, boolean alpha)

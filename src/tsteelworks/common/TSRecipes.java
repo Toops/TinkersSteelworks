@@ -155,9 +155,13 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.highoven, 1, 10));
         GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.highoven, 1, 11));
         // Recipes to obtain bricks from high oven
-        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "fuelCoal", null, "blockSand");
-        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "coal", null, "blockSand");
-        AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, "dustCoal", null, "blockSand");
+        String[] oxidizers = { "fuelCoal", "coal", "dustCoal" };
+        String[] purifiers = { "blockSand", "Sandblock" };
+        
+        for (String o : oxidizers)
+            for (String p : purifiers)
+                AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, o, null, p);
+
         // Casting
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
         basinCasting.addCastingRecipe(blockScorchedBrick, fluidStoneChunk, new ItemStack(Block.brick), true, 100);
@@ -252,7 +256,7 @@ public class TSRecipes
         
         String[] oxidizers = { "dustGunpowder", "dustSulphur", "dustSulfur", "dustSaltpeter",  "dustCoal" };
         String[] reducers = { "dustRedstone", "dustManganese", "dustAluminum", "dustAluminium" };
-        String[] purifiers = { "blockSand" };
+        String[] purifiers = { "blockSand", "Sandblock" };
         
         for (String o : oxidizers)
             for (String r : reducers)

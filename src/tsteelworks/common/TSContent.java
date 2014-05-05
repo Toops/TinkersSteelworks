@@ -213,11 +213,11 @@ public class TSContent
         liquidCementFluid = new Fluid("cement.liquid");
         if (!FluidRegistry.registerFluid(liquidCementFluid))
             liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
-        liquidCement = new CementFluidBlock(ConfigCore.liquidCement, liquidCementFluid, Material.lava, "liquid_cement").setUnlocalizedName("liquid.cement");
+        liquidCement = new CementFluidBlock(ConfigCore.liquidCement, liquidCementFluid, Material.air, "liquid_cement").setUnlocalizedName("liquid.cement");
         GameRegistry.registerBlock(liquidCement, "liquid.cement");
         fluids[2] = liquidCementFluid;
         fluidBlocks[2] = liquidCement;
-        liquidCementFluid.setBlockID(liquidCement).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
+        liquidCementFluid.setBlockID(liquidCement).setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
         FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), new ItemStack(Item.bucketEmpty)));
     }
     
@@ -238,8 +238,6 @@ public class TSContent
         OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
         OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
         OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
-        OreDictionary.registerOre("stone", new ItemStack(limestoneBlock, 1, 0));
-        OreDictionary.registerOre("cobblestone", new ItemStack(limestoneBlock, 1, 1));
         // TConstuct
         OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TContent.craftedSoil, 1, 3));
         // * Dual registry for smelting (slag) purposes (we need the ore prefix)

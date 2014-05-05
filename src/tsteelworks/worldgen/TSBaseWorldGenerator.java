@@ -5,6 +5,7 @@ import java.util.Random;
 import tconstruct.common.TContent;
 import tconstruct.util.config.PHConstruct;
 import tsteelworks.common.TSContent;
+import tsteelworks.lib.ConfigCore;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -33,16 +34,19 @@ public class TSBaseWorldGenerator implements IWorldGenerator
     
     void generateSurface (Random random, int xChunk, int zChunk, World world)
     {
-        String biomeName = world.getWorldChunkManager().getBiomeGenAt(xChunk, zChunk).biomeName;
-        generateLimestone(random, xChunk, zChunk, world);
+        //String biomeName = world.getWorldChunkManager().getBiomeGenAt(xChunk, zChunk).biomeName;
+        if (ConfigCore.enableLimestoneWorldgen)
+            generateLimestone(random, xChunk, zChunk, world);
     }
     
+    //TODO: Generate in underground ponds
+    // This currently generates under oceans, rivers, etc, around the same places you find sandstone
     void generateLimestone (Random random, int xChunk, int zChunk, World world)
     {
         int xPos, yPos, zPos;
-        int maxamt = 16;
+        int maxamt = 32;
         int miny = 12;
-        int maxy = 64;
+        int maxy = PHConstruct.seaLevel;
         for (int q = 0; q <= maxamt; q++)
         {
             xPos = xChunk + random.nextInt(16);
