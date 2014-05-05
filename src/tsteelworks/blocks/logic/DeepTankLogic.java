@@ -33,10 +33,11 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.IMaster;
+//import tsteelworks.lib.IMaster;
+import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
 
-public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic //, IMaster
+public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic //, IMaster
 {
     public ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
     boolean structureHasBottom;
@@ -1186,9 +1187,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 
 	/*
 	 * (non-Javadoc)
-	 * @see tsteelworks.lib.IMaster#isValid()
+	 * @see tsteelworks.lib.ITSMasterLogic#isValid()
 	 */
-	//@Override
+	@Override
 	public boolean isValid() {
 		return validStructure;
 	}
