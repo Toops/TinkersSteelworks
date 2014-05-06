@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
@@ -58,7 +59,7 @@ public class DeepTankGui extends TSContainerGui
         int cornerX = (width - xSize) / 2 + 20;
         int cornerY = (height - ySize) / 2 + 12;
 
-        for (FluidStack liquid : logic.fluidlist)
+        for (FluidStack liquid : logic.getFluidlist())
         {
             int basePos = 54;
             int initialLiquidSize = 0;
@@ -103,7 +104,7 @@ public class DeepTankGui extends TSContainerGui
         //Liquids - molten metal
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         int base = 0;
-        for (FluidStack liquid : logic.fluidlist)
+        for (FluidStack liquid : logic.getFluidlist())
         {
             Icon renderIndex = liquid.getFluid().getStillIcon();
             int basePos = 54;
@@ -313,7 +314,7 @@ public class DeepTankGui extends TSContainerGui
         int cornerY = (height - ySize) / 2 + 12;
         int fluidToBeBroughtUp = -1;
 
-        for (FluidStack liquid : logic.fluidlist)
+        for (FluidStack liquid : logic.getFluidlist())
         {
             int basePos = 54;
             int initialLiquidSize = 0;
@@ -358,7 +359,7 @@ public class DeepTankGui extends TSContainerGui
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                   TSteelworks.logError("an error occured", e);
                 }
 
                 packet.channel = Repo.modChan;

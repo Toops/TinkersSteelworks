@@ -898,6 +898,7 @@ public class SmallFontRenderer implements ResourceManagerReloadListener
                 break;
             case 32:
                 i1 = l;
+                // TODO : @Toops - didn't you forget a break here?
             default:
                 k += getCharWidth(c0);
 

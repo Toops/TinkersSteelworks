@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
@@ -161,7 +162,7 @@ public class HighOvenGui extends TSContainerGui
                 }
                 catch (final Exception e)
                 {
-                    e.printStackTrace();
+                	TSteelworks.logError("an error occured", e);
                 }
                 packet.channel = Repo.modChan;
                 packet.data = bos.toByteArray();

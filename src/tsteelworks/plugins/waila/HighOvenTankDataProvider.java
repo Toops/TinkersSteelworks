@@ -38,14 +38,14 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	    if (accessor.getTileEntity() instanceof DeepTankLogic)
         {
 	        DeepTankLogic te = (DeepTankLogic) accessor.getTileEntity();
-            if (te.validStructure)
+            if (te.isStructureValid())
             {
     			List<FluidStack> fls = te.getAllFluids();
     			if(fls != null)
     			{
     				if(fls.size() <= 0)
     				{
-    					currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+    					currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
     				}
     				else
     				{
@@ -58,7 +58,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             }
     		else
     		{
-    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+    			currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -71,7 +71,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
                 {
                     if(fls.size() <= 0)
                     {
-                        currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+                        currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
                     }
                     else
                     {
@@ -84,7 +84,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             }
             else
             {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+                currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
             }
         }
 		return currenttip;

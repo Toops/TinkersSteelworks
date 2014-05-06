@@ -54,8 +54,7 @@ public class TSPacketHandler implements IPacketHandler
         }
         catch (final Exception e)
         {
-            TSteelworks.logger.warning("Failed at reading client packet for TSteelworks.");
-            e.printStackTrace();
+            TSteelworks.logError("Failed at reading client packet for TSteelworks.", e);
         }
     }
 
@@ -127,16 +126,16 @@ public class TSPacketHandler implements IPacketHandler
                 if (te instanceof DeepTankLogic)
                 {
                     FluidStack temp = null;
-                    for (final FluidStack liquid : ((DeepTankLogic) te).fluidlist)
+                    for (final FluidStack liquid : ((DeepTankLogic) te).getFluidlist())
                         if (liquid.fluidID == fluidID)
                             temp = liquid;
                     if (temp != null)
                     {
-                        ((DeepTankLogic) te).fluidlist.remove(temp);
+                        ((DeepTankLogic) te).getFluidlist().remove(temp);
                         if (isShiftPressed)
-                            ((DeepTankLogic) te).fluidlist.add(temp);
+                            ((DeepTankLogic) te).getFluidlist().add(temp);
                         else
-                            ((DeepTankLogic) te).fluidlist.add(0, temp);
+                            ((DeepTankLogic) te).getFluidlist().add(0, temp);
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
@@ -145,8 +144,7 @@ public class TSPacketHandler implements IPacketHandler
         }
         catch (final IOException e)
         {
-            TSteelworks.logger.warning("Failed at reading server packet for TSteelworks.");
-            e.printStackTrace();
+            TSteelworks.logError("Failed at reading server packet for TSteelworks.", e);
         }
     }
 }

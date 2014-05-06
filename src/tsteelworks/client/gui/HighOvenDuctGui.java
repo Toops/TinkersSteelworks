@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.inventory.TSActiveContainer;
 import tsteelworks.lib.Repo;
@@ -71,7 +72,7 @@ public class HighOvenDuctGui extends TSContainerGui
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+        	TSteelworks.logError("an error occured", e);
         }
         packet.channel = Repo.modChan;
         packet.data = bos.toByteArray();
