@@ -2,6 +2,7 @@ package tsteelworks.blocks.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -28,53 +29,67 @@ import tconstruct.blocks.logic.SmelteryDrainLogic;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
-import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
-//import tsteelworks.lib.IMaster;
 import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
 
-public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic //, IMaster
+public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic
 {
-    public ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
-    boolean structureHasBottom;
-    boolean structureHasTop;
-    boolean needsUpdate;
-    boolean containsAlloy;
-    boolean activeTurbineAttached;
-    public boolean validStructure;
-    byte direction;
-    public CoordTuple centerPos;
-    int tick;
-    int maxLiquid;
-    int currentLiquid;
-    int numBricks;
-    public int innerMaxX;
-    public int innerMaxZ;
-    public int layers;
-    public final int innerMaxSpace = 9;
+    private List<FluidStack> fluidlist = new ArrayList<FluidStack>();
+    private boolean structureHasBottom;
+    private boolean structureHasTop;
+    private boolean needsUpdate;
+    private boolean containsAlloy;
+    private boolean activeTurbineAttached;
+    private boolean validStructure;
+    private byte direction;
+    private CoordTuple centerPos;
+    private int tick;
+    private int maxLiquid;
+    private int currentLiquid;
+    private int numBricks;
+    private int innerMaxX;
+    private int innerMaxZ;
+    private int layers;
+    private final static int INNER_MAX_SPACE = 9;
     Random rand = new Random();
 	
 
     public DeepTankLogic() 
     { 
-        super(); 
-        innerMaxX = 0;
-        innerMaxZ = 0;
+        super();
+        this.innerMaxX = 0;
+        this.innerMaxZ = 0;
         containsAlloy = false;
         activeTurbineAttached = false;
     }
     
-    public int xDistanceToRim () { return (innerMaxX / 2) + 1; }
-    public int zDistanceToRim () { return (innerMaxZ / 2) + 1; }
-    public int innerSpaceTotal () { return innerMaxX * innerMaxZ; }
-    public int layerFluidCapacity() { return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); }
+    public int xDistanceToRim () 
+    { 
+    	return (getInnerMaxX() / 2) + 1; 
+    }
+    
+    public int zDistanceToRim () 
+    { 
+    	return (getInnerMaxZ() / 2) + 1; 
+    }
+    
+    public int innerSpaceTotal () 
+    { 
+    	return getInnerMaxX() * getInnerMaxZ(); 
+    }
+    
+    public int layerFluidCapacity() 
+    { 
+    	return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); 
+    }
     
     void adjustLayers (int lay, boolean forceAdjust)
     {
+    	//TODO : manage lay < 0 safety check
         if (lay != layers || forceAdjust)
         {
             needsUpdate = true;
@@ -88,19 +103,60 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         return new DeepTankContainer(inventoryplayer, this);
     }
-    
-    public boolean isUseableByPlayer (EntityPlayer entityplayer)
+     
+   	/**
+	 * @return the centerPos
+	 */
+	public CoordTuple getCenterPos() {
+		return centerPos;
+	}
+
+	/**
+	 * @return the innerMaxX
+	 */
+	public int getInnerMaxX() {
+		return innerMaxX;
+	}
+
+	/**
+	 * @return the innerMaxZ
+	 */
+	public int getInnerMaxZ() {
+		return innerMaxZ;
+	}
+
+	/**
+	 * @param innerMaxZ the innerMaxZ to set
+	 */
+	private void setInnerMaxZ(int innerMaxZ) {
+		this.innerMaxZ = innerMaxZ;
+	}
+
+	/**
+	 * @param innerMaxX the innerMaxX to set
+	 */
+	private void setInnerMaxX(int innerMaxX) {
+		this.innerMaxX = innerMaxX;
+	}
+
+	public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
         
 		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+		{
             return false;
+		}
         else
+        {
             return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+        }
     }
     
-    public String getDefaultName () { return "tank.DeepTank"; }
+    public String getDefaultName () { 
+    	return "tank.DeepTank"; 
+    }
     
-    // TODO wisthy - 2014/05/04 - trying to fix the Deep Tank for issue toops#26
+    
     /**
      * 
      * @return true structure is valid / false structure is not valid
@@ -114,21 +170,30 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
      */
     @Override
-    public byte getRenderDirection () { return direction; }
+    public byte getRenderDirection () 
+    { 
+    	return direction; 
+    }
 
     /*
      * (non-Javadoc)
      * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
      */
     @Override
-    public ForgeDirection getForgeDirection () { return ForgeDirection.VALID_DIRECTIONS[direction]; }
+    public ForgeDirection getForgeDirection () 
+    { 
+    	return ForgeDirection.VALID_DIRECTIONS[direction]; 
+    }
 
     /*
      * (non-Javadoc)
      * @see tconstruct.library.util.IFacingLogic#setDirection(int)
      */
     @Override
-    public void setDirection (int side) {}
+    public void setDirection (int side) 
+    {
+    	//do nothing
+    }
 
     /*
      * (non-Javadoc)
@@ -152,6 +217,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         case 3:
             direction = 4;
             break;
+        default:
+        	break;
         }
     }
 
@@ -161,33 +228,31 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         tick++;
         if (tick % 20 == 0)
         {
-            if (!validStructure)
+            if (!validStructure){
                 checkValidPlacement();
+            }
             if (needsUpdate)
             {
                 needsUpdate = false;
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
-        if (tick == 40)
-            if (activeTurbineAttached)
+        if (tick == 40){
+            if (activeTurbineAttached){
                 dealloyFluids();
-        if (tick == 60)
+            }
+        }
+        if (tick == 60){
             tick = 0;
+        }
     }
 
     boolean addFluidToTank (FluidStack liquid, boolean first)
     {
     	if(!isStructureValid())
     	{
-    		//TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
     		return false;
-    	}
-//    	else
-//    	{
-//    		TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
-//    	}
-    	
+    	}    	
         needsUpdate = true;
         if (fluidlist.size() == 0)
         {
@@ -198,23 +263,20 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
         else
         {
-            if (liquid.amount + currentLiquid > maxLiquid)
+            if (liquid.amount + currentLiquid > maxLiquid){
                 return false;
+            }
             currentLiquid += liquid.amount;
             boolean added = false;
-            for (int i = 0; i < fluidlist.size(); i++)
-            {
-                FluidStack l = fluidlist.get(i);
-                if (l.isFluidEqual(liquid))
-                {
-                    l.amount += liquid.amount;
-                    added = true;
-                }
-                if (l.amount <= 0)
-                {
-                    fluidlist.remove(l);
-                    i--;
-                }
+            for(Iterator<FluidStack> it = fluidlist.iterator(); it.hasNext();){
+            	FluidStack fs = it.next();
+            	if(fs.isFluidEqual(liquid)){
+            		fs.amount += liquid.amount;
+            		added = true;
+            	}
+            	if(fs.amount <= 0){
+            		it.remove();
+            	}
             }
             if (!added)
             {
@@ -263,7 +325,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     void alignControllerLayer (int x, int y, int z)
     {
         // If new centralized coords didn't change, INVALID!
-        if (x == xCoord && z == zCoord) return;
+        if (x == xCoord && z == zCoord){
+        	return;
+        }
         // Let's get those central points again...
         int innerCenterX = xDistanceToRim();
         int innerCenterZ = zDistanceToRim();
@@ -293,7 +357,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             brickCounter += checkBricks(x - innerCenterX, y, zPos, false);
             brickCounter += checkBricks(x + innerCenterX, y, zPos, false);
         }
-        if (!validateRimmedLayer(glassCounter, brickCounter)) return;
+        if (!validateRimmedLayer(glassCounter, brickCounter)) {
+        	return;
+        }
         checkValidStructure(x, y, z, glassCounter + brickCounter);
     }
     
@@ -306,14 +372,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     	 */
     	boolean oldStructureHasBottom = structureHasBottom;
     	boolean oldStructureHasTop = structureHasTop;
-    	//boolean oldValidStructure = validStructure;
     	
     	/*
     	 * reset all validation variables
     	 */
     	structureHasBottom = false;
     	structureHasTop = false;
-    	//validStructure = false;
     	
         int checkedLayers = 0;
         if (checkSameLevel(x, y, z, compareBricks))
@@ -332,10 +396,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
              * So, the test below should be done "greater than 0" instead of "greater than 1" 
              */
             
-            if (checkUp > 0 && !structureHasBottom)
+            if (checkUp > 0 && !structureHasBottom){
                 validateBottom (x, y, z, 0, compareBricks);
-            if (checkDown > 0 && !structureHasTop)
+            }
+            if (checkDown > 0 && !structureHasTop){
                 validateTop (x, y, z, 0, compareBricks);
+            }
         }
         
         if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
@@ -346,24 +412,11 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         		// adjustLayers but set to validStructure = false?
         		adjustLayers(checkedLayers, false);
         		validStructure = true;
-        	}
-        	else
-        	{
+        	}else{
         		validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
-//        if (structureHasTop != structureHasBottom != validStructure || checkLayers != this.layers)
-//        {
-//            if (structureHasBottom && structureHasTop)
-//            {
-//                adjustLayers(checkLayers, false);
-//                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-//                validStructure = true;
-//            }
-//            else
-//                validStructure = false;
-//        }
     }
     
     
@@ -648,7 +701,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         {
         case 2: // +z
             // Scan to last block
-            for (int z = zCoord + 1; z < zCoord + (innerMaxSpace + 1); z++)
+            for (int z = zCoord + 1; z < zCoord + (INNER_MAX_SPACE + 1); z++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -660,7 +713,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxZ = centerZ;
+                setInnerMaxZ(centerZ);
                 centerZ = (centerZ / 2 + 1); 
             }
             if (centerZ == 0) break;
@@ -684,13 +737,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxX = centerX;
+                setInnerMaxX(centerX);
                 centerX = (centerX / 2 + 1); 
             }
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord + centerZ};
         case 3: // -z
-            for (int z = zCoord - 1; z > zCoord - (innerMaxSpace + 1); z--)
+            for (int z = zCoord - 1; z > zCoord - (INNER_MAX_SPACE + 1); z--)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -702,7 +755,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxZ = centerZ;
+                setInnerMaxZ(centerZ);
                 centerZ = (centerZ / 2 + 1); 
             }
             if (centerZ == 0) break;
@@ -726,13 +779,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxX = centerX;
+                setInnerMaxX(centerX);
                 centerX = (centerX / 2 + 1); 
             }
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord - centerZ};
         case 4: // +x
-            for (int x = xCoord + 1; x < xCoord + (innerMaxSpace + 1); x++)
+            for (int x = xCoord + 1; x < xCoord + (INNER_MAX_SPACE + 1); x++)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))
@@ -744,7 +797,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxX = centerX;
+                setInnerMaxX(centerX);
                 centerX = (centerX / 2 + 1); 
             }
             if (centerX == 0) break;
@@ -768,13 +821,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxZ = centerZ;
+                setInnerMaxZ(centerZ);
                 centerZ = (centerZ / 2 + 1); 
             }
             if (centerZ == 0) break;
             return new int[] {xCoord + centerX, zCoord};
         case 5: // -x
-            for (int x = xCoord - 1; x > xCoord - (innerMaxSpace + 1); x--)
+            for (int x = xCoord - 1; x > xCoord - (INNER_MAX_SPACE + 1); x--)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))
@@ -786,7 +839,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxX = centerX;
+                setInnerMaxX(centerX);
                 centerX = (centerX / 2 + 1); 
             }
             if (centerX == 0) break;
@@ -810,7 +863,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 break;
             else 
             {
-                innerMaxZ = centerZ;
+                setInnerMaxZ(centerZ);
                 centerZ = (centerZ / 2 + 1); 
             }
             if (centerZ == 0) break;
@@ -823,15 +876,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public boolean validateRimmedLayer(int innerbricks, int outerbricks)
     {
         final int total = innerbricks + outerbricks;
-        if (innerMaxX == 1 || innerMaxZ == 1)
+        if (getInnerMaxX() == 1 || getInnerMaxZ() == 1)
             return Arrays.asList(9, 15, 21, 27, 33).contains(total);
-        else if (innerMaxX == 3 || innerMaxZ == 3)
+        else if (getInnerMaxX() == 3 || getInnerMaxZ() == 3)
             return Arrays.asList(25, 35, 45, 55).contains(total);
-        else if (innerMaxX == 5 || innerMaxZ == 5)
+        else if (getInnerMaxX() == 5 || getInnerMaxZ() == 5)
             return Arrays.asList(49, 63, 77).contains(total);
-        else if (innerMaxX == 7 || innerMaxZ == 7)
+        else if (getInnerMaxX() == 7 || getInnerMaxZ() == 7)
             return Arrays.asList(81, 99).contains(total);
-        else if (innerMaxX == 9 || innerMaxZ == 9)
+        else if (getInnerMaxX() == 9 || getInnerMaxZ() == 9)
             return (total == 121);
         return false;
     }
@@ -866,7 +919,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return false;
     }
     
-    /*
+    
+    
+    public List<FluidStack> getFluidlist() {
+		return fluidlist;
+	}
+
+	/*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
      */
@@ -1085,8 +1144,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public void readFromNBT (NBTTagCompound tags)
     {
         layers = tags.getInteger("Layers");
-        innerMaxX = tags.getInteger("InnerMaxX");
-        innerMaxZ = tags.getInteger("InnerMaxZ");
+        setInnerMaxX(tags.getInteger("InnerMaxX"));
+        setInnerMaxZ(tags.getInteger("InnerMaxZ"));
         super.readFromNBT(tags);
         validStructure = tags.getBoolean("ValidStructure");
         containsAlloy = tags.getBoolean("ContainsAlloy");
@@ -1129,8 +1188,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         tags.setByte("Direction", direction);
         tags.setInteger("CurrentLiquid", currentLiquid);
         tags.setInteger("MaxLiquid", maxLiquid);
-        tags.setInteger("InnerMaxZ", innerMaxZ);
-        tags.setInteger("InnerMaxX", innerMaxX);
+        tags.setInteger("InnerMaxZ", getInnerMaxZ());
+        tags.setInteger("InnerMaxX", getInnerMaxX());
         tags.setInteger("Layers", layers);
 
         NBTTagList taglist = new NBTTagList();
@@ -1202,4 +1261,6 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 	public int getBlockId() {
 		return this.worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
+
+	
 }

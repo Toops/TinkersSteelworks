@@ -143,7 +143,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
             }
             if (type == 2)
             {
-                for (final FluidStack fstack : getDeepTankController().fluidlist)
+                for (final FluidStack fstack : getDeepTankController().getFluidlist())
                     if (fstack.fluidID == fluid.getID())
                     {
                         containsFluid = true;

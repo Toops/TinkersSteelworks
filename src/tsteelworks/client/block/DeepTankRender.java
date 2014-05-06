@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.client.TProxyClient;
 import tconstruct.client.block.BlockSkinRenderHelper;
+import tconstruct.library.util.CoordTuple;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -41,16 +42,17 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
     {
         renderer.renderStandardBlock(block, x, y, z);
         DeepTankLogic logic = (DeepTankLogic) world.getBlockTileEntity(x, y, z);
-        if (logic.validStructure)
+        if (logic.isStructureValid())
         {
-            int posX = logic.centerPos.x - (logic.xDistanceToRim() - 1);
-            int posY = logic.centerPos.y;
-            int posZ = logic.centerPos.z - (logic.zDistanceToRim() - 1);
+            CoordTuple centerPos = logic.getCenterPos();
+			int posX = centerPos.x - (logic.xDistanceToRim() - 1);
+            int posY = centerPos.y;
+            int posZ = centerPos.z - (logic.zDistanceToRim() - 1);
             //Liquids
             float base = 0F;
             int yBase = 0;
             int liquidBase = 0;
-            for (FluidStack liquid : logic.fluidlist)
+            for (FluidStack liquid : logic.getFluidlist())
             {
                 int liquidSize = liquid.amount;
                 while (liquidSize > 0)
@@ -68,20 +70,20 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
 
                     Fluid fluid = liquid.getFluid();
                     // This if statement is simply to save a little processing if it's symetrical
-                    if (logic.innerMaxX == logic.innerMaxZ)
+                    if (logic.getInnerMaxX() == logic.getInnerMaxZ())
                     {
                     
                         for (int i = 0; i < logic.innerSpaceTotal(); i++)
                         {
-                            float minX = i % (logic.innerMaxX) == 0 ? -0.001F : 0F;
-                            float minZ = i / (logic.innerMaxX) == 0 ? -0.001F : 0F;
-                            float maxX = i % (logic.innerMaxZ) == 2 ? 1.001F : 1F;
-                            float maxZ = i / (logic.innerMaxZ) == 2 ? 1.001F : 1F;
+                            float minX = i % (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
+                            float minZ = i / (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
+                            float maxX = i % (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
+                            float maxZ = i / (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
                             
                             renderer.setRenderBounds(minX, renderBase, minZ, maxX, renderHeight, maxZ);
-                            int rx = posX + i % logic.innerMaxX;
+                            int rx = posX + i % logic.getInnerMaxX();
                             int ry = posY + yBase;
-                            int rz = posZ + i / logic.innerMaxZ;
+                            int rz = posZ + i / logic.getInnerMaxZ();
                             if (fluid.canBePlacedInWorld())
                                 BlockSkinRenderHelper.renderMetadataBlock(Block.blocksList[fluid.getBlockID()], 0, rx, ry, rz, renderer, world);
                             else
@@ -92,15 +94,15 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
                     {
                         for (int i = 0; i < logic.innerSpaceTotal(); i++)
                         {
-                            int modZ = getRenderZOffset(logic.innerMaxX, logic.innerMaxZ);
+                            int modZ = getRenderZOffset(logic.getInnerMaxX(), logic.getInnerMaxZ());
                             
-                            float minX = i % (logic.innerMaxX) == 0 ? -0.001F : 0F;
-                            float minZ = i / (logic.innerMaxZ) == 0 ? -0.001F : 0F;
-                            float maxX = i % (logic.innerMaxX) == 2 ? 1.001F : 1F;
-                            float maxZ = i / (logic.innerMaxZ) == 2 ? 1.001F : 1F;
+                            float minX = i % (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
+                            float minZ = i / (logic.getInnerMaxZ()) == 0 ? -0.001F : 0F;
+                            float maxX = i % (logic.getInnerMaxX()) == 2 ? 1.001F : 1F;
+                            float maxZ = i / (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
                             
                             renderer.setRenderBounds(minX, renderBase, minZ, maxX, renderHeight, maxZ);
-                            int rx = posX + i % logic.innerMaxX;
+                            int rx = posX + i % logic.getInnerMaxX();
                             int ry = posY + yBase;
                             int rz = posZ + i / modZ;
                             if (fluid.canBePlacedInWorld())
