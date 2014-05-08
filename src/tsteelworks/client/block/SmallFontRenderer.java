@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class SmallFontRenderer implements ResourceManagerReloadListener
 {
-    private static final ResourceLocation[] field_111274_c = new ResourceLocation[256];
+    private static final ResourceLocation[] FIELD_111274_C = new ResourceLocation[256];
 
     /**
      * Digests a string for nonprinting formatting characters then returns a string containing only that formatting.
@@ -497,10 +497,10 @@ public class SmallFontRenderer implements ResourceManagerReloadListener
 
     private ResourceLocation func_111271_a (int par1)
     {
-        if (field_111274_c[par1] == null)
-            field_111274_c[par1] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", new Object[] { Integer.valueOf(par1) }));
+        if (FIELD_111274_C[par1] == null)
+            FIELD_111274_C[par1] = new ResourceLocation(String.format("textures/font/unicode_page_%02x.png", new Object[] { Integer.valueOf(par1) }));
 
-        return field_111274_c[par1];
+        return FIELD_111274_C[par1];
     }
 
     private void func_111272_d ()
