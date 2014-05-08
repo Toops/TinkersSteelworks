@@ -1,6 +1,7 @@
 package tsteelworks.lib;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import net.minecraft.item.Item;
@@ -25,7 +26,7 @@ public class TSteelworksRegistry
      * A directory of ItemStacks. Contains mostly crafting items Materials:
      * scorchedbrick, ingotMonogold, nuggetMonogold
      */
-    static HashMap<String, ItemStack> itemstackDirectory = new HashMap<String, ItemStack>();
+    static Map<String, ItemStack> itemstackDirectory = new HashMap<String, ItemStack>();
 
     /**
      * Adds an itemstack to the directory
