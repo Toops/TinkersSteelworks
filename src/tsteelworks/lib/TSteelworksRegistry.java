@@ -8,16 +8,23 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.util.TabTools;
 
-public class TSteelworksRegistry
-{
+public class TSteelworksRegistry{
     /** The static instance of this class */
     public static TSteelworksRegistry instance = new TSteelworksRegistry();
     /** The logger instance for API */
     public static Logger logger = Logger.getLogger("TSteel-API");
     /** Creative tab */
     public static TabTools SteelworksCreativeTab;
+    
+    
+    
+    
 
-    /**
+    // just to disable the default implicit public constructor which has no sense in this helper class
+	private TSteelworksRegistry() {
+	}
+
+	/**
      * A directory of crafting items and tools used by the mod. 
      */
     public static HashMap<String, Item> itemDirectory = new HashMap<String, Item>();
