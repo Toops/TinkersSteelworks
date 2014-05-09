@@ -1,8 +1,0 @@
-[submodule "mods/nei"]
-	path = mods/nei
-	url = https://bitbucket.org/ChickenBones/notenoughitems
-[submodule "mods/ccc"]
-	path = mods/ccc
-	url = https://bitbucket.org/ChickenBones/codechickencore
-
-
