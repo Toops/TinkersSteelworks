@@ -1,0 +1,6 @@
+[submodule "mods/nei"]
+	path = mods/nei
+	url = https://github.com/Chicken-Bones/NotEnoughItems.git
+[submodule "mods/ccc"]
+	path = mods/ccc
+	url = https://github.com/Chicken-Bones/CodeChickenCore.git
