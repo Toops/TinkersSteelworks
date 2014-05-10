@@ -25,7 +25,7 @@
     <property name="forge.name" value="forge-${mc.version}-${forge.version}-src.zip"/>
 
     <available property="forge-exists" file="${download.dir}/${forge.name}"/>
-    <available file=".git" type="dir" property="git.present"/>
+    <available file=".git" type="dir" property="git.present"/>	
 
     <property name="build.dependencies.file" value="${build.dir}/dependencies.properties" />
     <property name="tcon.version" value="bfd2291" />
@@ -48,6 +48,62 @@
     </condition>
 
     <mkdir dir="${download.dir}"/>
+
+        <!-- Installing CCC mod -->
+	<property name="ccc.version" value="1.6.4-1.0.0.62"/>
+	<available property="ccc-downloaded" file="${download.dir}/${ccc.name}" />
+	<property name="ccc.name" value="CodeChickenLib-dev-${ccc.version}.jar" />
+
+	<target name="download-ccc" unless="ccc-downloaded">
+		<get src="http://files.minecraftforge.net/CodeChickenLib/${ccc.name}" dest="${download.dir}" usetimestamp="true"/>	
+	</target>
+
+	<condition property="ccc-installed">
+	  <and>
+            <isset property="forge-installed" />
+            <equals arg1="${build.dependencies.ccc}" arg2="${ccc.version}" />
+	  </and>
+	</condition>
+
+	<target name="install-ccc" depends="setup,download-ccc" unless="ccc-installed">
+	        <echo message="Installing CodeChickenCore" />
+		<copy file="${download.dir}/${ccc.name}" todir="${mcp.dir}/lib" />
+
+		<echo message="Updating build.dependencies" />
+		<propertyfile file="${build.dependencies.file}">
+		  <entry key="ccc" value="${ccc.version}" />
+		  <entry key="ccc.name" value="${ccc.name}" />
+		</propertyfile>
+	</target>
+
+	<!-- Installing NEI mod -->
+	<property name="nei.version" value="1.6.1.8"/>
+	<available property="nei-downloaded" file="${download.dir}/${nei.name}" />
+	<property name="nei.name" value="NotEnoughItems-dev-${nei.version}.jar" />
+	<property name="nei.name.distant" value="NotEnoughItems-dev%20${nei.version}.jar" />
+
+	<condition property="nei-installed">
+	  <and>
+            <isset property="forge-installed" />
+            <equals arg1="${build.dependencies.nei}" arg2="${nei.version}" />
+	  </and>
+	</condition>
+
+	<target name="download-nei" unless="nei-downloaded">
+		<get src="http://www.chickenbones.craftsaddle.org/Files/Old_Versions/1.6.4/${nei.name.distant}" dest="${download.dir}/${nei.name}" usetimestamp="true"/>	
+	</target>
+
+	<target name="install-nei" depends="setup,install-ccc,download-nei" unless="nei-installed">
+	        <echo message="Installing NEI" />
+		<copy file="${download.dir}/${nei.name}" todir="${mcp.dir}/lib" />
+
+		<echo message="Updating build.dependencies" />
+		<propertyfile file="${build.dependencies.file}">
+		  <entry key="nei" value="${nei.version}" />
+		  <entry key="tei.name" value="${nei.name}" />
+		</propertyfile>
+	</target>
+	
 
     <target name="download-tcon" unless="tcon-downloaded">
         <get src="https://dl.dropboxusercontent.com/u/11017392/Minecraft/${tcon.name}" dest="${download.dir}" usetimestamp="true" />
@@ -98,7 +154,7 @@
     </target>
 
     <!-- Download necessary files -->
-    <target name="download-files" depends="download-forge,download-tcon"/>
+    <target name="download-files" depends="download-forge,download-tcon,download-ccc,download-nei"/>
 
     <!-- Download forge (if it doesn't exist) -->
     <target name="download-forge" unless="forge-exists">
@@ -140,7 +196,7 @@
         </copy>
     </target>
 
-    <target name="compile" depends="initialize-version,install-tcon,setup,copy-src">
+    <target name="compile" depends="initialize-version,install-tcon,install-nei,setup,copy-src">
 
         <delete dir="${classes.dir}"/>
         <mkdir dir="${classes.dir}"/>
