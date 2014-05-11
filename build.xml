@@ -100,7 +100,7 @@
 		<echo message="Updating build.dependencies" />
 		<propertyfile file="${build.dependencies.file}">
 		  <entry key="nei" value="${nei.version}" />
-		  <entry key="tei.name" value="${nei.name}" />
+		  <entry key="nei.name" value="${nei.name}" />
 		</propertyfile>
 	</target>
 	
@@ -132,6 +132,9 @@
     <!-- Set full version -->
     <target name="initialize-version" depends="version-provided,version-not-provided,git-revision">
         <property name="project.version.full" value="${build.number}.${git.revision}"/>
+    	<propertyfile file="sonar-project.properties">
+    		<entry key="sonar.projectVersion" value="${project.version.full}" />
+    	</propertyfile>
     </target>
 
     <!-- Set unknown build number -->
