@@ -55,7 +55,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
     					}
     					if(config.getConfig("tseelworks.showtotal"))
     					{
-    						currentttip.add("-----");
+    						currenttip.add("-----");
     						currenttip.add("total : "+0+"mb");
     					}
     				}
