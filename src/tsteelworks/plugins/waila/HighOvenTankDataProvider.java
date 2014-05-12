@@ -112,10 +112,19 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		if(!autoUnit || amount < 1000)
 		{
 			textValue += amount + "mB";
-		}else{
+		}else
+		{
 			double converted = amount;
 			converted = converted / 1000;
-			textValue += converted +"b";
+			if(converted < 1000)
+			{
+				textValue += converted +"B";
+			}else
+			{
+				converted = converted / 1000;
+				textValue += converted +"kB";
+			}
+			
 		}
 		return textValue;
 	}
