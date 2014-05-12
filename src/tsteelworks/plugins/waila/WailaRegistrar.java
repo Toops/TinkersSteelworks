@@ -21,7 +21,8 @@ public class WailaRegistrar
 		registrar.registerBodyProvider(new SteamTurbineDataProvider(), TurbineLogic.class);
 		
 		//config
-		registrar.addConfig("TinkersSteelworks", "tseelworks.showtotal", "Show Total");
+		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal", "Show Total");
+		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit", "Adjust bucket units");
 	}
 
 	public static String fluidNameHelper (FluidStack f)
