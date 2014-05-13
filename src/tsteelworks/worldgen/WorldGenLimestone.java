@@ -24,56 +24,19 @@ public class WorldGenLimestone extends WorldGenerator
         this.radius = area;
     }
     
-    // This producing interesting results, might tweak this a bit and add it in as well
-//    public boolean generate(World world, Random rand, int x, int y, int z)
-//    {
-//        if (world.getBlockMaterial(x, y, z) != Material.water)
-//        {
-//            return false;
-//        }
-//        else
-//        {
-//            int radial = rand.nextInt(this.radius - 2) + 2;
-//            byte height = 8;
-//
-//            for (int xCheck = x - radial; xCheck <= x + radial; ++xCheck)
-//            {
-//                for (int zCheck = z - radial; zCheck <= z + radial; ++zCheck)
-//                {
-//                    int xSquare = xCheck - x;
-//                    int zSquare = zCheck - z;
-//
-//                    if (xSquare * xSquare + zSquare * zSquare <= radial * radial)
-//                    {
-//                        for (int yCheck = y - height; yCheck <= y + height; ++yCheck)
-//                        {
-//                            int searchBlockID = world.getBlockId(xCheck, yCheck, zCheck);
-//                            if (searchBlockID == Block.stone.blockID)
-//                            {
-//                                world.setBlock(xCheck, yCheck, zCheck, this.limestoneID, 0, 2);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//            return true;
-//        }
-//    }
-    
-    public boolean generate(World world, Random random, int startX, int startY, int startZ)
+    public boolean generate(World world, Random random, int xCoord, int yCoord, int zCoord)
     {
-        if (world.getBlockMaterial(startX, startY, startZ) != Material.water)
+        if (world.getBlockMaterial(xCoord, yCoord, zCoord) != Material.water)
         {
             return false;
         }
         float f = random.nextFloat() * (float)Math.PI;
-        double d0 = (double)((float)(startX + 16) + MathHelper.sin(f) * (float)this.radius / 16.0F);
-        double d1 = (double)((float)(startX + 16) - MathHelper.sin(f) * (float)this.radius / 16.0F);
-        double d2 = (double)((float)(startZ + 16) + MathHelper.cos(f) * (float)this.radius / 16.0F);
-        double d3 = (double)((float)(startZ + 16) - MathHelper.cos(f) * (float)this.radius / 16.0F);
-        double d4 = (double)(startY + random.nextInt(3) - 2);
-        double d5 = (double)(startY + random.nextInt(3) - 2);
+        double d0 = (double)((float)(xCoord + 16) + MathHelper.sin(f) * (float)this.radius / 16.0F);
+        double d1 = (double)((float)(xCoord + 16) - MathHelper.sin(f) * (float)this.radius / 16.0F);
+        double d2 = (double)((float)(zCoord + 16) + MathHelper.cos(f) * (float)this.radius / 16.0F);
+        double d3 = (double)((float)(zCoord + 16) - MathHelper.cos(f) * (float)this.radius / 16.0F);
+        double d4 = (double)(yCoord + random.nextInt(3) - 2);
+        double d5 = (double)(yCoord + random.nextInt(3) - 2);
 
         for (int l = 0; l <= this.radius; ++l)
         {
@@ -90,26 +53,29 @@ public class WorldGenLimestone extends WorldGenerator
             int i2 = MathHelper.floor_double(d7 + d11 / 2.0D);
             int j2 = MathHelper.floor_double(d8 + d10 / 2.0D);
 
-            for (int k2 = i1; k2 <= l1; ++k2)
+            for (int x = i1; x <= l1; ++x)
             {
-                double d12 = ((double)k2 + 0.5D - d6) / (d10 / 2.0D);
+                double d12 = ((double)x + 0.5D - d6) / (d10 / 2.0D);
 
                 if (d12 * d12 < 1.0D)
                 {
-                    for (int l2 = j1; l2 <= i2; ++l2)
+                    for (int y = j1; y <= i2; ++y)
                     {
-                        double d13 = ((double)l2 + 0.5D - d7) / (d11 / 2.0D);
+                        double d13 = ((double)y + 0.5D - d7) / (d11 / 2.0D);
 
                         if (d12 * d12 + d13 * d13 < 1.0D)
                         {
-                            for (int i3 = k1; i3 <= j2; ++i3)
+                            for (int z = k1; z <= j2; ++z)
                             {
-                                double d14 = ((double)i3 + 0.5D - d8) / (d10 / 2.0D);
-
-                                Block block = Block.blocksList[world.getBlockId(k2, l2, i3)];
-                                if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.blockID ==  Block.stone.blockID))
+                                double d14 = ((double)z + 0.5D - d8) / (d10 / 2.0D);
+                                if(!world.getChunkProvider().chunkExists(x >> 4, z >> 4))
                                 {
-                                    world.setBlock(k2, l2, i3, this.limestoneID, limestoneMeta, 2);
+                                    Block block = Block.blocksList[world.getBlockId(x, y, z)];
+                                    if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.blockID ==  Block.stone.blockID))
+                                    {
+                                        
+                                        world.setBlock(x, y, z, this.limestoneID, limestoneMeta, 2);
+                                    }
                                 }
                             }
                         }
@@ -117,7 +83,6 @@ public class WorldGenLimestone extends WorldGenerator
                 }
             }
         }
-
         return true;
     }
 }
