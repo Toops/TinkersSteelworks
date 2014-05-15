@@ -666,6 +666,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 tempBricks++;
             else if (te instanceof TSMultiServantLogic)
             {
+                if (te instanceof HighOvenDuctLogic)
+                    return tempBricks++;
                 TSMultiServantLogic servant = (TSMultiServantLogic) te;
                 if (servant.hasValidMaster())
                 {
@@ -674,20 +676,6 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 }
                 else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
                     tempBricks++;
-            }
-            else if (te instanceof MultiServantLogic)
-            {
-                if (!(te instanceof SmelteryDrainLogic))
-                {
-                    MultiServantLogic servant = (MultiServantLogic) te;
-                    if (servant.hasValidMaster())
-                    {
-                        if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
-                            tempBricks++;
-                    }
-                    else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
-                        tempBricks++;
-                }
             }
         }
         return tempBricks;
