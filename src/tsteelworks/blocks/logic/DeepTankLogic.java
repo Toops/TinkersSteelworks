@@ -460,7 +460,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 				 {
 					 if(! isMiddleLayer)
 					 {
-						 numBricks += checkBricks(xPos, y, zPos, true);
+						 numBricks += checkBricks(xPos, y, zPos, false);
 					 }else
 					 {
 						 if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 

@@ -6,15 +6,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import tsteelworks.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TSMaterialItem extends TSCraftingItem
 {
-    static String[] materialNames = new String[] { "ScorchedBrick", "LimestoneBrick" };
+    static String[] materialNames = new String[] { "ScorchedBrick", "LimestoneBrick", "LimestoneDust" };
 
-    static String[] craftingTextures = new String[] { "scorchedbrick", "limestonebrick" };
+    static String[] craftingTextures = new String[] { "scorchedbrick", "limestonebrick", "limestonedust" };
 
     private static String[] getTextures ()
     {
@@ -62,7 +63,15 @@ public class TSMaterialItem extends TSCraftingItem
             world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
             if (!world.isRemote)
                 world.spawnEntityInWorld(new EntityScorchedBrick(world, player));
-
+            return itemstack;
+        }
+        else if (itemstack.getItemDamage() == 1)
+        {
+            if (!player.capabilities.isCreativeMode)
+                --itemstack.stackSize;
+            world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / ((itemRand.nextFloat() * 0.4F) + 0.8F));
+            if (!world.isRemote)
+                world.spawnEntityInWorld(new EntityLimestoneBrick(world, player));
             return itemstack;
         }
         else
