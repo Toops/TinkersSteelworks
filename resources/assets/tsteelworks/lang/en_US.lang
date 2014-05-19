@@ -19,6 +19,7 @@ item.tsteelworks.bucket.Limestone.name=Molten Limestone Bucket
 item.tsteelworks.bucket.Cement.name=Wet Cement Bucket
 
 entity.HighGolem.name=High Golem
+entity.SteelGolem.name=Steel Golem
 
 tile.tsteelworks.blocks.charcoal.name=Block of Charcoal
 block.storage.dust.gunpowder.name=Block of Gunpowder
