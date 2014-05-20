@@ -36,6 +36,7 @@ import tsteelworks.entity.SteelGolem;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
+import tsteelworks.util.InventoryHelper;
 
 public class HighOvenBlock extends TSInventoryBlock
 {
@@ -441,11 +442,14 @@ public class HighOvenBlock extends TSInventoryBlock
     
     private void spawnSteelGolem (World world, int x, int y, int z)
     {
-        int blockSteelID = TContent.metalBlock.blockID;
-        final boolean check1 = ((world.getBlockId(x, y - 1, z) == TContent.meatBlock.blockID));
-        final boolean check2 = ((world.getBlockId(x + 1, y - 1, z) == blockSteelID) && (world.getBlockId(x - 1, y - 1, z) == blockSteelID));
-        final boolean check3 = ((world.getBlockId(x, y - 1, z + 1) == blockSteelID) && (world.getBlockId(x, y - 1, z - 1) == blockSteelID));
-        final boolean check4 = ((world.getBlockId(x, y - 2, z) == blockSteelID));
+        ItemStack blockSteel = new ItemStack(TContent.metalBlock, 1, 9);
+        ItemStack blockArdite = new ItemStack(TContent.metalBlock, 1, 1);
+        final boolean check1 = InventoryHelper.matchBlockAtLocation(world, x, y - 1, z, TContent.meatBlock.blockID);
+        final boolean check2 = InventoryHelper.matchBlockAtLocationWithMeta(world, x + 1, y - 1, z, blockSteel) && 
+                                InventoryHelper.matchBlockAtLocationWithMeta(world, x - 1, y - 1, z, blockSteel);
+        final boolean check3 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z + 1, blockSteel) && 
+                                InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z - 1, blockSteel);
+        final boolean check4 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 2, z, blockArdite);
 
         if (check1 && check4 && (check2 || check3))
         {
