@@ -134,6 +134,22 @@ public class InventoryHelper
        return iinventory;
    }
    
+   public static boolean matchBlockAtLocation (World world, int x, int y, int z, int blockID)
+   {
+       return world.getBlockId(x, y, z) == blockID;
+   }
+   
+   public static boolean matchBlockAtLocationWithMeta (World world, int x, int y, int z, int blockID, int meta)
+   {
+       return world.getBlockId(x, y, z) == blockID && world.getBlockMetadata(x, y, z) == meta;
+   }
+   
+   public static boolean matchBlockAtLocationWithMeta (World world, int x, int y, int z, ItemStack itemstack)
+   {
+       if (itemstack == null) return false;
+       return world.getBlockId(x, y, z) == itemstack.itemID && world.getBlockMetadata(x, y, z) == itemstack.getItemDamage();
+   }
+   
    /**
     * Obtains a OreDictionary name of a given item.
     * 

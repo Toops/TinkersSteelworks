@@ -36,6 +36,8 @@ import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.SteelGolem;
+import tsteelworks.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.items.TSArmorBasic;
 import tsteelworks.items.TSFilledBucket;
@@ -293,8 +295,10 @@ public class TSContent
     public void createEntities ()
     {
         EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
+        EntityRegistry.registerModEntity(EntityLimestoneBrick.class, "LimestoneBrick", 1, TSteelworks.instance, 32, 3, true);
         // TODO: Register with registerModEntity instead. We do this because registerModEntity does not seemingly add a mob spawner egg.
         EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
+        EntityRegistry.registerGlobalEntityID(SteelGolem.class, "SteelGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
     }
     
     /**

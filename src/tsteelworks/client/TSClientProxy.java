@@ -36,6 +36,7 @@ import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.block.MachineRender;
 import tsteelworks.client.block.SmallFontRenderer;
 import tsteelworks.client.entity.RenderHighGolem;
+import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.gui.DeepTankGui;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
@@ -59,6 +60,8 @@ import tsteelworks.client.pages.TSToolPage;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
 import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.SteelGolem;
+import tsteelworks.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.client.TSClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -365,7 +368,9 @@ public class TSClientProxy extends TSCommonProxy
         MinecraftForge.EVENT_BUS.register(new TSClientEvents());
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
-        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS, 0));
+        RenderingRegistry.registerEntityRenderingHandler(SteelGolem.class, new RenderSteelGolem());
+        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
+        RenderingRegistry.registerEntityRenderingHandler(EntityLimestoneBrick.class, new RenderSnowball(TSContent.materialsTS, 1));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
         
@@ -388,10 +393,11 @@ public class TSClientProxy extends TSCommonProxy
     @Override
     public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
     {
-        if ( !"scorchedbrick".equals(particle))
-            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-        else
+        if ( "scorchedbrick".equals(particle) || "limestonebrick".equals(particle))
             doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+        else
+            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+            
     }
     
     public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
@@ -421,6 +427,8 @@ public class TSClientProxy extends TSCommonProxy
             {
                 if (par1Str.equals("scorchedbrick"))
                     entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
+                if (par1Str.equals("limestonebrick"))
+                    entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS, 1);
 
                 if (entityfx != null)
                     mc.effectRenderer.addEffect(entityfx);

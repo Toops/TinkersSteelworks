@@ -8,6 +8,7 @@ gui.button.prev=<
 
 item.tsteelworks.Materials.ScorchedBrick.name=Mattone Cotto
 item.tsteelworks.Materials.LimestoneBrick.name=Mattone di Calcare
+item.tsteelworks.Materials.LimestoneDust.name=Polvere di Calcare
 item.tsteelworks.manual.highoven.name=Lavorazione del Ferro e Tu
 item.tsteelworks.helmetSteel.name=Elmo d'Acciaio
 item.tsteelworks.chestplateSteel.name=Corazza d'Acciaio
@@ -18,7 +19,8 @@ item.tsteelworks.bucket.Steam.name=Secchio di Vapore
 item.tsteelworks.bucket.Limestone.name=Secchio di Calcare Fuso
 item.tsteelworks.bucket.Cement.name=Secchio di Cemento Fresco
 
-entity.HighGolem.name=Golem d'Acciaio
+entity.HighGolem.name=Golem Alto
+entity.SteelGolem.name=Golem d'Acciaio
 
 tile.tsteelworks.blocks.charcoal.name=Blocco di Carbonella
 block.storage.dust.gunpowder.name=Blocco di Polvere da Sparo

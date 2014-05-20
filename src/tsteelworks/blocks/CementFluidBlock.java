@@ -53,6 +53,7 @@ public class CementFluidBlock extends TSBaseFluid
             int y2 = y - densityDir;
 
             if (world.getBlockId(x,     y2, z    ) == blockID ||
+                world.getBlockId(x, y2 + 1, z    ) == blockID ||
                 world.getBlockId(x - 1, y2, z    ) == blockID ||
                 world.getBlockId(x + 1, y2, z    ) == blockID ||
                 world.getBlockId(x,     y2, z - 1) == blockID ||
@@ -67,6 +68,8 @@ public class CementFluidBlock extends TSBaseFluid
                 maxQuanta = getLargerQuanta(world, x + 1, y, z,     maxQuanta);
                 maxQuanta = getLargerQuanta(world, x,     y, z - 1, maxQuanta);
                 maxQuanta = getLargerQuanta(world, x,     y, z + 1, maxQuanta);
+                
+                maxQuanta = getLargerQuanta(world, x,     y + 1, z, maxQuanta);
 
                 expQuanta = maxQuanta - 1;
             }
@@ -100,6 +103,7 @@ public class CementFluidBlock extends TSBaseFluid
         {
             flowIntoBlock(world, x, y + densityDir, z, 1);
             checkForHarden(world, x, y, z);
+//            traceToSource(world, x, y, z);
             return;
         }
 
@@ -109,21 +113,7 @@ public class CementFluidBlock extends TSBaseFluid
         if (flowMeta >= quantaPerBlock)
         {
             checkForHarden(world, x, y, z);
-            traceToSource(world, x, y, z);
-//            if (this.isFlowingVertically(world, expQuanta, y, z))
-//                onNeighborBlockChange(world, x, y, z, blockID);
-
-//                boolean flowTo[] = getOptimalFlowDirections(world, x, y, z);
-//
-//                if (flowTo[0]) checkForHarden(world, x - 1, y, z     );
-//                if (flowTo[1]) checkForHarden(world, x + 1, y, z     );
-//                if (flowTo[2]) checkForHarden(world, x,     y, z - 1 );
-//                if (flowTo[3]) checkForHarden(world, x,     y, z + 1 );
-
-//            checkForHarden(world, origin.x, origin.y, origin.z);
-//            world.scheduleBlockUpdate(origin.x, origin.y, origin.z, blockID, tickRate);
-//            world.scheduleBlockUpdateWithPriority(origin.x, origin.y, origin.z, blockID, tickRate, 0);
-//            updateTick(world, x, y, z, rand);
+            traceToSource(world, x, y, z, expQuanta);
             return;
         }
 
@@ -177,20 +167,21 @@ public class CementFluidBlock extends TSBaseFluid
 //                this.triggerCementMixEffects(world, x, y, z);
                 if (this.isFlowingVertically(world, x, y, z)) 
                     onNeighborBlockChange(world, x, y, z, blockID);
-//                else
-                    return;
             }
         }
     }
     
-    public void traceToSource(World world, int x, int y, int z)
+    public void traceToSource(World world, int x, int y, int z, int amount)
     {
-        for (int xScan = 0; xScan < 8; xScan++)
-            for (int yScan = 0; yScan < 8; yScan++)
-                for (int zScan = 0; zScan < 8; zScan++)
+        for (int xScan = 0; xScan < amount; xScan++)
+            for (int yScan = 0; yScan < amount; yScan++)
+                for (int zScan = 0; zScan < amount; zScan++)
                 {
-                    if (world.getBlockId(x - xScan, y - yScan, z - zScan) == blockID && (world.getBlockMetadata(x - xScan, y - yScan, z - zScan) == 0 || world.getBlockMetadata(x - xScan, y - yScan, z - zScan) == 1))
+                    if (world.getBlockId(x - xScan, y - yScan, z - zScan) == blockID && (world.getBlockMetadata(x - xScan, y - yScan, z - zScan) != 3))// || world.getBlockMetadata(x - xScan, y - yScan, z - zScan) == 1))
+                    {
                         world.setBlock(x - xScan, y - yScan, z - zScan, TSContent.cementBlock.blockID);
+                        break;
+                    }
                 }
     }
     

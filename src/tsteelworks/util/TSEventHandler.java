@@ -23,6 +23,20 @@ public class TSEventHandler
     @ForgeSubscribe
     public void onInteract (EntityInteractEvent event)
     {
+        // Reserved for future use...
+        /*if (event.target.getClass() == EntityPig.class)
+        {
+            EntityPig pig = (EntityPig) event.target;
+
+            EntityPlayer player = (EntityPlayer) event.entityPlayer;
+            ItemStack itemstack = player.inventory.getCurrentItem();
+            
+            if (itemstack != null)
+            {
+                boolean affected = false;
+                
+            }
+        }*/
         if (event.target.getClass() == EntityHorse.class)
         {
             EntityHorse horse = (EntityHorse) event.target;
