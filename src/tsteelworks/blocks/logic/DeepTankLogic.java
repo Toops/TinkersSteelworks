@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,17 +23,15 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.blocks.logic.MultiServantLogic;
-import tconstruct.blocks.logic.SmelteryDrainLogic;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
+import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.IMaster;
 import tsteelworks.lib.crafting.AlloyInfo;
 
 public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic //, IMaster
