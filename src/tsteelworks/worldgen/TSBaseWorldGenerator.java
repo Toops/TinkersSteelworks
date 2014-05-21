@@ -34,7 +34,6 @@ public class TSBaseWorldGenerator implements IWorldGenerator
     
     void generateSurface (Random random, int xChunk, int zChunk, World world)
     {
-        //String biomeName = world.getWorldChunkManager().getBiomeGenAt(xChunk, zChunk).biomeName;
         if (ConfigCore.enableLimestoneWorldgen)
             generateLimestone(random, xChunk, zChunk, world);
     }
