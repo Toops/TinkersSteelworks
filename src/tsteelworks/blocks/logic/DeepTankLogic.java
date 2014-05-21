@@ -72,15 +72,22 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int xDistanceToRim () { return (innerMaxX / 2) + 1; }
     public int zDistanceToRim () { return (innerMaxZ / 2) + 1; }
     public int innerSpaceTotal () { return innerMaxX * innerMaxZ; }
-    public int layerFluidCapacity() { return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); }
+    public int layerFluidCapacity() 
+    { 
+    	int multiplicator = ConfigCore.deeptankCapacityMultiplier;
+    	TSteelworks.loginfo("DTL - layerFluidCapacity - mult="+multiplicator);
+    	return (FluidContainerRegistry.BUCKET_VOLUME * multiplicator) * innerSpaceTotal(); 
+    }
     
     void adjustLayers (int lay, boolean forceAdjust)
     {
+    	TSteelworks.loginfo("DTL - adjustLayers - lay="+lay+", maxX="+innerMaxX+", maxZ="+innerMaxZ);
         if (lay != layers || forceAdjust)
         {
             needsUpdate = true;
             layers = lay;
             maxLiquid = layerFluidCapacity() * lay;
+            TSteelworks.loginfo("DTL - adjustLayers - maxLiquid="+maxLiquid);
         }
     }
 
