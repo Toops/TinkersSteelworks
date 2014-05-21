@@ -35,10 +35,11 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.IMaster;
+//import tsteelworks.lib.IMaster;
+import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
 
-public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, IMasterLogic //, IMaster
+public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic //, IMaster
 {
     public ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
     boolean structureHasBottom;
@@ -603,13 +604,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         int tempBricks = 0;
         int blockID = worldObj.getBlockId(x, y, z);
-        if (glassOnly && (validGlassID(blockID) || validTankID(blockID)))
+        if (glassOnly && (validGlassID(blockID)))
             tempBricks++;
         if (!glassOnly && validBlockID(blockID))
         {
             TileEntity te = worldObj.getBlockTileEntity(x, y, z);
             if (te == this)
                 tempBricks++;
+            if (te instanceof HighOvenDuctLogic)
+                return tempBricks++;
             else if (te instanceof TSMultiServantLogic)
             {
                 TSMultiServantLogic servant = (TSMultiServantLogic) te;
@@ -620,20 +623,6 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 }
                 else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
                     tempBricks++;
-            }
-            else if (te instanceof MultiServantLogic)
-            {
-                if (!(te instanceof SmelteryDrainLogic))
-                {
-                    MultiServantLogic servant = (MultiServantLogic) te;
-                    if (servant.hasValidMaster())
-                    {
-                        if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
-                            tempBricks++;
-                    }
-                    else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
-                        tempBricks++;
-                }
             }
         }
         return tempBricks;
@@ -841,15 +830,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         return (blockID == TSContent.highoven.blockID);
     }
-    
-    boolean validTankID(int blockID)
-    {
-        return (blockID == TContent.lavaTank.blockID);// || blockID == TContent.lavaTankNether.blockID);
-    }
-    
+
     boolean validGlassID(int blockID)
     {
-        if (blockID == Block.glass.blockID || blockID == TContent.stainedGlassClear.blockID || blockID == TContent.clearGlass.blockID)
+        if (blockID == Block.glass.blockID || 
+                blockID == TContent.stainedGlassClear.blockID || 
+                blockID == TContent.clearGlass.blockID ||
+                blockID == TContent.lavaTank.blockID)
             return true;
         else
             return validModGlassID(blockID);
@@ -1089,7 +1076,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         innerMaxX = tags.getInteger("InnerMaxX");
         innerMaxZ = tags.getInteger("InnerMaxZ");
         super.readFromNBT(tags);
-        validStructure = tags.getBoolean("ValidStructure");
+        //validStructure = tags.getBoolean("ValidStructure");
         containsAlloy = tags.getBoolean("ContainsAlloy");
         int[] center = tags.getIntArray("CenterPos");
         if (center.length > 2)
@@ -1188,9 +1175,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 
 	/*
 	 * (non-Javadoc)
-	 * @see tsteelworks.lib.IMaster#isValid()
+	 * @see tsteelworks.lib.ITSMasterLogic#isValid()
 	 */
-	//@Override
+	@Override
 	public boolean isValid() {
 		return validStructure;
 	}
