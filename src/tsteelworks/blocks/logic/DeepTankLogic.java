@@ -657,13 +657,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         int tempBricks = 0;
         int blockID = worldObj.getBlockId(x, y, z);
-        if (glassOnly && (validGlassID(blockID) || validTankID(blockID)))
+        if (glassOnly && (validGlassID(blockID)))
             tempBricks++;
         if (!glassOnly && validBlockID(blockID))
         {
             TileEntity te = worldObj.getBlockTileEntity(x, y, z);
             if (te == this)
                 tempBricks++;
+            if (te instanceof HighOvenDuctLogic)
+                return tempBricks++;
             else if (te instanceof TSMultiServantLogic)
             {
                 if (te instanceof HighOvenDuctLogic)
@@ -883,15 +885,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         return (blockID == TSContent.highoven.blockID);
     }
-    
-    boolean validTankID(int blockID)
-    {
-        return (blockID == TContent.lavaTank.blockID);// || blockID == TContent.lavaTankNether.blockID);
-    }
-    
+
     boolean validGlassID(int blockID)
     {
-        if (blockID == Block.glass.blockID || blockID == TContent.stainedGlassClear.blockID || blockID == TContent.clearGlass.blockID)
+        if (blockID == Block.glass.blockID || 
+                blockID == TContent.stainedGlassClear.blockID || 
+                blockID == TContent.clearGlass.blockID ||
+                blockID == TContent.lavaTank.blockID)
             return true;
         else
             return validModGlassID(blockID);
@@ -1137,7 +1137,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         setInnerMaxX(tags.getInteger("InnerMaxX"));
         setInnerMaxZ(tags.getInteger("InnerMaxZ"));
         super.readFromNBT(tags);
-        validStructure = tags.getBoolean("ValidStructure");
+        //validStructure = tags.getBoolean("ValidStructure");
         containsAlloy = tags.getBoolean("ContainsAlloy");
         int[] center = tags.getIntArray("CenterPos");
         if (center.length > 2)
