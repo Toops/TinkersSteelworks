@@ -7,8 +7,10 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -28,18 +30,30 @@ public class CementFluidBlock extends TSBaseFluid
     }
     
     @Override
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+        world.scheduleBlockUpdate(x, y, z, blockID, tickRate);
+        origin = new CoordTuple(x, y, z);
+    }
+    
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int blockId)
+    {
+        world.scheduleBlockUpdate(x, y, z, blockID, tickRate);
+    }
+    
+    @Override
     public void updateTick(World world, int x, int y, int z, Random rand)
     {
         int quantaRemaining = quantaPerBlock - world.getBlockMetadata(x, y, z);
         int expQuanta = -101;
-        if (quantaRemaining == quantaPerBlock - world.getBlockMetadata(x, y, z))
-            origin = new CoordTuple(x, y, z);
         // check adjacent block levels if non-source
         if (quantaRemaining < quantaPerBlock)
         {
             int y2 = y - densityDir;
 
             if (world.getBlockId(x,     y2, z    ) == blockID ||
+                world.getBlockId(x, y2 + 1, z    ) == blockID ||
                 world.getBlockId(x - 1, y2, z    ) == blockID ||
                 world.getBlockId(x + 1, y2, z    ) == blockID ||
                 world.getBlockId(x,     y2, z - 1) == blockID ||
@@ -54,6 +68,8 @@ public class CementFluidBlock extends TSBaseFluid
                 maxQuanta = getLargerQuanta(world, x + 1, y, z,     maxQuanta);
                 maxQuanta = getLargerQuanta(world, x,     y, z - 1, maxQuanta);
                 maxQuanta = getLargerQuanta(world, x,     y, z + 1, maxQuanta);
+                
+                maxQuanta = getLargerQuanta(world, x,     y + 1, z, maxQuanta);
 
                 expQuanta = maxQuanta - 1;
             }
@@ -65,8 +81,8 @@ public class CementFluidBlock extends TSBaseFluid
 
                 if (expQuanta <= 0)
                 {
-                    world.setBlockToAir(x, y, z);
-                    //checkForHarden(world, x, y, z);
+                    //world.setBlockToAir(x, y, z);
+                    checkForHarden(world, x, y, z);
                 }
                 else
                 {
@@ -86,6 +102,8 @@ public class CementFluidBlock extends TSBaseFluid
         if (canDisplace(world, x, y + densityDir, z))
         {
             flowIntoBlock(world, x, y + densityDir, z, 1);
+            checkForHarden(world, x, y, z);
+//            traceToSource(world, x, y, z);
             return;
         }
 
@@ -94,47 +112,8 @@ public class CementFluidBlock extends TSBaseFluid
         
         if (flowMeta >= quantaPerBlock)
         {
-//            for (int index = 0; index < pool.length - 1; index++)
-//            {
-//                if (pool[index].equals(null)) break;
-//                checkForHarden(world, pool[index].x, pool[index].y, pool[index].z);
-//            }
-            if (!isSourceBlock(world, x, y, z))
-            {
-                checkForHarden(world, x + 1, y, z);
-                checkForHarden(world, x - 1, y, z);
-
-                checkForHarden(world, x, y, z + 1);
-                checkForHarden(world, x, y, z - 1);
-                
-                checkForHarden(world, x + 1, y, z + 1);
-                checkForHarden(world, x - 1, y, z - 1);
-                
-                checkForHarden(world, x + 1, y, z - 1);
-                checkForHarden(world, x - 1, y, z + 1);
-                
-                checkForHarden(world, x, y, z);
-            }
-            if (isSourceBlock(world, x, y, z))
-            {
-                checkForHarden(world, x + 1, y, z);
-                checkForHarden(world, x - 1, y, z);
-
-                checkForHarden(world, x, y, z + 1);
-                checkForHarden(world, x, y, z - 1);
-                
-                checkForHarden(world, x + 1, y, z + 1);
-                checkForHarden(world, x - 1, y, z - 1);
-                
-                checkForHarden(world, x + 1, y, z - 1);
-                checkForHarden(world, x - 1, y, z + 1);
-                
-                checkForHarden(world, x, y, z);
-            }
-        }
-        
-        if (flowMeta >= quantaPerBlock)
-        {
+            checkForHarden(world, x, y, z);
+            traceToSource(world, x, y, z, expQuanta);
             return;
         }
 
@@ -158,14 +137,7 @@ public class CementFluidBlock extends TSBaseFluid
     {
         if (meta < 0) return;
         if (displaceIfPossible(world, x, y, z))
-        {
             world.setBlock(x, y, z, this.blockID, meta, 3);
-//            pool[0] = new CoordTuple(x, y, z);
-            
-//            pool[pool.length - 1] = new CoordTuple(x, y, z);
-        }
-//        for (int i = 0; i < pool.length - 1; i++)
-//            TSteelworks.loginfo(pool[i].toString());
     }
     
     /**
@@ -173,41 +145,74 @@ public class CementFluidBlock extends TSBaseFluid
      */
     private void checkForHarden(World world, int x, int y, int z)
     {
-        if (world.getBlockId(x, y, z) == this.blockID)
+        if (world.getBlockId(x, y, z) == this.blockID || (world.getBlockId(x, y, z) == TSContent.cementBlock.blockID))
         {
             boolean harden = false;
-            if (harden || world.getBlockMaterial(x, y, z - 1) == Material.air || world.getBlockId(x, y, z - 1) == this.blockID)
+            if (!this.isFlowingVertically(world, x, y, z)) 
             {
-                harden = true;
+                if (harden || validHardenCoords(world, x, y, z - 1)); harden = true;
+                if (harden || validHardenCoords(world, x, y, z + 1)); harden = true;
+                if (harden || validHardenCoords(world, x - 1, y, z)); harden = true;
+                if (harden || validHardenCoords(world, x - 1, y, z)); harden = true;
+                if (harden || validHardenCoords(world, x + 1, y, z + 1)); harden = true;
+                if (harden || validHardenCoords(world, x + 1, y, z - 1)); harden = true;
+                if (harden || validHardenCoords(world, x - 1, y, z - 1)); harden = true;
+                if (harden || validHardenCoords(world, x + 1, y, z + 1)); harden = true;
             }
-            if (harden || world.getBlockMaterial(x, y, z + 1) == Material.air || world.getBlockId(x, y, z + 1) == this.blockID)
-            {
-                harden = true;
-            }
-            if (harden || world.getBlockMaterial(x - 1, y, z) == Material.air || world.getBlockId(x - 1, y, z) == this.blockID)
-            {
-                harden = true;
-            }
-            if (harden || world.getBlockMaterial(x + 1, y, z) == Material.air || world.getBlockId(x + 1, y, z) == this.blockID)
-            {
-                harden = true;
-            }
-            if (harden || world.getBlockMaterial(x, y + 1, z) == Material.air || world.getBlockId(x, y + 1, z) == this.blockID)
-            {
-                harden = true;
-            }
-            if (harden || world.getBlockMaterial(x, y - 1, z) == Material.air || world.getBlockId(x, y - 1, z) == this.blockID)
-            {
-                harden = true;
-            }
+            if (harden || validHardenCoords(world, x, y - 1, z)); harden = true;
+            if (harden || validHardenCoords(world, x, y + 1, z)); harden = true;
             if (harden)
             {
                 world.setBlock(x, y, z, TSContent.cementBlock.blockID);
-                this.triggerCementMixEffects(world, x, y, z);
+//                this.triggerCementMixEffects(world, x, y, z);
+                if (this.isFlowingVertically(world, x, y, z)) 
+                    onNeighborBlockChange(world, x, y, z, blockID);
             }
         }
     }
+    
+    public void traceToSource(World world, int x, int y, int z, int amount)
+    {
+        for (int xScan = 0; xScan < amount; xScan++)
+            for (int yScan = 0; yScan < amount; yScan++)
+                for (int zScan = 0; zScan < amount; zScan++)
+                {
+                    if (world.getBlockId(x - xScan, y - yScan, z - zScan) == blockID && (world.getBlockMetadata(x - xScan, y - yScan, z - zScan) != 3))// || world.getBlockMetadata(x - xScan, y - yScan, z - zScan) == 1))
+                    {
+                        world.setBlock(x - xScan, y - yScan, z - zScan, TSContent.cementBlock.blockID);
+                        break;
+                    }
+                }
+    }
+    
+    /* IFluidBlock */
+/*    @Override
+    public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
+    {
+        if (!isSourceBlock(world, x, y, z))
+        {
+            return null;
+        }
 
+        if (doDrain)
+        {
+//            world.setBlockToAir(x, y, z);
+            checkForHarden(world, x, y, z);
+        }
+
+        return stack.copy();
+    }*/
+    
+    public boolean validHardenCoords(World world, int x, int y, int z)
+    {
+        return (world.getBlockMaterial(x, y, z) == Material.air ||  world.getBlockId(x, y, z) == TSContent.cementBlock.blockID);
+    }
+
+//    public boolean isSourceBlock(IBlockAccess world, int x, int y, int z)
+//    {
+//        return (world.getBlockId(x, y, z) == blockID && world.getBlockMetadata(x, y, z) == 0);//|| (world.getBlockId(x, y, z) == TSContent.cementBlock.blockID));
+//    }
+    
     /**
      * Creates fizzing sound and smoke. Used when lava flows over block or mixes with water.
      */

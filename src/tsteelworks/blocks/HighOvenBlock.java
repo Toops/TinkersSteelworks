@@ -31,9 +31,11 @@ import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.SteelGolem;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
+import tsteelworks.util.InventoryHelper;
 
 public class HighOvenBlock extends TSInventoryBlock
 {
@@ -318,7 +320,10 @@ public class HighOvenBlock extends TSInventoryBlock
     {
         super.onBlockAdded(world, x, y, z);
         if (world.getBlockMetadata(x, y, z) == 0)
+        {
             spawnHighGolem(world, x, y, z);
+            spawnSteelGolem(world, x, y, z);
+        }
     }
 
     @Override
@@ -411,6 +416,7 @@ public class HighOvenBlock extends TSInventoryBlock
 
     private void spawnHighGolem (World world, int x, int y, int z)
     {
+        
         final boolean check1 = ((world.getBlockId(x, y - 1, z) == TContent.smeltery.blockID) && (world.getBlockMetadata(x, y - 1, z) > 1));
         final boolean check2 = ((world.getBlockId(x, y - 2, z) == TContent.smeltery.blockID) && (world.getBlockMetadata(x, y - 2, z) > 1));
 
@@ -430,6 +436,58 @@ public class HighOvenBlock extends TSInventoryBlock
                 world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
                 for (int l = 0; l < 120; ++l)
                     TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+            } 
+        }
+    }
+    
+    private void spawnSteelGolem (World world, int x, int y, int z)
+    {
+        ItemStack blockSteel = new ItemStack(TContent.metalBlock, 1, 9);
+        ItemStack blockArdite = new ItemStack(TContent.metalBlock, 1, 1);
+        final boolean check1 = InventoryHelper.matchBlockAtLocation(world, x, y - 1, z, TContent.meatBlock.blockID);
+        final boolean check2 = InventoryHelper.matchBlockAtLocationWithMeta(world, x + 1, y - 1, z, blockSteel) && 
+                                InventoryHelper.matchBlockAtLocationWithMeta(world, x - 1, y - 1, z, blockSteel);
+        final boolean check3 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z + 1, blockSteel) && 
+                                InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z - 1, blockSteel);
+        final boolean check4 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 2, z, blockArdite);
+
+        if (check1 && check4 && (check2 || check3))
+        {
+            if (!world.isRemote)
+            {
+                world.setBlock(x, y, z, 0, 0, 2);
+                world.setBlock(x, y - 1, z, 0, 0, 2);
+                if (check2)
+                {
+                    world.setBlock(x + 1, y - 1, z, 0, 0, 2);
+                    world.setBlock(x - 1, y - 1, z, 0, 0, 2);
+                }
+                else
+                {
+                    world.setBlock(x, y - 1, z + 1, 0, 0, 2);
+                    world.setBlock(x, y - 1, z - 1, 0, 0, 2);
+                }
+                world.setBlock(x, y - 2, z, 0, 0, 2);
+                
+                final SteelGolem entitysteelgolem = new SteelGolem(world);
+                entitysteelgolem.setPlayerCreated(true);
+                entitysteelgolem.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
+                world.spawnEntityInWorld(entitysteelgolem);
+                world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
+                for (int l = 0; l < 120; ++l)
+                    TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+                world.notifyBlockChange(x, y, z, 0);
+                if (check2)
+                {
+                    world.notifyBlockChange(x + 1, y - 1, z, 0);
+                    world.notifyBlockChange(x - 1, y - 1, z, 0);
+                }
+                else
+                {
+                    world.notifyBlockChange(x, y - 1, z + 1, 0);
+                    world.notifyBlockChange(x, y - 1, z - 1, 0);
+                }
+                world.notifyBlockChange(x, y - 2, z, 0);
             } 
         }
     }
