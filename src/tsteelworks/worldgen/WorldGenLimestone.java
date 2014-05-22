@@ -73,7 +73,6 @@ public class WorldGenLimestone extends WorldGenerator
                                     Block block = Block.blocksList[world.getBlockId(x, y, z)];
                                     if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.blockID ==  Block.stone.blockID))
                                     {
-                                        
                                         world.setBlock(x, y, z, this.limestoneID, limestoneMeta, 2);
                                     }
                                 }
