@@ -74,8 +74,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     int maxLiquid;
     int currentLiquid;
     int numBricks;
-    int maxTemp = 3000;
-    int maxTempUserSet = 3000;
+    int maxTemp;
+    int maxTempUserSet;
     public int layers;
     public int fuelBurnTime;
     public int[] activeTemps;
@@ -92,6 +92,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         fuelHeatRate = 3;
         internalCoolDownRate = 10;
         activeTemps = meltingTemps = new int[0];
+        maxTemp = maxTempUserSet = 2000;
     }
 
     /* ==================== Layers ==================== */
@@ -192,6 +193,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     public int maxTempByLayer ()
     {
+        int defaultTemp = 2000;
+        int layerAdjustment = (layers - 1) * 500;
+        int finalCalc = (defaultTemp + layerAdjustment < defaultTemp ? defaultTemp : defaultTemp + layerAdjustment);
         return 3000 + ((layers - 1) * 1000);
     }
     
