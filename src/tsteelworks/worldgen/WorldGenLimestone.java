@@ -68,7 +68,7 @@ public class WorldGenLimestone extends WorldGenerator
                             for (int z = k1; z <= j2; ++z)
                             {
                                 double d14 = ((double)z + 0.5D - d8) / (d10 / 2.0D);
-                                if(world.getChunkProvider().chunkExists(x >> 4, z >> 4))
+				if(world.getChunkProvider().chunkExists(x >> 4, z >> 4))
                                 {
                                     Block block = Block.blocksList[world.getBlockId(x, y, z)];
                                     if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && (block != null && block.blockID ==  Block.stone.blockID))

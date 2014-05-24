@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -44,9 +45,19 @@ public class LimestoneBlock extends TSBaseBlock
         super.breakBlock(world, x, y, z, blockID, meta);
     }
 
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+//    public int idDropped(int par1, Random par2Random, int par3)
+//    {
+//        return super.idDropped(1, par2Random, par3);
+//    }
+    
     @Override
     public int damageDropped (int meta)
     {
+        if (meta == 0)
+            return 1;
         return meta;
     }
     

@@ -36,6 +36,7 @@ import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.block.MachineRender;
 import tsteelworks.client.block.SmallFontRenderer;
 import tsteelworks.client.entity.RenderHighGolem;
+import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.gui.DeepTankGui;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
@@ -59,6 +60,8 @@ import tsteelworks.client.pages.TSToolPage;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
 import tsteelworks.entity.HighGolem;
+import tsteelworks.entity.SteelGolem;
+import tsteelworks.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.client.TSClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -94,16 +97,20 @@ public class TSClientProxy extends TSCommonProxy
         pageClasses.put(type, clazz);
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#getClientGuiElement(int, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World, int, int, int)
+     */
     @Override
-    public Object getClientGuiElement (int ID, EntityPlayer player, World world, int x, int y, int z)
+    public Object getClientGuiElement (int id, EntityPlayer player, World world, int x, int y, int z)
     {
-        if (ID == highovenGuiID)
+        if (id == highovenGuiID)
             return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (ID == highovenDuctGuiID)
+        if (id == highovenDuctGuiID)
             return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (ID == deeptankGuiID)
+        if (id == deeptankGuiID)
             return new DeepTankGui(player.inventory, (DeepTankLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (ID == manualGuiID)
+        if (id == manualGuiID)
         {
             final ItemStack stack = player.getCurrentEquippedItem();
             return new TSManualGui(stack, TSClientProxy.getManualFromStack(stack));
@@ -327,12 +334,19 @@ public class TSClientProxy extends TSCommonProxy
         }
     }
     
-    
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#postInit()
+     */
     @Override
     public void postInit ()
     {
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#readManuals()
+     */
     @Override
     public void readManuals ()
     {
@@ -343,6 +357,10 @@ public class TSClientProxy extends TSCommonProxy
         initManualPages();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#registerRenderer()
+     */
     @Override
     public void registerRenderer ()
     {
@@ -350,25 +368,36 @@ public class TSClientProxy extends TSCommonProxy
         MinecraftForge.EVENT_BUS.register(new TSClientEvents());
         smallFontRenderer = new SmallFontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, false);
         RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
-        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS, 0));
+        RenderingRegistry.registerEntityRenderingHandler(SteelGolem.class, new RenderSteelGolem());
+        RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
+        RenderingRegistry.registerEntityRenderingHandler(EntityLimestoneBrick.class, new RenderSnowball(TSContent.materialsTS, 1));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
         
         addRenderMappings();
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#registerSounds()
+     */
     @Override
     public void registerSounds ()
     {
     }
 
+    /*
+     * (non-Javadoc)
+     * @see tsteelworks.common.TSCommonProxy#spawnParticle(java.lang.String, double, double, double, double, double, double)
+     */
     @Override
     public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)
     {
-        if (particle != "scorchedbrick")
-            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-        else
+        if ( "scorchedbrick".equals(particle) || "limestonebrick".equals(particle))
             doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+        else
+            TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
+            
     }
     
     public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
@@ -398,6 +427,8 @@ public class TSClientProxy extends TSCommonProxy
             {
                 if (par1Str.equals("scorchedbrick"))
                     entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
+                if (par1Str.equals("limestonebrick"))
+                    entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS, 1);
 
                 if (entityfx != null)
                     mc.effectRenderer.addEffect(entityfx);
@@ -441,7 +472,7 @@ public class TSClientProxy extends TSCommonProxy
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            TSteelworks.logError("an error occured", e);
             return null;
         }
     }

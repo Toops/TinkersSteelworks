@@ -33,8 +33,12 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         final int mx = getMasterPosition().x;
         final int my = getMasterPosition().y;
         final int mz = getMasterPosition().z;
-        if (worldObj.getBlockTileEntity(mx,my, mz) instanceof HighOvenLogic) return 1;
-        if (worldObj.getBlockTileEntity(mx,my, mz) instanceof DeepTankLogic) return 2;
+        if (worldObj.getBlockTileEntity(mx, my, mz) instanceof HighOvenLogic){
+        	return 1;
+        }
+        if (worldObj.getBlockTileEntity(mx, my, mz) instanceof DeepTankLogic){
+        	return 2;
+        }
         return 0;
     }
     
@@ -143,7 +147,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
             }
             if (type == 2)
             {
-                for (final FluidStack fstack : getDeepTankController().fluidlist)
+                for (final FluidStack fstack : getDeepTankController().getFluidlist())
                     if (fstack.fluidID == fluid.getID())
                     {
                         containsFluid = true;
@@ -180,7 +184,9 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
         }
         else
+        {
             return null;
+        }
     }
 
     /*

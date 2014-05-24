@@ -1,6 +1,7 @@
 package tsteelworks;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraftforge.common.MinecraftForge;
@@ -120,6 +121,11 @@ public class TSteelworks
     public static void loginfo (String desc, float value)  { logger.info(desc + ": " + value); }
     public static void loginfo (String desc, String text)  { logger.info(desc + ": " + text); }
     public static void loginfo (String desc, boolean flag) { logger.info(desc + ": " + flag); }
+    
+    
+	public static void logError(String msg, Throwable thrown) {
+		logger.log(Level.SEVERE, msg, thrown);
+	}
     
     void logAlloyList ()
     {
