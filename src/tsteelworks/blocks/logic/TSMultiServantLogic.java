@@ -12,6 +12,7 @@ import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.IMaster;
+import tsteelworks.lib.ITSMasterLogic;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic
 {    
@@ -59,8 +60,19 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
             return false;
 
         if ((worldObj.getBlockId(master.x, master.y, master.z) == masterID) && (worldObj.getBlockMetadata(master.x, master.y, master.z) == masterMeta))
-            return true;
-
+        {
+            CoordTuple coord = imaster.getCoord();
+            final TileEntity te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            if(te != null && te instanceof ITSMasterLogic)
+            {
+            	ITSMasterLogic logic = (ITSMasterLogic)te;
+            	return logic.isValid();
+            }
+            else
+            {
+            	return true;
+            }
+        }
         else
         {
             hasMaster = false;
