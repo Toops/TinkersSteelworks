@@ -61,8 +61,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
 
         if ((worldObj.getBlockId(master.x, master.y, master.z) == masterID) && (worldObj.getBlockMetadata(master.x, master.y, master.z) == masterMeta))
         {
-            CoordTuple coord = imaster.getCoord();
-            final TileEntity te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+            final TileEntity te = worldObj.getBlockTileEntity(master.x, master.y, master.z);
             if(te != null && te instanceof ITSMasterLogic)
             {
             	ITSMasterLogic logic = (ITSMasterLogic)te;

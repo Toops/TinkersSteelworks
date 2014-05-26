@@ -184,13 +184,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         if(!isStructureValid())
         {
-            //TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
+            TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
             return false;
         }
-//      else
-//      {
-//          TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
-//      }
+      else
+      {
+          TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
+      }
         
         needsUpdate = true;
         if (fluidlist.size() == 0)
@@ -874,13 +874,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         if(!isStructureValid())
         {
-        //  TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
+            TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
             return null;
         }
-//      else
-//      {
-//          TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
-//      }
+      else
+      {
+          TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
+      }
         
         if (fluidlist.size() == 0)
             return null;
@@ -931,13 +931,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         if(!isStructureValid())
         {
-            //TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
+            TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
             return 0;
         }
-//      else
-//      {
-//          TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
-//      }
+      else
+      {
+          TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
+      }
         
         if (resource == null) return 0;
         int amount = resource.amount;
@@ -969,13 +969,13 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         if(!isStructureValid())
         {
-            //TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
+            TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
             return null;
         }
-//      else
-//      {
-//          TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
-//      }
+      else
+      {
+          TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
+      }
         
         
         if (fluidlist.size() == 0)
@@ -1108,7 +1108,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public void writeToNBT (NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setBoolean("ValidStructure", validStructure);
+//        tags.setBoolean("ValidStructure", validStructure);
         tags.setBoolean("ContainsAlloy", containsAlloy);
         int[] center = new int[3];// { centerPos.x, centerPos.y, centerPos.z };
         if (centerPos == null)
