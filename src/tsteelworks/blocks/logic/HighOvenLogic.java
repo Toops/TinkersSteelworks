@@ -54,7 +54,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	public static final int SLOT_PURIFIER = 2; // ex: sand, graveyard soil
 	public static final int SLOT_FUEL = 3; // ex: coal, charcoal, coal block
 	public static final int SLOT_FIRST_MELTABLE = 4; // the first meltable slot. All slots after this one will be meltable too. ex of meltable: iron ingot
-	
+	public static final int DEFAULT_TEMP = 2000;
 	
     public final IRegistry dispenseBehavior = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
@@ -92,7 +92,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         fuelHeatRate = 3;
         internalCoolDownRate = 10;
         activeTemps = meltingTemps = new int[0];
-        maxTemp = maxTempUserSet = 2000;
+        maxTemp = maxTempUserSet = DEFAULT_TEMP;
     }
 
     /* ==================== Layers ==================== */
@@ -193,10 +193,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     public int maxTempByLayer ()
     {
-        int defaultTemp = 2000;
         int layerAdjustment = (layers - 1) * 500;
-        int finalCalc = (defaultTemp + layerAdjustment < defaultTemp ? defaultTemp : defaultTemp + layerAdjustment);
-        return 3000 + ((layers - 1) * 1000);
+        int finalCalc = (DEFAULT_TEMP + layerAdjustment < DEFAULT_TEMP ? DEFAULT_TEMP : DEFAULT_TEMP + layerAdjustment);
+        return finalCalc;
     }
     
     /*
