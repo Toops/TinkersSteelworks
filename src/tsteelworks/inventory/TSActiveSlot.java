@@ -14,13 +14,13 @@ public class TSActiveSlot extends Slot
         active = flag;
     }
 
-    public void setActive (boolean flag)
-    {
-        active = flag;
-    }
-
     public boolean getActive ()
     {
         return active;
+    }
+
+    public void setActive (boolean flag)
+    {
+        active = flag;
     }
 }

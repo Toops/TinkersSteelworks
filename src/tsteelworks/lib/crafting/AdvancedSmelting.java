@@ -4,47 +4,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
-import tsteelworks.TSteelworks;
+import tsteelworks.util.InventoryHelper;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
+/**
+ * @author Toops
+ *
+ */
 public class AdvancedSmelting
 {
-    /*
-     * Instance variables
-     */
-    public static AdvancedSmelting                   instance        = new AdvancedSmelting();
-    private final HashMap<List<Integer>, FluidStack> smeltingList    = new HashMap<List<Integer>, FluidStack>();
-    private final HashMap<List<Integer>, Integer>    temperatureList = new HashMap<List<Integer>, Integer>();
-    private final HashMap<String, List<Integer>>     mixerList       = new HashMap<String, List<Integer>>();
-    private final HashMap<FluidType, List<String>>   mixerCombos     = new HashMap<FluidType, List<String>>();
-    private final HashMap<List<Integer>, ItemStack>  renderIndex     = new HashMap<List<Integer>, ItemStack>();
-
-    /**
-     * Adds mappings between an itemstack and an output liquid.
-     * 
-     * @param stack
-     *            The itemstack to liquify
-     * @param temperature
-     *            How hot the block should be before liquifying. Max temp in the
-     *            Smeltery is 800, other structures may vary
-     * @param output
-     *            The result of the process in liquid form
-     */
-    public static void addMelting (ItemStack stack, int temperature, FluidStack output)
-    {
-        addMelting(stack, stack.itemID, stack.getItemDamage(), temperature, output);
-    }
-
+    public static AdvancedSmelting instance = new AdvancedSmelting();
+    private final HashMap<List<Integer>, FluidStack> meltingList = new HashMap<List<Integer>, FluidStack>();
+    private final HashMap<List<Integer>, Integer> temperatureList = new HashMap<List<Integer>, Integer>();
+    private final HashMap<String, List<Integer>> mixItemList = new HashMap<String, List<Integer>>();
+    private final Multimap<FluidType, List> fluidComboList = ArrayListMultimap.create();
+    private final Multimap<ItemStack, List> itemComboList = ArrayListMultimap.create();
+    private final HashMap<List<Integer>, ItemStack> renderIndex = new HashMap<List<Integer>, ItemStack>();
+    
+    /* ========== Normal Smelting  ========== */
+    
     /**
      * Adds mappings between a block and its liquid.
      * 
@@ -62,54 +50,7 @@ public class AdvancedSmelting
     {
         addMelting(new ItemStack(block, 1, metadata), block.blockID, metadata, temperature, output);
     }
-
-    /**
-     * Adds mappings between an input and its liquid. Renders with the given
-     * input's block ID and metadata.
-     * 
-     * @param input
-     *            The item to liquify
-     * @param blockID
-     *            The ID of the block to render
-     * @param metadata
-     *            The metadata of the block to render
-     * @param temperature
-     *            How hot the block should be before liquifying
-     * @param liquid
-     *            The result of the process
-     */
-    public static void addMelting (ItemStack input, int blockID, int metadata, int temperature, FluidStack liquid)
-    {
-        instance.smeltingList.put(Arrays.asList(input.itemID, input.getItemDamage()), liquid);
-        instance.temperatureList.put(Arrays.asList(input.itemID, input.getItemDamage()), temperature);
-        instance.renderIndex.put(Arrays.asList(input.itemID, input.getItemDamage()),
-                                 new ItemStack(blockID, input.stackSize, metadata));
-    }
-
-    /**
-     * Adds a mapping between FluidType and ItemStack
-     * 
-     * @author samtrion
-     * @param type
-     *            Type of Fluid
-     * @param input
-     *            The item to liquify
-     * @param temperatureDifference
-     *            Difference between FluidType BaseTemperature
-     * @param fluidAmount
-     *            Amount of Fluid
-     */
-    public static void addMelting (FluidType type, ItemStack input, int temperatureDifference, int fluidAmount)
-    {
-        int temp = type.baseTemperature + temperatureDifference;
-        if (temp <= 20)
-        {
-            temp = type.baseTemperature;
-        }
-        addMelting(input, type.renderBlockID, type.renderMeta, type.baseTemperature + temperatureDifference,
-                   new FluidStack(type.fluid, fluidAmount));
-    }
-
+    
     /**
      * Adds all Items to the Smeltery based on the oreDictionary Name
      * 
@@ -118,36 +59,105 @@ public class AdvancedSmelting
      *            oreDictionary name e.g. oreIron
      * @param type
      *            Type of Fluid
-     * @param temperatureDifference
+     * @param tempDiff
      *            Difference between FluidType BaseTemperature
      * @param fluidAmount
      *            Amount of Fluid
      */
-    public static void addDictionaryMelting (String oreName, FluidType type, int temperatureDifference, int fluidAmount)
+    public static void addDictionaryMelting (String oreName, FluidType type, int tempDiff, int fluidAmount)
     {
         for (final ItemStack is : OreDictionary.getOres(oreName))
-        {
-            addMelting(type, is, temperatureDifference, fluidAmount);
-        }
+            addMelting(type, is, tempDiff, fluidAmount);
+    }
+    
+    /**
+     * Adds a mapping between FluidType and ItemStack
+     * 
+     * @author samtrion
+     * @param type
+     *            Type of Fluid
+     * @param input
+     *            The item to liquify
+     * @param tempDiff
+     *            Difference between FluidType BaseTemperature
+     * @param fluidAmount
+     *            Amount of Fluid
+     */
+    public static void addMelting (FluidType type, ItemStack input, int tempDiff, int fluidAmount)
+    {
+        int temp = type.baseTemperature + tempDiff;
+        if (temp <= 20)
+            temp = type.baseTemperature;
+        addMelting(input, type.renderBlockID, type.renderMeta, type.baseTemperature + tempDiff, new FluidStack(type.fluid, fluidAmount));
+    }
+    
+    /**
+     * Adds mappings between an input and its liquid. Renders with the given
+     * input's block ID and metadata.
+     * 
+     * @param itemstack : The item to liquify
+     * @param blockID : The ID of the block to render
+     * @param metadata : The metadata of the block to render
+     * @param temperature : How hot the block should be before liquifying
+     * @param liquid : The result of the process
+     */
+    public static void addMelting (ItemStack itemstack, int blockID, int metadata, int temperature, FluidStack liquid)
+    {
+        instance.meltingList.put(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()), liquid);
+        instance.temperatureList.put(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()), temperature);
+        instance.renderIndex.put(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()), new ItemStack(blockID, itemstack.stackSize, metadata));
+    }
+    
+    /**
+     * Used to get the resulting ItemStack from a source Block
+     * 
+     * @param blockID : source block ID
+     * @param metadata : source block metadata
+     * @return The result ItemStack
+     */
+    public static FluidStack getMeltingResult (int blockID, int metadata)
+    {
+        final FluidStack stack = instance.meltingList.get(Arrays.asList(blockID, metadata));
+        if (stack == null)
+            return null;
+        return stack.copy();
+    }
+    
+    /**
+     * Used to get the resulting ItemStack from a source ItemStack
+     * 
+     * @param itemstack
+     *            The Source ItemStack
+     * @return The result ItemStack
+     */
+    public static FluidStack getMeltingResult (ItemStack itemstack)
+    {
+        if (itemstack == null) return null;
+        final FluidStack stack = instance.meltingList.get(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()));
+        if (stack == null) return null;
+        return stack.copy();
     }
 
+    /* ========== Temperatures ========== */
+    
     /**
      * Used to get the resulting temperature from a source ItemStack
      * 
-     * @param item
+     * @param itemstack
      *            The Source ItemStack
      * @return The result temperature
      */
-    public static Integer getLiquifyTemperature (ItemStack item)
+    public static Integer getLiquifyTemperature (ItemStack itemstack)
     {
-        if (item == null) return 20;
-        final Integer temp = instance.temperatureList.get(Arrays.asList(item.itemID, item.getItemDamage()));
+        if (itemstack == null)
+            return 20;
+        final Integer temp = instance.temperatureList.get(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()));
         if (temp == null)
             return 20;
         else
             return temp;
     }
-
+    
     /**
      * Used to get the resulting temperature from a source Block
      * 
@@ -161,67 +171,72 @@ public class AdvancedSmelting
     }
 
     /**
-     * Used to get the resulting ItemStack from a source ItemStack
+     * Used to get the block to render
      * 
-     * @param item
-     *            The Source ItemStack
-     * @return The result ItemStack
+     * @param itemstack
+     * @return
      */
-    public static FluidStack getSmelteryResult (ItemStack item)
+    public static ItemStack getRenderIndex (ItemStack itemstack)
     {
-        if (item == null) return null;
-        final FluidStack stack = instance.smeltingList.get(Arrays.asList(item.itemID, item.getItemDamage()));
-        if (stack == null) return null;
-        return stack.copy();
+        return instance.renderIndex.get(Arrays.asList(itemstack.itemID, itemstack.getItemDamage()));
     }
     
-    /**
-     * Used to get the resulting ItemStack from a source Block
-     * 
-     * @param item
-     *            The Source ItemStack
-     * @return The result ItemStack
-     */
-    public static FluidStack getSmelteryResult (int blockID, int metadata)
-    {
-        final FluidStack stack = instance.smeltingList.get(Arrays.asList(blockID, metadata));
-        if (stack == null) return null;
-        return stack.copy();
-    }
+    /* ========== Combinitorial Smelting ========== */
     
     /**
      * Adds a mapping between an item and its mix type and consume chance
      * Stack size determines the amount required for consumption
      * 
-     * @param item
+     * @param oreName
      * @param type
      * @param chance
      */
-    public static void addMixer (ItemStack item, int type, int chance)
+    public static void registerMixItem (String oreName, int type, int consume, int chance)
     {
-        instance.mixerList.put(mixItemKey(item), Arrays.asList(type, item.stackSize, chance));
+        for (final ItemStack is : OreDictionary.getOres(oreName))
+            instance.mixItemList.put(InventoryHelper.getOreDictionaryName(is), Arrays.asList(type, consume, chance));
+    }
+    
+    public static void registerMixComboForFluidOutput (FluidType fluidout, FluidType fluidin, String i1, String i2, String i3)
+    {
+        instance.fluidComboList.put(fluidout, Arrays.asList(fluidin, i1, i2, i3));
+    }
+
+    public static void registerMixComboForSolidOutput (ItemStack stackout, FluidType fluidin, String i1, String i2, String i3)
+    {
+        instance.itemComboList.put(stackout, Arrays.asList(fluidin, i1, i2, i3));
+    }
+    
+    public static void getMixComboForFluidOutput (FluidType fluidtype)
+    {
+        instance.fluidComboList.get(fluidtype);
+    }
+    
+    public static void getMixComboForSolidOutput (ItemStack itemstack)
+    {
+        instance.itemComboList.get(itemstack);
     }
     
     /**
      * Determine if item is in mixer list
      * 
-     * @param item
+     * @param itemstack
      * @return
      */
-    public static Boolean isMixerValid (ItemStack item)
+    public static Boolean isMixItemListed (ItemStack itemstack)
     {
-        return instance.mixerList.containsKey(mixItemKey(item));
+        return instance.mixItemList.containsKey(InventoryHelper.getOreDictionaryName(itemstack));
     }
     
     /**
      * Gets item mixer type (0: oxidizer, 1: reducer, 2:purifier)
      * 
-     * @param item
+     * @param itemstack
      * @return
      */
-    public static Integer getMixerType (ItemStack item)
+    public static Integer getMixItemType (ItemStack itemstack)
     {
-        final List<Integer> list = instance.mixerList.get(mixItemKey(item));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(itemstack));
         return list.get(0);
     }
     
@@ -231,152 +246,96 @@ public class AdvancedSmelting
      * @param item
      * @return
      */
-    public static Integer getMixerConsumeAmount (ItemStack item)
+    public static Integer getMixItemConsumeAmount (ItemStack item)
     {
-        final List<Integer> list = instance.mixerList.get(mixItemKey(item));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(item));
         return list.get(1);
     }
     
     /**
      * Gets mixer item consumption chance
      * 
-     * @param item
+     * @param itemstack
      * @return
      */
-    public static Integer getMixerConsumeChance (ItemStack item)
+    public static Integer getMixItemConsumeChance (ItemStack itemstack)
     {
-        final List<Integer> list = instance.mixerList.get(mixItemKey(item));
+        final List<Integer> list = instance.mixItemList.get(InventoryHelper.getOreDictionaryName(itemstack));
         return list.get(2);
     }
     
-    public static void addMixerCombo (FluidType fluid, ItemStack item1, ItemStack item2, ItemStack item3)
-    {
-        instance.mixerCombos.put(fluid, Arrays.asList(mixItemKey(item1), mixItemKey(item2), mixItemKey(item3)));
-    }
-    
-    public static void getMixerCombo (FluidType fluid)
-    {
-        instance.mixerCombos.get(fluid);
-    }
-    
     /**
-     * Obtains items passed from slots, compares with the combo list, 
-     * and if matching returns the fluid type from the combo list.
+     * Determines whether a given itemstack meets or exceeds the required amount
+     * Returns true if itemstack is null, because some recipes do not require an
+     * item in a slot.
+     * 
+     * @param itemstack : ItemStack to check against
+     * @return 
+     */
+    public static Boolean doesMixItemMeetRequirements (ItemStack itemstack)
+    {
+        if (itemstack == null) return true;
+        if (!isMixItemListed(itemstack)) return false;
+        return (itemstack.stackSize >= getMixItemConsumeAmount(itemstack));
+    }
+
+    /**
+     * Obtains items passed from slots, compares with the fluid combo list, 
+     * and if matching returns the fluid type from the fluid combo list.
      * 
      * @param i1 Oxidizer
      * @param i2 Reducer
      * @param i3 Purifier
-     * @return FluidType from ComboList.
+     * @return FluidType from fluidComboList on success, null otherwise
      */
-    public static FluidType validateMixerCombo (ItemStack i1, ItemStack i2, ItemStack i3)
+    public static FluidType getMixFluidSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        final Collection<String> inputs = new ArrayList(Arrays.asList(mixItemKey(i1), mixItemKey(i2), mixItemKey(i3)));
-        
-        if (inputs.contains(null))
-            return null;
-        
-        for (Entry<FluidType, List<String>> e : instance.mixerCombos.entrySet()) 
+        String ox = InventoryHelper.getOreDictionaryName(i1);
+        String re = InventoryHelper.getOreDictionaryName(i2);
+        String pu = InventoryHelper.getOreDictionaryName(i3);
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, ox, re, pu));
+        for (final Entry<FluidType, List> e : instance.fluidComboList.entries())
         {
-            FluidType key = e.getKey();
-            Object value = e.getValue();
+            final FluidType key = e.getKey();
+            final List value = e.getValue();
             if (value.equals(inputs))
-                return key;
+                if (doesMixItemMeetRequirements(i1) && doesMixItemMeetRequirements(i2) && doesMixItemMeetRequirements(i3))
+                    return key;
         }
         return null;
     }
-    
+
     /**
-     * Determines ...pretty much nothing, really. Only keeping just incase.
+     * Obtains items passed from slots, compares with the item combo list, 
+     * and if matching returns the fluid type from the item combo list.
      * 
-     * @param fluid
-     * @return
+     * @param i1 Oxidizer
+     * @param i2 Reducer
+     * @param i3 Purifier
+     * @return ItemStack from itemComboList on success, null otherwise
      */
-    @Deprecated
-    public static Boolean matchMixerLists (FluidType fluid)
+    public static ItemStack getMixItemSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
-        boolean match = false;
-        
-        final ArrayList<String> copyMix = new ArrayList(instance.mixerList.keySet());
-        final ArrayList<String> copyCombo = new ArrayList(instance.mixerCombos.get(fluid));
-        
-        for (int i = 0; i < copyMix.size(); i++)
+        String ox = InventoryHelper.getOreDictionaryName(i1);
+        String re = InventoryHelper.getOreDictionaryName(i2);
+        String pu = InventoryHelper.getOreDictionaryName(i3);
+        final Collection<String> inputs = new ArrayList(Arrays.asList(f1, ox, re, pu));
+        for (final Entry<ItemStack, List> e : instance.itemComboList.entries())
         {
-            String item = copyMix.get(i);
-            Iterator iter = copyMix.iterator();
-            while (iter.hasNext())
-            {
-                if (copyCombo.contains(item))
-                {
-                    match = true;
-                    break;
-                } 
-                else
-                {
-                    match = false;
-                    break;
-                }
-            }
-            if (!match) break;  
+            final ItemStack key = e.getKey();
+            final List value = e.getValue();
+            if (value.equals(inputs))
+                if (doesMixItemMeetRequirements(i1) && doesMixItemMeetRequirements(i2) && doesMixItemMeetRequirements(i3))
+                    return key.copy();
         }
-        return match;
-    }
-    
-    /**
-     * Internal: Used to create a key for mixer list based on item id and metadata
-     * We do this because values cannot be retrieved from the list directly based 
-     * on ItemStack obj. Will do this differently in the future.
-     * 
-     * @param item
-     * @return
-     */
-    private static String mixItemKey (ItemStack item)
-    {
-        if (item == null)
-            return null;
-        return (item.itemID + ":" + item.getItemDamage());
-    }
-    
-    /**
-     * Used to get the block to render
-     * 
-     * @param input
-     * @return
-     */
-    public static ItemStack getRenderIndex (ItemStack input)
-    {
-        return instance.renderIndex.get(Arrays.asList(input.itemID, input.getItemDamage()));
+        return null;
     }
 
-    /**
-     * @return The entire smelting list
-     */
-    public static HashMap<List<Integer>, FluidStack> getSmeltingList ()
-    {
-        return instance.smeltingList;
-    }
-
-    /**
-     * @return The entire temperature list
-     */
-    public static HashMap<List<Integer>, Integer> getTemperatureList ()
-    {
-        return instance.temperatureList;
-    }
-
-    /**
-     * @return The entire mixer list
-     */
-    public static HashMap<String, List<Integer>> getMixersList ()
-    {
-        return instance.mixerList;
-    }
+    /* ========== Get Lists ========== */
     
-    /**
-     * @return The entire mixer list
-     */
-    public static HashMap<FluidType, List<String>> getCombosList ()
+    public static HashMap<List<Integer>, FluidStack> getMeltingList ()
     {
-        return instance.mixerCombos;
+        return instance.meltingList;
     }
     
     public static HashMap<List<Integer>, ItemStack> getRenderIndex ()
@@ -384,50 +343,23 @@ public class AdvancedSmelting
         return instance.renderIndex;
     }
     
-    /* TODO: Conversion to this style (Like ToolBuilder, kinda)
-    public HashMap<String, MixingRecipes> recipeList = new HashMap<String, MixingRecipes>();
-    public List<MixingRecipes> combos = new ArrayList<MixingRecipes>();  
-    
-    public static void addComplexMelting (FluidType output, Item ore, Item oxidizer, Item reducer, Item purifier, int temperatureDifference, int fluidAmount)
+    public static HashMap<List<Integer>, Integer> getTemperatureList ()
     {
-        int temp = output.baseTemperature + temperatureDifference;
-        if (temp <= 20) temp = output.baseTemperature;
-        
-        MixingRecipes recipe = instance.recipeList.get(output.name());
-        if (recipe != null)
-        {
-            recipe.addOreItem(ore);
-            recipe.addOxidizerItem(oxidizer);
-            recipe.addReducerItem(reducer);
-            recipe.addPurifierItem(purifier);
-        }
-        else
-        {
-            recipe = new MixingRecipes(ore, oxidizer, reducer, purifier, output);
-            instance.combos.add(recipe);
-            instance.recipeList.put(output.name(), recipe);
-        }
+        return instance.temperatureList;
     }
     
-    public FluidType getMatchingRecipe (Item ore, Item oxidizer, Item reducer, Item purifier)
+    public static HashMap<String, List<Integer>> getMixItemsList ()
     {
-        for (MixingRecipes recipe : combos)
-        {
-            if (recipe.validOre(ore) && recipe.validOxidizer(oxidizer) && recipe.validReducer(reducer) && recipe.validPurifier(purifier))
-                return recipe.getType();
-        }
-        return null;
+        return instance.mixItemList;
     }
     
-    public FluidStack getComplexResult (ItemStack oreStack, ItemStack oxidizerStack, ItemStack reducerStack, ItemStack purifierStack, String name)
+    public static Multimap<FluidType, List> getFluidCombosList ()
     {
-        FluidType fluid;
-        boolean validMaterials = true;
-        
-        fluid = getMatchingRecipe(oreStack.getItem(), oxidizerStack.getItem(), reducerStack.getItem(), purifierStack.getItem());
-
-        if (fluid == null)
-            return null;
+        return instance.fluidComboList;
     }
-    */
+    
+    public static Multimap<ItemStack, List> getItemCombosList ()
+    {
+        return instance.itemComboList;
+    }
 }

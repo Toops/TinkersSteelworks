@@ -28,8 +28,8 @@
     <available file=".git" type="dir" property="git.present"/>
 
     <property name="build.dependencies.file" value="${build.dir}/dependencies.properties" />
-    <property name="tcon.version" value="2e99697" />
-    <property name="tcon.name" value="TConstruct-${mc.version}-DEV.${tcon.version}-Deobf.jar" />
+    <property name="tcon.version" value="bfd2291" />
+    <property name="tcon.name" value="TConstruct-${mc.version}-DEV.${tcon.version}-deobf.jar" />
     <available property="tcon-downloaded" file="${download.dir}/${tcon.name}" />
     <condition property="tcon-installed">
         <and>
@@ -50,7 +50,7 @@
     <mkdir dir="${download.dir}"/>
 
     <target name="download-tcon" unless="tcon-downloaded">
-        <get src="https://kalen.sunstrike.io/browse/TIC-AP-425/artifact/shared/Tinkers-Construct-Deobf-Jar/${tcon.name}" dest="${download.dir}" usetimestamp="true" />
+        <get src="https://dl.dropboxusercontent.com/u/11017392/Minecraft/${tcon.name}" dest="${download.dir}" usetimestamp="true" />
     </target>
 
     <target name="install-tcon" depends="setup,download-tcon" unless="tcon-installed">

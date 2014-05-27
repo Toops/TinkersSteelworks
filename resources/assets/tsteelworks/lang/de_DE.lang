@@ -1,0 +1,82 @@
+itemGroup.TSteelworks=TSteelworks
+
+crafters.HighOven=Hochofen
+container.HighOvenDuct=Hochofenöffnung
+tank.DeepTank=Tiefentank
+gui.button.next=>
+gui.button.prev=<
+
+item.tsteelworks.Materials.ScorchedBrick.name=Verbrannter Ziegel
+item.tsteelworks.Materials.LimestoneBrick.name=Kalksteinziegel
+item.tsteelworks.manual.highoven.name=Stahlwerken und du
+item.tsteelworks.helmetSteel.name=Stahlhelm
+item.tsteelworks.chestplateSteel.name=Stahlbrustpanzer
+item.tsteelworks.leggingsSteel.name=Stahlbeinschutz
+item.tsteelworks.bootsSteel.name=Stahlstiefel
+
+item.tsteelworks.bucket.Steam.name=Eimer mit Dampf
+item.tsteelworks.bucket.Limestone.name=Eimer mit geschmolzenem Kalkstein
+
+entity.HighGolem.name=Hochgolem
+
+tile.tsteelworks.blocks.charcoal.name=Holzkohleblock
+block.storage.dust.gunpowder.name=Schwarzpulverblock
+block.storage.dust.sugar.name=Zuckerwürfel
+tile.steam.name=Dampf
+tile.molten.limestone.name=Geschmolzener Kalkstein
+fluid.steam=Dampf
+fluid.water=Wasser
+
+HighOven.Controller.name=Hochofenkern
+HighOven.TankController.name=Tiefentankkern
+HighOven.Drain.name=Verbrannter Ausguss
+HighOven.Duct.name=Verbrannte Öffnung
+HighOven.Valve.name=Verbranntes Ventil
+HighOven.Analyzer.name=Verbrannter Analysierer
+HighOven.Brick.name=Verbrannte Ziegel
+HighOven.Stone.name=Verbrannter Stein
+HighOven.Cobblestone.name=Verbrannter Pflasterstein
+HighOven.Paver.name=Verbrannte Pflasterziegel
+HighOven.Brick.Cracked.name=Rissige verbrannte Ziegel
+HighOven.Road.name=Verbrannte Straße
+HighOven.Brick.Fancy.name=Schicke verbrannte Ziegel
+HighOven.Brick.Square.name=Gemeißelte verbrannte Ziegel
+HighOven.Brick.Creeper.name=Ziselierte verbrannte Ziegel
+
+Machine.Turbine.name=Dampfturbine
+
+Limestone.Stone.name=Kalkstein
+Limestone.Cobblestone.name=Kalkpflasterstein
+Limestone.Brick.name=Kalksteinziegel
+Limestone.Brick.Cracked.name=Rissige Kalksteinziegel
+Limestone.Paver.name=Kalsteinpflasterziegel
+Limestone.Road.name=Kalksteinstraße
+Limestone.Brick.Fancy.name=Schicke Kalksteinziegel
+Limestone.Brick.Square.name=Gemeißelte Kalksteinziegel
+Limestone.Brick.Creeper.name=Ziselierte Kalksteinziegel
+
+highoven.controller.tooltip1=Die Hauptkomponente des Hochofens
+highoven.controller.tooltip2=(Vorsicht: Inhalt unter Druck!)
+highoven.tankcontroller.tooltip1=Die Hauptkomponente des Tieftanks
+highoven.tankcontroller.tooltip2=(Hohe Kapazität!)
+highoven.drain.tooltip1=Flüssigkeits-Input/Output für Hochöfen/Tiefentänke
+highoven.drain.tooltip2=(Wird mit einem Zapfhahn oder Rohren verwendet)
+highoven.duct.tooltip1=Item-Input/Output für Hochöfen
+highoven.duct.tooltip2=(Wird mit Trichtern, Truhen oder Rohren verwendet)
+highoven.valve.tooltip1=Flüssigkeits-Input/Output für Hochöfen/Tiefentänke
+highoven.valve.tooltip2=(Platziere Flüssigkeiten in der Welt! Sauge sie wieder ein!)
+highoven.analyzer.tooltip1=Redstone-Output für Hochöfen/Tiefentänke
+highoven.analyzer.tooltip2=(W.I.P.)
+highoven.brick.tooltip1=Hochofen-Strukturblock
+highoven.brick.tooltip2=(Sicher zum Dekorieren)
+
+limestone.tooltip1=Sedimentär
+
+dustblock.gunpowder.tooltip=Geht in Deckung!
+dustblock.sugar.tooltip=Wie süß!
+machine.turbine.tooltip1=Experimentell!
+machine.turbine.tooltip2=(Witzelei)
+material.scorchedbrick.tooltip1=Nutze zum Bauen oder Werfen!
+material.limestonebrick.tooltip1=Kreidig. Enthält Calciumcarbonat.
+
+manual.steelworks.tooltip1=Von der Bastlergsellschaft

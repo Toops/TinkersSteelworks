@@ -19,22 +19,22 @@ public class TSCraftingItem extends Item
 {
     public String[] textureNames;
     public String[] unlocalizedNames;
-    public String   folder;
-    public Icon[]   icons;
+    public String folder;
+    public Icon[] icons;
 
-    public TSCraftingItem (int id, String[] names, String[] tex, String folder)
+    public TSCraftingItem(int id, String[] names, String[] tex, String folder)
     {
         super(id);
-        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        this.setMaxDamage(0);
-        this.setHasSubtypes(true);
-        this.textureNames = tex;
-        this.unlocalizedNames = names;
+        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+        setMaxDamage(0);
+        setHasSubtypes(true);
+        textureNames = tex;
+        unlocalizedNames = names;
         this.folder = folder;
     }
 
     @Override
-    @SideOnly (Side.CLIENT)
+    @SideOnly(Side.CLIENT)
     public Icon getIconFromDamage (int meta)
     {
         final int arr = MathHelper.clamp_int(meta, 0, unlocalizedNames.length);
@@ -42,15 +42,11 @@ public class TSCraftingItem extends Item
     }
 
     @Override
-    @SideOnly (Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
+    public void getSubItems (int id, CreativeTabs tab, List list)
     {
-        icons = new Icon[textureNames.length];
-        for (int i = 0; i < icons.length; ++i)
+        for (int i = 0; i < unlocalizedNames.length; i++)
             if (!(textureNames[i].equals("")))
-            {
-                icons[i] = iconRegister.registerIcon(Repo.textureDir + folder + textureNames[i]);
-            }
+                list.add(new ItemStack(id, 1, i));
     }
 
     @Override
@@ -61,16 +57,17 @@ public class TSCraftingItem extends Item
     }
 
     @Override
-    public void getSubItems (int id, CreativeTabs tab, List list)
+    public void onCreated (ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        for (int i = 0; i < unlocalizedNames.length; i++)
-            if (!(textureNames[i].equals("")))
-            {
-                list.add(new ItemStack(id, 1, i));
-            }
     }
 
     @Override
-    public void onCreated (ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
-    {}
+    @SideOnly(Side.CLIENT)
+    public void registerIcons (IconRegister iconRegister)
+    {
+        icons = new Icon[textureNames.length];
+        for (int i = 0; i < icons.length; ++i)
+            if (!(textureNames[i].equals("")))
+                icons[i] = iconRegister.registerIcon(Repo.textureDir + folder + textureNames[i]);
+    }
 }

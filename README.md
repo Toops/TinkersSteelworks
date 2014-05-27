@@ -22,8 +22,6 @@ Please include the following:
 Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/licenses/by/3.0/).
 
 ##Notice
-Currently, only the 1.6.4 branch is valid. The master branch will be used for Minecraft 1.7 and onwards.
-
 Much of the code and structure of this project is heavily based on projects by [SlimeKnights](https://github.com/SlimeKnights).
 Even this readme file is partially lifted from said projects.  ^_^
 This project is meant to compliment their efforts.

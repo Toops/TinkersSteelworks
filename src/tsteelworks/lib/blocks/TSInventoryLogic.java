@@ -38,44 +38,24 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
 
     /* Inventory management */
 
-    @Override
-    public ItemStack getStackInSlot (int slot)
-    {
-        return inventory[slot];
-    }
-
-    public boolean isStackInSlot (int slot)
-    {
-        return inventory[slot] != null;
-    }
-
-    @Override
-    public int getSizeInventory ()
-    {
-        return inventory.length;
-    }
-
-    @Override
-    public int getInventoryStackLimit ()
-    {
-        return stackSizeLimit;
-    }
-
     public boolean canDropInventorySlot (int slot)
     {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#closeChest()
+     */
     @Override
-    public void setInventorySlotContents (int slot, ItemStack itemstack)
+    public void closeChest ()
     {
-        inventory[slot] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
-        {
-            itemstack.stackSize = getInventoryStackLimit();
-        }
     }
 
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#decrStackSize(int, int)
+     */
     @Override
     public ItemStack decrStackSize (int slot, int quantity)
     {
@@ -83,24 +63,110 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
         {
             if (inventory[slot].stackSize <= quantity)
             {
-                ItemStack stack = inventory[slot];
+                final ItemStack stack = inventory[slot];
                 inventory[slot] = null;
                 return stack;
             }
-            ItemStack split = inventory[slot].splitStack(quantity);
+            final ItemStack split = inventory[slot].splitStack(quantity);
             if (inventory[slot].stackSize == 0)
-            {
                 inventory[slot] = null;
-            }
             return split;
         }
         else
-        {
             return null;
-        }
+    }
+
+    public abstract Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z);
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getInventoryStackLimit()
+     */
+    @Override
+    public int getInventoryStackLimit ()
+    {
+        return stackSizeLimit;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getInvName()
+     */
+    @Override
+    public String getInvName ()
+    {
+        return isInvNameLocalized() ? invName : getDefaultName();
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getSizeInventory()
+     */
+    @Override
+    public int getSizeInventory ()
+    {
+        return inventory.length;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getStackInSlot(int)
+     */
+    @Override
+    public ItemStack getStackInSlot (int slot)
+    {
+        return inventory[slot];
+    }
+
+    /* Default implementations of hardly used methods */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#getStackInSlotOnClosing(int)
+     */
+    @Override
+    public ItemStack getStackInSlotOnClosing (int slot)
+    {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isInvNameLocalized()
+     */
+    @Override
+    public boolean isInvNameLocalized ()
+    {
+        return (invName != null) && (invName.length() > 0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isItemValidForSlot(int, net.minecraft.item.ItemStack)
+     */
+    @Override
+    public boolean isItemValidForSlot (int slot, ItemStack itemstack)
+    {
+    	if(inventory == null || itemstack == null) return false;
+    	
+        if (slot >= 0 && slot < getSizeInventory())
+            if ((itemstack.stackSize + inventory[slot].stackSize) <= getInventoryStackLimit())
+                return true;
+        return false;
+    }
+
+    public boolean isStackInSlot (int slot)
+    {
+    	if(inventory == null) return false;
+    	if(slot >= 0 && slot < inventory.length)
+    		return inventory[slot] != null;
+    	return false;
     }
 
     /* Supporting methods */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#isUseableByPlayer(net.minecraft.entity.player.EntityPlayer)
+     */
     @Override
     public boolean isUseableByPlayer (EntityPlayer entityplayer)
     {
@@ -108,13 +174,29 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
             return false;
 
         else
-            return entityplayer.getDistance((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D) <= 64D;
+            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
 
     }
 
-    public abstract Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z);
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#openChest()
+     */
+    @Override
+    public void openChest ()
+    {
+    }
+
+    public void placeBlock (EntityLivingBase entity, ItemStack stack)
+    {
+
+    }
 
     /* NBT */
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#readFromNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void readFromNBT (NBTTagCompound tags)
     {
@@ -125,20 +207,67 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
     public void readInventoryFromNBT (NBTTagCompound tags)
     {
         super.readFromNBT(tags);
-        this.invName = tags.getString("InvName");
-        NBTTagList nbttaglist = tags.getTagList("Items");
+        invName = tags.getString("InvName");
+        final NBTTagList nbttaglist = tags.getTagList("Items");
         inventory = new ItemStack[getSizeInventory()];
         for (int iter = 0; iter < nbttaglist.tagCount(); iter++)
         {
-            NBTTagCompound tagList = (NBTTagCompound) nbttaglist.tagAt(iter);
-            byte slotID = tagList.getByte("Slot");
-            if (slotID >= 0 && slotID < inventory.length)
-            {
+            final NBTTagCompound tagList = (NBTTagCompound) nbttaglist.tagAt(iter);
+            final byte slotID = tagList.getByte("Slot");
+            if ((slotID >= 0) && (slotID < inventory.length))
                 inventory[slotID] = ItemStack.loadItemStackFromNBT(tagList);
-            }
         }
     }
 
+    public void removeBlock ()
+    {
+
+    }
+
+    //uncheck ArrayIndexOutOfBounds
+    //uncheck NullPointer
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.inventory.IInventory#setInventorySlotContents(int, net.minecraft.item.ItemStack)
+     */
+    @Override
+    public void setInventorySlotContents (int slot, ItemStack itemstack)
+    {
+    	if(inventory == null) return;
+    	if(slot >= 0 && slot < inventory.length)
+    	{
+    		inventory[slot] = itemstack;
+    		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
+    			itemstack.stackSize = getInventoryStackLimit();
+    	}
+    }
+
+    public void setInvName (String name)
+    {
+        invName = name;
+    }
+
+    public void writeInventoryToNBT (NBTTagCompound tags)
+    {
+        if (invName != null)
+            tags.setString("InvName", invName);
+        final NBTTagList nbttaglist = new NBTTagList();
+        for (int iter = 0; iter < inventory.length; iter++)
+            if (inventory[iter] != null)
+            {
+                final NBTTagCompound tagList = new NBTTagCompound();
+                tagList.setByte("Slot", (byte) iter);
+                inventory[iter].writeToNBT(tagList);
+                nbttaglist.appendTag(tagList);
+            }
+
+        tags.setTag("Items", nbttaglist);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#writeToNBT(net.minecraft.nbt.NBTTagCompound)
+     */
     @Override
     public void writeToNBT (NBTTagCompound tags)
     {
@@ -146,86 +275,5 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
         writeInventoryToNBT(tags);
     }
 
-    public void writeInventoryToNBT (NBTTagCompound tags)
-    {
-        if (invName != null)
-            tags.setString("InvName", invName);
-        NBTTagList nbttaglist = new NBTTagList();
-        for (int iter = 0; iter < inventory.length; iter++)
-        {
-            if (inventory[iter] != null)
-            {
-                NBTTagCompound tagList = new NBTTagCompound();
-                tagList.setByte("Slot", (byte) iter);
-                inventory[iter].writeToNBT(tagList);
-                nbttaglist.appendTag(tagList);
-            }
-        }
-
-        tags.setTag("Items", nbttaglist);
-    }
-
-    /* Cause of the heisenbug. Do not uncomment! */
-    /*public void superReadFromNBT (NBTTagCompound tags)
-    {
-        super.readFromNBT(tags);
-    }
-    
-    public void superWriteToNBT (NBTTagCompound tags)
-    {
-        super.writeToNBT(tags);
-    }*/
-
-    /* Default implementations of hardly used methods */
-    public ItemStack getStackInSlotOnClosing (int slot)
-    {
-        return null;
-    }
-
-    public void openChest ()
-    {
-    }
-
-    public void closeChest ()
-    {
-    }
-
     protected abstract String getDefaultName ();
-
-    public void setInvName (String name)
-    {
-        this.invName = name;
-    }
-
-    public String getInvName ()
-    {
-        return this.isInvNameLocalized() ? this.invName : getDefaultName();
-    }
-
-    public boolean isInvNameLocalized ()
-    {
-        return this.invName != null && this.invName.length() > 0;
-    }
-
-    @Override
-    public boolean isItemValidForSlot (int slot, ItemStack itemstack)
-    {
-        if (slot < getSizeInventory())
-        {
-            if (inventory[slot] == null || itemstack.stackSize + inventory[slot].stackSize <= getInventoryStackLimit())
-                return true;
-        }
-        return false;
-    }
-
-    public void placeBlock (EntityLivingBase entity, ItemStack stack)
-    {
-
-    }
-
-    public void removeBlock ()
-    {
-
-    }
 }
-

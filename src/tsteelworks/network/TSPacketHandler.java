@@ -14,6 +14,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
+import tsteelworks.blocks.logic.DeepTankLogic;
+import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.lib.Repo;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -28,14 +30,19 @@ public class TSPacketHandler implements IPacketHandler
     public void onPacketData (INetworkManager manager, Packet250CustomPayload packet, Player player)
     {
         final Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (packet.channel.equals(Repo.modChan)) if (side == Side.SERVER)
-        {
-            handleServerPacket(packet, (EntityPlayerMP) player);
-        }
-        else
-        {
-            handleClientPacket(packet, (EntityPlayer) player);
-        }
+        if (packet.channel.equals(Repo.modChan))
+            if (side == Side.SERVER)
+                handleServerPacket(packet, (EntityPlayerMP) player);
+            else
+                handleClientPacket(packet, (EntityPlayer) player);
+    }
+
+    Entity getEntity (World world, int id)
+    {
+        for (final Object o : world.loadedEntityList)
+            if (((Entity) o).entityId == id)
+                return (Entity) o;
+        return null;
     }
 
     void handleClientPacket (Packet250CustomPayload packet, EntityPlayer player)
@@ -59,8 +66,8 @@ public class TSPacketHandler implements IPacketHandler
         try
         {
             packetID = inputStream.readByte();
-            TSteelworks.logger.info("Packet ID: " + packetID);
-            if (packetID == 1) // High Oven
+            // High Oven
+            if (packetID == Repo.ovenPacketID)
             {
                 final int dimension = inputStream.readInt();
                 final World world = DimensionManager.getWorld(dimension);
@@ -75,23 +82,65 @@ public class TSPacketHandler implements IPacketHandler
                     FluidStack temp = null;
                     for (final FluidStack liquid : ((HighOvenLogic) te).moltenMetal)
                         if (liquid.fluidID == fluidID)
-                        {
                             temp = liquid;
-                        }
                     if (temp != null)
                     {
                         ((HighOvenLogic) te).moltenMetal.remove(temp);
                         if (isShiftPressed)
-                        {
                             ((HighOvenLogic) te).moltenMetal.add(temp);
-                        }
                         else
-                        {
                             ((HighOvenLogic) te).moltenMetal.add(0, temp);
-                        }
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
+            }
+            // Duct
+            if (packetID == Repo.ductPacketID)
+            {
+                final int dimension = inputStream.readInt();
+                final World world = DimensionManager.getWorld(dimension);
+                final int x = inputStream.readInt();
+                final int y = inputStream.readInt();
+                final int z = inputStream.readInt();
+                final int mode = inputStream.readInt();
+                final TileEntity te = world.getBlockTileEntity(x, y, z);
+                if (te instanceof HighOvenDuctLogic)
+                {
+                    final int tempMode = ((HighOvenDuctLogic) te).getMode();
+                    if (tempMode != mode)
+                        ((HighOvenDuctLogic) te).setMode(mode);
+                    PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
+                }
+
+            }
+            // Deep Tank
+            if (packetID == Repo.tankPacketID)
+            {
+                final int dimension = inputStream.readInt();
+                final World world = DimensionManager.getWorld(dimension);
+                final int x = inputStream.readInt();
+                final int y = inputStream.readInt();
+                final int z = inputStream.readInt();
+                final boolean isShiftPressed = inputStream.readBoolean();
+                final int fluidID = inputStream.readInt();
+                final TileEntity te = world.getBlockTileEntity(x, y, z);
+                if (te instanceof DeepTankLogic)
+                {
+                    FluidStack temp = null;
+                    for (final FluidStack liquid : ((DeepTankLogic) te).fluidlist)
+                        if (liquid.fluidID == fluidID)
+                            temp = liquid;
+                    if (temp != null)
+                    {
+                        ((DeepTankLogic) te).fluidlist.remove(temp);
+                        if (isShiftPressed)
+                            ((DeepTankLogic) te).fluidlist.add(temp);
+                        else
+                            ((DeepTankLogic) te).fluidlist.add(0, temp);
+                    }
+                    PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
+                }
+
             }
         }
         catch (final IOException e)
@@ -99,12 +148,5 @@ public class TSPacketHandler implements IPacketHandler
             TSteelworks.logger.warning("Failed at reading server packet for TSteelworks.");
             e.printStackTrace();
         }
-    }
-
-    Entity getEntity (World world, int id)
-    {
-        for (final Object o : world.loadedEntityList)
-            if (((Entity) o).entityId == id) return (Entity) o;
-        return null;
     }
 }
