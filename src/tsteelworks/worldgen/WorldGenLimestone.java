@@ -26,7 +26,11 @@ public class WorldGenLimestone extends WorldGenerator
     
     public boolean generate(World world, Random random, int xCoord, int yCoord, int zCoord)
     {
-        if(world.getChunkProvider().chunkExists(xCoord, zCoord))
+        if(!world.getChunkProvider().chunkExists(xCoord, zCoord))
+        {
+            return false;
+        }
+        else
         {
             if (world.getBlockMaterial(xCoord, yCoord, zCoord) != Material.water)
             {
