@@ -28,31 +28,31 @@ public class TSLogger
     
     public static void info (String desc)
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         logger.info(desc);
     }
 
     public static void info (String desc, int value)
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         logger.info(desc + ": " + value);
     }
 
     public static void info (String desc, float value)
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         logger.info(desc + ": " + value);
     }
 
     public static void info (String desc, String text)
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         logger.info(desc + ": " + text);
     }
 
     public static void info (String desc, boolean flag)
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         logger.info(desc + ": " + flag);
     }
     
@@ -63,7 +63,7 @@ public class TSLogger
     
     void logAlloyList ()
     {
-        if (TSteelworks.DEBUG_MODE) return;
+        if (!TSteelworks.DEBUG_MODE) return;
         for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
         {
             FluidStack f = AlloyInfo.alloys.get(i).result.copy();

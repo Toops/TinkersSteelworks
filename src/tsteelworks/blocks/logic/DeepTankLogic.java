@@ -931,21 +931,26 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     {
         if(!isStructureValid())
         {
-            TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
+            //TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
             return 0;
         }
-      else
-      {
-          TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
-      }
+        else
+        {
+            //TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
+        }
         
         if (resource == null) return 0;
+        if (currentLiquid == maxLiquid) return 0;
+
         int amount = resource.amount;
         if (amount + currentLiquid < maxLiquid)
         {
             if (amount + currentLiquid > maxLiquid)
                 amount = maxLiquid - currentLiquid;
+            
             resource.amount = amount;
+            
+            //TSteelworks.loginfo("DTL - fill - res amount: " + resource.amount + " amount: " + amount);
             
             if (amount > 0 && doFill)
             {

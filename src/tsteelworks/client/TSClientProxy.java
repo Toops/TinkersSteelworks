@@ -238,7 +238,7 @@ public class TSClientProxy extends TSCommonProxy
         final ItemStack dustGunpwoder = new ItemStack(Item.gunpowder, 1, 0);
         final ItemStack dustRedstone = new ItemStack(Item.redstone, 1, 0);
         final ItemStack dustAluminum = TConstructRegistry.getItemStack("dustAluminum");
-        final ItemStack blockSand = new ItemStack(Block.sand, 2, 0);
+        final ItemStack blockSand = new ItemStack(Block.sand, 1, 0);
         
         TSClientRegistry.registerManualHighOvenRecipe("steelsmelting", ingotSteel, ingotIron, dustGunpwoder, dustRedstone, blockSand);
         

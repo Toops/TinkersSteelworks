@@ -15,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.modifiers.tools.ModInteger;
 import tsteelworks.TSteelworks;
@@ -171,6 +172,7 @@ public class TSContent
     
     void registerFluids()
     {
+        ItemStack bucket = new ItemStack(Item.bucketEmpty);
         boolean doRegisterSteamBlock = false;
         steamFluid = new Fluid("steam");
         if (!FluidRegistry.registerFluid(steamFluid))
@@ -197,8 +199,8 @@ public class TSContent
             fluidBlocks[0] = steamBlock;
             GameRegistry.registerBlock(steamBlock, "steam");
             steamBlock.setLightOpacity(0);
-            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(588).setGaseous(true);
-            FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), new ItemStack(bucketsTS, 1, 0), new ItemStack(Item.bucketEmpty)));
+            steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(1300).setGaseous(true);
+            FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), new ItemStack(bucketsTS, 1, 0), bucket));
         }
         
         moltenLimestoneFluid = new Fluid("limestone.molten");
@@ -209,7 +211,7 @@ public class TSContent
         fluids[1] = moltenLimestoneFluid;
         fluidBlocks[1] = moltenLimestone;
         moltenLimestoneFluid.setBlockID(moltenLimestone).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
-        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), new ItemStack(Item.bucketEmpty)));
+        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), bucket));
     
         liquidCementFluid = new Fluid("cement.liquid");
         if (!FluidRegistry.registerFluid(liquidCementFluid))
@@ -219,7 +221,15 @@ public class TSContent
         fluids[2] = liquidCementFluid;
         fluidBlocks[2] = liquidCement;
         liquidCementFluid.setBlockID(liquidCement).setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
-        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), new ItemStack(Item.bucketEmpty)));
+        FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), bucket));
+
+        // Table Casting
+        LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
+
+        for (int fluidID = 0; fluidID < 2; fluidID++)
+        {
+            tableCasting.addCastingRecipe(new ItemStack(bucketsTS, 1, fluidID), new FluidStack(fluids[fluidID], FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+        }
     }
     
     public void oreRegistry ()
@@ -264,6 +274,7 @@ public class TSContent
         AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
         AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
         AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 30);
+        AdvancedSmelting.registerMixItem("dustSaltpetre", HighOvenLogic.SLOT_PURIFIER, 1, 30);
         AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
         AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
         AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
@@ -276,11 +287,11 @@ public class TSContent
         AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
         AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
         AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 37);
-        AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 37);
+        AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 27);
         
-        AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 2, 100);
-        AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 80);
-        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 67);
+        AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 1, 100);
+        AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 73);
+        AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 59);
     }
     
     /**

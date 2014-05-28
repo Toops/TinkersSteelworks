@@ -70,7 +70,7 @@ The High Oven will be your threshold into this process. It is smaller than the S
 
 * Mixing materials is key! As time goes on, you will become familiar with oxidizers, reducers, and purifiers. These are properties of materials which lead may to robust crystalline structures within your metalworking.
 
-* The High Oven can be as small as three blocks high, or as high as eight. For each layer between the top and bottom layers, more space will be available to cook items within.</text>
+* The High Oven can be as small as three blocks high, or as high as eight. For each layer between the top and bottom layers, more space will be available to cook items within. Additionally, the taller the structure, the hotter it gets!</text>
 </page>
 
 <page type="sidebar">
@@ -163,7 +163,7 @@ Purifiers filter unwanted leftover materials.
  <icon>bonemeal</icon>
 </item>
 <item>
- <text>Essence Berry - 37% Dissipation</text>
+ <text>Essence Berry - 27% Dissipation</text>
  <icon>essenceberry</icon>
 </item>
 </page>
@@ -175,11 +175,11 @@ Purifiers filter unwanted leftover materials.
  <icon>sandblock</icon>
 </item>
 <item>
- <text>Graveyard Soil - 67% Dissipation</text>
+ <text>Graveyard Soil - 59% Dissipation</text>
  <icon>graveyardsoil</icon>
 </item>
 <item>
- <text>Hambone - 80% Dissipation</text>
+ <text>Hambone - 73% Dissipation</text>
  <icon>hambone</icon>
 </item>
 </page>
