@@ -54,6 +54,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int layers;
     public final int innerMaxSpace = 9;
     Random rand = new Random();
+    ArrayList glassBlocks = validOreDictGlass();
     
 
     public DeepTankLogic() 
@@ -838,7 +839,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         if (blockID == Block.glass.blockID || 
                 blockID == TContent.stainedGlassClear.blockID || 
                 blockID == TContent.clearGlass.blockID ||
-                blockID == TContent.lavaTank.blockID)
+                blockID == TContent.lavaTank.blockID ||
+                glassBlocks.contains(blockID))
             return true;
         else
             return validModGlassID(blockID);
@@ -854,6 +856,24 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
                 return true;
         }
         return false;
+    }
+    
+    ArrayList validOreDictGlass()
+    {
+    	ArrayList<ItemStack> oreDict = OreDictionary.getOres("glass");
+    	if (!oreDict.isEmpty())
+    	{
+    		ArrayList glasses = new ArrayList();
+    		for (ItemStack glass : oreDict)
+    		{
+    			glasses.add(Block.blocksList[glass.itemID].blockID);
+    		}
+    		return glasses;
+    	}
+    	else
+    	{
+    		return oreDict;
+    	}
     }
     
     /*
