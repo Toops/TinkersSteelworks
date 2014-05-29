@@ -2,6 +2,7 @@ package tsteelworks.blocks.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -10,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
@@ -23,6 +25,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
@@ -54,7 +57,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     public int layers;
     public final int innerMaxSpace = 9;
     Random rand = new Random();
-    ArrayList glassBlocks = validOreDictGlass();
+    ArrayList glassBlocks = getRegisteredGlassIDs();
     
 
     public DeepTankLogic() 
@@ -836,38 +839,39 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 
     boolean validGlassID(int blockID)
     {
-        if (blockID == Block.glass.blockID || 
-                blockID == TContent.stainedGlassClear.blockID || 
-                blockID == TContent.clearGlass.blockID ||
-                blockID == TContent.lavaTank.blockID ||
-                glassBlocks.contains(blockID))
-            return true;
-        else
-            return validModGlassID(blockID);
-    }
-
-    boolean validModGlassID(int blockID)
-    {
-        if (ConfigCore.modTankGlassBlocks.length < 1) return false;
+        return glassBlocks.contains(blockID);
         
-        for (int id : ConfigCore.modTankGlassBlocks)
-        {
-            if (id == blockID)
-                return true;
-        }
-        return false;
     }
     
-    ArrayList validOreDictGlass()
+    /*
+     * Set up a list of glass blocks by preset, config, and oredictionary
+     * Duplicate elements are removed from the list
+     */
+    ArrayList getRegisteredGlassIDs()
     {
     	ArrayList<ItemStack> oreDict = OreDictionary.getOres("glass");
+    	ArrayList glasses = new ArrayList();
+    	
+    	glasses.add(Block.blocksList[Block.glass.blockID]);
+        glasses.add(Block.blocksList[TContent.clearGlass.blockID]);
+        glasses.add(Block.blocksList[TContent.stainedGlassClear.blockID]);
+        glasses.add(Block.blocksList[TContent.lavaTank.blockID]);
+        
+    	if (ConfigCore.modTankGlassBlocks.length >= 1)
+            for (int id : ConfigCore.modTankGlassBlocks)
+                glasses.add(Block.blocksList[id]);
+        
     	if (!oreDict.isEmpty())
     	{
-    		ArrayList glasses = new ArrayList();
     		for (ItemStack glass : oreDict)
-    		{
     			glasses.add(Block.blocksList[glass.itemID].blockID);
-    		}
+    		
+            // Let's remove those duplicates
+            HashSet temp = new HashSet();
+            temp.addAll(glasses);
+            glasses.clear();
+            glasses.addAll(temp);
+            
     		return glasses;
     	}
     	else
