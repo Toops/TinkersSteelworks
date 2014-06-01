@@ -44,8 +44,8 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
     			if(fls != null)
     			{
     				if(fls.size() <= 0)
-    				{
-    					currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+    				{ //�
+    					currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
     				}
     				else
     				{
@@ -53,12 +53,13 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
     					{
     						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
     					}
+    					currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
     				}
     			}
             }
     		else
     		{
-    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+    			currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -71,20 +72,22 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
                 {
                     if(fls.size() <= 0)
                     {
-                        currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+                        currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
                     }
                     else
                     {
                         for(FluidStack stack : fls)
                         {
                             currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
+                            
                         }
+                        currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
                     }
                 }
             }
             else
             {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+                currenttip.add("�o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
             }
         }
 		return currenttip;

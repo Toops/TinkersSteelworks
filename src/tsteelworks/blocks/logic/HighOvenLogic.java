@@ -1383,6 +1383,23 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return moltenMetal.get(0);
     }
 
+    public int getTotalFluidAmount ()
+    {
+        if (moltenMetal.size() == 0)
+            return currentLiquid;
+        
+        int amt = 0;
+        
+        for (int i = 0; i < moltenMetal.size(); i++)
+        {
+            FluidStack l = moltenMetal.get(i);
+            amt += l.amount;
+        }
+        return amt;
+    }
+    
+    public int getFillRatio () { return currentLiquid <= 0 ? 0 : maxLiquid / getTotalFluidAmount(); }
+    
     /*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
