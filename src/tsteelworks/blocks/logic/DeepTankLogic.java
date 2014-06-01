@@ -602,6 +602,25 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return tempBricks;
     }
     
+    int verifyComponent (TileEntity tileentity)
+    {
+        int tempBricks = 0;
+        if (tileentity instanceof HighOvenDuctLogic)
+            return tempBricks++;
+        else if (tileentity instanceof TSMultiServantLogic)
+        {
+            TSMultiServantLogic servant = (TSMultiServantLogic) tileentity;
+            if (servant.hasValidMaster())
+            {
+                if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
+                    tempBricks++;
+            }
+            else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
+                tempBricks++;
+        }
+        return tempBricks;
+    }
+    
     // TODO: Clean this mess up.
     private int[] scanGlassLayerCenter ()
     {

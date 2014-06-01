@@ -44,8 +44,8 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
     			if(fls != null)
     			{
     				if(fls.size() <= 0)
-    				{ //Â
-    					currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
+    				{ 
+    					currenttip.add(StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
     				}
     				else
     				{
@@ -59,7 +59,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             }
     		else
     		{
-    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
+    			currenttip.add(StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -72,7 +72,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
                 {
                     if(fls.size() <= 0)
                     {
-                        currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
+                        currenttip.add(StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
                     }
                     else
                     {
@@ -87,7 +87,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             }
             else
             {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
+                currenttip.add(StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
             }
         }
 		return currenttip;
