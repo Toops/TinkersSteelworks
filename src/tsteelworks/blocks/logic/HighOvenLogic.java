@@ -112,7 +112,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {
             needsUpdate = true;
             layers = lay;
-            TSteelworks.loginfo("layers", layers);
+            //TSteelworks.loginfo("layers", layers);
             maxLiquid = FLUID_AMOUNT_PER_LAYER * lay;
             maxTemp = maxTempByLayer();
             final int[] tempActive = activeTemps;
