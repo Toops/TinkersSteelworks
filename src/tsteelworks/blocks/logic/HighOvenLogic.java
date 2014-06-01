@@ -54,7 +54,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	public static final int SLOT_PURIFIER = 2; // ex: sand, graveyard soil
 	public static final int SLOT_FUEL = 3; // ex: coal, charcoal, coal block
 	public static final int SLOT_FIRST_MELTABLE = 4; // the first meltable slot. All slots after this one will be meltable too. ex of meltable: iron ingot
-	
+	public static final int FLUID_AMOUNT_PER_LAYER = 20000; // fluid amount multiplier by layer
+	public static final int DEFAULT_MAX_TEMP = 2000; // the max temperature of the smallest sized high oven
+	public static final int ROOM_TEMP = 20; // room temperature (used to determine item melting
 	
     public final IRegistry dispenseBehavior = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
     public ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
@@ -74,8 +76,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     int maxLiquid;
     int currentLiquid;
     int numBricks;
-    int maxTemp = 3000;
-    int maxTempUserSet = 3000;
+    int maxTemp;
+    int maxTempUserSet;
     public int layers;
     public int fuelBurnTime;
     public int[] activeTemps;
@@ -92,6 +94,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         fuelHeatRate = 3;
         internalCoolDownRate = 10;
         activeTemps = meltingTemps = new int[0];
+        maxTemp = maxTempUserSet = DEFAULT_MAX_TEMP;
     }
 
     /* ==================== Layers ==================== */
@@ -109,8 +112,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         {
             needsUpdate = true;
             layers = lay;
-            TSteelworks.loginfo("layers", layers);
-            maxLiquid = 20000 * lay;
+            //TSteelworks.loginfo("layers", layers);
+            maxLiquid = FLUID_AMOUNT_PER_LAYER * lay;
             maxTemp = maxTempByLayer();
             final int[] tempActive = activeTemps;
             activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
@@ -135,8 +138,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 {
                     if (!isSmeltingSlot(i))
                         continue;
-                    activeTemps[i] = 20;
-                    meltingTemps[i] = 20;
+                    activeTemps[i] = ROOM_TEMP;
+                    meltingTemps[i] = ROOM_TEMP;
                 }
             }
             if (tempInv.length > inventory.length)
@@ -192,7 +195,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     public int maxTempByLayer ()
     {
-        return 3000 + ((layers - 1) * 1000);
+        int layerAdjustment = (layers - 1) * 500;
+        int finalCalc = (DEFAULT_MAX_TEMP + layerAdjustment < DEFAULT_MAX_TEMP ? DEFAULT_MAX_TEMP : DEFAULT_MAX_TEMP + layerAdjustment);
+        return finalCalc;
     }
     
     /*
@@ -324,7 +329,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * 
      * @return Redstone powered state
      */
-    public boolean getRedstoneActive ()
+    public boolean getRSmode ()
     {
         return redstoneActivated;
     }
@@ -335,7 +340,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param flag
      *          true: powered / false: not powered
      */
-    public void setRedstoneActive (boolean flag)
+    public void setRSmode (boolean flag)
     {
         redstoneActivated = flag;
         setActive(true);
@@ -356,30 +361,22 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void updateEntity ()
     {
         tick++;
+        // item smelting
         if ((tick % 4) == 0)
             heatItems();
+        // structural checks amd fuel guage updates
         if ((tick % 20) == 0)
         {
-            //TSteelworks.loginfo("what's goin on big guy?", validStructure);
             if (!validStructure)
                 checkValidPlacement();
             if (isBurning())
             {
                 fuelBurnTime -= 3;
-                // replace by a min(x, y)?
-                if (internalTemp > maxTempByLayer())
-                    internalTemp = maxTempByLayer();
-                if (internalTemp < maxTempByLayer())
-                    internalTemp += fuelHeatRate;
-
+                internalTemp = Math.min(internalTemp + fuelHeatRate, maxTempByLayer());
             }
             else
             {
-            	// replace by a max(x, y)?
-                if (internalTemp > 20)
-                    internalTemp -= internalCoolDownRate;
-                if (internalTemp < 20)
-                    internalTemp = 20;
+                internalTemp = Math.max(internalTemp - internalCoolDownRate, ROOM_TEMP);
             }
             if (validStructure && (fuelBurnTime <= 0))
                 updateFuelGauge();
@@ -389,8 +386,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
+        // fluid heating (steam)
         if ((tick % 40) == 0)
             heatFluids();
+        // reset tick to 0, back to the beginning we go~
         if (tick == 60)
             tick = 0;
     }
@@ -400,12 +399,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     void heatItems ()
     {
-        if (internalTemp > 20)
+        if (internalTemp > ROOM_TEMP)
         {
             boolean hasUse = false;
             for (int i = SLOT_FIRST_MELTABLE; i < (layers + SLOT_FIRST_MELTABLE); i += 1)
                 // If an item is present and meltable
-                if (isStackInSlot(i) && (meltingTemps[i] > 20))
+                if (isStackInSlot(i) && (meltingTemps[i] > ROOM_TEMP))
                 {
                     hasUse = true;
                     // Increase temp if its temp is lower than the High Oven's internal 
@@ -439,7 +438,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                         }
                 }
                 else
-                    activeTemps[i] = 20;
+                    activeTemps[i] = ROOM_TEMP;
             isMeltingItems = hasUse;
         }
     }
@@ -472,14 +471,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         if (addFluidToTank(fluid, false))
         {
-            if (itemIsOre(inventory[slot]))
+            if (InventoryHelper.itemIsOre(inventory[slot]))
                 outputTE3Slag();
 
             if (inventory[slot].stackSize >= 2)
                 inventory[slot].stackSize--;
             else
                 inventory[slot] = null;
-            activeTemps[slot] = 20;
+            activeTemps[slot] = ROOM_TEMP;
             if (doMix)
                 removeMixItems();
             onInventoryChanged();
@@ -492,7 +491,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             inventory[slot].stackSize--;
         else
             inventory[slot] = null;
-        activeTemps[slot] = 20;
+        activeTemps[slot] = ROOM_TEMP;
         if (doMix)
             removeMixItems();
         addSolidItem(stack);
@@ -538,12 +537,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
     }
     
-    public boolean itemIsOre (ItemStack itemstack)
-    {
-        String oreName = InventoryHelper.getOreDictionaryName(itemstack);
-        return (oreName == null ? false : (oreName.startsWith("ore")));
-    }
-    
     /**
      * Remove additive materials by preset vs random chance and amount
      */
@@ -580,7 +573,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param slot
      * @return
      */
-    public int getTempForSlot (int slot) { return (isSmeltingSlot(slot)) ? activeTemps[slot] : 20; }
+    public int getTempForSlot (int slot) { return (isSmeltingSlot(slot)) ? activeTemps[slot] : ROOM_TEMP; }
 
     /**
      * Get melting point for item in slot
@@ -588,7 +581,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param slot
      * @return
      */
-    public int getMeltingPointForSlot (int slot) { return (isSmeltingSlot(slot)) ? meltingTemps[slot] : 20; }
+    public int getMeltingPointForSlot (int slot) { return (isSmeltingSlot(slot)) ? meltingTemps[slot] : ROOM_TEMP; }
 
     /**
      * Update melting temperatures for items
@@ -614,9 +607,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     public int getScaledFuelGague (int scale)
     {
-        int ret = fuelBurnTime / scale;
-        if (ret < 1) ret = 1;
-        return ret;
+        int value = fuelBurnTime / scale;
+        return  value < 1 ? 1 : value;
     }
 
     /**
@@ -874,7 +866,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             else
             {
-                internalTemp = 20;
+                internalTemp = ROOM_TEMP;
                 validStructure = false;
             }
         }
@@ -940,7 +932,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         	}
         	else
         	{
-        		internalTemp = 20;
+        		internalTemp = ROOM_TEMP;
         		validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -1391,6 +1383,23 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return moltenMetal.get(0);
     }
 
+    public int getTotalFluidAmount ()
+    {
+        if (moltenMetal.size() == 0)
+            return currentLiquid;
+        
+        int amt = 0;
+        
+        for (int i = 0; i < moltenMetal.size(); i++)
+        {
+            FluidStack l = moltenMetal.get(i);
+            amt += l.amount;
+        }
+        return amt;
+    }
+    
+    public int getFillRatio () { return currentLiquid <= 0 ? 0 : maxLiquid / getTotalFluidAmount(); }
+    
     /*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
