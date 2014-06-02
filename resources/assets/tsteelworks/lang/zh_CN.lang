@@ -35,7 +35,7 @@ block.scorchedstone.slab.creeper.name=爬行者焦黄台阶
 
 block.limestone.slab.brick.name=石灰砖台阶
 block.limestone.slab.stone.name=石灰台阶
-block.limestone.slab.cobble.name=石灰Cobble台阶
+block.limestone.slab.cobble.name=石灰圆石台阶
 block.limestone.slab.paver.name=石灰路基台阶
 block.limestone.slab.road.name=石灰铺路石台阶
 block.limestone.slab.fancy.name=平滑石灰台阶
@@ -44,13 +44,13 @@ block.limestone.slab.creeper.name=爬行者石灰台阶
 
 tile.steam.name=蒸汽
 tile.molten.limestone.name=液态石灰
-tile.liquid.cement.name=Wet水泥
+tile.liquid.cement.name=未凝固的水泥
 fluid.steam=蒸汽
 fluid.limestone.molten=液态石灰
 fluid.cement.liquid=Wet水泥
 steam=蒸汽
 limestone.molten=液态石灰
-cement.liquid=Wet水泥
+cement.liquid=未凝固的水泥
 
 HighOven.Controller.name=高炉控制器
 HighOven.TankController.name=深渊储罐控制器
