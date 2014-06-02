@@ -2,7 +2,7 @@ itemGroup.TSteelworks=TSteelworks
 
 crafters.HighOven=高炉
 container.HighOvenDuct=高炉接口
-tank.DeepTank=深渊罐
+tank.DeepTank=深渊储罐
 gui.button.next=>
 gui.button.prev=<
 
