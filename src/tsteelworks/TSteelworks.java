@@ -45,7 +45,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class TSteelworks
 {
     // Shared logger
-    public static final boolean DEBUG_MODE = true; // for logging (change to false before release!)
+    public static final boolean DEBUG_MODE = false; // for logging (change to false before release!)
     public static final TSLogger logger = new TSLogger(DEBUG_MODE);
     @Instance(Repo.modId)
     public static TSteelworks instance;
