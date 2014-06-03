@@ -6,6 +6,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.blocks.logic.DeepTankLogic;
@@ -38,14 +39,29 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	    if (accessor.getTileEntity() instanceof DeepTankLogic)
         {
 	        DeepTankLogic te = (DeepTankLogic) accessor.getTileEntity();
-            if (te.isStructureValid())
+            if (te.validStructure)
             {
     			List<FluidStack> fls = te.getAllFluids();
-    			showFluids(currenttip, config, fls);
+    			WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
+//    			if(fls != null)
+//    			{
+//    				if(fls.size() <= 0)
+//    				{ 
+//    					currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
+//    				}
+//    				else
+//    				{
+//    					for(FluidStack stack : fls)
+//    					{
+//    						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
+//    					}
+//    					currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
+//    				}
+//    			}
             }
     		else
     		{
-    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+    			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -54,79 +70,30 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             if (te.validStructure)
             {
                 List<FluidStack> fls = te.moltenMetal;
-                showFluids(currenttip, config, fls);
+                WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
 //                if(fls != null)
 //                {
 //                    if(fls.size() <= 0)
 //                    {
-//                        currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+//                        currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
 //                    }
 //                    else
 //                    {
 //                        for(FluidStack stack : fls)
 //                        {
 //                            currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
+//                            
 //                        }
+//                        currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
 //                    }
 //                }
-                
             }
             else
             {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+                currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
             }
         }
 		return currenttip;
-	}
-
-	private void showFluids(List<String> currenttip, IWailaConfigHandler config, List<FluidStack> fls) {
-		if(fls != null)
-		{
-			if(fls.size() <= 0)
-			{
-				currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
-			}
-			else
-			{
-				int total = 0;
-				boolean autoUnit = config.getConfig("tseelworks.autoUnit");
-				for(FluidStack stack : fls)
-				{
-					int amount = stack.amount;
-					total  += amount;
-					
-					String textValue = formatFluidValue(autoUnit, amount);
-					currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + textValue + ")");
-				}
-				if(config.getConfig("tseelworks.showTotal"))
-				{
-					currenttip.add("-----");
-					currenttip.add("total : "+formatFluidValue(autoUnit, total));
-				}
-			}
-		}
-	}
-
-	private String formatFluidValue(boolean autoUnit, int amount) {
-		String textValue = "";
-		if(!autoUnit || amount < 1000)
-		{
-			textValue += amount + "mB";
-		}else
-		{
-			double converted = amount;
-			converted = converted / 1000;
-			if(converted < 1000)
-			{
-				textValue += converted +"B";
-			}else
-			{
-				converted = converted / 1000;
-				textValue += converted +"kB";
-			}
-			
-		}
-		return textValue;
 	}
 	
 	   /* (non-Javadoc)

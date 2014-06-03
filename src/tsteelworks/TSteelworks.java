@@ -13,6 +13,7 @@ import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSFuelHandler;
+import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
@@ -45,7 +46,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class TSteelworks
 {
     // Shared logger
-    public static final Logger logger = Logger.getLogger(Repo.modId);
+    public static final boolean DEBUG_MODE = false; // for logging (change to false before release!)
+    public static final TSLogger logger = new TSLogger(DEBUG_MODE);
     @Instance(Repo.modId)
     public static TSteelworks instance;
     @SidedProxy(clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
@@ -59,10 +61,7 @@ public class TSteelworks
 
     public TSteelworks()
     {
-        logger.setParent(FMLCommonHandler.instance().getFMLLogger());
-        TConstruct.logger.info("TSteelworks, are you pondering what I'm pondering?");
-        logger.info("I think so, TConstruct, but where are we going to find a duck and a hose at this hour?");
-
+        logger.introMessage();
         PluginController.getController().registerBuiltins();
     }
 
