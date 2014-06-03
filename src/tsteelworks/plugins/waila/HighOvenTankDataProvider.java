@@ -39,74 +39,27 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	    if (accessor.getTileEntity() instanceof DeepTankLogic)
         {
 	        DeepTankLogic te = (DeepTankLogic) accessor.getTileEntity();
-            if (te.validStructure)
+            if (te.isValidStructure())
             {
     			List<FluidStack> fls = te.getAllFluids();
-<<<<<<< HEAD
     			WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
-//    			if(fls != null)
-//    			{
-//    				if(fls.size() <= 0)
-//    				{ 
-//    					currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
-//    				}
-//    				else
-//    				{
-//    					for(FluidStack stack : fls)
-//    					{
-//    						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
-//    					}
-//    					currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
-//    				}
-//    			}
             }
     		else
     		{
-    			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
-=======
-    			showFluids(currenttip, config, fls);
+    			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure"));
             }
-    		else
-    		{
-    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
->>>>>>> be110a673570a6e64f4cdb20a0ce52050375eacd
-    		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
         {
 	        HighOvenLogic te = (HighOvenLogic) accessor.getTileEntity();
-            if (te.validStructure)
+            if (te.isValidStructure())
             {
                 List<FluidStack> fls = te.moltenMetal;
-<<<<<<< HEAD
                 WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
-//                if(fls != null)
-//                {
-//                    if(fls.size() <= 0)
-//                    {
-//                        currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "Â§o" == Italics
-//                    }
-//                    else
-//                    {
-//                        for(FluidStack stack : fls)
-//                        {
-//                            currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
-//                            
-//                        }
-//                        currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
-//                    }
-//                }
             }
             else
             {
-                currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
-=======
-                showFluids(currenttip, config, fls);
-            }
-            else
-            {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
->>>>>>> be110a673570a6e64f4cdb20a0ce52050375eacd
+                currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure"));
             }
         }
 		return currenttip;

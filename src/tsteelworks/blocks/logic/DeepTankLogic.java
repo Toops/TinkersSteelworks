@@ -62,7 +62,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     private int innerMaxX;
     private int innerMaxZ;
     private int layers;
-    private final static int INNER_MAX_SPACE = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
+    private final static int innerMaxSpace = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
     Random rand = new Random();
     ArrayList glassBlocks = getRegisteredGlassIDs();
     
@@ -74,6 +74,11 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         this.innerMaxZ = 0;
         containsAlloy = false;
         activeTurbineAttached = false;
+    }
+    
+    public boolean isValidStructure ()
+    {
+        return validStructure;
     }
     
     public int xDistanceToRim () 
@@ -161,14 +166,15 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         else
         {
         
-	    if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-	    {
-		return false;
-	    }
-	    else
-	    {
-		return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
-	    }
+    	    if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+    	    {
+    	        return false;
+    	    }
+    	    else
+    	    {
+    	        return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+    	    }
+        }
 	}
     
     public String getDefaultName () { 
@@ -263,49 +269,6 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         }
         if (tick == 60){
             tick = 0;
-        }
-    }
-
-    boolean addFluidToTank (FluidStack liquid, boolean first)
-    {
-    	if(!isStructureValid())
-    	{
-    		return false;
-    	}    	
-        needsUpdate = true;
-        if (fluidlist.size() == 0)
-        {
-            fluidlist.add(liquid.copy());
-            currentLiquid += liquid.amount;
-            containsAlloy = containsAlloy();
-            return true;
-        }
-        else
-        {
-            if (liquid.amount + currentLiquid > maxLiquid){
-                return false;
-            }
-            currentLiquid += liquid.amount;
-            boolean added = false;
-            for(Iterator<FluidStack> it = fluidlist.iterator(); it.hasNext();){
-            	FluidStack fs = it.next();
-            	if(fs.isFluidEqual(liquid)){
-            		fs.amount += liquid.amount;
-            		added = true;
-            	}
-            	if(fs.amount <= 0){
-            		it.remove();
-            	}
-            }
-            if (!added)
-            {
-                if (first)
-                    fluidlist.add(0, liquid.copy());
-                else
-                    fluidlist.add(liquid.copy());
-            }
-            containsAlloy = containsAlloy();
-            return true;
         }
     }
 

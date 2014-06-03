@@ -160,7 +160,7 @@ public class InventoryHelper
    public static boolean itemIsOre (ItemStack itemstack)
    {
        String oreName = getOreDictionaryName(itemstack);
-       return oreName == null ? false : (oreName.startsWith("ore"));
+       return oreName != null && oreName.startsWith("ore");
    }
    
    /**

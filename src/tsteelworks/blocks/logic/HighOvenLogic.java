@@ -97,6 +97,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         maxTemp = maxTempUserSet = DEFAULT_MAX_TEMP;
     }
 
+    public boolean isValidStructure ()
+    {
+        return validStructure;
+    }
+    
     /* ==================== Layers ==================== */
     
     /**
