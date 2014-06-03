@@ -26,9 +26,16 @@ public class WorldGenLimestone extends WorldGenerator
     
     public boolean generate(World world, Random random, int xCoord, int yCoord, int zCoord)
     {
-        if (world.getBlockMaterial(xCoord, yCoord, zCoord) != Material.water)
+        if(!world.getChunkProvider().chunkExists(xCoord >> 4, zCoord >> 4 ))
         {
             return false;
+        }
+        else
+        {
+            if (world.getBlockMaterial(xCoord, yCoord, zCoord) != Material.water)
+            {
+                return false;
+            }
         }
         float f = random.nextFloat() * (float)Math.PI;
         double d0 = (double)((float)(xCoord + 16) + MathHelper.sin(f) * (float)this.radius / 16.0F);

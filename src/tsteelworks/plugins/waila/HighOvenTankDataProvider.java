@@ -55,21 +55,6 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             {
                 List<FluidStack> fls = te.moltenMetal;
                 showFluids(currenttip, config, fls);
-//                if(fls != null)
-//                {
-//                    if(fls.size() <= 0)
-//                    {
-//                        currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
-//                    }
-//                    else
-//                    {
-//                        for(FluidStack stack : fls)
-//                        {
-//                            currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
-//                        }
-//                    }
-//                }
-                
             }
             else
             {
