@@ -151,6 +151,19 @@ public class InventoryHelper
    }
    
    /**
+    * Determine if item from itemstack is an ore through the OreDictionary.
+    * Does not work on ores that aren't prefixed with "ore".
+    * 
+    * @param itemstack
+    * @return Boolean true if item is an ore
+    */
+   public static boolean itemIsOre (ItemStack itemstack)
+   {
+       String oreName = getOreDictionaryName(itemstack);
+       return oreName == null ? false : (oreName.startsWith("ore"));
+   }
+   
+   /**
     * Obtains a OreDictionary name of a given item.
     * 
     * @param itemstack
@@ -161,4 +174,5 @@ public class InventoryHelper
        int oreID = OreDictionary.getOreID(itemstack);
        return (oreID != -1) ?  OreDictionary.getOreName(oreID) : null;
    }
+   
 }
