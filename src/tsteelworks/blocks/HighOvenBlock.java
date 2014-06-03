@@ -352,7 +352,7 @@ public class HighOvenBlock extends TSInventoryBlock
         else if (logic instanceof IMasterLogic)
             ((IMasterLogic) logic).notifyChange(null, x, y, z);
         if (logic instanceof HighOvenLogic)
-            ((HighOvenLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
+            ((HighOvenLogic) logic).setRSmode(world.isBlockIndirectlyGettingPowered(x, y, z));
         if (logic instanceof HighOvenDuctLogic)
             ((HighOvenDuctLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
     }
@@ -451,4 +451,5 @@ public class HighOvenBlock extends TSInventoryBlock
         directions.add(new CoordTuple(-1, 0, 0));
         directions.add(new CoordTuple(1, 0, 0));
     }
+    
 }

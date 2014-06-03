@@ -156,7 +156,7 @@ public class TSRecipes
         GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.highoven, 1, 11));
         // Recipes to obtain bricks from high oven
         String[] oxidizers = { "fuelCoal", "coal", "dustCoal" };
-        String[] purifiers = { "blockSand", "Sandblock" };
+        String[] purifiers = { "blockSand", "Sandblock", "sand" };
         
         for (String o : oxidizers)
             for (String p : purifiers)

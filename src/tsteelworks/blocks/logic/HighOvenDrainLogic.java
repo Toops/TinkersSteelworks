@@ -5,12 +5,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.IFluidTank;
 import tconstruct.library.util.IFacingLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic
@@ -38,7 +40,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return 0;
     }
     
-    public HighOvenLogic getHighOvenController()
+    public HighOvenLogic getHighOvenController ()
     {
         final int mx = getMasterPosition().x;
         final int my = getMasterPosition().y;
@@ -46,12 +48,21 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
     }
     
-    public DeepTankLogic getDeepTankController()
+    public DeepTankLogic getDeepTankController ()
     {
         final int mx = getMasterPosition().x;
         final int my = getMasterPosition().y;
         final int mz = getMasterPosition().z;
         return (DeepTankLogic) worldObj.getBlockTileEntity(mx, my, mz);
+    }
+    
+    public IFluidTank getControllerTank ()
+    {
+        TileEntity te;
+        int type = getControllerLogicType();
+        if (type == 1) return getHighOvenController();
+        if (type == 2) return getDeepTankController();
+        return null;
     }
 
     // ========== IFacingLogic ===========
@@ -173,11 +184,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     {
         if (hasValidMaster() && canDrain(from, null))
         {
-            int type = getControllerLogicType();
-            if (type == 1) return getHighOvenController().drain(maxDrain, doDrain);
-            if (type == 2) return getDeepTankController().drain(maxDrain, doDrain);
-            return null;
-
+            return getControllerTank().drain(maxDrain, doDrain);
         }
         else
             return null;
@@ -190,7 +197,17 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     @Override
     public boolean canFill (ForgeDirection from, Fluid fluid)
     {
+        if (!this.hasValidMaster()) return false;
+        
+        int type = getControllerLogicType();
+        if (type == 1)
+            if (getHighOvenController().getTotalFluidAmount() >= getHighOvenController().maxLiquid) 
+                return false;
+        if (type == 2)
+            if (getDeepTankController().getTotalFluidAmount() >= getDeepTankController().maxLiquid) 
+                return false;
         return true;
+
     }
     
     /*
@@ -203,12 +220,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
         if (hasValidMaster() && (resource != null) && canFill(from, resource.getFluid()))
         {
             if (doFill)
-            {
-                int type = getControllerLogicType();
-                if (type == 1) return getHighOvenController().fill(resource, doFill);
-                if (type == 2) return getDeepTankController().fill(resource, doFill);
-                return 0;
-            }
+                return this.getControllerTank().fill(resource, doFill);
             else
                 return resource.amount;
         }
