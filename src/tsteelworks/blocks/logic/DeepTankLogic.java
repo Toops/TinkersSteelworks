@@ -39,6 +39,10 @@ import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
+import tsteelworks.lib.crafting.AlloyInfo;
+
+import tsteelworks.lib.ITSMasterLogic;
+import tsteelworks.lib.crafting.AlloyInfo;
 
 public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic
 {
@@ -58,7 +62,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     private int innerMaxX;
     private int innerMaxZ;
     private int layers;
-    private final static int INNER_MAX_SPACE = 9;
+    private final static int INNER_MAX_SPACE = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
     Random rand = new Random();
     ArrayList glassBlocks = getRegisteredGlassIDs();
     
@@ -91,6 +95,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     { 
     	return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); 
     }
+
+
     
     void adjustLayers (int lay, boolean forceAdjust)
     {
@@ -154,9 +160,16 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 		}
         else
         {
-            return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
-        }
-    }
+        
+	    if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+	    {
+		return false;
+	    }
+	    else
+	    {
+		return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
+	    }
+	}
     
     public String getDefaultName () { 
     	return "tank.DeepTank"; 
@@ -731,7 +744,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         {
         case 2: // +z
             // Scan to last block
-            for (int z = zCoord + 1; z < zCoord + (INNER_MAX_SPACE + 1); z++)
+            for (int z = zCoord + 1; z < zCoord + (innerMaxSpace + 1); z++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -773,7 +786,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord + centerZ};
         case 3: // -z
-            for (int z = zCoord - 1; z > zCoord - (INNER_MAX_SPACE + 1); z--)
+            for (int z = zCoord - 1; z > zCoord - (innerMaxSpace + 1); z--)
             {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
                 if (block != null && validGlassID(block.blockID))
@@ -815,7 +828,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerX == 0) break;
             return new int[] {xCoord, zCoord - centerZ};
         case 4: // +x
-            for (int x = xCoord + 1; x < xCoord + (INNER_MAX_SPACE + 1); x++)
+            for (int x = xCoord + 1; x < xCoord + (innerMaxSpace + 1); x++)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))
@@ -857,7 +870,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             if (centerZ == 0) break;
             return new int[] {xCoord + centerX, zCoord};
         case 5: // -x
-            for (int x = xCoord - 1; x > xCoord - (INNER_MAX_SPACE + 1); x--)
+            for (int x = xCoord - 1; x > xCoord - (innerMaxSpace + 1); x--)
             {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
                 if (block != null && validGlassID(block.blockID))

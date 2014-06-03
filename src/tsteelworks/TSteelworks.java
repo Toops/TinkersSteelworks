@@ -123,7 +123,7 @@ public class TSteelworks
     
     
 	public static void logError(String msg, Throwable thrown) {
-		logger.log(Level.SEVERE, msg, thrown);
+		//logger.log(Level.SEVERE, msg, thrown);
 	}
     
     void logAlloyList ()

@@ -42,6 +42,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             if (te.validStructure)
             {
     			List<FluidStack> fls = te.getAllFluids();
+<<<<<<< HEAD
     			WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
 //    			if(fls != null)
 //    			{
@@ -62,6 +63,13 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
     		else
     		{
     			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
+=======
+    			showFluids(currenttip, config, fls);
+            }
+    		else
+    		{
+    			currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+>>>>>>> be110a673570a6e64f4cdb20a0ce52050375eacd
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -70,6 +78,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             if (te.validStructure)
             {
                 List<FluidStack> fls = te.moltenMetal;
+<<<<<<< HEAD
                 WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
 //                if(fls != null)
 //                {
@@ -91,6 +100,13 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             else
             {
                 currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "Â§o" == Italics
+=======
+                showFluids(currenttip, config, fls);
+            }
+            else
+            {
+                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+>>>>>>> be110a673570a6e64f4cdb20a0ce52050375eacd
             }
         }
 		return currenttip;

@@ -210,7 +210,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
             if (getHighOvenController().getTotalFluidAmount() >= getHighOvenController().maxLiquid) 
                 return false;
         if (type == 2)
-            if (getDeepTankController().getTotalFluidAmount() >= getDeepTankController().maxLiquid) 
+            if (getDeepTankController().getTotalFluidAmount() >= getDeepTankController().getCapacity()) 
                 return false;
         return true;
 
