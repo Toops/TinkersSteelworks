@@ -8,6 +8,7 @@ gui.button.prev=<
 
 item.tsteelworks.Materials.ScorchedBrick.name=Обгоревший кирпич
 item.tsteelworks.Materials.LimestoneBrick.name=Известняковый кирпич
+item.tsteelworks.Materials.LimestoneDust.name=Известняковая пыль
 item.tsteelworks.manual.highoven.name=Работа со сталью и Вы
 item.tsteelworks.helmetSteel.name=Стальной шлем
 item.tsteelworks.chestplateSteel.name=Стальная кираса
@@ -19,6 +20,7 @@ item.tsteelworks.bucket.Limestone.name=Ведро расплавленного �
 item.tsteelworks.bucket.Cement.name=Ведро сырого цемента
 
 entity.HighGolem.name=Большой голем
+entity.SteelGolem.name=Стальной голем
 
 tile.tsteelworks.blocks.charcoal.name=Древесноугольный блок
 block.storage.dust.gunpowder.name=Пороховой блок
@@ -121,7 +123,7 @@ machine.turbine.tooltip2=(Крепится к сливу глубокого ре
 material.scorchedbrick.tooltip1=Используется для создания или бросания!
 material.limestonebrick.tooltip1=Камень окрученный известью
 
-manual.steelworks.tooltip1=От: Общества инженеров
+manual.steelworks.tooltip1=Автор: Общество инженеров
 
 modifier.tool.vacuous=Пустота
 
