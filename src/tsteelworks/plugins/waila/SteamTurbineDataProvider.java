@@ -3,6 +3,7 @@ package tsteelworks.plugins.waila;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.blocks.logic.LavaTankLogic;
@@ -39,7 +40,7 @@ public class SteamTurbineDataProvider implements IWailaDataProvider
             }
             else
             {
-                currenttip.add("§o" + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+                currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
             }
         }
         return currenttip;

@@ -6,6 +6,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.blocks.logic.DeepTankLogic;
@@ -41,25 +42,26 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             if (te.validStructure)
             {
     			List<FluidStack> fls = te.getAllFluids();
-    			if(fls != null)
-    			{
-    				if(fls.size() <= 0)
-    				{ 
-    					currenttip.add(StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
-    				}
-    				else
-    				{
-    					for(FluidStack stack : fls)
-    					{
-    						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
-    					}
-    					currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
-    				}
-    			}
+    			WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
+//    			if(fls != null)
+//    			{
+//    				if(fls.size() <= 0)
+//    				{ 
+//    					currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+//    				}
+//    				else
+//    				{
+//    					for(FluidStack stack : fls)
+//    					{
+//    						currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
+//    					}
+//    					currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
+//    				}
+//    			}
             }
     		else
     		{
-    			currenttip.add(StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+    			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
     		}
         }
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
@@ -68,26 +70,27 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
             if (te.validStructure)
             {
                 List<FluidStack> fls = te.moltenMetal;
-                if(fls != null)
-                {
-                    if(fls.size() <= 0)
-                    {
-                        currenttip.add(StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
-                    }
-                    else
-                    {
-                        for(FluidStack stack : fls)
-                        {
-                            currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
-                            
-                        }
-                        currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
-                    }
-                }
+                WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
+//                if(fls != null)
+//                {
+//                    if(fls.size() <= 0)
+//                    {
+//                        currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty")); // "§o" == Italics
+//                    }
+//                    else
+//                    {
+//                        for(FluidStack stack : fls)
+//                        {
+//                            currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + stack.amount + "mB)");
+//                            
+//                        }
+//                        currenttip.add(te.getTotalFluidAmount() + "mB / " + te.getCapacity() + "mB Total");
+//                    }
+//                }
             }
             else
             {
-                currenttip.add(StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
+                currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.invalidstructure")); // "§o" == Italics
             }
         }
 		return currenttip;
