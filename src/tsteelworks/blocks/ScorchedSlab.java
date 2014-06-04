@@ -7,9 +7,6 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import tconstruct.blocks.SlabBase;
-import tconstruct.common.TContent;
-import tconstruct.library.TConstructRegistry;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -43,6 +40,7 @@ public class ScorchedSlab extends TSBaseSlab
         return TSContent.highoven.getIcon(side, meta + 4);
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {

@@ -65,7 +65,8 @@ public class InventoryHelper
        return !(iiventory instanceof ISidedInventory) || ((ISidedInventory) iiventory).canExtractItem(slot, stack, side);
    }
    
-   public static EntityItem getItemEntityAtLocation (World world, double minX, double minY, double minZ, byte facing)
+   @SuppressWarnings ("unchecked")
+public static EntityItem getItemEntityAtLocation (World world, double minX, double minY, double minZ, byte facing)
    {
        double x = minX;
        double maxX = minX;
@@ -103,7 +104,8 @@ public class InventoryHelper
        return list.size() > 0 ? (EntityItem) list.get(0) : null;
    }
 
-   public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
+   @SuppressWarnings ("unchecked")
+public static IInventory getInventoryAtLocation (World world, double minX, double minY, double maxX)
    {
        IInventory iinventory = null;
        final int i = MathHelper.floor_double(minX);

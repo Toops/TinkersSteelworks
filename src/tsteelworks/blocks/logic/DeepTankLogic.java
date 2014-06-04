@@ -2,12 +2,9 @@ package tsteelworks.blocks.logic;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-
-
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,14 +30,9 @@ import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IFacingLogic;
 import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.DeepTankContainer;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.ITSMasterLogic;
-import tsteelworks.lib.crafting.AlloyInfo;
-import tsteelworks.lib.crafting.AlloyInfo;
-
 import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
 
@@ -64,6 +56,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     private int layers;
     private final static int innerMaxSpace = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
     Random rand = new Random();
+    @SuppressWarnings ("rawtypes")
     ArrayList glassBlocks = getRegisteredGlassIDs();
     
 
@@ -631,6 +624,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     /* Returns whether the brick is a lava tank or not.
      * Increments bricks, sets them as part of the structure, and adds tanks to the list.
      */
+    @SuppressWarnings ("deprecation")
     int checkBricks (int x, int y, int z, boolean glassOnly)
     {
         int tempBricks = 0;
@@ -678,6 +672,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         return tempBricks;
     }
     
+    @SuppressWarnings ("deprecation")
     int verifyComponent (TileEntity tileentity)
     {
         int tempBricks = 0;
@@ -906,6 +901,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         
     }
     
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     /*
      * Set up a list of glass blocks by preset, config, and oredictionary
      * Duplicate elements are removed from the list

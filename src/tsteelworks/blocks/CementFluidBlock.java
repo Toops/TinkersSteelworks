@@ -2,15 +2,11 @@ package tsteelworks.blocks;
 
 import java.util.Random;
 
-import tconstruct.library.util.CoordTuple;
-import tsteelworks.TSteelworks;
-import tsteelworks.common.TSContent;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
+import tconstruct.library.util.CoordTuple;
+import tsteelworks.common.TSContent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

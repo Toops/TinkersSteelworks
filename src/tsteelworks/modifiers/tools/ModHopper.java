@@ -1,13 +1,5 @@
 package tsteelworks.modifiers.tools;
 
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
-import tconstruct.library.tools.ToolCore;
-import tconstruct.modifiers.tools.ModInteger;
 
 //TODO: During migration into TConstruct, actually use a separate class like this.
 // Sadly, this is acting up - possibly due to ModInteger having tooltipName, increase, ect private?

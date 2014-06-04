@@ -3,18 +3,17 @@ package tsteelworks.lib;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-import tsteelworks.TSteelworks;
 
 public class TSAbilityHelper
 {
     public static Random random = new Random();
     
     // Mostly lifted from NEI
+    @SuppressWarnings ("unchecked")
     public static void drawItemsToEntity(World world, EntityLivingBase entity, int distance)
     {
         float distancexz = distance * 2;

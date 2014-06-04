@@ -21,6 +21,7 @@ public class MachineRender implements ISimpleBlockRenderingHandler
         }
     }
 
+    @SuppressWarnings ("unused")
     @Override
     public boolean renderWorldBlock (IBlockAccess world, int x, int y, int z, Block block, int modelID, RenderBlocks renderer)
     {

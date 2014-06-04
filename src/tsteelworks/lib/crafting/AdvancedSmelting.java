@@ -27,7 +27,9 @@ public class AdvancedSmelting
     private final HashMap<List<Integer>, FluidStack> meltingList = new HashMap<List<Integer>, FluidStack>();
     private final HashMap<List<Integer>, Integer> temperatureList = new HashMap<List<Integer>, Integer>();
     private final HashMap<String, List<Integer>> mixItemList = new HashMap<String, List<Integer>>();
+    @SuppressWarnings ("rawtypes")
     private final Multimap<FluidType, List> fluidComboList = ArrayListMultimap.create();
+    @SuppressWarnings ("rawtypes")
     private final Multimap<ItemStack, List> itemComboList = ArrayListMultimap.create();
     private final HashMap<List<Integer>, ItemStack> renderIndex = new HashMap<List<Integer>, ItemStack>();
     
@@ -197,11 +199,13 @@ public class AdvancedSmelting
             instance.mixItemList.put(InventoryHelper.getOreDictionaryName(is), Arrays.asList(type, consume, chance));
     }
     
+    @SuppressWarnings ("unchecked")
     public static void registerMixComboForFluidOutput (FluidType fluidout, FluidType fluidin, String i1, String i2, String i3)
     {
         instance.fluidComboList.put(fluidout, Arrays.asList(fluidin, i1, i2, i3));
     }
 
+    @SuppressWarnings ("unchecked")
     public static void registerMixComboForSolidOutput (ItemStack stackout, FluidType fluidin, String i1, String i2, String i3)
     {
         instance.itemComboList.put(stackout, Arrays.asList(fluidin, i1, i2, i3));
@@ -288,6 +292,7 @@ public class AdvancedSmelting
      * @param i3 Purifier
      * @return FluidType from fluidComboList on success, null otherwise
      */
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public static FluidType getMixFluidSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
         String ox = InventoryHelper.getOreDictionaryName(i1);
@@ -314,6 +319,7 @@ public class AdvancedSmelting
      * @param i3 Purifier
      * @return ItemStack from itemComboList on success, null otherwise
      */
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     public static ItemStack getMixItemSmeltingResult (FluidType f1, ItemStack i1, ItemStack i2, ItemStack i3)
     {
         String ox = InventoryHelper.getOreDictionaryName(i1);
@@ -353,11 +359,13 @@ public class AdvancedSmelting
         return instance.mixItemList;
     }
     
+    @SuppressWarnings ("rawtypes")
     public static Multimap<FluidType, List> getFluidCombosList ()
     {
         return instance.fluidComboList;
     }
     
+    @SuppressWarnings ("rawtypes")
     public static Multimap<ItemStack, List> getItemCombosList ()
     {
         return instance.itemComboList;

@@ -1,15 +1,11 @@
 package tsteelworks.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import tsteelworks.lib.Repo;
-import tsteelworks.lib.TSteelworksRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
+import tsteelworks.lib.Repo;
 
 public class TSBaseFluid extends BlockFluidClassic
 {

@@ -6,7 +6,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import cpw.mods.fml.common.IFuelHandler;
 

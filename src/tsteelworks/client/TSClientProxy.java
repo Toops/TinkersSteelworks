@@ -236,6 +236,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("battleaxeicon", TConstructClientRegistry.getManualIcon("battleaxeicon"));
     }
 
+    @SuppressWarnings ("unused")
     public void initManualRecipes ()
     {
         final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);

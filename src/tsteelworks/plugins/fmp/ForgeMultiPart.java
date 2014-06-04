@@ -13,6 +13,7 @@ public class ForgeMultiPart implements ICompatPlugin
         return "ForgeMultipart";
     }
 
+    @SuppressWarnings ("static-access")
     @Override
     public void init ()
     {

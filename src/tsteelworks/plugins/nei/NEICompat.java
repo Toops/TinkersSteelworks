@@ -6,6 +6,7 @@ import codechicken.nei.recipe.DefaultOverlayHandler;
 import codechicken.nei.api.API;
 //import tconstruct.client.gui.CraftingStationGui;
 
+@SuppressWarnings ("unused")
 public class NEICompat
 {
 

@@ -135,6 +135,7 @@ public class TSContent
     /**
      * Register Blocks and TileEntities (Logic)
      */
+    @SuppressWarnings ("static-access")
     void registerBlocks ()
     {
         /* High Oven */
@@ -172,6 +173,7 @@ public class TSContent
         GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");
     }
     
+    @SuppressWarnings ("static-access")
     void registerFluids()
     {
         ItemStack bucket = new ItemStack(Item.bucketEmpty);
@@ -344,6 +346,7 @@ public class TSContent
         }*/
     }
     
+    @SuppressWarnings ("static-access")
     void registerModifiers()
     {
         ToolBuilder tb = ToolBuilder.instance;

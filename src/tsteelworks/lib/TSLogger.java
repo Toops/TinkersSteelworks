@@ -1,6 +1,7 @@
 package tsteelworks.lib;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraftforge.fluids.FluidStack;
@@ -59,6 +60,10 @@ public class TSLogger
     public static void warning (String desc)
     {
         logger.warning(desc);
+    }
+    
+    public static void error(String msg, Throwable thrown) {
+        logger.log(Level.SEVERE, msg, thrown);
     }
     
     void logAlloyList ()

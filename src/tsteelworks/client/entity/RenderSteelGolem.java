@@ -1,7 +1,6 @@
 package tsteelworks.client.entity;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.model.ModelIronGolem;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.texture.TextureMap;

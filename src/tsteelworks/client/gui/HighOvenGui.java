@@ -68,6 +68,7 @@ public class HighOvenGui extends TSContainerGui
         super.drawScreen(mouseX, mouseY, par3);
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public List getLiquidTooltip (FluidStack liquid, boolean par2)
     {
         final ArrayList list = new ArrayList();
@@ -172,6 +173,7 @@ public class HighOvenGui extends TSContainerGui
         }
     }
 
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
     {
         zLevel = 100;
@@ -326,6 +328,7 @@ public class HighOvenGui extends TSContainerGui
         }
     }
 
+    @SuppressWarnings ("rawtypes")
     protected void drawToolTip (List par1List, int par2, int par3)
     {
         if (!par1List.isEmpty())

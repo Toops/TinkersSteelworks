@@ -136,6 +136,7 @@ public abstract class TSInventoryBlock extends BlockContainer
         return meta;
     }
 
+    @SuppressWarnings ("deprecation")
     @Override
     public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack)
     {

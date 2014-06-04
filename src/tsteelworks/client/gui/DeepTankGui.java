@@ -49,6 +49,7 @@ public class DeepTankGui extends TSContainerGui
         super.drawScreen(mouseX, mouseY, par3);
     }
 
+    @SuppressWarnings ("unused")
     @Override
     protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY)
     {
@@ -90,7 +91,6 @@ public class DeepTankGui extends TSContainerGui
     }
 
     private static final ResourceLocation background = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
-    private static final ResourceLocation terrain = new ResourceLocation("terrain.png");
 
     @Override
     protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)
@@ -144,6 +144,7 @@ public class DeepTankGui extends TSContainerGui
         drawTexturedModalRect(cornerX + 54, cornerY + 16, 120, 0, 104, 104);
     }
 
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
     {
         this.zLevel = 100;
@@ -158,6 +159,7 @@ public class DeepTankGui extends TSContainerGui
         this.zLevel = 0;
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     public List getLiquidTooltip (FluidStack liquid, boolean par2)
     {
         ArrayList list = new ArrayList();
@@ -219,6 +221,7 @@ public class DeepTankGui extends TSContainerGui
         return list;
     }
 
+    @SuppressWarnings ("rawtypes")
     protected void drawToolTip (List par1List, int par2, int par3)
     {
         if (!par1List.isEmpty())
@@ -304,6 +307,7 @@ public class DeepTankGui extends TSContainerGui
         tessellator.draw();
     }
 
+    @SuppressWarnings ({ "unused", "static-access" })
     @Override
     public void mouseClicked (int mouseX, int mouseY, int mouseButton)
     {

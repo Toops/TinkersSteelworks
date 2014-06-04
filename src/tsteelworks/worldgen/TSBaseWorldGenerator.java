@@ -2,15 +2,12 @@ package tsteelworks.worldgen;
 
 import java.util.Random;
 
-import tconstruct.common.TContent;
-import tconstruct.util.config.PHConstruct;
-import tsteelworks.common.TSContent;
-import tsteelworks.lib.ConfigCore;
-import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
+import tconstruct.util.config.PHConstruct;
+import tsteelworks.common.TSContent;
+import tsteelworks.lib.ConfigCore;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class TSBaseWorldGenerator implements IWorldGenerator

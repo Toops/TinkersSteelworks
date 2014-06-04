@@ -29,6 +29,7 @@ public class NotEnoughItems implements ICompatPlugin
      * (non-Javadoc)
      * @see tsteelworks.plugins.ICompatPlugin#init()
      */
+    @SuppressWarnings ("static-access")
     @Override
     public void init ()
     {

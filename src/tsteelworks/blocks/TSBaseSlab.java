@@ -37,6 +37,7 @@ public class TSBaseSlab extends Block
         this.totalSize = totalSize;
     }
 
+    @SuppressWarnings ("rawtypes")
     @Override
     public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB axisalignedbb, List arraylist, Entity entity)
     {
@@ -91,6 +92,7 @@ public class TSBaseSlab extends Block
         return modelBlock.getIcon(side, meta);
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {

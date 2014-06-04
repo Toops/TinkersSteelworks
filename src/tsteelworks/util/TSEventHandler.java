@@ -18,6 +18,7 @@ import tsteelworks.lib.ConfigCore;
 public class TSEventHandler
 {
     Random random = new Random();
+    @SuppressWarnings ("unused")
     private Object evt;
     
     @ForgeSubscribe

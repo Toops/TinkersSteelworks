@@ -19,7 +19,6 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.util.RecipeRemover;
-import tsteelworks.TSteelworks;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -112,6 +111,7 @@ public class TSRecipes
         AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
     }
     
+    @SuppressWarnings ("static-access")
     public static void craftManual ()
     {
         final LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
@@ -129,6 +129,7 @@ public class TSRecipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.machine, 1, 0), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', "ingotSteel", 'r', new ItemStack(Item.redstone), 'd', new ItemStack(Block.pistonBase)));
     }
     
+    @SuppressWarnings ("static-access")
     public static void craftScorchedStone ()
     {
         final LiquidCasting basinCasting = TConstructRegistry.instance.getBasinCasting();

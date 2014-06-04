@@ -21,6 +21,7 @@ public class TSManual extends TSCraftingItem
         setUnlocalizedName("tsteelworks.manual");
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack stack, EntityPlayer player, List list, boolean par4)
@@ -33,6 +34,7 @@ public class TSManual extends TSCraftingItem
         }
     }
 
+    @SuppressWarnings ("static-access")
     @Override
     public ItemStack onItemRightClick (ItemStack stack, World world, EntityPlayer player)
     {

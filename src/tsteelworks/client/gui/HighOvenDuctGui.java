@@ -35,6 +35,7 @@ public class HighOvenDuctGui extends TSContainerGui
         xSize = 248;
     }
 
+    @SuppressWarnings ("unchecked")
     @Override
     public void initGui ()
     {

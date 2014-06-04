@@ -13,9 +13,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import tconstruct.blocks.LiquidMetalFinite;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.CementFluidBlock;
 import tsteelworks.common.TSContent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,6 +29,7 @@ public class TSFilledBucket extends ItemBucket
         this.setHasSubtypes(true);
     }
 
+    @SuppressWarnings ("unused")
     public ItemStack onItemRightClick (ItemStack stack, World world, EntityPlayer player)
     {
         float var4 = 1.0F;
@@ -102,6 +101,7 @@ public class TSFilledBucket extends ItemBucket
         }
     }
 
+    @SuppressWarnings ("static-access")
     public boolean tryPlaceContainedLiquid (World world, int clickX, int clickY, int clickZ, int type)
     {
         if (type == 0) return false; // Disallow placement of steam, until steam is done proper
@@ -131,6 +131,7 @@ public class TSFilledBucket extends ItemBucket
         }
     }
 
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     @Override
     public void getSubItems (int id, CreativeTabs tab, List list)
     {

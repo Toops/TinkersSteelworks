@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IActiveLogic;
@@ -39,7 +38,6 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.IMaster;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -1132,6 +1130,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     /**
      * Increments bricks, sets them as part of the structure.
      */
+    @SuppressWarnings ("deprecation")
     int checkBricks (int x, int y, int z)
     {
         int tempBricks = 0;

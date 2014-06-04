@@ -31,7 +31,9 @@ public class TSManualGui extends GuiScreen
     int currentPage;
     int maxPages;
 
+    @SuppressWarnings ("unused")
     private TSTurnPageButton buttonNextPage;
+    @SuppressWarnings ("unused")
     private TSTurnPageButton buttonPreviousPage;
 
     TSBookPage pageLeft;
@@ -101,6 +103,7 @@ public class TSManualGui extends GuiScreen
         return mc;
     }
 
+    @SuppressWarnings ("unchecked")
     @Override
     public void initGui ()
     {
@@ -125,6 +128,7 @@ public class TSManualGui extends GuiScreen
         }
     }
 
+    @SuppressWarnings ("rawtypes")
     void updateText ()
     {
         if ((maxPages % 2) == 1)

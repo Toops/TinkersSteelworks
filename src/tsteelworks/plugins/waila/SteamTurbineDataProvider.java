@@ -2,16 +2,15 @@ package tsteelworks.plugins.waila;
 
 import java.util.List;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
-import tconstruct.blocks.logic.LavaTankLogic;
 import tconstruct.plugins.waila.WailaRegistrar;
 import tsteelworks.blocks.logic.TurbineLogic;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
 
 public class SteamTurbineDataProvider implements IWailaDataProvider
 {

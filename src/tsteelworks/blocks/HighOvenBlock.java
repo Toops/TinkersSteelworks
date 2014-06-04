@@ -209,6 +209,7 @@ public class HighOvenBlock extends TSInventoryBlock
         return icons[3 + meta];
     }
 
+    @SuppressWarnings ("static-access")
     @Override
     public Integer getGui (World world, int x, int y, int z, EntityPlayer entityplayer)
     {
@@ -279,6 +280,7 @@ public class HighOvenBlock extends TSInventoryBlock
         return TSteelworks.instance;
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {

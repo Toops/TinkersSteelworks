@@ -33,6 +33,7 @@ public class TSMaterialItem extends TSCraftingItem
         super(id, materialNames, getTextures(), "materials/");
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation (ItemStack stack, EntityPlayer player, List list, boolean par4)

@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
@@ -62,7 +61,6 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
     
     public IFluidTank getControllerTank ()
     {
-        TileEntity te;
         int type = getControllerLogicType();
         if (type == 1) return getHighOvenController();
         if (type == 2) return getDeepTankController();

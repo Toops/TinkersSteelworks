@@ -64,6 +64,7 @@ public abstract class TSContainerGui extends GuiScreen
     protected ItemStack returningStack = null;
     protected Slot field_92033_y = null;
     protected long field_92032_z = 0L;
+    @SuppressWarnings ("rawtypes")
     protected final Set field_94077_p = new HashSet();
     protected boolean field_94076_q;
     protected int field_94071_C = 0;
@@ -304,6 +305,7 @@ public abstract class TSContainerGui extends GuiScreen
         itemRenderer.zLevel = 0.0F;
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     protected void drawItemStackTooltip (ItemStack par1ItemStack, int par2, int par3)
     {
         final List list = par1ItemStack.getTooltip(mc.thePlayer, mc.gameSettings.advancedItemTooltips);
@@ -396,6 +398,7 @@ public abstract class TSContainerGui extends GuiScreen
         zLevel = 0.0F;
     }
 
+    @SuppressWarnings ("rawtypes")
     protected void func_102021_a (List par1List, int par2, int par3)
     {
         if (!par1List.isEmpty())
@@ -464,6 +467,7 @@ public abstract class TSContainerGui extends GuiScreen
         }
     }
 
+    @SuppressWarnings ("unchecked")
     protected void func_85041_a (int par1, int par2, int par3, long par4)
     {
         final Slot slot = getSlotAtPosition(par1, par2);
@@ -507,6 +511,7 @@ public abstract class TSContainerGui extends GuiScreen
         }
     }
 
+    @SuppressWarnings ("rawtypes")
     protected void func_94066_g ()
     {
         final ItemStack itemstack = mc.thePlayer.inventory.getItemStack();
@@ -687,6 +692,7 @@ public abstract class TSContainerGui extends GuiScreen
      * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
      * mouseMove, which==0 or which==1 is mouseUp
      */
+    @SuppressWarnings ("rawtypes")
     @Override
     protected void mouseMovedOrUp (int par1, int par2, int par3)
     {

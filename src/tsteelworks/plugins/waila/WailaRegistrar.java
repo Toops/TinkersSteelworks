@@ -11,7 +11,8 @@ import tsteelworks.blocks.logic.TurbineLogic;
 
 public class WailaRegistrar
 {
-	public static void wailaCallback (IWailaRegistrar registrar)
+	@SuppressWarnings ("static-access")
+    public static void wailaCallback (IWailaRegistrar registrar)
 	{
 		TSteelworks.logger.info("[Waila-Compat] Got registrar: " + registrar);
 

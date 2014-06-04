@@ -1,6 +1,5 @@
 package tsteelworks.lib;
 
-import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IMasterLogic;
 
 public interface ITSMasterLogic extends IMasterLogic {

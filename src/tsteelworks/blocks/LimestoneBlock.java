@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -61,6 +60,7 @@ public class LimestoneBlock extends TSBaseBlock
         return meta;
     }
     
+    @SuppressWarnings ("unused")
     @Override
     @SideOnly(Side.CLIENT)
     public Icon getBlockTexture (IBlockAccess world, int x, int y, int z, int side)
@@ -83,6 +83,7 @@ public class LimestoneBlock extends TSBaseBlock
         return icons[meta];
     }
 
+    @SuppressWarnings ({ "unchecked", "rawtypes" })
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {

@@ -1,12 +1,6 @@
 package tsteelworks;
 
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidStack;
-import tconstruct.TConstruct;
 import tconstruct.library.util.TabTools;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
@@ -19,7 +13,6 @@ import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.util.TSEventHandler;
 import tsteelworks.worldgen.TSBaseWorldGenerator;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -110,35 +103,22 @@ public class TSteelworks
         GameRegistry.registerFuelHandler(fuelHandler);
         PluginController.getController().postInit();
 
-        //Initialize dealloying information at the last possible minute, to ensure that other mods have a chance to get their alloying information to TCon.
+        // Initialize dealloying information at the last possible minute, to ensure that other 
+        // mods have a chance to get their alloying information to TCon.
         AlloyInfo.init();
-//        logAlloyList();
+//        TSteelworks.logger.logAlloyList();
     }
 
+    @SuppressWarnings ("static-access")
     public static void loginfo (String desc) { logger.info(desc); }
+    @SuppressWarnings ("static-access")
     public static void loginfo (String desc, int value)    { logger.info(desc + ": " + value); }
+    @SuppressWarnings ("static-access")
     public static void loginfo (String desc, float value)  { logger.info(desc + ": " + value); }
+    @SuppressWarnings ("static-access")
     public static void loginfo (String desc, String text)  { logger.info(desc + ": " + text); }
+    @SuppressWarnings ("static-access")
     public static void loginfo (String desc, boolean flag) { logger.info(desc + ": " + flag); }
-    
-    
-	public static void logError(String msg, Throwable thrown) {
-		//logger.log(Level.SEVERE, msg, thrown);
-	}
-    
-    void logAlloyList ()
-    {
-        for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
-        {
-            FluidStack f = AlloyInfo.alloys.get(i).result.copy();
-            f.amount = 1000;
-            ArrayList<FluidStack> result = AlloyInfo.deAlloy(f);
-
-            System.out.println("Alloy " + AlloyInfo.alloys.get(i).result.getFluid().getName() + " produces:");
-            for (int j = 0; j < result.size(); ++j)
-            {
-                System.out.println(result.get(j).amount + " mB of " + result.get(j).getFluid().getName());
-            }
-        }
-    }
+	@SuppressWarnings ("static-access")
+    public static void logError(String msg, Throwable thrown) { logger.error(msg, thrown); }
 }

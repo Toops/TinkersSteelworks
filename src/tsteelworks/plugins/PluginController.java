@@ -61,6 +61,7 @@ public class PluginController
         registerPlugin(new Waila());
     }
 
+    @SuppressWarnings ("static-access")
     public void registerPlugin (ICompatPlugin plugin)
     {
         if (Loader.isModLoaded(plugin.getModId()))

@@ -12,6 +12,7 @@ public class HighOvenContainer extends TSActiveContainer
     public InventoryPlayer playerInv;
     public int fuel = 0;
 
+    @SuppressWarnings ("static-access")
     public HighOvenContainer(InventoryPlayer inventoryplayer, HighOvenLogic highoven)
     {
         logic = highoven;

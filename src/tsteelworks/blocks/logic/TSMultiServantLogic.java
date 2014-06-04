@@ -10,7 +10,6 @@ import tconstruct.library.util.CoordTuple;
 import tconstruct.library.util.IMasterLogic;
 import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
-import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.IMaster;
 import tsteelworks.lib.ITSMasterLogic;
 

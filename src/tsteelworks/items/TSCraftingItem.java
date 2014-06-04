@@ -41,6 +41,7 @@ public class TSCraftingItem extends Item
         return icons[arr];
     }
 
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     public void getSubItems (int id, CreativeTabs tab, List list)
     {

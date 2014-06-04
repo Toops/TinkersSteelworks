@@ -216,6 +216,7 @@ public class MachineBlock extends TSInventoryBlock
         return false;
     }
     
+    @SuppressWarnings ({ "rawtypes", "unchecked" })
     @Override
     public void getSubBlocks (int id, CreativeTabs tab, List list)
     {
