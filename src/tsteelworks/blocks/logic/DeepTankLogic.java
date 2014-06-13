@@ -36,32 +36,75 @@ import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.ITSMasterLogic;
 import tsteelworks.lib.crafting.AlloyInfo;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeepTankLogic.
+ */
 public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTank, ITSMasterLogic
 {
-    private List<FluidStack> fluidlist = new ArrayList<FluidStack>();
-    private boolean structureHasBottom;
-    private boolean structureHasTop;
-    private boolean needsUpdate;
-    private boolean containsAlloy;
-    private boolean activeTurbineAttached;
-    private boolean validStructure;
-    private byte direction;
-    private CoordTuple centerPos;
-    private int tick;
-    private int maxLiquid;
-    private int currentLiquid;
-    private int numBricks;
-    private int innerMaxX;
-    private int innerMaxZ;
-    private int layers;
-    private final static int innerMaxSpace = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
-    Random rand = new Random();
-    @SuppressWarnings ("rawtypes")
-    ArrayList glassBlocks = getRegisteredGlassIDs();
     
+    /** The fluidlist. */
+    private List<FluidStack> fluidlist = new ArrayList<FluidStack>();
+    
+    /** The structure has bottom. */
+    private boolean structureHasBottom;
+    
+    /** The structure has top. */
+    private boolean structureHasTop;
+    
+    /** The needs update. */
+    private boolean needsUpdate;
+    
+    /** The contains alloy. */
+    private boolean containsAlloy;
+    
+    /** The active turbine attached. */
+    private boolean activeTurbineAttached;
+    
+    /** The valid structure. */
+    private boolean validStructure;
+    
+    /** The direction. */
+    private byte direction;
+    
+    /** The center pos. */
+    private CoordTuple centerPos;
+    
+    /** The tick. */
+    private int tick;
+    
+    /** The max liquid. */
+    private int maxLiquid;
+    
+    /** The current liquid. */
+    private int currentLiquid;
+    
+    /** The num bricks. */
+    private int numBricks;
+    
+    /** The inner max x. */
+    private int innerMaxX;
+    
+    /** The inner max z. */
+    private int innerMaxZ;
+    
+    /** The layers. */
+    private int layers;
+    
+    /** The Constant innerMaxSpace. */
+    private static final int innerMaxSpace = 9; // Max amount of blocks inside in X/Z direction, TODO: config option
+    
+    /** The rand. */
+    Random rand = new Random();
+    
+    /** The glass blocks. */
+    @SuppressWarnings ("rawtypes")
+    private ArrayList glassBlocks = getRegisteredGlassIDs();
 
-    public DeepTankLogic() 
-    { 
+    /**
+     * Instantiates a new deep tank logic.
+     */
+    public DeepTankLogic() {
         super();
         this.innerMaxX = 0;
         this.innerMaxZ = 0;
@@ -69,38 +112,62 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         activeTurbineAttached = false;
     }
     
-    public boolean isValidStructure ()
-    {
+    /**
+     * Checks if is valid structure.
+     *
+     * @return true, if is valid structure
+     */
+    public final boolean isValidStructure() {
         return validStructure;
     }
     
-    public int xDistanceToRim () 
-    { 
+    /**
+     * X distance to rim.
+     *
+     * @return the int
+     */
+    public final int xDistanceToRim() {
     	return (getInnerMaxX() / 2) + 1; 
     }
     
-    public int zDistanceToRim () 
-    { 
+    /**
+     * Z distance to rim.
+     *
+     * @return the int
+     */
+    public final int zDistanceToRim() {
     	return (getInnerMaxZ() / 2) + 1; 
     }
     
-    public int innerSpaceTotal () 
-    { 
+    /**
+     * Inner space total.
+     *
+     * @return the int
+     */
+    public final int innerSpaceTotal() {
     	return getInnerMaxX() * getInnerMaxZ(); 
     }
     
-    public int layerFluidCapacity() 
-    { 
+    /**
+     * Layer fluid capacity.
+     *
+     * @return the int
+     */
+    public final int layerFluidCapacity() {
     	return (FluidContainerRegistry.BUCKET_VOLUME * ConfigCore.deeptankCapacityMultiplier) * innerSpaceTotal(); 
     }
 
 
     
-    void adjustLayers (int lay, boolean forceAdjust)
-    {
+    /**
+     * Adjust layers.
+     *
+     * @param lay the lay
+     * @param forceAdjust the force adjust
+     */
+    final void adjustLayers(final int lay, final boolean forceAdjust) {
     	//TODO : manage lay < 0 safety check
-        if (lay != layers || forceAdjust)
-        {
+        if (lay != layers || forceAdjust) {
             needsUpdate = true;
             layers = lay;
             maxLiquid = layerFluidCapacity() * lay;
@@ -109,77 +176,101 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     }
 
     /* Misc */
-    public Container getGuiContainer (InventoryPlayer inventoryplayer, World world, int x, int y, int z)
+    /**
+     * Gets the gui container.
+     *
+     * @param inventoryplayer the inventoryplayer
+     * @param world the world
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @return the gui container
+     */
+    public final Container getGuiContainer(final InventoryPlayer inventoryplayer, final World world, final int x, final int y, final int z)
     {
         return new DeepTankContainer(inventoryplayer, this);
     }
      
    	/**
-	 * @return the centerPos
-	 */
-	public CoordTuple getCenterPos() {
+	    * Gets the center pos.
+	    *
+	    * @return the centerPos
+	    */
+	public final CoordTuple getCenterPos() {
 		return centerPos;
 	}
 
 	/**
+	 * Gets the inner max x.
+	 *
 	 * @return the innerMaxX
 	 */
-	public int getInnerMaxX() {
+	public final int getInnerMaxX() {
 		return innerMaxX;
 	}
 
 	/**
+	 * Gets the inner max z.
+	 *
 	 * @return the innerMaxZ
 	 */
-	public int getInnerMaxZ() {
+	public final int getInnerMaxZ() {
 		return innerMaxZ;
 	}
 
 	/**
+	 * Sets the inner max z.
+	 *
 	 * @param innerMaxZ the innerMaxZ to set
 	 */
-	private void setInnerMaxZ(int innerMaxZ) {
+	private void setInnerMaxZ(final int innerMaxZ) {
 		this.innerMaxZ = innerMaxZ;
 	}
 
 	/**
+	 * Sets the inner max x.
+	 *
 	 * @param innerMaxX the innerMaxX to set
 	 */
-	private void setInnerMaxX(int innerMaxX) {
+	private final void setInnerMaxX(final int innerMaxX) {
 		this.innerMaxX = innerMaxX;
 	}
 
-	public boolean isUseableByPlayer (EntityPlayer entityplayer)
-    {
-        
-		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-		{
+	/**
+	 * Checks if is useable by player.
+	 *
+	 * @param entityplayer the entityplayer
+	 * @return true, if is useable by player
+	 */
+	public final boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+		if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
             return false;
-		}
-        else
-        {
+		} else {
         
-    	    if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
-    	    {
+    	    if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this) {
     	        return false;
-    	    }
-    	    else
-    	    {
+    	    } else {
     	        return entityplayer.getDistance(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64D;
     	    }
         }
 	}
     
-    public String getDefaultName () { 
+    /**
+     * Gets the default name.
+     *
+     * @return the default name
+     */
+    public final String getDefaultName() {
     	return "tank.DeepTank"; 
     }
     
     
     /**
-     * 
+     * Checks if is structure valid.
+     *
      * @return true structure is valid / false structure is not valid
      */
-    public boolean isStructureValid(){
+    public final boolean isStructureValid() {
         return this.validStructure;
     }
 
@@ -188,8 +279,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
      */
     @Override
-    public byte getRenderDirection () 
-    { 
+    public final byte getRenderDirection() {
     	return direction; 
     }
 
@@ -198,8 +288,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
      */
     @Override
-    public ForgeDirection getForgeDirection () 
-    { 
+    public final ForgeDirection getForgeDirection() {
     	return ForgeDirection.VALID_DIRECTIONS[direction]; 
     }
 
@@ -208,21 +297,17 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tconstruct.library.util.IFacingLogic#setDirection(int)
      */
     @Override
-    public void setDirection (int side) 
-    {
-    	//do nothing
+    public void setDirection(final int side) {
     }
 
-    /*
-     * (non-Javadoc)
+    /* (non-Javadoc)
      * @see tconstruct.library.util.IFacingLogic#setDirection(float, float, net.minecraft.entity.EntityLivingBase)
      */
     @Override
-    public void setDirection (float yaw, float pitch, EntityLivingBase player)
+    public final void setDirection(final float yaw, final float pitch, final EntityLivingBase player)
     {
         int facing = MathHelper.floor_double((double) (yaw / 360) + 0.5D) & 3;
-        switch (facing)
-        {
+        switch (facing) {
         case 0:
             direction = 2;
             break;
@@ -239,28 +324,27 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         	break;
         }
     }
-
-    /* Updating */
-    public void updateEntity ()
-    {
+    
+    /* (non-Javadoc)
+     * @see net.minecraft.tileentity.TileEntity#updateEntity()
+     */
+    public final void updateEntity() {
         tick++;
-        if (tick % 20 == 0)
-        {
-            if (!validStructure){
+        if (tick % 20 == 0) {
+            if (!validStructure) {
                 checkValidPlacement();
             }
-            if (needsUpdate)
-            {
+            if (needsUpdate) {
                 needsUpdate = false;
                 worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
-        if (tick == 40){
-            if (activeTurbineAttached){
+        if (tick == 40) {
+            if (activeTurbineAttached) {
                 dealloyFluids();
             }
         }
-        if (tick == 60){
+        if (tick == 60) {
             tick = 0;
         }
     }
@@ -270,8 +354,7 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
      */
     @Override
-    public void onInventoryChanged ()
-    {
+    public final void onInventoryChanged() {
         updateEntity();
         super.onInventoryChanged();
         needsUpdate = true;
@@ -286,80 +369,95 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tconstruct.library.util.IMasterLogic#notifyChange(tconstruct.library.util.IServantLogic, int, int, int)
      */
     @Override
-    public void notifyChange (IServantLogic servant, int x, int y, int z)
+    public final void notifyChange(final IServantLogic servant, final int x, final int y, final int z)
     {
-        checkValidPlacement();
+        this.checkValidPlacement();
     }
 
-    public void checkValidPlacement ()
-    {
-        int[] center = scanGlassLayerCenter();
-        alignControllerLayer(center[0], yCoord, center[1]);
+    /**
+     * Check valid placement.
+     */
+    public final void checkValidPlacement() {
+        final int[] center = this.scanGlassLayerCenter();
+        this.alignControllerLayer(center[0], yCoord, center[1]);
     }
     
-    void alignControllerLayer (int x, int y, int z)
-    {
+    /**
+     * Align controller layer.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     */
+    final void alignControllerLayer(final int x, final int y, final int z) {
         // If new centralized coords didn't change, INVALID!
-        if (x == xCoord && z == zCoord){
+        if (x == xCoord && z == zCoord) {
         	return;
         }
         // Let's get those central points again...
-        int innerCenterX = xDistanceToRim();
-        int innerCenterZ = zDistanceToRim();
+        final int innerCenterX = this.xDistanceToRim();
+        final int innerCenterZ = this.zDistanceToRim();
         // Just a little counter to pass along...
         int brickCounter = 0;
         int glassCounter = 0;
         // Set up a new block for scanning purposes
         Block block;
         // Scan inner for glass blocks by adjusted X/Z coordinates
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-        {
-            for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++)
-            {
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) { 
+            for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++) {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-                if (block != null && validGlassID(block.blockID))
-                    glassCounter += checkBricks(xPos, y, zPos, true);
+                if (block != null && this.validGlassID(block.blockID)) {
+                    glassCounter += this.checkBricks(xPos, y, zPos, true);
+                }
             }
         }
+        
         // Scan outter for brick/drain blocks by adjusted X/Z coordinates
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-        {
-            brickCounter += checkBricks(xPos, y, z - (innerCenterZ), false);
-            brickCounter += checkBricks(xPos, y, z + (innerCenterZ), false);
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+            brickCounter += this.checkBricks(xPos, y, z - innerCenterZ, false);
+            brickCounter += this.checkBricks(xPos, y, z + innerCenterZ, false);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
-        {
-            brickCounter += checkBricks(x - innerCenterX, y, zPos, false);
-            brickCounter += checkBricks(x + innerCenterX, y, zPos, false);
+        
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++) {
+            brickCounter += this.checkBricks(x - innerCenterX, y, zPos, false);
+            brickCounter += this.checkBricks(x + innerCenterX, y, zPos, false);
         }
-        if (!validateRimmedLayer(glassCounter, brickCounter)) {
+        
+        if (!this.validateRimmedLayer(glassCounter, brickCounter)) {
         	return;
         }
-        checkValidStructure(x, y, z, glassCounter + brickCounter);
+        
+        this.checkValidStructure(x, y, z, glassCounter + brickCounter);
     }
     
     
     // Wisthy - 2014/05/02 - solution for issue Toops#21, refactoring of the method
-    public void checkValidStructure (int x, int y, int z, int compareBricks)
-    {
+    /**
+     * Check valid structure.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param compareBricks the compare bricks
+     */
+    public final void checkValidStructure(final int x, final int y, final int z, final int compareBricks) {
     	/*
     	 * store old validation variables
     	 */
-    	boolean oldStructureHasBottom = structureHasBottom;
-    	boolean oldStructureHasTop = structureHasTop;
+    	final boolean oldStructureHasBottom = this.structureHasBottom;
+    	final boolean oldStructureHasTop = this.structureHasTop;
     	
     	/*
     	 * reset all validation variables
     	 */
-    	structureHasBottom = false;
-    	structureHasTop = false;
+    	this.structureHasBottom = false;
+    	this.structureHasTop = false;
     	
         int checkedLayers = 0;
-        if (checkSameLevel(x, y, z, compareBricks))
-        {
+        if (this.checkSameLevel(x, y, z, compareBricks)) {
             checkedLayers++;
-            int checkUp = recurseStructureUp(x, y + 1, z, 0, compareBricks);
-            int checkDown = recurseStructureDown(x, y - 1, z, 0, compareBricks);
+            final int checkUp = this.recurseStructureUp(x, y + 1, z, 0, compareBricks);
+            final int checkDown = this.recurseStructureDown(x, y - 1, z, 0, compareBricks);
             
             checkedLayers += checkUp;
             checkedLayers += checkDown;
@@ -371,24 +469,23 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
              * So, the test below should be done "greater than 0" instead of "greater than 1" 
              */
             
-            if (checkUp > 0 && !structureHasBottom){
-                validateBottom (x, y, z, 0, compareBricks);
+            if (checkUp > 0 && !this.structureHasBottom) {
+                this.validateBottom(x, y, z, 0, compareBricks);
             }
-            if (checkDown > 0 && !structureHasTop){
-                validateTop (x, y, z, 0, compareBricks);
+            if (checkDown > 0 && !this.structureHasTop) {
+                this.validateTop(x, y, z, 0, compareBricks);
             }
         }
         
-        if((oldStructureHasBottom != structureHasBottom) ||(oldStructureHasTop != structureHasTop) || (this.layers != checkedLayers))
+        if((oldStructureHasBottom != this.structureHasBottom) ||(oldStructureHasTop != this.structureHasTop) || (this.layers != checkedLayers))
         {
-        	if(structureHasBottom && structureHasTop && checkedLayers > 0)
-        	{
+        	if (this.structureHasBottom && this.structureHasTop && checkedLayers > 0) {
         		// what if checkLayers == 0? <0?
         		// adjustLayers but set to validStructure = false?
-        		adjustLayers(checkedLayers, false);
-        		validStructure = true;
-        	}else{
-        		validStructure = false;
+        	    this.adjustLayers(checkedLayers, false);
+        	    this.validStructure = true;
+        	} else {
+        	    this.validStructure = false;
         	}
         	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
@@ -400,71 +497,112 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
     // TODO wisthy - 2014/05/02 - use enum+switch to separate more clearly the distinct behavior
     
 
-     public boolean checkSameLevel2(int x, int y, int z, int compareBricks)
-     {
-         return checkStructureGlobal(x, y, z, compareBricks, -1, 0, 0, 0)==0;
+     /**
+     * Check same level2.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param compareBricks the compare bricks
+     * @return true, if successful
+     */
+    public final boolean checkSameLevel2(final int x, final int y, final int z, final int compareBricks) {
+         return this.checkStructureGlobal(x, y, z, compareBricks, -1, 0, 0, 0) == 0;
      }
 
-     public int recurseStructureUp2(int x, int y, int z, int count, int compareBricks)
-     {
-         return checkStructureGlobal(x, y, z, compareBricks, count, -1, 1, -1); 
+     /**
+      * Recurse structure up2.
+      *
+      * @param x the x
+      * @param y the y
+      * @param z the z
+      * @param count the count
+      * @param compareBricks the compare bricks
+      * @return the int
+      */
+     public final int recurseStructureUp2(final int x, final int y, final int z, final int count, final int compareBricks) {
+         return this.checkStructureGlobal(x, y, z, compareBricks, count, -1, 1, -1); 
      }
      
-     public int recurseStructureDown2(int x, int y, int z, int count, int compareBricks)
-     {
-         return checkStructureGlobal(x, y, z, compareBricks, count, -1, -1, -1); 
+     /**
+      * Recurse structure down2.
+      *
+      * @param x the x
+      * @param y the y
+      * @param z the z
+      * @param count the count
+      * @param compareBricks the compare bricks
+      * @return the int
+      */
+     public final int recurseStructureDown2(final int x, final int y, final int z, final int count, final int compareBricks) {
+         return this.checkStructureGlobal(x, y, z, compareBricks, count, -1, -1, -1); 
      }
 
-     public int checkStructureGlobal(int x, int y, int z, int compareBricks, int count, int modX, int modY, int modZ)
-     {
-         numBricks = 0;
+     /**
+      * Check structure global.
+      *
+      * @param x the x
+      * @param y the y
+      * @param z the z
+      * @param compareBricks the compare bricks
+      * @param count the count
+      * @param modX the mod x
+      * @param modY the mod y
+      * @param modZ the mod z
+      * @return the int
+      */
+     public final int checkStructureGlobal(final int x, final int y, final int z, final int compareBricks, int count, final int modX, final int modY, final int modZ) {
+         this.numBricks = 0;
          Block block = null;
-         int innerCenterX = xDistanceToRim();
-         int innerCenterZ = zDistanceToRim();
+         final int innerCenterX = this.xDistanceToRim();
+         final int innerCenterZ = this.zDistanceToRim();
          
-         boolean isMiddleLayer = (count > -1);
+         final boolean isMiddleLayer = count > -1;
 
-		 for(int xPos = x - (innerCenterX + modX); xPos <= x + (innerCenterX + modX); xPos++)
-		 {
-			 for(int zPos = z - (innerCenterZ + modZ); zPos <= z + (innerCenterZ + modZ); zPos++)
-			 {
+		 for (int xPos = x - (innerCenterX + modX); xPos <= x + (innerCenterX + modX); xPos++) {
+			 for (int zPos = z - (innerCenterZ + modZ); zPos <= z + (innerCenterZ + modZ); zPos++) {
 				 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-				 if (block != null && validGlassID(block.blockID))
-				 {
-					 if(! isMiddleLayer)
-					 {
-						 numBricks += checkBricks(xPos, y, zPos, false);
-					 }else
-					 {
-						 if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 
-							 return (validGlassID(block.blockID)) ? validateTop(x, y, z, count, compareBricks) : count;
+				 if (block != null && this.validGlassID(block.blockID)) {
+					 if (!isMiddleLayer) {
+					     this.numBricks += this.checkBricks(xPos, y, zPos, false);
+					 } else {
+						 if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) {
+                            return (this.validGlassID(block.blockID)) ? this.validateTop(x, y, z, count, compareBricks) : count;
+                        }
 					 }
 				 }
 			 }
 		 }
-		 for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-		 {
-			 numBricks += checkBricks(xPos, y, z - (innerCenterZ), isMiddleLayer);
-			 numBricks += checkBricks(xPos, y, z + (innerCenterZ), isMiddleLayer);
+		 for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+		     this.numBricks += this.checkBricks(xPos, y, z - innerCenterZ, isMiddleLayer);
+			 this.numBricks += this.checkBricks(xPos, y, z + innerCenterZ, isMiddleLayer);
 		 }
-		 for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
-		 {
-			 numBricks += checkBricks(x - innerCenterX, y, zPos, isMiddleLayer);
-			 numBricks += checkBricks(x + innerCenterX, y, zPos, isMiddleLayer);
-		 }
-		 if(!isMiddleLayer)
-		 {
-			 return (numBricks == compareBricks)?0:1;
-		 }else{
-			 if (numBricks != compareBricks - innerSpaceTotal())
-				 return count;
-             return checkStructureGlobal(x, y + modY, z, compareBricks, count, modX, modY, modZ);
+		 for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++) { 
+		     this.numBricks += this.checkBricks(x - innerCenterX, y, zPos, isMiddleLayer);
+		     this.numBricks += this.checkBricks(x + innerCenterX, y, zPos, isMiddleLayer);
+        }
+		 if (!isMiddleLayer) {
+			 return (this.numBricks == compareBricks) ? 0 : 1;
+		 } else {
+			 if (this.numBricks != compareBricks - this.innerSpaceTotal()) {
+                return count;
+			 }
+             return this.checkStructureGlobal(x, y + modY, z, compareBricks, count, modX, modY, modZ);
          }
      }
     
     
     // Redundancy at its finest.
-    public boolean checkSameLevel (int x, int y, int z, int compareBricks)
+    /**
+     * Check same level.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param compareBricks the compare bricks
+     * @return true, if successful
+     */
+    public final boolean checkSameLevel(final int x, final int y, final int z, final int compareBricks)
     {
         numBricks = 0;
         Block block;
@@ -475,440 +613,556 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-                if (block != null && validGlassID(block.blockID))
-                    numBricks += checkBricks(xPos, y, zPos, true);
+                if (block != null && validGlassID(block.blockID)) {
+                    numBricks += this.checkBricks(xPos, y, zPos, true);
+                }
             }
         }
         for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
         {
-            numBricks += checkBricks(xPos, y, z - (innerCenterZ), false);
-            numBricks += checkBricks(xPos, y, z + (innerCenterZ), false);
+            numBricks += this.checkBricks(xPos, y, z - (innerCenterZ), false);
+            numBricks += this.checkBricks(xPos, y, z + (innerCenterZ), false);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++)
         {
-            numBricks += checkBricks(x - innerCenterX, y, zPos, false);
-            numBricks += checkBricks(x + innerCenterX, y, zPos, false);
+            numBricks += this.checkBricks(x - innerCenterX, y, zPos, false);
+            numBricks += this.checkBricks(x + innerCenterX, y, zPos, false);
         }
         return (numBricks == compareBricks);
     }
 
-    public int recurseStructureUp (int x, int y, int z, int count, int compareBricks)
+    /**
+     * Recurse structure up.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param count the count
+     * @param compareBricks the compare bricks
+     * @return the int
+     */
+    public final int recurseStructureUp(final int x, final int y, final int z, int count, final int compareBricks)
     {
-        numBricks = 0;
+        this.numBricks = 0;
         //Check inside
-        int innerCenterX = xDistanceToRim();
-        int innerCenterZ = zDistanceToRim();
+        final int innerCenterX = xDistanceToRim();
+        final int innerCenterZ = zDistanceToRim();
 
         Block block;
-        for (int xPos = x - (innerCenterX-1); xPos <= x + (innerCenterX-1); xPos++)
+        for (int xPos = x - (innerCenterX - 1); xPos <= x + (innerCenterX - 1); xPos++)
         {
-            for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+            for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-                if ((block != null) && validGlassID(block.blockID)) 
+                if ((block != null) && this.validGlassID(block.blockID)) {
                     // previous line: validGlassId(block) <==> next line: !block.isAirBlock
                     // so, it's a glass block that is not an air block. Is there any glass blocks that are air blocks?  
-                    if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 
-                        return (validGlassID(block.blockID)) ? validateTop(x, y, z, count, compareBricks) : count;
+                    if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) {
+                        return (this.validGlassID(block.blockID)) ? this.validateTop(x, y, z, count, compareBricks) : count;
+                    }
+                }
             }
         }
         //Check outer layer
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-        {
-            numBricks += checkBricks(xPos, y, z - (innerCenterZ), true);
-            numBricks += checkBricks(xPos, y, z + (innerCenterZ), true);
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+            numBricks += this.checkBricks(xPos, y, z - (innerCenterZ), true);
+            numBricks += this.checkBricks(xPos, y, z + (innerCenterZ), true);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
-        {
-            numBricks += checkBricks(x - innerCenterX, y, zPos, true);
-            numBricks += checkBricks(x + innerCenterX, y, zPos, true);
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++) {
+            numBricks += this.checkBricks(x - innerCenterX, y, zPos, true);
+            numBricks += this.checkBricks(x + innerCenterX, y, zPos, true);
         }
 
-        if (numBricks != compareBricks - innerSpaceTotal())
+        if (numBricks != compareBricks - innerSpaceTotal()) {
             return count;
+        }
 
         count++;
-        return recurseStructureUp(x, y + 1, z, count, compareBricks);
+        return this.recurseStructureUp(x, y + 1, z, count, compareBricks);
     }
 
-    public int recurseStructureDown (int x, int y, int z, int count, int compareBricks)
+    /**
+     * Recurse structure down.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param count the count
+     * @param compareBricks the compare bricks
+     * @return the int
+     */
+    public final int recurseStructureDown(final int x, final int y, final int z, int count, final int compareBricks)
     {
         numBricks = 0;
         //Check inside
         int innerCenterX = xDistanceToRim();
         int innerCenterZ = zDistanceToRim();
         Block block;
-        for (int xPos = x - (innerCenterX-1); xPos <= x + (innerCenterX-1); xPos++)
+        for (int xPos = x - (innerCenterX - 1); xPos <= x + (innerCenterX - 1); xPos++)
         {
-            for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+            for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++)
             {
                 block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
-                if ((block != null) && validGlassID(block.blockID)) 
-                    if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) 
+                if ((block != null) && validGlassID(block.blockID))
+                {
+                    if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos))
+                    {
                         return (validGlassID(block.blockID)) ? validateBottom(x, y, z, count, compareBricks) : count;
+                    }
+                }
             }
         }
         //Check outer layer
         for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
         {
-            numBricks += checkBricks(xPos, y, z - (innerCenterZ), true);
-            numBricks += checkBricks(xPos, y, z + (innerCenterZ), true);
+            numBricks += this.checkBricks(xPos, y, z - (innerCenterZ), true);
+            numBricks += this.checkBricks(xPos, y, z + (innerCenterZ), true);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++)
         {
-            numBricks += checkBricks(x - innerCenterX, y, zPos, true);
-            numBricks += checkBricks(x + innerCenterX, y, zPos, true);
+            numBricks += this.checkBricks(x - innerCenterX, y, zPos, true);
+            numBricks += this.checkBricks(x + innerCenterX, y, zPos, true);
         }
         if (numBricks != compareBricks - innerSpaceTotal())
+        {
             return count;
+        }
 
         count++;
         return recurseStructureDown(x, y - 1, z, count, compareBricks);
     }
     
     // TODO Wisthy - 2014/04/26 - can it be fitted in the "global" method too? Need more reflexion time on this
-    public int validateTop (int x, int y, int z, int count, int compareBricks)
+    /**
+     * Validate top.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param count the count
+     * @param compareBricks the compare bricks
+     * @return the int
+     */
+    public final int validateTop(final int x, final int y, final int z, final int count, final int compareBricks)
     {
         int topBricks = 0;
         
-        int innerCenterX = xDistanceToRim();
-        int innerCenterZ = zDistanceToRim();
+        final int innerCenterX = this.xDistanceToRim();
+        final int innerCenterZ = this.zDistanceToRim();
         
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-            for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++)
-                if (validGlassID(worldObj.getBlockId(xPos, y, zPos)))
-                    topBricks += checkBricks(xPos, y, zPos, true);
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+            for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++) {
+                if (this.validGlassID(worldObj.getBlockId(xPos, y, zPos))) {
+                    topBricks += this.checkBricks(xPos, y, zPos, true);
+                }
+            }
+        }
         
         //Check outer rim
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-        {
-            topBricks += checkBricks(xPos, y, z - (innerCenterZ), false);
-            topBricks += checkBricks(xPos, y, z + (innerCenterZ), false);
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+            topBricks += this.checkBricks(xPos, y, z - innerCenterZ, false);
+            topBricks += this.checkBricks(xPos, y, z + innerCenterZ, false);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
-        {
-            topBricks += checkBricks(x - innerCenterX, y, zPos, false);
-            topBricks += checkBricks(x + innerCenterX, y, zPos, false);
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++){
+            topBricks += this.checkBricks(x - innerCenterX, y, zPos, false);
+            topBricks += this.checkBricks(x + innerCenterX, y, zPos, false);
         }
-        structureHasTop = (topBricks == compareBricks);
+        this.structureHasTop = topBricks == compareBricks;
         return count;
     }
     
     // TODO Wisthy - 2014/04/26 - can it be fitted in the "global" method too? Need more reflexion time on this
-    public int validateBottom (int x, int y, int z, int count, int compareBricks)
+    /**
+     * Validate bottom.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param count the count
+     * @param compareBricks the compare bricks
+     * @return the int
+     */
+    public final int validateBottom(final int x, final int y, final int z, int count, final int compareBricks)
     {
         int bottomBricks = 0;
-        int innerCenterX = xDistanceToRim();
-        int innerCenterZ = zDistanceToRim();
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
+        final int innerCenterX = xDistanceToRim();
+        final int innerCenterZ = zDistanceToRim();
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
             for (int zPos = z - innerCenterZ; zPos <= z + innerCenterZ; zPos++)
-                if (validGlassID(worldObj.getBlockId(xPos, y, zPos)))
-                    bottomBricks += checkBricks(xPos, y, zPos, true);
+            {
+                if (this.validGlassID(worldObj.getBlockId(xPos, y, zPos))) {
+                    bottomBricks += this.checkBricks(xPos, y, zPos, true);
+                }
+            }
+        }
         //Check outer layer
-        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++)
-        {
-            bottomBricks += checkBricks(xPos, y, z - (innerCenterZ), false);
-            bottomBricks += checkBricks(xPos, y, z + (innerCenterZ), false);
+        for (int xPos = x - innerCenterX; xPos <= x + innerCenterX; xPos++) {
+            bottomBricks += this.checkBricks(xPos, y, z - innerCenterZ, false);
+            bottomBricks += this.checkBricks(xPos, y, z + innerCenterZ, false);
         }
-        for (int zPos = z - (innerCenterZ-1); zPos <= z + (innerCenterZ-1); zPos++)
+        for (int zPos = z - (innerCenterZ - 1); zPos <= z + (innerCenterZ - 1); zPos++)
         {
-            bottomBricks += checkBricks(x - innerCenterX, y, zPos, false);
-            bottomBricks += checkBricks(x + innerCenterX, y, zPos, false);
+            bottomBricks += this.checkBricks(x - innerCenterX, y, zPos, false);
+            bottomBricks += this.checkBricks(x + innerCenterX, y, zPos, false);
         }
-        structureHasBottom = (bottomBricks == compareBricks);
-        if (structureHasBottom)
-            centerPos = new CoordTuple(x, y + 1, z);
+        this.structureHasBottom = bottomBricks == compareBricks;
+        if (this.structureHasBottom) {
+            this.centerPos = new CoordTuple(x, y + 1, z);
+        }
         return count;
     }
 
     /* Returns whether the brick is a lava tank or not.
      * Increments bricks, sets them as part of the structure, and adds tanks to the list.
      */
-    @SuppressWarnings ("deprecation")
-    int checkBricks (int x, int y, int z, boolean glassOnly)
-    {
+    /**
+     * Check bricks.
+     *
+     * @param x the x
+     * @param y the y
+     * @param z the z
+     * @param glassOnly the glass only
+     * @return the int
+     */
+    @SuppressWarnings("deprecation")
+    final int checkBricks(final int x, final int y, final int z, final boolean glassOnly) {
         int tempBricks = 0;
-        int blockID = worldObj.getBlockId(x, y, z);
-        if (glassOnly && (validGlassID(blockID)))
+        final int blockID = worldObj.getBlockId(x, y, z);
+        if (glassOnly && (this.validGlassID(blockID))) {
             tempBricks++;
-        if (glassOnly && validBlockID(blockID))
-        {
-            TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-            if (te instanceof HighOvenDuctLogic)
+        }
+        if (glassOnly && this.validBlockID(blockID)) {
+            final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+            if (te instanceof HighOvenDuctLogic) {
                 return tempBricks++;
-            else if (te instanceof TSMultiServantLogic)
-            {
-                TSMultiServantLogic servant = (TSMultiServantLogic) te;
-                if (servant.hasValidMaster())
-                {
-                    if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
+            } else if (te instanceof TSMultiServantLogic) {
+                final TSMultiServantLogic servant = (TSMultiServantLogic) te;
+                if (servant.hasValidMaster()) {
+                    if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord)) {
                         tempBricks++;
-                }
-                else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
+                    }
+                } else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord)) {
                     tempBricks++;
+                }
             }
         }
-        if (!glassOnly && validBlockID(blockID))
-        {
-            TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-            if (te == this)
+        if (!glassOnly && this.validBlockID(blockID)) {
+            final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+            if (te == this) {
                 tempBricks++;
-            if (te instanceof HighOvenDuctLogic)
+            }
+            if (te instanceof HighOvenDuctLogic) {
                 return tempBricks++;
-            else if (te instanceof TSMultiServantLogic)
-            {
-                if (te instanceof HighOvenDuctLogic)
+            } else if (te instanceof TSMultiServantLogic) {
+                if (te instanceof HighOvenDuctLogic) {
                     return tempBricks++;
-                TSMultiServantLogic servant = (TSMultiServantLogic) te;
-                if (servant.hasValidMaster())
-                {
-                    if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
-                        tempBricks++;
                 }
-                else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
+                final TSMultiServantLogic servant = (TSMultiServantLogic) te;
+                if (servant.hasValidMaster()) {
+                    if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord)) {
+                        tempBricks++;
+                    }
+                } else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord)) {
                     tempBricks++;
+                }
             }
         }
         return tempBricks;
     }
     
+    /**
+     * Verify component.
+     *
+     * @param tileentity the tileentity
+     * @return the int
+     */
     @SuppressWarnings ("deprecation")
-    int verifyComponent (TileEntity tileentity)
-    {
+    final int verifyComponent(final TileEntity tileentity) {
         int tempBricks = 0;
-        if (tileentity instanceof HighOvenDuctLogic)
+        if (tileentity instanceof HighOvenDuctLogic) {
             return tempBricks++;
-        else if (tileentity instanceof TSMultiServantLogic)
-        {
-            TSMultiServantLogic servant = (TSMultiServantLogic) tileentity;
-            if (servant.hasValidMaster())
-            {
-                if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord))
+        } else if (tileentity instanceof TSMultiServantLogic) {
+            final TSMultiServantLogic servant = (TSMultiServantLogic) tileentity;
+            if (servant.hasValidMaster()) {
+                if (servant.verifyMaster(this, this.xCoord, this.yCoord, this.zCoord)) {
                     tempBricks++;
-            }
-            else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord))
+                }
+            } else if (servant.setMaster(this.xCoord, this.yCoord, this.zCoord)) {
                 tempBricks++;
+            }
         }
         return tempBricks;
     }
     
     // TODO: Clean this mess up.
-    private int[] scanGlassLayerCenter ()
-    {
+    /**
+     * Scan glass layer center.
+     *
+     * @return the int[]
+     */
+    private int[] scanGlassLayerCenter() {
         int centerX = 0;
         int centerZ = 0;
         Block block;
-        switch (getRenderDirection())
-        {
+        switch (this.getRenderDirection()) {
         case 2: // +z
             // Scan to last block
-            for (int z = zCoord + 1; z < zCoord + (innerMaxSpace + 1); z++)
-            {
+            for (int z = zCoord + 1; z < zCoord + (innerMaxSpace + 1); z++) {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
-                    centerZ += checkBricks(xCoord, yCoord, z, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerZ += this.checkBricks(xCoord, yCoord, z, true);
+                } else {
+                    break;
+                }
             }
             // Adjust depth scan to center
-            if ((centerZ != 1) && (centerZ % 2 == 0))
+            if ((centerZ != 1) && (centerZ % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxZ(centerZ);
-                centerZ = (centerZ / 2 + 1); 
+            } else {
+                this.setInnerMaxZ(centerZ);
+                centerZ = centerZ / 2 + 1; 
             }
-            if (centerZ == 0) break;
+            if (centerZ == 0) {
+                break;
+            }
             // Scan width from center
-            for (int x = xCoord; x >= xCoord - (innerMaxSpace / 2); x--)
-            {
+            for (int x = xCoord; x >= xCoord - (innerMaxSpace / 2); x--) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord + centerZ)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord + centerZ, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord + centerZ, true);
+                } else {
+                    break;
+                }
             }
-            for (int x = xCoord + 1; x <= xCoord + (innerMaxSpace / 2); x++)
-            {
+            for (int x = xCoord + 1; x <= xCoord + (innerMaxSpace / 2); x++) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord + centerZ)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord + centerZ, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord + centerZ, true);
+                } else {
+                    break;
+                }
             }
             // Adjust width to center
-            if ((centerX != 1) && (centerX % 2 == 0))
+            if ((centerX != 1) && (centerX % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxX(centerX);
-                centerX = (centerX / 2 + 1); 
+            } else {
+                this.setInnerMaxX(centerX);
+                centerX = centerX / 2 + 1; 
             }
-            if (centerX == 0) break;
+            if (centerX == 0) {
+                break;
+            }
             return new int[] {xCoord, zCoord + centerZ};
         case 3: // -z
-            for (int z = zCoord - 1; z > zCoord - (innerMaxSpace + 1); z--)
-            {
+            for (int z = zCoord - 1; z > zCoord - (innerMaxSpace + 1); z--) {
                 block = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
-                    centerZ += checkBricks(xCoord, yCoord, z, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerZ += this.checkBricks(xCoord, yCoord, z, true);
+                } else {
+                    break;
+                }
             }
             // Adjust depth scan to center
-            if ((centerZ != 1) && (centerZ % 2 == 0))
+            if ((centerZ != 1) && (centerZ % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxZ(centerZ);
-                centerZ = (centerZ / 2 + 1); 
+            } else {
+                this.setInnerMaxZ(centerZ);
+                centerZ = centerZ / 2 + 1; 
             }
-            if (centerZ == 0) break;
+            if (centerZ == 0) {
+                break;
+            }
             // Scan width from center
-            for (int x = xCoord; x >= xCoord - (innerMaxSpace / 2); x--)
-            {
+            for (int x = xCoord; x >= xCoord - (innerMaxSpace / 2); x--) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord - centerZ)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord - centerZ, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord - centerZ, true);
+                } else { 
+                    break; 
+                }
             }
-            for (int x = xCoord + 1; x <= xCoord + (innerMaxSpace / 2); x++)
-            {
+            for (int x = xCoord + 1; x <= xCoord + (innerMaxSpace / 2); x++) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord - centerZ)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord - centerZ, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord - centerZ, true);
+                } else { 
+                    break; 
+                }
             }
+            
             // Adjust width to center
-            if ((centerX != 1) && (centerX % 2 == 0))
+            if ((centerX != 1) && (centerX % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxX(centerX);
-                centerX = (centerX / 2 + 1); 
+            } else {
+                this.setInnerMaxX(centerX);
+                centerX = centerX / 2 + 1; 
             }
-            if (centerX == 0) break;
+            if (centerX == 0) {
+                break;
+            }
             return new int[] {xCoord, zCoord - centerZ};
         case 4: // +x
-            for (int x = xCoord + 1; x < xCoord + (innerMaxSpace + 1); x++)
-            {
+            for (int x = xCoord + 1; x < xCoord + (innerMaxSpace + 1); x++) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord, true);
+                } else {
+                    break;
+                }
             }
             // Adjust depth scan to center
-            if ((centerX != 1) && (centerX % 2 == 0))
+            if ((centerX != 1) && (centerX % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxX(centerX);
-                centerX = (centerX / 2 + 1); 
+            } else {
+                this.setInnerMaxX(centerX);
+                centerX = centerX / 2 + 1; 
             }
-            if (centerX == 0) break;
+            if (centerX == 0) {
+                break;
+            }
             // Scan length from center
-            for (int z = zCoord; z >= zCoord - (innerMaxSpace / 2); z--)
-            {
+            for (int z = zCoord; z >= zCoord - (innerMaxSpace / 2); z--) {
                 block = Block.blocksList[worldObj.getBlockId(xCoord + centerX, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
-                    centerZ += checkBricks(xCoord + centerX, yCoord, z, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerZ += this.checkBricks(xCoord + centerX, yCoord, z, true);
+                } else {
+                    break;
+                }
             }
-            for (int z = zCoord + 1; z <= zCoord + (innerMaxSpace / 2); z++)
-            {
+            for (int z = zCoord + 1; z <= zCoord + (innerMaxSpace / 2); z++) {
                 block = Block.blocksList[worldObj.getBlockId(xCoord + centerX, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
-                    centerZ += checkBricks(xCoord + centerX, yCoord, z, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerZ += this.checkBricks(xCoord + centerX, yCoord, z, true);
+                } else {
+                    break;
+                }
             }
             // Adjust length to center
-            if ((centerZ != 1) && (centerZ % 2 == 0))
+            if ((centerZ != 1) && (centerZ % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxZ(centerZ);
-                centerZ = (centerZ / 2 + 1); 
+            } else {
+                this.setInnerMaxZ(centerZ);
+                centerZ = centerZ / 2 + 1; 
             }
-            if (centerZ == 0) break;
+            if (centerZ == 0) {
+                break;
+            }
             return new int[] {xCoord + centerX, zCoord};
         case 5: // -x
-            for (int x = xCoord - 1; x > xCoord - (innerMaxSpace + 1); x--)
-            {
+            for (int x = xCoord - 1; x > xCoord - (innerMaxSpace + 1); x--) {
                 block = Block.blocksList[worldObj.getBlockId(x, yCoord, zCoord)];
-                if (block != null && validGlassID(block.blockID))
-                    centerX += checkBricks(x, yCoord, zCoord, true);
-                else break;
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerX += this.checkBricks(x, yCoord, zCoord, true);
+                } else {
+                    break;
+                }
             }
             // Adjust depth scan to center
-            if ((centerX != 1) && (centerX % 2 == 0))
+            if ((centerX != 1) && (centerX % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxX(centerX);
+            } else {
+                this.setInnerMaxX(centerX);
                 centerX = (centerX / 2 + 1); 
             }
-            if (centerX == 0) break;
-            // Scan length from center
-            for (int z = zCoord; z >= zCoord - (innerMaxSpace / 2); z--)
-            {
-                block = Block.blocksList[worldObj.getBlockId(xCoord - centerX, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
-                    centerZ += checkBricks(xCoord - centerX, yCoord, z, true);
-                else break;
+            if (centerX == 0) {
+                break;
             }
-            for (int z = zCoord + 1; z <= zCoord + (innerMaxSpace / 2); z++)
-            {
+            // Scan length from center
+            for (int z = zCoord; z >= zCoord - (innerMaxSpace / 2); z--) {
                 block = Block.blocksList[worldObj.getBlockId(xCoord - centerX, yCoord, z)];
-                if (block != null && validGlassID(block.blockID))
+                if (block != null && this.validGlassID(block.blockID)) {
+                    centerZ += this.checkBricks(xCoord - centerX, yCoord, z, true);
+                } else {
+                    break;
+                }
+            }
+            for (int z = zCoord + 1; z <= zCoord + (innerMaxSpace / 2); z++) {
+                block = Block.blocksList[worldObj.getBlockId(xCoord - centerX, yCoord, z)];
+                if (block != null && this.validGlassID(block.blockID)) {
                     centerZ += checkBricks(xCoord - centerX, yCoord, z, true);
-                else break;
+                } else {
+                    break;
+                }
             }
             // Adjust length to center
-            if ((centerZ != 1) && (centerZ % 2 == 0))
+            if ((centerZ != 1) && (centerZ % 2 == 0)) {
                 break;
-            else 
-            {
-                setInnerMaxZ(centerZ);
-                centerZ = (centerZ / 2 + 1); 
+            } else {
+                this.setInnerMaxZ(centerZ);
+                centerZ = centerZ / 2 + 1; 
             }
-            if (centerZ == 0) break;
+            if (centerZ == 0) {
+                break;
+            }
             return new int[] {xCoord - centerX, zCoord};
+            default:
+                break;
         }
         return new int[] {xCoord, yCoord};
     }
     
     // TODO: Algorithms, man. 
-    public boolean validateRimmedLayer(int innerbricks, int outerbricks)
+    /**
+     * Validate rimmed layer.
+     *
+     * @param innerbricks the innerbricks
+     * @param outerbricks the outerbricks
+     * @return true, if successful
+     */
+    public final boolean validateRimmedLayer(final int innerbricks, final int outerbricks)
     {
         final int total = innerbricks + outerbricks;
-        if (getInnerMaxX() == 1 || getInnerMaxZ() == 1)
+        if (this.getInnerMaxX() == 1 || this.getInnerMaxZ() == 1) {
             return Arrays.asList(9, 15, 21, 27, 33).contains(total);
-        else if (getInnerMaxX() == 3 || getInnerMaxZ() == 3)
+        }
+        else if (this.getInnerMaxX() == 3 || this.getInnerMaxZ() == 3) {
             return Arrays.asList(25, 35, 45, 55).contains(total);
-        else if (getInnerMaxX() == 5 || getInnerMaxZ() == 5)
+        }
+        else if (this.getInnerMaxX() == 5 || this.getInnerMaxZ() == 5) {
             return Arrays.asList(49, 63, 77).contains(total);
-        else if (getInnerMaxX() == 7 || getInnerMaxZ() == 7)
+        }
+        else if (this.getInnerMaxX() == 7 || this.getInnerMaxZ() == 7) {
             return Arrays.asList(81, 99).contains(total);
-        else if (getInnerMaxX() == 9 || getInnerMaxZ() == 9)
-            return (total == 121);
+        }
+        else if (this.getInnerMaxX() == 9 || this.getInnerMaxZ() == 9) {
+            return total == 121;
+        }
         return false;
     }
     
-    boolean validBlockID(int blockID)
-    {
-        return (blockID == TSContent.highoven.blockID);
+    /**
+     * Valid block id.
+     *
+     * @param blockID the block id
+     * @return true, if successful
+     */
+    final boolean validBlockID(final int blockID) {
+        return blockID == TSContent.highoven.blockID;
     }
 
-    boolean validGlassID(int blockID)
-    {
-        return glassBlocks.contains(blockID);
-        
+    /**
+     * Valid glass id.
+     *
+     * @param blockID the block id
+     * @return true, if successful
+     */
+    final boolean validGlassID(final int blockID) {
+        return this.glassBlocks.contains(blockID);
     }
     
+    /**
+     * Gets the registered glass i ds.
+     *
+     * @return the registered glass i ds
+     */
     @SuppressWarnings ({ "unchecked", "rawtypes" })
+    final
     /*
      * Set up a list of glass blocks by preset, config, and oredictionary
      * Duplicate elements are removed from the list
      */
-    ArrayList getRegisteredGlassIDs()
-    {
-    	ArrayList<ItemStack> oreDict = OreDictionary.getOres("glass");
+    ArrayList getRegisteredGlassIDs() {
+    	final ArrayList<ItemStack> oreDict = OreDictionary.getOres("glass");
     	ArrayList glasses = new ArrayList();
     	
     	glasses.add(Block.blocksList[Block.glass.blockID]);
@@ -916,15 +1170,16 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
         glasses.add(Block.blocksList[TContent.stainedGlassClear.blockID]);
         glasses.add(Block.blocksList[TContent.lavaTank.blockID]);
         
-    	if (ConfigCore.modTankGlassBlocks.length >= 1)
-            for (int id : ConfigCore.modTankGlassBlocks)
+    	if (ConfigCore.modTankGlassBlocks.length >= 1) {
+            for (int id : ConfigCore.modTankGlassBlocks) {
                 glasses.add(Block.blocksList[id]);
+            }
+        }
         
-    	if (!oreDict.isEmpty())
-    	{
-    		for (ItemStack glass : oreDict)
+    	if (!oreDict.isEmpty())	{
+    		for (ItemStack glass : oreDict) {
     			glasses.add(Block.blocksList[glass.itemID].blockID);
-    		
+    		}
             // Let's remove those duplicates
             HashSet temp = new HashSet();
             temp.addAll(glasses);
@@ -932,17 +1187,18 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
             glasses.addAll(temp);
             
     		return glasses;
-    	}
-    	else
-    	{
+    	} else {
     		return oreDict;
     	}
     }
     
-    
-    
-    public List<FluidStack> getFluidlist() {
-		return fluidlist;
+    /**
+     * Gets the fluidlist.
+     *
+     * @return the fluidlist
+     */
+    public final List<FluidStack> getFluidlist() {
+		return this.fluidlist;
 	}
 
 	/*
@@ -950,63 +1206,61 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
      */
     @Override
-    public int getCapacity () { return maxLiquid; }
+    public final int getCapacity() {
+        return this.maxLiquid;
+    }
 
-    public int getTotalLiquid () { return currentLiquid; }
+    /**
+     * Gets the total liquid.
+     *
+     * @return the total liquid
+     */
+    public final int getTotalLiquid() {
+        return this.currentLiquid;
+    }
 
     /*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidTank#drain(int, boolean)
      */
     @Override
-    public FluidStack drain (int maxDrain, boolean doDrain)
-    {
-        if(!isStructureValid())
-        {
+    public final FluidStack drain(final int maxDrain, final boolean doDrain) {
+        if (!this.isStructureValid()) {
             //TSteelworks.loginfo("DTL - drain - invalid strucutre, refused");
             return null;
-        }
-      else
-      {
+        } else {
           //TSteelworks.loginfo("DTL - drain - valid strucutre, allowed");
-      }
+        }
         
-        if (fluidlist.size() == 0)
+        if (this.fluidlist.size() == 0) {
             return null;
+        }
 
-        FluidStack liquid = fluidlist.get(0);
-        if (liquid != null)
-        {
-            if (liquid.amount - maxDrain <= 0)
-            {
-                FluidStack liq = liquid.copy();
-                if (doDrain)
-                {
+        final FluidStack liquid = this.fluidlist.get(0);
+        if (liquid != null) {
+            if (liquid.amount - maxDrain <= 0) {
+                final FluidStack liq = liquid.copy();
+                if (doDrain) {
                     //liquid = null;
-                    fluidlist.remove(liquid);
+                    this.fluidlist.remove(liquid);
                     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                    currentLiquid = 0;
-                    needsUpdate = true;
+                    this.currentLiquid = 0;
+                    this.needsUpdate = true;
                 }
-                containsAlloy = containsAlloy();
+                this.containsAlloy = this.containsAlloy();
                 return liq;
-            }
-            else
-            {
-                if (doDrain && maxDrain > 0)
-                {
+            } else {
+                if (doDrain && maxDrain > 0) {
                     liquid.amount -= maxDrain;
                     worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                    currentLiquid -= maxDrain;
-                    needsUpdate = true;
+                    this.currentLiquid -= maxDrain;
+                    this.needsUpdate = true;
                 }
-                containsAlloy = containsAlloy();
+                this.containsAlloy = this.containsAlloy();
                 return new FluidStack(liquid.fluidID, maxDrain, liquid.tag);
             }
-        }
-        else
-        {
-            containsAlloy = containsAlloy();
+        } else {
+            this.containsAlloy = this.containsAlloy();
             return new FluidStack(0, 0);
         }
     }
@@ -1016,72 +1270,68 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraftforge.fluids.IFluidTank#fill(net.minecraftforge.fluids.FluidStack, boolean)
      */
     @Override
-    public int fill (FluidStack resource, boolean doFill)
-    {
-        if(!isStructureValid())
-        {
+    public final int fill(final FluidStack resource, final boolean doFill) {
+        if (!this.isStructureValid()) {
             //TSteelworks.loginfo("DTL - fill - invalid strucutre, refused");
             return 0;
-        }
-        else
-        {
+        } else {
             //TSteelworks.loginfo("DTL - fill - valid strucutre, allowed");
         }
-        if (resource == null) return 0;
-        FluidStack copy = resource.copy();
-        addFluidToTank(copy, false);
+        if (resource == null) {
+            return 0;
+        }
+        final FluidStack copy = resource.copy();
+        this.addFluidToTank(copy, false);
 
         return resource.amount - copy.amount;
     }
     
-    boolean addFluidToTank (FluidStack liquid, boolean first)
-    {
-          if(!isStructureValid())
-          {
-              //TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
-              return false;
-          }
-          else
-          {
-              //TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
-          }
-        
-        needsUpdate = true;
-        if (fluidlist.size() == 0)
-        {
-            fluidlist.add(liquid.copy());
-            currentLiquid += liquid.amount;
-            containsAlloy = containsAlloy();
-            return true;
+    /**
+     * Adds the fluid to tank.
+     *
+     * @param liquid the liquid
+     * @param first the first
+     * @return true, if successful
+     */
+    final boolean addFluidToTank(final FluidStack liquid, final boolean first) {
+        if (!this.isStructureValid()) {
+            //TSteelworks.loginfo("DTL - addFluidToTank - invalid strucutre, refused");
+            return false;
+        } else {
+            //TSteelworks.loginfo("DTL - addFluidToTank - valid strucutre, allowed");
         }
-        else
-        {
-            if (liquid.amount + currentLiquid > maxLiquid)
+
+        this.needsUpdate = true;
+        if (this.fluidlist.size() == 0) {
+            this.fluidlist.add(liquid.copy());
+            this.currentLiquid += liquid.amount;
+            this.containsAlloy = this.containsAlloy();
+            return true;
+        } else {
+            if (liquid.amount + this.currentLiquid > this.maxLiquid) {
                 return false;
-            currentLiquid += liquid.amount;
+            }
+            this.currentLiquid += liquid.amount;
             boolean added = false;
-            for (int i = 0; i < fluidlist.size(); i++)
-            {
-                FluidStack l = fluidlist.get(i);
-                if (l.isFluidEqual(liquid))
-                {
+            for (int i = 0; i < this.fluidlist.size(); i++) {
+                FluidStack l = this.fluidlist.get(i);
+                if (l.isFluidEqual(liquid)) {
                     l.amount += liquid.amount;
                     added = true;
                 }
-                if (l.amount <= 0)
-                {
-                    fluidlist.remove(l);
+                if (l.amount <= 0) {
+                    this.fluidlist.remove(l);
                     i--;
                 }
             }
-            if (!added)
-            {
-                if (first)
-                    fluidlist.add(0, liquid.copy());
-                else
-                    fluidlist.add(liquid.copy());
+            if (!added) {
+                if (first) {
+                    this.fluidlist.add(0, liquid.copy());
+                } else {
+                    this.fluidlist.add(liquid.copy());
+                }
             }
-            containsAlloy = containsAlloy();
+            this.containsAlloy = this.containsAlloy();
             return true;
         }
     }
@@ -1091,35 +1341,42 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraftforge.fluids.IFluidTank#getFluid()
      */
     @Override
-    public FluidStack getFluid ()
-    {
-        if(!isStructureValid())
-        {
+    public final FluidStack getFluid() {
+        if (!this.isStructureValid()) {
             //TSteelworks.loginfo("DTL - getFluid - invalid strucutre, refused");
             return null;
-        }
-        else
-        {
+        } else {
             //TSteelworks.loginfo("DTL - getFluid - valid strucutre, allowed");
         }
         
-        if (fluidlist.size() == 0)
+        if (this.fluidlist.size() == 0) {
             return null;
-        return fluidlist.get(0);
+        }
+        
+        return this.fluidlist.get(0);
     }
     
-    public List<FluidStack> getAllFluids () { return fluidlist; }
+    /**
+     * Gets the all fluids.
+     *
+     * @return the all fluids
+     */
+    public final List<FluidStack> getAllFluids() { return this.fluidlist; }
     
-    public int getTotalFluidAmount ()
-    {
-        if (fluidlist.size() == 0)
-            return currentLiquid;
+    /**
+     * Gets the total fluid amount.
+     *
+     * @return the total fluid amount
+     */
+    public final int getTotalFluidAmount() {
+        if (this.fluidlist.size() == 0) {
+            return this.currentLiquid;
+        }
         
         int amt = 0;
         
-        for (int i = 0; i < fluidlist.size(); i++)
-        {
-            FluidStack l = fluidlist.get(i);
+        for (int i = 0; i < this.fluidlist.size(); i++) {
+            FluidStack l = this.fluidlist.get(i);
             amt += l.amount;
         }
         return amt;
@@ -1130,79 +1387,116 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
      */
     @Override
-    public int getFluidAmount () { return currentLiquid; }
+    public final int getFluidAmount() { 
+        return this.currentLiquid;
+    }
 
-    public int getFillRatio () { return currentLiquid <= 0 ? 0 : maxLiquid / getTotalFluidAmount(); }
+    /**
+     * Gets the fill ratio.
+     *
+     * @return the fill ratio
+     */
+    public final int getFillRatio() { 
+        return this.currentLiquid <= 0 ? 0 : this.maxLiquid / this.getTotalFluidAmount();
+    }
     
     /*
      * (non-Javadoc)
      * @see net.minecraftforge.fluids.IFluidTank#getInfo()
      */
     @Override
-    public FluidTankInfo getInfo () { return new FluidTankInfo(this); }
+    public final FluidTankInfo getInfo() { 
+        return new FluidTankInfo(this);
+    }
 
-    public FluidTankInfo[] getMultiTankInfo ()
-    {
-        FluidTankInfo[] info = new FluidTankInfo[fluidlist.size() + 1];
-        for (int i = 0; i < fluidlist.size(); i++)
-        {
-            FluidStack fluid = fluidlist.get(i);
+    /**
+     * Gets the multi tank info.
+     *
+     * @return the multi tank info
+     */
+    public final FluidTankInfo[] getMultiTankInfo() {
+        final FluidTankInfo[] info = new FluidTankInfo[this.fluidlist.size() + 1];
+        for (int i = 0; i < this.fluidlist.size(); i++) {
+            final FluidStack fluid = this.fluidlist.get(i);
             info[i] = new FluidTankInfo(fluid.copy(), fluid.amount);
         }
-        info[fluidlist.size()] = new FluidTankInfo(null, maxLiquid - currentLiquid);
+        info[this.fluidlist.size()] = new FluidTankInfo(null, this.maxLiquid - this.currentLiquid);
         return info;
     }
 
-    public void setTurbineAttached (boolean flag)
-    {
-        activeTurbineAttached = flag;
+    /**
+     * Sets the turbine attached.
+     *
+     * @param flag the new turbine attached
+     */
+    public final void setTurbineAttached(final boolean flag) {
+        this.activeTurbineAttached = flag;
     }
     
-    public boolean isTurbineAttached ()
-    {
-        return activeTurbineAttached;
+    /**
+     * Checks if is turbine attached.
+     *
+     * @return true, if is turbine attached
+     */
+    public final boolean isTurbineAttached() {
+        return this.activeTurbineAttached;
     }
     
-    boolean containsAlloy ()
-    {
-        for (FluidStack fluid : fluidlist) if (fluidIsAlloy(fluid)) return true;
-        return false;
-    }
-    
-    boolean fluidIsAlloy (FluidStack fluidstack)
-    {
-        for (int i = 0; i < AlloyInfo.alloys.size(); ++i)
-            if (fluidstack.getFluid() == AlloyInfo.alloys.get(i).result.copy().getFluid())
+    /**
+     * Contains alloy.
+     *
+     * @return true, if successful
+     */
+    final boolean containsAlloy() {
+        for (FluidStack fluid : this.fluidlist) {
+            if (this.fluidIsAlloy(fluid)) {
                 return true;
+            }
+        }
         return false;
     }
     
-    void dealloyFluids ()
-    {
-        if(!isStructureValid())
-        {
+    /**
+     * Fluid is alloy.
+     *
+     * @param fluidstack the fluidstack
+     * @return true, if successful
+     */
+    final boolean fluidIsAlloy(final FluidStack fluidstack) {
+        for (int i = 0; i < AlloyInfo.alloys.size(); ++i) {
+            if (fluidstack.getFluid() == AlloyInfo.alloys.get(i).result.copy().getFluid()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Dealloy fluids.
+     */
+    final void dealloyFluids() {
+        if (!this.isStructureValid()) {
             //TSteelworks.loginfo("DTL - dealloyFluids - invalid strucutre, refused");
             return;
-        }
-        else
-        {
+        } else {
             //TSteelworks.loginfo("DTL - dealloyFluids - valid strucutre, allowed");
         }
         
-        
-        if (!containsAlloy) return;
-        for (int i = 0; i < fluidlist.size(); ++i)
-        {
-            FluidStack alloy = fluidlist.get(i).copy();
-            if (!fluidIsAlloy(alloy)) continue;
+        if (!this.containsAlloy) {
+            return;
+        }
+        for (int i = 0; i < this.fluidlist.size(); ++i) {
+            final FluidStack alloy = this.fluidlist.get(i).copy();
+            if (!this.fluidIsAlloy(alloy)) {
+                continue;
+            }
             
-            ArrayList<FluidStack> fluids = AlloyInfo.deAlloy(alloy);
-            fluidlist.remove(i);
+            final ArrayList<FluidStack> fluids = AlloyInfo.deAlloy(alloy);
+            this.fluidlist.remove(i);
             
-            for (int j = 0; j < fluids.size(); j++)
-            {
-                FluidStack liquid = (FluidStack) fluids.get(j);
-                addFluidToTank(liquid, true);
+            for (int j = 0; j < fluids.size(); j++) {
+                final FluidStack liquid = (FluidStack) fluids.get(j);
+                this.addFluidToTank(liquid, true);
             }
         }
     }
@@ -1214,31 +1508,31 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraft.tileentity.TileEntity#readFromNBT(net.minecraft.nbt.NBTTagCompound)
      */
     @Override
-    public void readFromNBT (NBTTagCompound tags)
-    {
-        layers = tags.getInteger("Layers");
-        setInnerMaxX(tags.getInteger("InnerMaxX"));
-        setInnerMaxZ(tags.getInteger("InnerMaxZ"));
+    public final void readFromNBT(final NBTTagCompound tags) {
+        this.layers = tags.getInteger("Layers");
+        this.setInnerMaxX(tags.getInteger("InnerMaxX"));
+        this.setInnerMaxZ(tags.getInteger("InnerMaxZ"));
         super.readFromNBT(tags);
         //validStructure = tags.getBoolean("ValidStructure");
-        containsAlloy = tags.getBoolean("ContainsAlloy");
-        int[] center = tags.getIntArray("CenterPos");
-        if (center.length > 2)
-            centerPos = new CoordTuple(center[0], center[1], center[2]);
-        else
-            centerPos = new CoordTuple(xCoord, yCoord, zCoord);
-        direction = tags.getByte("Direction");
-        currentLiquid = tags.getInteger("CurrentLiquid");
-        maxLiquid = tags.getInteger("MaxLiquid");
-        NBTTagList liquidTag = tags.getTagList("Liquids");
-        fluidlist.clear();
+        this.containsAlloy = tags.getBoolean("ContainsAlloy");
+        final int[] center = tags.getIntArray("CenterPos");
+        if (center.length > 2) {
+            this.centerPos = new CoordTuple(center[0], center[1], center[2]);
+        } else {
+            this.centerPos = new CoordTuple(xCoord, yCoord, zCoord);
+        }
+        this.direction = tags.getByte("Direction");
+        this.currentLiquid = tags.getInteger("CurrentLiquid");
+        this.maxLiquid = tags.getInteger("MaxLiquid");
+        final NBTTagList liquidTag = tags.getTagList("Liquids");
+        this.fluidlist.clear();
 
-        for (int iter = 0; iter < liquidTag.tagCount(); iter++)
-        {
-            NBTTagCompound nbt = (NBTTagCompound) liquidTag.tagAt(iter);
-            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-            if (fluid != null)
-                fluidlist.add(fluid);
+        for (int iter = 0; iter < liquidTag.tagCount(); iter++) {
+            final NBTTagCompound nbt = (NBTTagCompound) liquidTag.tagAt(iter);
+            final FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+            if (fluid != null) {
+                this.fluidlist.add(fluid);
+            }
         }
     }
 
@@ -1247,28 +1541,27 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraft.tileentity.TileEntity#writeToNBT(net.minecraft.nbt.NBTTagCompound)
      */
     @Override
-    public void writeToNBT (NBTTagCompound tags)
-    {
+    public final void writeToNBT(final NBTTagCompound tags) {
         super.writeToNBT(tags);
 //        tags.setBoolean("ValidStructure", validStructure);
-        tags.setBoolean("ContainsAlloy", containsAlloy);
-        int[] center = new int[3];// { centerPos.x, centerPos.y, centerPos.z };
-        if (centerPos == null)
+        tags.setBoolean("ContainsAlloy", this.containsAlloy);
+        int[] center = new int[3];
+        if (this.centerPos == null) {
             center = new int[] { xCoord, yCoord, zCoord };
-        else
-            center = new int[] { centerPos.x, centerPos.y, centerPos.z };
+        } else {
+            center = new int[] { this.centerPos.x, this.centerPos.y, this.centerPos.z };
+        }
         tags.setIntArray("CenterPos", center);
-        tags.setByte("Direction", direction);
-        tags.setInteger("CurrentLiquid", currentLiquid);
-        tags.setInteger("MaxLiquid", maxLiquid);
-        tags.setInteger("InnerMaxZ", getInnerMaxZ());
-        tags.setInteger("InnerMaxX", getInnerMaxX());
-        tags.setInteger("Layers", layers);
+        tags.setByte("Direction", this.direction);
+        tags.setInteger("CurrentLiquid", this.currentLiquid);
+        tags.setInteger("MaxLiquid", this.maxLiquid);
+        tags.setInteger("InnerMaxZ", this.getInnerMaxZ());
+        tags.setInteger("InnerMaxX", this.getInnerMaxX());
+        tags.setInteger("Layers", this.layers);
 
-        NBTTagList taglist = new NBTTagList();
-        for (FluidStack liquid : fluidlist)
-        {
-            NBTTagCompound nbt = new NBTTagCompound();
+        final NBTTagList taglist = new NBTTagList();
+        for (FluidStack liquid : this.fluidlist) {
+            final NBTTagCompound nbt = new NBTTagCompound();
             liquid.writeToNBT(nbt);
             taglist.appendTag(nbt);
         }
@@ -1285,10 +1578,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraft.tileentity.TileEntity#getDescriptionPacket()
      */
     @Override
-    public Packet getDescriptionPacket ()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
+    public final Packet getDescriptionPacket() {
+        final NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
     }
 
@@ -1297,10 +1589,9 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see net.minecraft.tileentity.TileEntity#onDataPacket(net.minecraft.network.INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
      */
     @Override
-    public void onDataPacket (INetworkManager net, Packet132TileEntityData packet)
-    {
-        readFromNBT(packet.data);
-        onInventoryChanged();
+    public final void onDataPacket(final INetworkManager net, final Packet132TileEntityData packet) {
+        this.readFromNBT(packet.data);
+        this.onInventoryChanged();
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         this.needsUpdate = true;
     }
@@ -1313,7 +1604,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tsteelworks.lib.IMaster#getCoord()
      */
     //@Override
-    public CoordTuple getCoord() {
+    /**
+     * Gets the coord.
+     *
+     * @return the coord
+     */
+    public final CoordTuple getCoord() {
         return new CoordTuple(xCoord, yCoord, zCoord);
     }
 
@@ -1322,8 +1618,8 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
      * @see tsteelworks.lib.IMaster#isValid()
      */
     //@Override
-    public boolean isValid() {
-        return validStructure;
+    public final boolean isValid() {
+        return this.validStructure;
     }
 
 	/*
@@ -1331,10 +1627,12 @@ public class DeepTankLogic extends TileEntity implements IFacingLogic, IFluidTan
 	 * @see tsteelworks.lib.IMaster#getBlockId()
 	 */
 	//@Override
-	public int getBlockId() {
+	/**
+	 * Gets the block id.
+	 *
+	 * @return the block id
+	 */
+	public final int getBlockId() {
 		return this.worldObj.getBlockId(xCoord, yCoord, zCoord);
 	}
-
-	
-
 }
