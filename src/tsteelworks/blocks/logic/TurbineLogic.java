@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import tconstruct.library.util.IActiveLogic;
-import tconstruct.library.util.IFacingLogic;
+import tsteelworks.lib.IFacingLogic;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 
 public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidHandler
@@ -122,25 +122,21 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
     }
 
     @Override
-    public byte getRenderDirection ()
-    {
+    public byte getRenderDirection () {
         return direction;
     }
     
     @Override
-    public ForgeDirection getForgeDirection ()
-    {
+    public ForgeDirection getForgeDirection () {
         return ForgeDirection.VALID_DIRECTIONS[direction];
     }
 
     @Override
-    public void setDirection (int side)
-    {
+    public void setDirection (int side) {
     }
 
     @Override
-    public void setDirection (float yaw, float pitch, EntityLivingBase player)
-    {
+    public void setDirection (float yaw, float pitch, EntityLivingBase player) {
         if (pitch > 45)
             direction = 1;
         else if (pitch < -45)
@@ -250,5 +246,59 @@ public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFac
         final NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluid()
+     */
+    @Override
+    public FluidStack getFluid() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
+     */
+    @Override
+    public int getFluidAmount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
+     */
+    @Override
+    public int getCapacity() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#getInfo()
+     */
+    @Override
+    public FluidTankInfo getInfo() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#fill(net.minecraftforge.fluids.FluidStack, boolean)
+     */
+    @Override
+    public int fill(FluidStack resource, boolean doFill) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    /* (non-Javadoc)
+     * @see net.minecraftforge.fluids.IFluidTank#drain(int, boolean)
+     */
+    @Override
+    public FluidStack drain(int maxDrain, boolean doDrain) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

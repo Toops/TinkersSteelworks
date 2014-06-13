@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -69,6 +69,6 @@ public class TSCraftingItem extends Item
         icons = new Icon[textureNames.length];
         for (int i = 0; i < icons.length; ++i)
             if (!(textureNames[i].equals("")))
-                icons[i] = iconRegister.registerIcon(Repo.textureDir + folder + textureNames[i]);
+                icons[i] = iconRegister.registerIcon(TSRepo.textureDir + folder + textureNames[i]);
     }
 }

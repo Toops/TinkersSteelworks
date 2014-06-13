@@ -7,12 +7,13 @@ import java.util.logging.Logger;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.TConstruct;
 import tsteelworks.TSteelworks;
+import tsteelworks.common.TSRepo;
 import tsteelworks.lib.crafting.AlloyInfo;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class TSLogger
 {
-    public static final Logger logger = Logger.getLogger(Repo.modId);
+    public static final Logger logger = Logger.getLogger(TSRepo.modId);
     public boolean debugMode;
 
     public TSLogger (boolean debug)

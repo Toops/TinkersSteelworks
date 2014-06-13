@@ -20,9 +20,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tconstruct.common.TContent;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IFacingLogic;
-import tconstruct.library.util.IMasterLogic;
-import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDrainLogic;
@@ -30,9 +27,12 @@ import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.blocks.logic.TSMultiServantLogic;
 import tsteelworks.client.block.DeepTankRender;
+import tsteelworks.common.TSRepo;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
-import tsteelworks.lib.Repo;
+import tsteelworks.lib.IFacingLogic;
+import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
 import tsteelworks.util.InventoryHelper;
@@ -361,7 +361,7 @@ public class HighOvenBlock extends TSInventoryBlock
         if (logic instanceof HighOvenLogic)
             ((HighOvenLogic) logic).setRSmode(world.isBlockIndirectlyGettingPowered(x, y, z));
         if (logic instanceof HighOvenDuctLogic)
-            ((HighOvenDuctLogic) logic).setRedstoneActive(world.isBlockIndirectlyGettingPowered(x, y, z));
+            ((HighOvenDuctLogic) logic).setRSmode(world.isBlockIndirectlyGettingPowered(x, y, z));
     }
 
     @Override
@@ -413,7 +413,7 @@ public class HighOvenBlock extends TSInventoryBlock
         icons = new Icon[textureNames.length];
 
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
     }
 
     private void spawnHighGolem (World world, int x, int y, int z)

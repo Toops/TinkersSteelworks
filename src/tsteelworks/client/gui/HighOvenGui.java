@@ -25,9 +25,9 @@ import org.lwjgl.opengl.GL12;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.common.TSRepo;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
-import tsteelworks.lib.Repo;
 
 public class HighOvenGui extends TSContainerGui
 {
@@ -153,7 +153,7 @@ public class HighOvenGui extends TSContainerGui
                 final DataOutputStream dos = new DataOutputStream(bos);
                 try
                 {
-                    dos.write(Repo.ovenPacketID);
+                    dos.write(TSRepo.ovenPacketID);
                     dos.writeInt(logic.worldObj.provider.dimensionId);
                     dos.writeInt(logic.xCoord);
                     dos.writeInt(logic.yCoord);
@@ -165,7 +165,7 @@ public class HighOvenGui extends TSContainerGui
                 {
                 	TSteelworks.logError("an error occured", e);
                 }
-                packet.channel = Repo.modChan;
+                packet.channel = TSRepo.modChan;
                 packet.data = bos.toByteArray();
                 packet.length = bos.size();
                 PacketDispatcher.sendPacketToServer(packet);

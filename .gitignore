@@ -16,3 +16,4 @@ Thumbs.db
 /run/
 #eclipse stuff
 /.settings
+/bin

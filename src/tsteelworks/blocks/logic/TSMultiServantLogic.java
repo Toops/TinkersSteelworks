@@ -7,15 +7,12 @@ import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IMasterLogic;
-import tconstruct.library.util.IServantLogic;
-import tsteelworks.TSteelworks;
-import tsteelworks.lib.IMaster;
-import tsteelworks.lib.ITSMasterLogic;
+import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.IServantLogic;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic
 {    
-    private IMaster imaster;
+    //private IMaster imaster;
     // Experimentation...
     CoordTuple master;
     boolean hasMaster;
@@ -33,25 +30,25 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         return false;
     }
     
-    public boolean hasValidMasterNEW()
-    {
-    	if (imaster == null || !hasWorldObj()) return false;
-    	CoordTuple coord = imaster.getCoord();
-    	final TileEntity te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
-    	if(te instanceof IMaster)
-    	{
-    		if((getWorldObj().getBlockId(coord.x, coord.y, coord.z) == imaster.getBlockId()) && (getWorldObj().getBlockMetadata(coord.x, coord.y, coord.z) == imaster.getBlockMetadata()))
-    		{
-    			return imaster.isValid();
-    		}
-    		else
-    		{
-    			imaster = null;
-    			return false;
-    		}
-    	}
-    	return false;
-    }
+//    public boolean hasValidMasterNEW()
+//    {
+//    	if (imaster == null || !hasWorldObj()) return false;
+//    	CoordTuple coord = imaster.getCoord();
+//    	final TileEntity te = worldObj.getBlockTileEntity(coord.x, coord.y, coord.z);
+//    	if(te instanceof IMaster)
+//    	{
+//    		if((getWorldObj().getBlockId(coord.x, coord.y, coord.z) == imaster.getBlockId()) && (getWorldObj().getBlockMetadata(coord.x, coord.y, coord.z) == imaster.getBlockMetadata()))
+//    		{
+//    			return imaster.isValid();
+//    		}
+//    		else
+//    		{
+//    			imaster = null;
+//    			return false;
+//    		}
+//    	}
+//    	return false;
+//    }
     
     public boolean hasValidMaster()
     {
@@ -61,9 +58,9 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         if ((worldObj.getBlockId(master.x, master.y, master.z) == masterID) && (worldObj.getBlockMetadata(master.x, master.y, master.z) == masterMeta))
         {
             final TileEntity te = worldObj.getBlockTileEntity(master.x, master.y, master.z);
-            if(te != null && te instanceof ITSMasterLogic)
+            if(te != null && te instanceof IMasterLogic)
             {
-            	ITSMasterLogic logic = (ITSMasterLogic)te;
+            	IMasterLogic logic = (IMasterLogic)te;
             	return logic.isValid();
             }
             else
@@ -83,10 +80,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
      * (non-Javadoc)
      * @see tconstruct.library.util.IServantLogic#getMasterPosition()
      */
-    public CoordTuple getMasterPositionNEW ()
-    {
-        return (imaster != null) ? imaster.getCoord():null;
-    }
+//    public CoordTuple getMasterPositionNEW ()
+//    {
+//        return (imaster != null) ? imaster.getCoord():null;
+//    }
     
     @Override
     public CoordTuple getMasterPosition ()
@@ -95,21 +92,21 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     }
     
     
-    public boolean overrideMasterNEW(int x, int y, int z)
-    {
-    	final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
-    	if(te instanceof IMaster)
-    	{
-    		imaster = (IMaster)te;
-    		return true;
-    	}
-    	else
-    	{
-    	    imaster = null;
-    		TSteelworks.loginfo("TSMSLogic - overrideMaster - it's not a IMaster - "+te.getClass());
-    	}
-    	return false;
-    }
+//    public boolean overrideMasterNEW(int x, int y, int z)
+//    {
+//    	final TileEntity te = worldObj.getBlockTileEntity(x, y, z);
+//    	if(te instanceof IMaster)
+//    	{
+//    		imaster = (IMaster)te;
+//    		return true;
+//    	}
+//    	else
+//    	{
+//    	    imaster = null;
+//    		TSteelworks.loginfo("TSMSLogic - overrideMaster - it's not a IMaster - "+te.getClass());
+//    	}
+//    	return false;
+//    }
     
     public boolean overrideMaster (int x, int y, int z)
     {
@@ -121,10 +118,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     }
     
     
-    public void removeMasterNEW ()
-    {
-        imaster = null;
-    }
+//    public void removeMasterNEW ()
+//    {
+//        imaster = null;
+//    }
     
     public void removeMaster ()
     {
@@ -139,16 +136,16 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
      * @see tconstruct.library.util.IServantLogic#notifyMasterOfChange()
      */
 //    @Override
-    public void notifyMasterOfChangeNEW ()
-    {
-        if (hasValidMaster())
-        {
-            CoordTuple masterCoord = imaster.getCoord();
-			final IMasterLogic logic = (IMasterLogic) getWorldObj().getBlockTileEntity(masterCoord .x, masterCoord.y, masterCoord.z);
-			if (logic == null) return;
-            logic.notifyChange(this, xCoord, yCoord, zCoord);
-        }
-    }
+//    public void notifyMasterOfChangeNEW ()
+//    {
+//        if (hasValidMaster())
+//        {
+//            CoordTuple masterCoord = imaster.getCoord();
+//			final IMasterLogic logic = (IMasterLogic) getWorldObj().getBlockTileEntity(masterCoord .x, masterCoord.y, masterCoord.z);
+//			if (logic == null) return;
+//            logic.notifyChange(this, xCoord, yCoord, zCoord);
+//        }
+//    }
     
     @Override
     public void notifyMasterOfChange ()
@@ -172,11 +169,11 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     }   
 
     // not needed anymore? replaced by something else somewhere else?
-    @Deprecated
-    public boolean setMasterNEW (int x, int y, int z)
-    {
-        return !hasValidMasterNEW() ? overrideMaster(x, y, z) : false;
-    }
+//    @Deprecated
+//    public boolean setMasterNEW (int x, int y, int z)
+//    {
+//        return !hasValidMasterNEW() ? overrideMaster(x, y, z) : false;
+//    }
 
     @Deprecated
     public boolean setMaster (int x, int y, int z)
@@ -195,10 +192,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
      * @see tconstruct.library.util.IServantLogic#setPotentialMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
      */
     //@Override
-    public boolean setPotentialMasterNEW (IMasterLogic master, World world, int x, int y, int z)
-    {
-        return imaster == null;
-    }
+//    public boolean setPotentialMasterNEW (IMasterLogic master, World world, int x, int y, int z)
+//    {
+//        return imaster == null;
+//    }
 
     @Override
     public boolean setPotentialMaster (IMasterLogic master, World world, int x, int y, int z)
@@ -211,13 +208,13 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
      * @see tconstruct.library.util.IServantLogic#verifyMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
      */
 //    @Override
-    public boolean verifyMasterNEW (IMasterLogic logic, World world, int x, int y, int z)
-    {
-        if (imaster != null)
-            return hasValidMaster();
-        else
-            return overrideMaster(x, y, z);
-    }
+//    public boolean verifyMasterNEW (IMasterLogic logic, World world, int x, int y, int z)
+//    {
+//        if (imaster != null)
+//            return hasValidMaster();
+//        else
+//            return overrideMaster(x, y, z);
+//    }
     
     @Override
     public boolean verifyMaster (IMasterLogic logic, World world, int x, int y, int z)
@@ -230,10 +227,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
      * @see tconstruct.library.util.IServantLogic#invalidateMaster(tconstruct.library.util.IMasterLogic, net.minecraft.world.World, int, int, int)
      */
 //    @Override
-    public void invalidateMasterNEW (IMasterLogic master, World world, int x, int y, int z)
-    {
-        imaster = null;
-    }
+//    public void invalidateMasterNEW (IMasterLogic master, World world, int x, int y, int z)
+//    {
+//        imaster = null;
+//    }
 
     @Override
     public void invalidateMaster (IMasterLogic master, World world, int x, int y, int z)
@@ -295,20 +292,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
         writeCustomNBT(tags);
     }
     
-    public void writeCustomNBT_NEW (NBTTagCompound tags)
-    {
-    	boolean hasMaster = (imaster != null);
-        tags.setBoolean("TiedToMaster", hasMaster);
-        if (hasMaster)
-        {
-        	CoordTuple coord = imaster.getCoord();
-            tags.setInteger("xCenter", coord.x);
-            tags.setInteger("yCenter", coord.y);
-            tags.setInteger("zCenter", coord.z);
-            tags.setShort("MasterID", (short)imaster.getBlockId());
-            tags.setByte("masterMeta", (byte)imaster.getBlockMetadata());
-        }
-    }
+//    public void writeCustomNBT_NEW (NBTTagCompound tags)
+//    {
+//    	boolean hasMaster = (imaster != null);
+//        tags.setBoolean("TiedToMaster", hasMaster);
+//        if (hasMaster)
+//        {
+//        	CoordTuple coord = imaster.getCoord();
+//            tags.setInteger("xCenter", coord.x);
+//            tags.setInteger("yCenter", coord.y);
+//            tags.setInteger("zCenter", coord.z);
+//            tags.setShort("MasterID", (short)imaster.getBlockId());
+//            tags.setByte("masterMeta", (byte)imaster.getBlockMetadata());
+//        }
+//    }
 
     public void writeCustomNBT (NBTTagCompound tags)
     {

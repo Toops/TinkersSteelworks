@@ -13,13 +13,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.IFluidTank;
 
 /*
  * A simple logic class for storing items
  * Abstract to avoid instantiation
  */
 
-public abstract class TSInventoryLogic extends TileEntity implements IInventory
+public abstract class TSInventoryLogic extends TileEntity implements IInventory, IFluidTank
 {
     protected ItemStack[] inventory;
     protected String invName;
@@ -219,9 +220,7 @@ public abstract class TSInventoryLogic extends TileEntity implements IInventory
         }
     }
 
-    public void removeBlock ()
-    {
-
+    public void removeBlock() {
     }
 
     //uncheck ArrayIndexOutOfBounds

@@ -18,13 +18,15 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IFacingLogic;
+import tsteelworks.common.TSRepo;
 import tsteelworks.inventory.HighOvenDuctContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.IFacingLogic;
+import tsteelworks.lib.IRedstonePowered;
 import tsteelworks.util.InventoryHelper;
 
 // TODO: Lots
-public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, Hopper
+public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, IRedstonePowered, Hopper
 {
 	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER; 
 	public static final int MODE_REDUCER = HighOvenLogic.SLOT_REDUCER;
@@ -34,7 +36,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	public static final int MODE_OUTPUT = 5;
 
 	byte direction = 0;
-
 
 	/**
 	 * The mode is used to determine if the duct is used 
@@ -129,8 +130,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * 
 	 * @return Redstone powered state
 	 */
-	public boolean getRedstoneActive ()
-	{
+	@Override
+	public boolean getRSmode() {
 		return redstoneActivated;
 	}
 
@@ -140,9 +141,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param flag
 	 *          true: powered / false: not powered
 	 */
-	public void setRedstoneActive (boolean flag)
-	{
-		redstoneActivated = flag;
+	@Override
+	public void setRSmode(boolean mode) {
+		redstoneActivated = mode;
 	}
 
 	/* ==================== Duct Logic ==================== */
@@ -241,7 +242,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	{
 		if (mode == MODE_OUTPUT || redstoneActivated)
 			return false;
-		final IInventory inventory = getExternalInventory(direction);
+		final IInventory inventory = getExternalInventory(this.getRenderDirection());
 
 		if (inventory != null)
 		{
@@ -267,7 +268,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		}
 		else if (ConfigCore.enableDuctVacuum)
 		{
-			final EntityItem entityitem = InventoryHelper.getItemEntityAtLocation(this.getWorldObj(), this.getXPos(), getYPos(), getZPos(), direction);
+			final EntityItem entityitem = InventoryHelper.getItemEntityAtLocation(this.getWorldObj(), this.getXPos(), getYPos(), getZPos(), this.getRenderDirection());
 
 			if (entityitem != null)
 				return pullStackFromEntity(entityitem, mode);
@@ -427,7 +428,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	private IInventory getOutputInventory ()
 	{
-		return (mode == MODE_OUTPUT) ? getExternalInventory(direction) : getHighOvenController();
+		return (mode == MODE_OUTPUT) ? getExternalInventory(this.getRenderDirection()) : getHighOvenController();
 	}
 
 	public IInventory getExternalInventory (byte facing)
@@ -661,62 +662,47 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/* ==================== IFacingLogic ==================== */
 
-	/*
-	 * (non-Javadoc)
-	 * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
-	 */
 	@Override
 	public byte getRenderDirection ()
 	{
 		return direction;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
-	 */
+	
 	@Override
 	public ForgeDirection getForgeDirection ()
 	{
 		return ForgeDirection.VALID_DIRECTIONS[direction];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see tconstruct.library.util.IFacingLogic#setDirection(int)
-	 */
 	@Override
 	public void setDirection (int side)
 	{
+	    direction = (byte) side;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see tconstruct.library.util.IFacingLogic#setDirection(float, float, net.minecraft.entity.EntityLivingBase)
-	 */
 	@Override
 	public void setDirection (float yaw, float pitch, EntityLivingBase player)
 	{
 		if (pitch > 45)
-			direction = 1;
+			setDirection(1);
 		else if (pitch < -45)
-			direction = 0;
+		    setDirection(0);
 		else
 		{
 			final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
 			switch (facing)
 			{
 			case 0:
-				direction = 2;
+			    setDirection(2);
 				break;
 			case 1:
-				direction = 5;
+			    setDirection(5);
 				break;
 			case 2:
-				direction = 3;
+			    setDirection(3);
 				break;
 			case 3:
-				direction = 4;
+			    setDirection(4);
 				break;
 			}
 		}
@@ -737,7 +723,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		final NBTTagList itemList = tags.getTagList("Items");
 		inventory = new ItemStack[getSizeInventory()];
 		transferCooldown = tags.getInteger("TransferCooldown");
-		direction = tags.getByte("Direction");
+		setDirection(tags.getByte(TSRepo.NBTNames.direction));
 
 		for (int iter = 0; iter < itemList.tagCount(); iter++)
 		{
@@ -769,8 +755,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			}
 		tags.setInteger("TransferCooldown", transferCooldown);
 		tags.setTag("Items", nbttaglist);
-		tags.setByte("Direction", direction);
-		tags.setBoolean("RedstoneActivated", redstoneActivated);
+		tags.setByte("Direction", this.getRenderDirection());
+		tags.setBoolean("RedstoneActivated", this.getRSmode());
 		tags.setInteger("Mode", mode);
 	}
 

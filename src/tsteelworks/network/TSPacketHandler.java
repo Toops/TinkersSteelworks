@@ -17,7 +17,7 @@ import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -30,7 +30,7 @@ public class TSPacketHandler implements IPacketHandler
     public void onPacketData (INetworkManager manager, Packet250CustomPayload packet, Player player)
     {
         final Side side = FMLCommonHandler.instance().getEffectiveSide();
-        if (packet.channel.equals(Repo.modChan))
+        if (packet.channel.equals(TSRepo.modChan))
             if (side == Side.SERVER)
                 handleServerPacket(packet, (EntityPlayerMP) player);
             else
@@ -66,7 +66,7 @@ public class TSPacketHandler implements IPacketHandler
         {
             packetID = inputStream.readByte();
             // High Oven
-            if (packetID == Repo.ovenPacketID)
+            if (packetID == TSRepo.ovenPacketID)
             {
                 final int dimension = inputStream.readInt();
                 final World world = DimensionManager.getWorld(dimension);
@@ -94,7 +94,7 @@ public class TSPacketHandler implements IPacketHandler
                 }
             }
             // Duct
-            if (packetID == Repo.ductPacketID)
+            if (packetID == TSRepo.ductPacketID)
             {
                 final int dimension = inputStream.readInt();
                 final World world = DimensionManager.getWorld(dimension);
@@ -113,7 +113,7 @@ public class TSPacketHandler implements IPacketHandler
 
             }
             // Deep Tank
-            if (packetID == Repo.tankPacketID)
+            if (packetID == TSRepo.tankPacketID)
             {
                 final int dimension = inputStream.readInt();
                 final World world = DimensionManager.getWorld(dimension);

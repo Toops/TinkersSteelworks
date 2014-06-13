@@ -42,7 +42,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
     {
         renderer.renderStandardBlock(block, x, y, z);
         DeepTankLogic logic = (DeepTankLogic) world.getBlockTileEntity(x, y, z);
-        if (logic.isStructureValid())
+        if (logic.isValid())
         {
             CoordTuple centerPos = logic.getCenterPos();
 			int posX = centerPos.x - (logic.xDistanceToRim() - 1);

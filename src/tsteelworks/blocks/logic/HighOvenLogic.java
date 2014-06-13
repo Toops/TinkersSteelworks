@@ -30,21 +30,22 @@ import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidTank;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IActiveLogic;
-import tconstruct.library.util.IFacingLogic;
-import tconstruct.library.util.IMasterLogic;
-import tconstruct.library.util.IServantLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.IActiveLogic;
+import tsteelworks.lib.IFacingLogic;
+import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.IRedstonePowered;
+import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.util.InventoryHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic //, IMaster
+public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IRedstonePowered
 {	
     
 	public static final int SLOT_OXIDIZER = 0; // ex: gunpowder, sugar, coal
@@ -88,18 +89,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public HighOvenLogic()
     {
         super(4);
-        redstoneActivated = false;
+        setRSmode(false);
         fuelHeatRate = 3;
         internalCoolDownRate = 10;
         activeTemps = meltingTemps = new int[0];
         maxTemp = maxTempUserSet = DEFAULT_MAX_TEMP;
     }
 
-    public boolean isValidStructure ()
-    {
-        return validStructure;
-    }
-    
     /* ==================== Layers ==================== */
     
     /**
@@ -261,7 +257,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         return direction;
     }
-
+    
     /*
      * (non-Javadoc)
      * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
@@ -325,15 +321,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     
     
-    /* ==================== Redstone Logic ==================== */
+    /* ==================== IRedstonePowered ==================== */
     
     /**
      * Get the current state of redstone-connected power
      * 
      * @return Redstone powered state
      */
-    public boolean getRSmode ()
-    {
+    @Override
+    public boolean getRSmode () {
         return redstoneActivated;
     }
 
@@ -343,8 +339,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param flag
      *          true: powered / false: not powered
      */
-    public void setRSmode (boolean flag)
-    {
+    @Override
+    public void setRSmode (boolean flag) {
         redstoneActivated = flag;
         setActive(true);
     }
@@ -497,7 +493,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         activeTemps[slot] = ROOM_TEMP;
         if (doMix)
             removeMixItems();
-        addSolidItem(stack);
+        addItem(stack);
         onInventoryChanged();
     }
 
@@ -537,7 +533,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     {
         if (TSteelworks.thermalExpansionAvailable && ConfigCore.enableTE3SlagOutput)
             if (new Random().nextInt(100) <= 10) // 2014/04/25 - Reduced from 15% to 10%
-                    addSolidItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
+                    addItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
     }
     
     /**
@@ -619,7 +615,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     void updateFuelGauge ()
     {
-        if (isBurning() || !redstoneActivated) return;
+        if (isBurning() || !this.getRSmode()) return;
         if (inventory[SLOT_FUEL] == null)
         {
             fuelBurnTime = 0;
@@ -1217,7 +1213,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
     }
 
-    void addSolidItem (ItemStack stack)
+    void addItem (ItemStack stack)
     {
         boolean transferred = false;
         // If we have an output duct...
@@ -1231,7 +1227,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
         // Dispense item if no duct is present
         if (!transferred)
-            dispenseSolidItem(stack);
+            dispenseItem(stack);
     }
 
     boolean sendItemToDuct (HighOvenDuctLogic duct, ItemStack stack)
@@ -1286,7 +1282,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return effective;
     }
 
-    void dispenseSolidItem (ItemStack stack)
+    void dispenseItem (ItemStack stack)
     {
         final BlockSourceImpl blocksourceimpl = new BlockSourceImpl(worldObj, xCoord, yCoord, zCoord);
         final IBehaviorDispenseItem ibehaviordispenseitem = (IBehaviorDispenseItem)dispenseBehavior.getObject(stack.getItem());
@@ -1451,7 +1447,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         
         super.readFromNBT(tags);
         //validStructure = tags.getBoolean("ValidStructure");
-        redstoneActivated = tags.getBoolean("RedstoneActivated");
+        setRSmode(tags.getBoolean("RedstoneActivated"));
         internalTemp = tags.getInteger("InternalTemp");
         isMeltingItems = tags.getBoolean("InUse");
         final int[] center = tags.getIntArray("CenterPos");
@@ -1485,7 +1481,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void writeToNBT (NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        //tags.setBoolean("ValidStructure", validStructure);
         tags.setBoolean("RedstoneActivated", redstoneActivated);
         tags.setInteger("InternalTemp", internalTemp);
         tags.setBoolean("InUse", isMeltingItems);
@@ -1565,20 +1560,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     
     /* =============== IMaster =============== */
     
-    /*
-     * (non-Javadoc)
-     * @see tsteelworks.lib.IMaster#getCoord()
-     */
-	//@Override
+	@Override
 	public CoordTuple getCoord() {
 		return new CoordTuple(xCoord, yCoord, zCoord);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see tsteelworks.lib.IMaster#isValid()
-	 */
-	//@Override
+	@Override
 	public boolean isValid() {
 		return validStructure;
 	}

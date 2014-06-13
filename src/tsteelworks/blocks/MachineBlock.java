@@ -24,7 +24,7 @@ import tconstruct.library.util.IMasterLogic;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.TurbineLogic;
 import tsteelworks.client.block.MachineRender;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
 
@@ -116,7 +116,7 @@ public class MachineBlock extends TSInventoryBlock
         icons = new Icon[textureNames.length];
 
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
     }
     
     @Override

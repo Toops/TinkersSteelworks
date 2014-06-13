@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,8 +31,8 @@ public class SteamFluidBlock extends BlockFluidClassic
     @SideOnly(Side.CLIENT)
     public void registerIcons (IconRegister iconRegister)
     {
-        stillIcon = iconRegister.registerIcon(Repo.textureDir + "liquid_steam");
-        flowIcon = iconRegister.registerIcon(Repo.textureDir + "liquid_steam_flow");
+        stillIcon = iconRegister.registerIcon(TSRepo.textureDir + "liquid_steam");
+        flowIcon = iconRegister.registerIcon(TSRepo.textureDir + "liquid_steam_flow");
     }
 
     @Override

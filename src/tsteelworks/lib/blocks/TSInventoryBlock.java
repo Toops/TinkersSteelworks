@@ -16,7 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tconstruct.library.util.IActiveLogic;
 import tconstruct.library.util.IFacingLogic;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 
 public abstract class TSInventoryBlock extends BlockContainer
 {
@@ -171,6 +171,6 @@ public abstract class TSInventoryBlock extends BlockContainer
         icons = new Icon[textureNames.length];
 
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
     }
 }

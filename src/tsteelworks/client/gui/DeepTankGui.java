@@ -24,9 +24,9 @@ import org.lwjgl.opengl.GL12;
 
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
+import tsteelworks.common.TSRepo;
 import tsteelworks.common.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
-import tsteelworks.lib.Repo;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class DeepTankGui extends TSContainerGui
@@ -350,7 +350,7 @@ public class DeepTankGui extends TSContainerGui
 
                 try
                 {
-                    dos.write(Repo.tankPacketID);
+                    dos.write(TSRepo.tankPacketID);
 
                     dos.writeInt(logic.worldObj.provider.dimensionId);
                     dos.writeInt(logic.xCoord);
@@ -366,7 +366,7 @@ public class DeepTankGui extends TSContainerGui
                    TSteelworks.logError("an error occured", e);
                 }
 
-                packet.channel = Repo.modChan;
+                packet.channel = TSRepo.modChan;
                 packet.data = bos.toByteArray();
                 packet.length = bos.size();
 

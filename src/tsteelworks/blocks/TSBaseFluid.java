@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 
 public class TSBaseFluid extends BlockFluidClassic
 {
@@ -66,8 +66,8 @@ public class TSBaseFluid extends BlockFluidClassic
     @Override
     public void registerIcons (IconRegister iconRegister)
     {
-        stillIcon = iconRegister.registerIcon(Repo.textureDir + texture);
-        flowIcon = iconRegister.registerIcon(Repo.textureDir + texture + "_flow");
+        stillIcon = iconRegister.registerIcon(TSRepo.textureDir + texture);
+        flowIcon = iconRegister.registerIcon(TSRepo.textureDir + texture + "_flow");
     }
 
     @Override

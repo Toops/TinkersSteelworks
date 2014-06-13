@@ -1,5 +1,6 @@
 package tsteelworks.blocks.logic;
 
+import tsteelworks.lib.IFacingLogic;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -12,7 +13,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
-import tconstruct.library.util.IFacingLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic
 {

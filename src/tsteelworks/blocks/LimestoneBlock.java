@@ -14,8 +14,8 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tconstruct.library.util.CoordTuple;
-import tconstruct.library.util.IFacingLogic;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
+import tsteelworks.lib.IFacingLogic;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -114,7 +114,7 @@ public class LimestoneBlock extends TSBaseBlock
     {
         icons = new Icon[textureNames.length];
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
     }
 
     static

@@ -2,10 +2,10 @@ package tsteelworks;
 
 import net.minecraftforge.common.MinecraftForge;
 import tconstruct.library.util.TabTools;
+import tsteelworks.common.TSRepo;
 import tsteelworks.common.TSCommonProxy;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.Repo;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
@@ -34,16 +34,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Toops
  * @license Creative Commons Attribution 3.0 Unported (http://creativecommons.org/licenses/by/3.0/)
  */
-@Mod(modid = Repo.modId, name = Repo.modName, version = Repo.modVer, dependencies = Repo.modRequire)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = (Repo.modChan), packetHandler = tsteelworks.network.TSPacketHandler.class)
+@Mod(modid = TSRepo.modId, name = TSRepo.modName, version = TSRepo.modVer, dependencies = TSRepo.modRequire)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = (TSRepo.modChan), packetHandler = tsteelworks.network.TSPacketHandler.class)
 public class TSteelworks
 {
     // Shared logger
     public static final boolean DEBUG_MODE = false; // for logging (change to false before release!)
     public static final TSLogger logger = new TSLogger(DEBUG_MODE);
-    @Instance(Repo.modId)
+    @Instance(TSRepo.modId)
     public static TSteelworks instance;
-    @SidedProxy(clientSide = Repo.modClientProxy, serverSide = Repo.modServProxy)
+    @SidedProxy(clientSide = TSRepo.modClientProxy, serverSide = TSRepo.modServProxy)
     public static TSCommonProxy proxy;
     
     public static TSContent content;
@@ -62,7 +62,7 @@ public class TSteelworks
     public void preInit (FMLPreInitializationEvent event)
     {
         ConfigCore.initProps(event.getSuggestedConfigurationFile());
-        TSteelworksRegistry.SteelworksCreativeTab = new TabTools(Repo.modId);
+        TSteelworksRegistry.SteelworksCreativeTab = new TabTools(TSRepo.modId);
         
         content = new TSContent();
         

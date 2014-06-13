@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,6 +68,6 @@ public class TSBaseBlock extends Block
     {
         icons = new Icon[textureNames.length];
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + textureNames[i]);
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
     }
 }

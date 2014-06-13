@@ -39,7 +39,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	    if (accessor.getTileEntity() instanceof DeepTankLogic)
         {
 	        DeepTankLogic te = (DeepTankLogic) accessor.getTileEntity();
-            if (te.isValidStructure())
+            if (te.isValid())
             {
     			List<FluidStack> fls = te.getAllFluids();
     			WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
@@ -52,7 +52,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	    else if (accessor.getTileEntity() instanceof HighOvenLogic)
         {
 	        HighOvenLogic te = (HighOvenLogic) accessor.getTileEntity();
-            if (te.isValidStructure())
+            if (te.isValid())
             {
                 List<FluidStack> fls = te.moltenMetal;
                 WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());

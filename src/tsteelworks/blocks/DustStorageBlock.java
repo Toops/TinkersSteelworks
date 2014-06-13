@@ -10,7 +10,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import tsteelworks.lib.Repo;
+import tsteelworks.common.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 
 public class DustStorageBlock extends BlockSand
@@ -89,6 +89,6 @@ public class DustStorageBlock extends BlockSand
         icons = new Icon[TEXTURE_NAMES.length];
 
         for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(Repo.textureDir + TEXTURE_NAMES[i] + "_block");
+            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + TEXTURE_NAMES[i] + "_block");
     }
 }
