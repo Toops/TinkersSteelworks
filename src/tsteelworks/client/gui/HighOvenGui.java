@@ -125,7 +125,7 @@ public class HighOvenGui extends TSContainerGui
         final int cornerX = ((width - xSize) / 2);
         final int cornerY = (height - ySize) / 2;
         int fluidToBeBroughtUp = -1;
-        for (final FluidStack liquid : logic.moltenMetal)
+        for (final FluidStack liquid : logic.getFluidlist())
         {
             final int basePos = 179;
             int liquidSize = 0;// liquid.amount * 52 / liquidLayers;
@@ -195,7 +195,7 @@ public class HighOvenGui extends TSContainerGui
         // Liquids - molten metal
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         int base = 0;
-        for (final FluidStack liquid : logic.moltenMetal)
+        for (final FluidStack liquid : logic.getFluidlist())
         {
             final Icon renderIndex = liquid.getFluid().getStillIcon();
             final int basePos = 179;
@@ -232,12 +232,12 @@ public class HighOvenGui extends TSContainerGui
         // Burn progress
         if (logic.isBurning())
         {
-            scale = logic.getScaledFuelGague(42);
+            scale = logic.getScaledFuelGauge(42);
             drawTexturedModalRect(cornerX + 127, (cornerY + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
         }
 
         // Side inventory
-        int slotSize = logic.layers;
+        int slotSize = logic.getLayers();
         if (slotSize > 6)
             slotSize = 6;
         if (slotSize > 0)
@@ -303,7 +303,7 @@ public class HighOvenGui extends TSContainerGui
         int base = 0;
         final int cornerX = ((width - xSize) / 2);
         final int cornerY = (height - ySize) / 2;
-        for (final FluidStack liquid : logic.moltenMetal)
+        for (final FluidStack liquid : logic.getFluidlist())
         {
             final int basePos = 179;
             int liquidSize = 0;// liquid.amount * 52 / liquidLayers;

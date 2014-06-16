@@ -1,6 +1,7 @@
 package tsteelworks.blocks.logic;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -32,6 +33,7 @@ import tconstruct.library.crafting.FluidType;
 import tconstruct.library.util.CoordTuple;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
+import tsteelworks.common.TSRepo;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.IActiveLogic;
@@ -45,9 +47,8 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.util.InventoryHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class HighOvenLogic.
+ * The primary class for the High Oven structure's logic.
  */
 public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IRedstonePowered {
 
@@ -95,79 +96,79 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     private final IRegistry dispenseBehavior = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
 
     /** The molten metal. */
-    private final ArrayList<FluidStack> moltenMetal = new ArrayList<FluidStack>();
+    private final ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
 
     /** Used to determine if the structure has a bottom. */
-    boolean structureHasBottom;
+    private boolean structureHasBottom;
 
     /** Used to determine if the structure has a top. */
-    boolean structureHasTop;
+    private boolean structureHasTop;
 
     /**
      * Used to determine if the controller is being supplied with a redstone
      * signal.
      */
-    boolean redstoneActivated;
+    private boolean redstoneActivated;
 
     /** Used to determine if the structure needs to be updated. */
-    boolean needsUpdate;
+    private boolean needsUpdate;
 
     /** Used to determine if the controller is melting items. */
-    boolean isMeltingItems;
+    private boolean isMeltingItems;
 
     /** Used to determine if the structure is valid. */
-    public boolean validStructure;
+    private boolean validStructure;
 
     /** Used to determine the controller's facing direction. */
-    byte direction;
+    private byte direction;
 
     /** The coordinates of the structure's output duct. */
-    public CoordTuple outputDuct;
+    private CoordTuple outputDuct;
 
     /** The coordinates of the structure's absolute center position. */
-    public CoordTuple centerPos;
+    private CoordTuple centerPos;
 
     /** The internal temperature. */
-    int internalTemp;
+    private int internalTemp;
 
     /** The current fuel heat rate (gain). */
-    int fuelHeatRate;
+    private int fuelHeatRate;
 
     /** The internal cool down rate. */
-    int internalCoolDownRate;
+    private int internalCoolDownRate;
 
     /** Tick tock, tick tock. */
-    int tick;
+    private int tick;
 
     /** The max liquid capacity. */
-    int maxLiquid;
+    private int maxLiquid;
 
     /** The current liquid amount. */
-    int currentLiquid;
+    private int currentLiquid;
 
     /** The amount of blocks in the structure. */
-    int numBricks;
+    private int numBricks;
 
     /** The max temperature. */
-    int maxTemp;
+    private int maxTemp;
 
     /** The max tempperature set by the user (not implemented). */
-    int maxTempUserSet;
+    private int maxTempUserSet;
 
     /** The amount of layers. */
-    public int layers;
+    private int layers;
 
     /** The fuel burn time. */
-    public int fuelBurnTime;
+    private int fuelBurnTime;
 
     /** The active temperatures of melting items. */
-    public int[] activeTemps;
+    private int[] activeTemps;
 
     /** The melting point temperatures if melting items. */
-    public int[] meltingTemps;
+    private int[] meltingTemps;
 
     /** Used to randomize things. */
-    Random rand = new Random();
+    private Random rand = new Random();
 
     /**
      * Initialization.
@@ -258,7 +259,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                                 itemSize = stack.stackSize;
                             }
                             stack.stackSize -= itemSize;
-                            final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
+                            final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, 
+                                                                         this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, 
+                                                                         new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
 
                             if (stack.hasTagCompound()) {
                                 entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
@@ -286,6 +289,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         return finalCalc;
     }
 
+    /**
+     * Gets the amount of layers in the structure.
+     *
+     * @return the layers
+     */
+    public final int getLayers() {
+        return this.layers;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -329,7 +341,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     @Override
     public final boolean isUseableByPlayer(final EntityPlayer entityplayer) {
-        if (this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this) {
+        if (worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this) {
             return false;
         } else {
             return entityplayer.getDistance(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64D;
@@ -413,7 +425,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     @Override
     public final void setActive(final boolean flag) {
         this.needsUpdate = true;
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+        worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
     /* ==================== IRedstonePowered ==================== */
@@ -470,7 +482,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             if (this.needsUpdate) {
                 this.needsUpdate = false;
-                this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
             }
         }
         // fluid heating (steam)
@@ -504,7 +516,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                             // Liquify metals if the temp has reached the melting point
                         } else
                             if (this.activeTemps[i] >= this.meltingTemps[i]) {
-                                if (!this.worldObj.isRemote) {
+                                if (!worldObj.isRemote) {
                                     final FluidStack result = this.getNormalResultFor(this.inventory[i]);
                                     final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
                                     if (resultitemstack != null) {
@@ -534,13 +546,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * Heat fluids.
      */
     final void heatFluids() {
-        if ((this.internalTemp < 1300) || (this.moltenMetal.size() < 1)) {
+        if ((this.internalTemp < 1300) || (this.fluidlist.size() < 1)) {
             return;
         }
         // Let's make steam!
         if ((this.getFluid().getFluid() == FluidRegistry.WATER) || (this.getFluid().getFluid() == FluidRegistry.getFluid("Steam"))) {
             int amount = 0;
-            for (final FluidStack fluid : this.moltenMetal) {
+            for (final FluidStack fluid : this.fluidlist) {
                 if (fluid.getFluid() == FluidRegistry.WATER) {
                     amount += fluid.amount;
                 }
@@ -548,7 +560,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             if (amount > 0) {
                 final FluidStack steam = new FluidStack(TSContent.steamFluid.getID(), amount);
                 if (this.addFluidToTank(steam, false)) {
-                    this.moltenMetal.remove(0);
+                    this.fluidlist.remove(0);
                     this.currentLiquid -= amount;
                 }
             }
@@ -725,21 +737,21 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     /* ==================== Fuel Handling ==================== */
 
     /**
-     * Checks if is burning.
+     * Checks if controller is burning fuel.
      * 
-     * @return true, if is burning
+     * @return true, burning
      */
     public final boolean isBurning() {
         return this.fuelBurnTime > 0;
     }
 
     /**
-     * Checks for fuel.
+     * Checks for fuel available.
      * 
-     * @return true, if successful
+     * @return true, fuel is available
      */
     public final boolean hasFuel() {
-        return getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0;
+        return HighOvenLogic.getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0;
     }
 
     /**
@@ -748,7 +760,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param scale the scale
      * @return scaled value
      */
-    public final int getScaledFuelGague(final int scale) {
+    public final int getScaledFuelGauge(final int scale) {
         final int value = this.fuelBurnTime / scale;
         return value < 1 ? 1 : value;
     }
@@ -764,10 +776,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             this.fuelBurnTime = 0;
             return;
         }
-        if (getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0) {
+        if (HighOvenLogic.getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0) {
             this.needsUpdate = true;
-            this.fuelBurnTime = getFuelBurnTime(this.inventory[SLOT_FUEL]);
-            this.fuelHeatRate = getFuelHeatRate(this.inventory[SLOT_FUEL]);
+            this.fuelBurnTime = HighOvenLogic.getFuelBurnTime(this.inventory[SLOT_FUEL]);
+            this.fuelHeatRate = HighOvenLogic.getFuelHeatRate(this.inventory[SLOT_FUEL]);
             this.inventory[SLOT_FUEL].stackSize--;
             if (this.inventory[SLOT_FUEL].stackSize <= 0) {
                 this.inventory[SLOT_FUEL] = null;
@@ -779,66 +791,92 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * Update fuel gauge display.
      */
     public final void updateFuelDisplay() {
-        if (getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0) {
+        if (HighOvenLogic.getFuelBurnTime(this.inventory[SLOT_FUEL]) > 0) {
             this.needsUpdate = true;
-            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
 
     /**
-     * Gets the fuel burn time.
+     * Gets the current fuel burn time.
+     *
+     * @return the fuel burn time
+     */
+    public final int getFuelBurnTime() {
+        return this.fuelBurnTime;
+    }
+    
+    /**
+     * Sets the current fuel burn time.
+     *
+     * @param value the new fuel burn time
+     */
+    public final void setFuelBurnTime(final int value) {
+        this.fuelBurnTime = value;
+    }
+    
+    /**
+     * Gets the fuel burn time by given item from the fuel handler.
      * 
-     * @param stack
+     * @param itemstack
      *        the stack
      * @return the fuel burn time
      */
-    public static int getFuelBurnTime(final ItemStack stack) {
-        if (stack == null) {
+    public static int getFuelBurnTime(final ItemStack itemstack) {
+        if (itemstack == null) {
             return 0;
         }
-        return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(stack);
+        return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(itemstack);
     }
 
     /**
-     * Get the rate of heat increase by given item.
-     * 
-     * @param stack
-     *        the stack
+     * Gets the current fuel heat rate.
+     *
      * @return the fuel heat rate
      */
-    public static int getFuelHeatRate(final ItemStack stack) {
-        if (stack == null) {
+    public final int getFuelHeatRate() {
+        return this.fuelHeatRate;
+    }
+    
+    /**
+     * Sets the current fuel heat rate.
+     *
+     * @param value the new fuel heat rate
+     */
+    public final void setFuelHeatRate(final int value) {
+        this.fuelHeatRate = value;
+    }
+    
+    /**
+     * Get the rate of heat increase by given item from the fuel handler.
+     *
+     * @param itemstack the itemstack
+     * @return the fuel heat rate
+     */
+    public static int getFuelHeatRate(final ItemStack itemstack) {
+        if (itemstack == null) {
             return 0;
         }
-        return TSFuelHandler.getHighOvenFuelHeatRate(stack);
+        return TSFuelHandler.getHighOvenFuelHeatRate(itemstack);
     }
-
+    
     /* ==================== Inventory ==================== */
 
     /**
      * Determine is slot is valid for 'ore' processing.
      * 
-     * @param slot
-     *        the slot
-     * @return True if slot is valid
+     * @param slot the slot
+     * @return true if slot is valid
      */
     public final boolean isSmeltingSlot(final int slot) {
-        return (slot > SLOT_FUEL);
+        return slot > SLOT_FUEL;
     }
 
-    /**
-     * Get (& Set) Inventory slot stack limit Returns the maximum stack size for
-     * a inventory slot.
-     * 
-     * @return the inventory stack limit
-     */
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getInventoryStackLimit()
      */
     @Override
-    public int getInventoryStackLimit() {
+    public final int getInventoryStackLimit() {
         return 64;
     }
 
@@ -851,7 +889,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
      */
     @Override
-    public void onInventoryChanged() {
+    public final void onInventoryChanged() {
         this.updateTemperatures();
         // updateEntity();
         super.onInventoryChanged();
@@ -1035,7 +1073,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         if ((this.structureHasTop != this.structureHasBottom != this.validStructure) || (checkLayers != this.layers)) {
             if (this.structureHasBottom && this.structureHasTop) {
                 this.adjustLayers(checkLayers, false);
-                this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+                worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                 this.validStructure = true;
             } else {
                 this.internalTemp = ROOM_TEMP;
@@ -1098,7 +1136,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                 this.internalTemp = ROOM_TEMP;
                 this.validStructure = false;
             }
-            this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+            worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
     }
 
@@ -1116,8 +1154,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         // Check inside
         for (int xPos = x; xPos <= x; xPos++) {
             for (int zPos = z; zPos <= z; zPos++) {
-                block = Block.blocksList[this.worldObj.getBlockId(xPos, y, zPos)];
-                if ((block != null) && !block.isAirBlock(this.worldObj, xPos, y, zPos)) {
+                block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
+                if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) {
                     return false;
                 }
             }
@@ -1144,18 +1182,19 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param count        current amount of blocks
      * @return block count
      */
-    public final int recurseStructureUp(final int x, final int y, final int z, int count) {
+    public final int recurseStructureUp(final int x, final int y, final int z, final int count) {
         this.numBricks = 0;
+        int increment = count;
         // Check inside
         for (int xPos = x; xPos <= x; xPos++) {
             for (int zPos = z; zPos <= z; zPos++) {
-                final int blockID = this.worldObj.getBlockId(xPos, y, zPos);
-                final Block block = Block.blocksList[this.worldObj.getBlockId(xPos, y, zPos)];
-                if ((block != null) && !block.isAirBlock(this.worldObj, xPos, y, zPos)) {
+                final int blockID = worldObj.getBlockId(xPos, y, zPos);
+                final Block block = Block.blocksList[worldObj.getBlockId(xPos, y, zPos)];
+                if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) {
                     if (this.validBlockID(blockID)) {
-                        return this.validateTop(x, y, z, count);
+                        return this.validateTop(x, y, z, increment);
                     } else {
-                        return count;
+                        return increment;
                     }
                 }
             }
@@ -1170,10 +1209,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             this.numBricks += this.checkBricks(x + 1, y, zPos);
         }
         if (this.numBricks != 8) {
-            return count;
+            return increment;
         }
-        count++;
-        return this.recurseStructureUp(x, y + 1, z, count);
+        increment++;
+        return this.recurseStructureUp(x, y + 1, z, increment);
     }
 
     /**
@@ -1185,18 +1224,19 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @param count        current amount of blocks
      * @return block count
      */
-    public final int recurseStructureDown(final int x, final int y, final int z, int count) {
+    public final int recurseStructureDown(final int x, final int y, final int z, final int count) {
         this.numBricks = 0;
+        int increment = count;
         // Check inside
         for (int xPos = x; xPos <= x; xPos++) {
             for (int zPos = z; zPos <= z; zPos++) {
-                final int blockID = this.worldObj.getBlockId(xPos, y, zPos);
+                final int blockID = worldObj.getBlockId(xPos, y, zPos);
                 final Block block = Block.blocksList[blockID];
-                if ((block != null) && !block.isAirBlock(this.worldObj, xPos, y, zPos)) {
+                if ((block != null) && !block.isAirBlock(worldObj, xPos, y, zPos)) {
                     if (this.validBlockID(blockID)) {
-                        return this.validateBottom(x, y, z, count);
+                        return this.validateBottom(x, y, z, increment);
                     } else {
-                        return count;
+                        return increment;
                     }
                 }
             }
@@ -1212,30 +1252,26 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             this.numBricks += this.checkBricks(x + 1, y, zPos);
         }
         if (this.numBricks != 8) {
-            return count;
+            return increment;
         }
-        count++;
-        return this.recurseStructureDown(x, y - 1, z, count);
+        increment++;
+        return this.recurseStructureDown(x, y - 1, z, increment);
     }
 
     /**
      * Determine if layer is a valid top layer.
-     * 
-     * @param x
-     *        coordinate from center
-     * @param y
-     *        coordinate from center
-     * @param z
-     *        coordinate from center
-     * @param count
-     *        current amount of blocks
+     *
+     * @param x        coordinate from center
+     * @param y        coordinate from center
+     * @param z        coordinate from center
+     * @param count        current amount of blocks
      * @return block count
      */
     public final int validateTop(final int x, final int y, final int z, final int count) {
         int topBricks = 0;
         for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
             for (int zPos = z - 1; zPos <= (z + 1); zPos++) {
-                if (this.validBlockID(this.worldObj.getBlockId(xPos, y, zPos)) && (this.worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
+                if (this.validBlockID(worldObj.getBlockId(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
                     topBricks += this.checkBricks(xPos, y, zPos);
                 }
             }
@@ -1246,15 +1282,11 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Determine if layer is a valid bottom layer.
-     * 
-     * @param x
-     *        coordinate from center
-     * @param y
-     *        coordinate from center
-     * @param z
-     *        coordinate from center
-     * @param count
-     *        current amount of blocks
+     *
+     * @param x        coordinate from center
+     * @param y        coordinate from center
+     * @param z        coordinate from center
+     * @param count        current amount of blocks
      * @return block count
      */
     public final int validateBottom(final int x, final int y, final int z, final int count) {
@@ -1275,13 +1307,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Increments bricks, sets them as part of the structure.
-     * 
-     * @param x
-     *        coordinate
-     * @param y
-     *        coordinate
-     * @param z
-     *        coordinate
+     *
+     * @param x        coordinate
+     * @param y        coordinate
+     * @param z        coordinate
      * @return int brick incement
      */
     final int checkBricks(final int x, final int y, final int z) {
@@ -1309,9 +1338,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Determine if block is a valid highoven component.
-     * 
-     * @param blockID
-     *        the block id
+     *
+     * @param blockID        the block id
      * @return Success
      */
     final boolean validBlockID(final int blockID) {
@@ -1333,8 +1361,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         // TODO: Tank should only hold multiple fluids under certain special
         // circumstances ex water & steam, anything & slag
         this.needsUpdate = true;
-        if (this.moltenMetal.size() == 0) {
-            this.moltenMetal.add(liquid.copy());
+        if (this.fluidlist.size() == 0) {
+            this.fluidlist.add(liquid.copy());
             this.currentLiquid += liquid.amount;
             return true;
         } else {
@@ -1345,22 +1373,22 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
             }
             this.currentLiquid += liquid.amount;
             boolean added = false;
-            for (int i = 0; i < this.moltenMetal.size(); i++) {
-                final FluidStack l = this.moltenMetal.get(i);
+            for (int i = 0; i < this.fluidlist.size(); i++) {
+                final FluidStack l = this.fluidlist.get(i);
                 if (l.isFluidEqual(liquid)) {
                     l.amount += liquid.amount;
                     added = true;
                 }
                 if (l.amount <= 0) {
-                    this.moltenMetal.remove(l);
+                    this.fluidlist.remove(l);
                     i--;
                 }
             }
             if (!added) {
                 if (first) {
-                    this.moltenMetal.add(0, liquid.copy());
+                    this.fluidlist.add(0, liquid.copy());
                 } else {
-                    this.moltenMetal.add(liquid.copy());
+                    this.fluidlist.add(liquid.copy());
                 }
             }
             return true;
@@ -1395,12 +1423,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * Send item to duct.
      *
      * @param duct        the duct
-     * @param stack        the stack
+     * @param itemstack        the stack
      * @return true, if successful
      */
-    final boolean sendItemToDuct(final HighOvenDuctLogic duct, final ItemStack stack) {
+    final boolean sendItemToDuct(final HighOvenDuctLogic duct, final ItemStack itemstack) {
         boolean effective = false;
-        ItemStack copystack = new ItemStack(stack.itemID, stack.stackSize, stack.getItemDamage());
+        ItemStack copystack = new ItemStack(itemstack.itemID, itemstack.stackSize, itemstack.getItemDamage());
         for (int slot = 0; slot < duct.getSizeInventory(); slot++) {
             final ItemStack getstack = duct.getStackInSlot(slot);
 
@@ -1410,7 +1438,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                     break;
                 }
                 if (getstack == null) {
-                    final int max = Math.min(stack.getMaxStackSize(), duct.getInventoryStackLimit());
+                    final int max = Math.min(itemstack.getMaxStackSize(), duct.getInventoryStackLimit());
                     if (max >= copystack.stackSize) {
                         duct.setInventorySlotContents(slot, copystack);
                         copystack = null;
@@ -1445,6 +1473,24 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
 
     /**
+     * Gets the output duct.
+     *
+     * @return the output duct
+     */
+    public final CoordTuple getOutputDuct() {
+        return this.outputDuct;
+    }
+    
+    /**
+     * Sets the output duct.
+     *
+     * @param duct the new output duct
+     */
+    public final void setOutputDuct(final CoordTuple duct) {
+        this.outputDuct = duct;
+    }
+    
+    /**
      * Dispense item.
      *
      * @param itemstack        the stack
@@ -1459,6 +1505,36 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
 
     /**
+     * Removes the from fluid list.
+     *
+     * @param fluidstack the fluidstack
+     * @return true, if successful
+     */
+    public boolean removeFromFluidList(final FluidStack fluidstack) {
+        return this.fluidlist.remove(fluidstack);
+    }
+    
+    /**
+     * Adds the to fluid list.
+     *
+     * @param fluidstack the fluidstack
+     * @return true, if successful
+     */
+    public boolean addToFluidList(final FluidStack fluidstack) {
+        return this.fluidlist.add(fluidstack);
+    }
+    
+    /**
+     * Adds the to fluid list.
+     *
+     * @param index the index
+     * @param fluidstack the fluidstack
+     */
+    public void addToFluidList(final int index, final FluidStack fluidstack) {
+        this.fluidlist.add(index,fluidstack);
+    }
+    
+    /**
      * Get max liquid capacity.
      * 
      * @return the capacity
@@ -1469,7 +1545,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
      */
     @Override
-    public int getCapacity() {
+    public final int getCapacity() {
         return this.maxLiquid;
     }
 
@@ -1489,15 +1565,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     @Override
     public final FluidStack drain(final int maxDrain, final boolean doDrain) {
-        if (this.moltenMetal.size() == 0) {
+        if (this.fluidlist.size() == 0) {
             return null;
         }
-        final FluidStack liquid = this.moltenMetal.get(0);
+        final FluidStack liquid = this.fluidlist.get(0);
         if (liquid != null) {
             if ((liquid.amount - maxDrain) <= 0) {
                 final FluidStack liq = liquid.copy();
                 if (doDrain) {
-                    this.moltenMetal.remove(liquid);
+                    this.fluidlist.remove(liquid);
                     this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
                     this.currentLiquid = 0;
                     this.needsUpdate = true;
@@ -1549,10 +1625,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     @Override
     public final FluidStack getFluid() {
-        if (this.moltenMetal.size() == 0) {
+        if (this.fluidlist.size() == 0) {
             return null;
         }
-        return this.moltenMetal.get(0);
+        return this.fluidlist.get(0);
     }
 
     /**
@@ -1561,14 +1637,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      * @return the total fluid amount
      */
     public final int getTotalFluidAmount() {
-        if (this.moltenMetal.size() == 0) {
+        if (this.fluidlist.size() == 0) {
             return this.currentLiquid;
         }
 
         int amt = 0;
 
-        for (int i = 0; i < this.moltenMetal.size(); i++) {
-            final FluidStack l = this.moltenMetal.get(i);
+        for (int i = 0; i < this.fluidlist.size(); i++) {
+            final FluidStack l = this.fluidlist.get(i);
             amt += l.amount;
         }
         return amt;
@@ -1604,17 +1680,26 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     }
 
     /**
+     * Gets the fluidlist.
+     *
+     * @return the fluidlist
+     */
+    public final List<FluidStack> getFluidlist() {
+        return this.fluidlist;
+    }
+    
+    /**
      * Gets the multi tank info.
      * 
      * @return the multi tank info
      */
     public final FluidTankInfo[] getMultiTankInfo() {
-        final FluidTankInfo[] info = new FluidTankInfo[this.moltenMetal.size() + 1];
-        for (int i = 0; i < this.moltenMetal.size(); i++) {
-            final FluidStack fluid = this.moltenMetal.get(i);
+        final FluidTankInfo[] info = new FluidTankInfo[this.fluidlist.size() + 1];
+        for (int i = 0; i < this.fluidlist.size(); i++) {
+            final FluidStack fluid = this.fluidlist.get(i);
             info[i] = new FluidTankInfo(fluid.copy(), fluid.amount);
         }
-        info[this.moltenMetal.size()] = new FluidTankInfo(null, this.maxLiquid - this.currentLiquid);
+        info[this.fluidlist.size()] = new FluidTankInfo(null, this.maxLiquid - this.currentLiquid);
         return info;
     }
 
@@ -1623,46 +1708,43 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * tsteelworks.lib.blocks.TSInventoryLogic#readFromNBT(net.minecraft.nbt
-     * .NBTTagCompound)
+     * @see tsteelworks.lib.blocks.TSInventoryLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
      */
     @Override
     public final void readFromNBT(final NBTTagCompound tags) {
-        this.layers = tags.getInteger("Layers");
-        this.maxTemp = tags.getInteger("MaxTemp");
+        this.layers = tags.getInteger(TSRepo.NBTNames.layers);
+        this.maxTemp = tags.getInteger(TSRepo.NBTNames.maxTemp);
         this.inventory = new ItemStack[4 + this.layers];
 
-        final int[] duct = tags.getIntArray("OutputDuct");
+        final int[] duct = tags.getIntArray(TSRepo.NBTNames.outputDuct);
         if (duct.length > 2) {
             this.outputDuct = new CoordTuple(duct[0], duct[1], duct[2]);
         }
 
         super.readFromNBT(tags);
-        // validStructure = tags.getBoolean("ValidStructure");
-        this.setRSmode(tags.getBoolean("RedstoneActivated"));
-        this.internalTemp = tags.getInteger("InternalTemp");
-        this.isMeltingItems = tags.getBoolean("InUse");
-        final int[] center = tags.getIntArray("CenterPos");
+        this.setRSmode(tags.getBoolean(TSRepo.NBTNames.redstoneOn));
+        this.internalTemp = tags.getInteger(TSRepo.NBTNames.internalTemp);
+        this.isMeltingItems = tags.getBoolean(TSRepo.NBTNames.inUse);
+        final int[] center = tags.getIntArray(TSRepo.NBTNames.centerPos);
         if (center.length > 2) {
             this.centerPos = new CoordTuple(center[0], center[1], center[2]);
         } else {
             this.centerPos = new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
         }
-        this.direction = tags.getByte("Direction");
-        this.fuelBurnTime = tags.getInteger("UseTime");
-        this.fuelHeatRate = tags.getInteger("FuelHeatRate");
-        this.currentLiquid = tags.getInteger("CurrentLiquid");
-        this.maxLiquid = tags.getInteger("MaxLiquid");
-        this.meltingTemps = tags.getIntArray("MeltingTemps");
-        this.activeTemps = tags.getIntArray("ActiveTemps");
-        final NBTTagList liquidTag = tags.getTagList("Liquids");
-        this.moltenMetal.clear();
+        this.direction = tags.getByte(TSRepo.NBTNames.direction);
+        this.setFuelBurnTime(tags.getInteger(TSRepo.NBTNames.useTime));
+        this.setFuelHeatRate(tags.getInteger(TSRepo.NBTNames.fuelHeatRate));
+        this.currentLiquid = tags.getInteger(TSRepo.NBTNames.currentLiquid);
+        this.maxLiquid = tags.getInteger(TSRepo.NBTNames.maxLiquid);
+        this.meltingTemps = tags.getIntArray(TSRepo.NBTNames.meltingTemps);
+        this.activeTemps = tags.getIntArray(TSRepo.NBTNames.activeTemps);
+        final NBTTagList liquidTag = tags.getTagList(TSRepo.NBTNames.liquids);
+        this.fluidlist.clear();
         for (int iter = 0; iter < liquidTag.tagCount(); iter++) {
             final NBTTagCompound nbt = (NBTTagCompound) liquidTag.tagAt(iter);
             final FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
             if (fluid != null) {
-                this.moltenMetal.add(fluid);
+                this.fluidlist.add(fluid);
             }
         }
     }
@@ -1677,14 +1759,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     @Override
     public final void writeToNBT(final NBTTagCompound tags) {
         super.writeToNBT(tags);
-        tags.setBoolean("RedstoneActivated", this.redstoneActivated);
-        tags.setInteger("InternalTemp", this.internalTemp);
-        tags.setBoolean("InUse", this.isMeltingItems);
+        tags.setBoolean(TSRepo.NBTNames.redstoneOn, this.redstoneActivated);
+        tags.setInteger(TSRepo.NBTNames.internalTemp, this.internalTemp);
+        tags.setBoolean(TSRepo.NBTNames.inUse, this.isMeltingItems);
         int[] duct = new int[3];
         if (this.outputDuct != null) {
             duct = new int[] { this.outputDuct.x, this.outputDuct.y, this.outputDuct.z };
         }
-        tags.setIntArray("OutputDuct", duct);
+        tags.setIntArray(TSRepo.NBTNames.outputDuct, duct);
 
         int[] center = new int[3];
         if (this.centerPos == null) {
@@ -1692,23 +1774,23 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         } else {
             center = new int[] { this.centerPos.x, this.centerPos.y, this.centerPos.z };
         }
-        tags.setIntArray("CenterPos", center);
-        tags.setByte("Direction", this.direction);
-        tags.setInteger("UseTime", this.fuelBurnTime);
-        tags.setInteger("FuelHeatRate", this.fuelHeatRate);
-        tags.setInteger("CurrentLiquid", this.currentLiquid);
-        tags.setInteger("MaxLiquid", this.maxLiquid);
-        tags.setInteger("Layers", this.layers);
-        tags.setInteger("MaxTemp", this.maxTemp);
-        tags.setIntArray("MeltingTemps", this.meltingTemps);
-        tags.setIntArray("ActiveTemps", this.activeTemps);
+        tags.setIntArray(TSRepo.NBTNames.centerPos, center);
+        tags.setByte(TSRepo.NBTNames.direction, this.direction);
+        tags.setInteger(TSRepo.NBTNames.useTime, this.fuelBurnTime);
+        tags.setInteger(TSRepo.NBTNames.fuelHeatRate, this.fuelHeatRate);
+        tags.setInteger(TSRepo.NBTNames.currentLiquid, this.currentLiquid);
+        tags.setInteger(TSRepo.NBTNames.maxLiquid, this.maxLiquid);
+        tags.setInteger(TSRepo.NBTNames.layers, this.layers);
+        tags.setInteger(TSRepo.NBTNames.maxTemp, this.maxTemp);
+        tags.setIntArray(TSRepo.NBTNames.meltingTemps, this.meltingTemps);
+        tags.setIntArray(TSRepo.NBTNames.activeTemps, this.activeTemps);
         final NBTTagList taglist = new NBTTagList();
-        for (final FluidStack liquid : this.moltenMetal) {
+        for (final FluidStack liquid : this.fluidlist) {
             final NBTTagCompound nbt = new NBTTagCompound();
             liquid.writeToNBT(nbt);
             taglist.appendTag(nbt);
         }
-        tags.setTag("Liquids", taglist);
+        tags.setTag(TSRepo.NBTNames.liquids, taglist);
     }
 
     /*

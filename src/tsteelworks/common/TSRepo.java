@@ -18,6 +18,7 @@ public class TSRepo
     
     public class NBTNames
     {
+        // Shared
         public static final String layers = "Layers";
         public static final String centerPos = "CenterPos";
         public static final String direction = "Direction";
@@ -25,7 +26,19 @@ public class TSRepo
         public static final String currentLiquid = "CurrentLiquid"; 
         public static final String maxLiquid = "MaxLiquid"; 
         public static final String liquids = "Liquids"; 
+        public static final String redstoneOn = "RedstoneActivated"; 
         
+        // High Oven
+        public static final String maxTemp = "MaxTemp"; 
+        public static final String internalTemp = "InternalTemp"; 
+        public static final String outputDuct = "OutputDuct"; 
+        public static final String inUse = "InUse"; 
+        public static final String useTime = "UseTime"; 
+        public static final String fuelHeatRate = "FuelHeatRate"; 
+        public static final String meltingTemps = "MeltingTemps"; 
+        public static final String activeTemps = "ActiveTemps"; 
+        
+        // Deep Tank
         public static final String innerMaxX = "InnerMaxX";
         public static final String innerMaxZ = "InnerMaxZ";
         public static final String containsAlloy = "ContainsAlloy";

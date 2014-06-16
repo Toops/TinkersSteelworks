@@ -79,16 +79,16 @@ public class TSPacketHandler implements IPacketHandler
                 if (te instanceof HighOvenLogic)
                 {
                     FluidStack temp = null;
-                    for (final FluidStack liquid : ((HighOvenLogic) te).moltenMetal)
+                    for (final FluidStack liquid : ((HighOvenLogic) te).getFluidlist())
                         if (liquid.fluidID == fluidID)
                             temp = liquid;
                     if (temp != null)
                     {
-                        ((HighOvenLogic) te).moltenMetal.remove(temp);
+                        ((HighOvenLogic) te).removeFromFluidList(temp);
                         if (isShiftPressed)
-                            ((HighOvenLogic) te).moltenMetal.add(temp);
+                            ((HighOvenLogic) te).addToFluidList(temp);
                         else
-                            ((HighOvenLogic) te).moltenMetal.add(0, temp);
+                            ((HighOvenLogic) te).addToFluidList(0, temp);;
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }
@@ -126,16 +126,16 @@ public class TSPacketHandler implements IPacketHandler
                 if (te instanceof DeepTankLogic)
                 {
                     FluidStack temp = null;
-                    for (final FluidStack liquid : ((DeepTankLogic) te).getFluidlist())
+                    for (final FluidStack liquid : ((DeepTankLogic) te).getFluidList())
                         if (liquid.fluidID == fluidID)
                             temp = liquid;
                     if (temp != null)
                     {
-                        ((DeepTankLogic) te).getFluidlist().remove(temp);
+                        ((DeepTankLogic) te).getFluidList().remove(temp);
                         if (isShiftPressed)
-                            ((DeepTankLogic) te).getFluidlist().add(temp);
+                            ((DeepTankLogic) te).getFluidList().add(temp);
                         else
-                            ((DeepTankLogic) te).getFluidlist().add(0, temp);
+                            ((DeepTankLogic) te).getFluidList().add(0, temp);
                     }
                     PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dimension);
                 }

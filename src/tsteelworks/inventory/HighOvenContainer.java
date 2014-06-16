@@ -24,7 +24,7 @@ public class HighOvenContainer extends TSActiveContainer
         addSlotToContainer(new Slot(highoven, logic.SLOT_PURIFIER, 55, 52)); // purifier
         addSlotToContainer(new Slot(highoven, logic.SLOT_FUEL, 126, 52)); // fuel        
         /* HighOven Ore inventory */
-        for (int y = 0; y < highoven.layers; y++)
+        for (int y = 0; y < highoven.getLayers(); y++)
             addDualSlotToContainer(new TSActiveSlot(highoven, logic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
 
         /* Player inventory */
@@ -76,7 +76,7 @@ public class HighOvenContainer extends TSActiveContainer
     public void updateProgressBar (int id, int value)
     {
         if (id == 0)
-            logic.fuelBurnTime = value / 12;
+            logic.setFuelBurnTime(value / 12);
     }
 
     @Override

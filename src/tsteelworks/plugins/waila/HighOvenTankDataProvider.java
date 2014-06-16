@@ -54,7 +54,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	        HighOvenLogic te = (HighOvenLogic) accessor.getTileEntity();
             if (te.isValid())
             {
-                List<FluidStack> fls = te.moltenMetal;
+                List<FluidStack> fls = te.getFluidlist();
                 WailaHelper.showFluids(currenttip, config, fls, te.getCapacity());
             }
             else

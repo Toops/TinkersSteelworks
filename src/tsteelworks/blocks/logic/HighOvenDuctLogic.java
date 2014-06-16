@@ -165,9 +165,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	public void setMode (int newMode)
 	{
 	    if (newMode == MODE_OUTPUT && !isOutputDuct())
-	        getHighOvenController().outputDuct = new CoordTuple(xCoord, yCoord, zCoord);
+	        getHighOvenController().setOutputDuct(new CoordTuple(xCoord, yCoord, zCoord));
 	    else if (newMode != MODE_OUTPUT && isOutputDuct())
-	        getHighOvenController().outputDuct = null;
+	        getHighOvenController().setOutputDuct(null);
 
 		mode = (newMode < MODE_OUTPUT) ? newMode : MODE_OUTPUT;
 	}
@@ -182,10 +182,10 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	boolean isOutputDuct ()
 	{
-	    if (getHighOvenController().outputDuct == null) return false;
-	    int x = getHighOvenController().outputDuct.x;
-	    int y = getHighOvenController().outputDuct.y;
-	    int z = getHighOvenController().outputDuct.z;
+	    if (getHighOvenController().getOutputDuct() == null) return false;
+	    int x = getHighOvenController().getOutputDuct().x;
+	    int y = getHighOvenController().getOutputDuct().y;
+	    int z = getHighOvenController().getOutputDuct().z;
 	    CoordTuple compare = new CoordTuple(x, y, z);
 	    CoordTuple pos = new CoordTuple(xCoord, yCoord, zCoord);
 	    return (mode == MODE_OUTPUT && compare == pos);

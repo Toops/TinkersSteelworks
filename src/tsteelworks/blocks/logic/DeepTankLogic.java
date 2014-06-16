@@ -780,7 +780,6 @@ public class DeepTankLogic extends TSInventoryLogic implements IFacingLogic, IFl
      * @param glassOnly the glass only
      * @return the int
      */
-    @SuppressWarnings("deprecation")
     final int checkBricks(final int x, final int y, final int z, final boolean glassOnly) {
         int tempBricks = 0;
         final int blockID = worldObj.getBlockId(x, y, z);
@@ -832,7 +831,6 @@ public class DeepTankLogic extends TSInventoryLogic implements IFacingLogic, IFl
      * @param tileentity the tileentity
      * @return the int
      */
-    @SuppressWarnings ("deprecation")
     final int verifyComponent(final TileEntity tileentity) {
         int tempBricks = 0;
         if (tileentity instanceof HighOvenDuctLogic) {
@@ -1149,7 +1147,7 @@ public class DeepTankLogic extends TSInventoryLogic implements IFacingLogic, IFl
      *
      * @return the fluidlist
      */
-    public final List<FluidStack> getFluidlist() {
+    public final List<FluidStack> getFluidList() {
 		return this.fluidlist;
 	}
 

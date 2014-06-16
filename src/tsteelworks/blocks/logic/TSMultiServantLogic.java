@@ -161,7 +161,6 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
     /**
      * @see {@link TSMultiServantLogic#verifyMaster(IMasterLogic, World, int, int, int)}
      */
-    @Deprecated
     public boolean verifyMaster (IMasterLogic logic, int x, int y, int z)
     {
         //return (master.equalCoords(x, y, z) && (worldObj.getBlockId(x, y, z) == masterID) && (worldObj.getBlockMetadata(x, y, z) == masterMeta));
@@ -174,8 +173,6 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic
 //    {
 //        return !hasValidMasterNEW() ? overrideMaster(x, y, z) : false;
 //    }
-
-    @Deprecated
     public boolean setMaster (int x, int y, int z)
     {
         if (!hasMaster || (worldObj.getBlockId(master.x, master.y, master.z) != masterID) || (worldObj.getBlockMetadata(master.x, master.y, master.z) != masterMeta))

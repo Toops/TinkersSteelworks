@@ -60,7 +60,7 @@ public class DeepTankGui extends TSContainerGui
         int cornerX = (width - xSize) / 2 + 20;
         int cornerY = (height - ySize) / 2 + 12;
 
-        for (FluidStack liquid : logic.getFluidlist())
+        for (FluidStack liquid : logic.getFluidList())
         {
             int basePos = 54;
             int initialLiquidSize = 0;
@@ -104,7 +104,7 @@ public class DeepTankGui extends TSContainerGui
         //Liquids - molten metal
         mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         int base = 0;
-        for (FluidStack liquid : logic.getFluidlist())
+        for (FluidStack liquid : logic.getFluidList())
         {
             Icon renderIndex = liquid.getFluid().getStillIcon();
             int basePos = 54;
@@ -318,7 +318,7 @@ public class DeepTankGui extends TSContainerGui
         int cornerY = (height - ySize) / 2 + 12;
         int fluidToBeBroughtUp = -1;
 
-        for (FluidStack liquid : logic.getFluidlist())
+        for (FluidStack liquid : logic.getFluidList())
         {
             int basePos = 54;
             int initialLiquidSize = 0;
