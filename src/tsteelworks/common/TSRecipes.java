@@ -1,7 +1,9 @@
 package tsteelworks.common;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -55,9 +57,10 @@ public class TSRecipes
     public static void addOreDictionarySmelting ()
     {
         final List<FluidType> exceptions = Arrays.asList(new FluidType[] { FluidType.getFluidType("Water"), FluidType.getFluidType("Stone"), FluidType.getFluidType("Ender"), FluidType.getFluidType("Glass"), FluidType.getFluidType("Slime"), FluidType.getFluidType("Obsidian") });
-        //TODO I fix this how? I (Mortvana) is Java n00b, Glassy or lclc, halp mah n00bishness :P
-        for (final FluidType ft : FluidType.values())
-        {
+        Iterator iter = FluidType.fluidTypes.entrySet().iterator();
+        while(iter.hasNext()) {
+            Map.Entry pairs = (Map.Entry) iter.next();
+            FluidType ft = (FluidType) pairs.getValue();
             if (exceptions.contains(ft)) continue;
             final int tempMod = getFluidTempMod(ft);
             AdvancedSmelting.addDictionaryMelting("nugget" + ft.toString(), ft, tempMod, nuggetLiquidValue);
@@ -255,9 +258,9 @@ public class TSRecipes
             GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, new Object[] { patBoots, '#', ingotSteel }));
         }
         
-        String[] oxidizers = { "dustGunpowder", "dustSulphur", "dustSulfur", "dustSaltpeter",  "dustCoal" };
+        String[] oxidizers = { "dustGunpowder", "dustSulphur", "dustSulfur", "dustSaltpeter", "dustSaltpetre", "dustCoal" };
         String[] reducers = { "dustRedstone", "dustManganese", "dustAluminum", "dustAluminium" };
-        String[] purifiers = { "blockSand", "Sandblock" };
+        String[] purifiers = { "blockSand", "Sandblock", "sand" };
         
         for (String o : oxidizers)
             for (String r : reducers)
@@ -328,40 +331,42 @@ public class TSRecipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.pistonBase), "WWW", "CTC", "CRC", 'C', "cobblestone", 'T', rod, 'R', "dustRedstone", 'W', "plankWood"));
     }
 
-    public static int getFluidTempMod (FluidType type)
-    {
-        switch (type)
-        {
-        //TODO Hey, look where I can error :P
-        case Water: return 10;
-        case Iron: return 913;
-        case Gold: return 663;
-        case Tin: return -163;
-        case Copper: return 534;
-        case Aluminum: return 310;
-        case NaturalAluminum: return 310;
-        case Cobalt: return 845;
-        case Ardite: return 910;
-        case AluminumBrass: return 305;
-        case Alumite: return -129;
-        case Manyullyn: return 534;
-        case Bronze: return 380;
-        case Steel: return 840;
-        case Nickel: return 1053;
-        case Lead: return -73;
-        case Silver: return 563;
-        case Platinum: return 1370;
-        case Invar: return 840;
-        case Electrum: return 663;
-        case Obsidian: return 330;
-        case Ender: return 0;
-        case Glass: return 975;
-        case Stone: return 600;
-        case Emerald: return 1025;
-        case Slime: return 0;
-        case PigIron: return 983;
-        case Glue: return 0;
+    public static int getFluidTempMod (FluidType type) {
+        Fluid fluid = type.fluid;
+        String fluidName = fluid.getName();
+
+        switch (fluidName){
+        case "Water": return 10;
+        case "Iron": return 913;
+        case "Gold": return 663;
+        case "Tin": return -163;
+        case "Copper": return 534;
+        case "Aluminum": return 310;
+        case "NaturalAluminum": return 310;
+        case "Cobalt": return 845;
+        case "Ardite": return 910;
+        case "AluminumBrass": return 305;
+        case "Alumite": return -129;
+        case "Manyullyn": return 534;
+        case "Bronze": return 380;
+        case "Steel": return 840;
+        case "Nickel": return 1053;
+        case "Lead": return -73;
+        case "Silver": return 563;
+        case "Platinum": return 1370;
+        case "Invar": return 840;
+        case "Electrum": return 663;
+        case "Obsidian": return 330;
+        case "Ender": return 0;
+        case "Glass": return 975;
+        case "Stone": return 600;
+        case "Emerald": return 1025;
+        case "Slime": return 0;
+        case "PigIron": return 983;
+        case "Glue": return 0;
         default: return 0;
+        //TODO: Make this use if statements for Java 6 compatibility
+        //if (fluidName.equals("Water")) {return 10;} etc ..
         }
     }
 }
