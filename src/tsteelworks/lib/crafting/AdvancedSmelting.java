@@ -36,7 +36,7 @@ public class AdvancedSmelting
     /**
      * Adds mappings between a block and its liquid.
      * 
-     * @param blockID
+     * @param block
      *            The ID of the block to liquify and render
      * @param metadata
      *            The metadata of the block to liquify and render
@@ -161,7 +161,7 @@ public class AdvancedSmelting
     /**
      * Used to get the resulting temperature from a source Block
      * 
-     * @param item
+     * @param item //TODO Make Toops fix this error :P -Mortvana
      *            The Source ItemStack
      * @return The result ItemStack
      */
