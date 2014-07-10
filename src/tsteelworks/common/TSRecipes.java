@@ -54,7 +54,8 @@ public class TSRecipes
     
     public static void addOreDictionarySmelting ()
     {
-        final List<FluidType> exceptions = Arrays.asList(new FluidType[] { FluidType.Water, FluidType.Stone, FluidType.Ender, FluidType.Glass, FluidType.Slime, FluidType.Obsidian });
+        final List<FluidType> exceptions = Arrays.asList(new FluidType[] { FluidType.getFluidType("Water"), FluidType.getFluidType("Stone"), FluidType.getFluidType("Ender"), FluidType.getFluidType("Glass"), FluidType.getFluidType("Slime"), FluidType.getFluidType("Obsidian") });
+        //TODO I fix this how? I (Mortvana) is Java n00b, Glassy or lclc, halp mah n00bishness :P
         for (final FluidType ft : FluidType.values())
         {
             if (exceptions.contains(ft)) continue;
@@ -68,7 +69,7 @@ public class TSRecipes
             AdvancedSmelting.addDictionaryMelting("block" + ft.toString(), ft, tempMod, blockLiquidValue);
         }
         {
-            final FluidType ft = FluidType.Obsidian;
+            final FluidType ft = FluidType.getFluidType("Obsidian");
             final int tempMod = getFluidTempMod(ft);
             AdvancedSmelting.addDictionaryMelting("nugget" + ft.toString(), ft, tempMod, nuggetLiquidValue);
             AdvancedSmelting.addDictionaryMelting("ingot" + ft.toString(), ft, tempMod, ingotLiquidValue);
@@ -79,8 +80,8 @@ public class TSRecipes
             AdvancedSmelting.addDictionaryMelting("block" + ft.toString(), ft, tempMod, blockLiquidValue);
         }
         for (int i = 1; i <= 8; i++)
-            AdvancedSmelting.addDictionaryMelting("compressedCobblestone" + i + "x", FluidType.Stone, getFluidTempMod(FluidType.Stone), (ingotLiquidValue / 18) * (9 ^ i));
-        AdvancedSmelting.addDictionaryMelting("compressedSand1x", FluidType.Glass, getFluidTempMod(FluidType.Glass), FluidContainerRegistry.BUCKET_VOLUME * 9);
+            AdvancedSmelting.addDictionaryMelting("compressedCobblestone" + i + "x", FluidType.getFluidType("Stone"), getFluidTempMod(FluidType.getFluidType("Stone")), (ingotLiquidValue / 18) * (9 ^ i));
+        AdvancedSmelting.addDictionaryMelting("compressedSand1x", FluidType.getFluidType("Glass"), getFluidTempMod(FluidType.getFluidType("Glass")), FluidContainerRegistry.BUCKET_VOLUME * 9);
     }
     
     public static void createAlloys ()
@@ -106,10 +107,10 @@ public class TSRecipes
         if (ConfigCore.hardcoreFlintAndSteel) TSRecipes.changeFlintAndSteel();
         if (ConfigCore.hardcoreAnvil) TSRecipes.changeAnvil();
         
-        AdvancedSmelting.addMelting(Block.blockEmerald, 0, getFluidTempMod(FluidType.Emerald), new FluidStack(TContent.moltenEmeraldFluid, 320 * 9));
-        AdvancedSmelting.addMelting(TContent.glueBlock, 0, getFluidTempMod(FluidType.Glue), new FluidStack(TContent.glueFluid, blockLiquidValue));
+        AdvancedSmelting.addMelting(Block.blockEmerald, 0, getFluidTempMod(FluidType.getFluidType("Emerald")), new FluidStack(TContent.moltenEmeraldFluid, 320 * 9));
+        AdvancedSmelting.addMelting(TContent.glueBlock, 0, getFluidTempMod(FluidType.getFluidType("Glue")), new FluidStack(TContent.glueFluid, blockLiquidValue));
         final ItemStack netherQuartz = new ItemStack(Item.netherQuartz, 1);
-        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.Glass, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
+        AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, FluidType.getFluidType("Glass"), "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
     }
     
     public static void craftManual ()
@@ -160,7 +161,7 @@ public class TSRecipes
         
         for (String o : oxidizers)
             for (String p : purifiers)
-                AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.Stone, o, null, p);
+                AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, FluidType.getFluidType("Stone"), o, null, p);
 
         // Casting
         tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Item.brick), true, 50);
@@ -192,7 +193,7 @@ public class TSRecipes
         Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 0, new FluidStack(fluid, ingotLiquidValue));
         AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock.blockID, 1, 825, new FluidStack(fluid, ingotLiquidValue));
         
-        AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), FluidType.Stone, "dyeLime", null, "blockSand");
+        AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), FluidType.getFluidType("Stone"), "dyeLime", null, "blockSand");
         
         GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 0), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 0));
         GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 1), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 1));
@@ -214,7 +215,7 @@ public class TSRecipes
     
     public static void craftStone ()
     {
-        final FluidType ft = FluidType.Stone;
+        final FluidType ft = FluidType.getFluidType("Stone");
         final Fluid fluid = TContent.moltenStoneFluid;
         
         AdvancedSmelting.addMelting(Block.stone, 0, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue / 18));
@@ -243,7 +244,7 @@ public class TSRecipes
     
     public static void craftSteel ()
     {
-        final FluidType ft = FluidType.Steel;
+        final FluidType ft = FluidType.getFluidType("Steel");
         final ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
         
         if (ConfigCore.enableSteelArmor)
@@ -261,25 +262,25 @@ public class TSRecipes
         for (String o : oxidizers)
             for (String r : reducers)
                 for (String p : purifiers)
-                    AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, o, r, p);
+                    AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.getFluidType("Iron"), o, r, p);
     }
 
     public static void craftPigIron ()
     {
-        final FluidType ft = FluidType.PigIron;
-        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.Iron, "dustSugar", "dyeWhite", "hambone");
+        final FluidType ft = FluidType.getFluidType("PigIron");
+        AdvancedSmelting.registerMixComboForFluidOutput(ft, FluidType.getFluidType("Iron"), "dustSugar", "dyeWhite", "hambone");
     }
 
     public static void craftObsidian ()
     {
-        final FluidType ft = FluidType.Obsidian;
+        final FluidType ft = FluidType.getFluidType("Obsidian");
         final Fluid fluid = TContent.moltenObsidianFluid;
         AdvancedSmelting.addMelting(Block.obsidian, 0, getFluidTempMod(ft), new FluidStack(fluid, ingotLiquidValue * 2));
     }
 
     public static void craftGlass ()
     {
-        final FluidType ft = FluidType.Glass;
+        final FluidType ft = FluidType.getFluidType("Glass");
         final Fluid fluid = TContent.moltenGlassFluid;
         
         AdvancedSmelting.addMelting(Block.sand, 0, getFluidTempMod(ft), new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME));
@@ -291,7 +292,7 @@ public class TSRecipes
 
     public static void craftWater ()
     {
-        final FluidType ft = FluidType.Water;
+        final FluidType ft = FluidType.getFluidType("Water");
         final Fluid fluid = FluidRegistry.WATER;
         
         AdvancedSmelting.addMelting(Block.ice, 0, getFluidTempMod(ft), new FluidStack(fluid, 1000));
@@ -304,9 +305,9 @@ public class TSRecipes
         RecipeRemover.removeShapedRecipe(new ItemStack(Block.anvil));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Block.anvil), "bbb", " i ", "iii", 'i', "ingotSteel", 'b', "blockSteel"));
         
-        Smeltery.addMelting(FluidType.Steel, new ItemStack(Block.anvil, 1, 0), 0, ingotLiquidValue * 31);
-        Smeltery.addMelting(FluidType.Steel, new ItemStack(Block.anvil, 1, 1), 0, ingotLiquidValue * 31);
-        Smeltery.addMelting(FluidType.Steel, new ItemStack(Block.anvil, 1, 2), 0, ingotLiquidValue * 31);
+        Smeltery.addMelting(FluidType.getFluidType("Steel"), new ItemStack(Block.anvil, 1, 0), 0, ingotLiquidValue * 31);
+        Smeltery.addMelting(FluidType.getFluidType("Steel"), new ItemStack(Block.anvil, 1, 1), 0, ingotLiquidValue * 31);
+        Smeltery.addMelting(FluidType.getFluidType("Steel"), new ItemStack(Block.anvil, 1, 2), 0, ingotLiquidValue * 31);
     }
 
     public static void changeFlintAndSteel ()
@@ -316,7 +317,7 @@ public class TSRecipes
         
         Item.flintAndSteel.setMaxDamage(128);
         
-        Smeltery.addMelting(FluidType.Steel, new ItemStack(Item.flintAndSteel, 1, 0), 0, ingotLiquidValue);
+        Smeltery.addMelting(FluidType.getFluidType("Steel"), new ItemStack(Item.flintAndSteel, 1, 0), 0, ingotLiquidValue);
     }
 
     public static void changePiston ()
@@ -331,6 +332,7 @@ public class TSRecipes
     {
         switch (type)
         {
+        //TODO Hey, look where I can error :P
         case Water: return 10;
         case Iron: return 913;
         case Gold: return 663;
