@@ -2,9 +2,6 @@
 
 A steel-based expansion for Tinkers' Construct.
 
-##Compile from Source
-Run [Apache Ant](http://ant.apache.org/bindownload.cgi) in the repository root: `ant package`
-
 ##Issue reporting
 Please include the following:
 

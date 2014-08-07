@@ -2,6 +2,7 @@ package tsteelworks.util;
 
 import java.util.Random;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,8 +21,8 @@ public class TSEventHandler
     Random random = new Random();
     @SuppressWarnings ("unused")
     private Object evt;
-    
-    @ForgeSubscribe
+
+    @SubscribeEvent
     public void onInteract (EntityInteractEvent event)
     {
         // Reserved for future use...
@@ -31,11 +32,11 @@ public class TSEventHandler
 
             EntityPlayer player = (EntityPlayer) event.entityPlayer;
             ItemStack itemstack = player.inventory.getCurrentItem();
-            
+
             if (itemstack != null)
             {
                 boolean affected = false;
-                
+
             }
         }*/
         if (event.target.getClass() == EntityHorse.class)
@@ -61,7 +62,7 @@ public class TSEventHandler
                         heal = 9.0F;
                         grow = 60;
                         temper = 4;
-                        
+
                         if (horse.getHealth() < horse.getMaxHealth() && heal > 0.0F)
                         {
                             horse.heal(heal);
@@ -84,7 +85,7 @@ public class TSEventHandler
                         {
                             horse.worldObj.playSoundAtEntity(horse, "eating", 1.0F, 1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F);
                         }
-                        
+
                         if (!horse.isTame() && !affected)
                         {
                             if (itemstack != null && itemstack.func_111282_a(player, horse))
@@ -109,8 +110,8 @@ public class TSEventHandler
             }
         }
     }
-    
-    @ForgeSubscribe
+
+    @SubscribeEvent
     public void bucketFill (FillBucketEvent evt)
     {
         if (evt.current.getItem() == Item.bucketEmpty && evt.target.typeOfHit == EnumMovingObjectType.TILE)

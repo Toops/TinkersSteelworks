@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSourceImpl;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
@@ -186,7 +187,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Adjust Layers for inventory containment.
-     * 
+     *
      * @param lay
      *        Layer
      * @param forceAdjust
@@ -259,8 +260,8 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
                                 itemSize = stack.stackSize;
                             }
                             stack.stackSize -= itemSize;
-                            final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, 
-                                                                         this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, 
+                            final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX,
+                                                                         this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ,
                                                                          new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
 
                             if (stack.hasTagCompound()) {
@@ -280,7 +281,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Max temp by layer.
-     * 
+     *
      * @return the int
      */
     public final int maxTempByLayer() {
@@ -297,10 +298,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final int getLayers() {
         return this.layers;
     }
-    
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraft.tileentity.TileEntity#canUpdate()
      */
     @Override
@@ -312,7 +313,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getDefaultName()
      */
     @Override
@@ -322,7 +323,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * tsteelworks.lib.blocks.TSInventoryLogic#getGuiContainer(net.minecraft
      * .entity.player.InventoryPlayer, net.minecraft.world.World, int, int, int)
@@ -334,7 +335,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * tsteelworks.lib.blocks.TSInventoryLogic#isUseableByPlayer(net.minecraft
      * .entity.player.EntityPlayer)
@@ -352,7 +353,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
      */
     @Override
@@ -362,7 +363,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
      */
     @Override
@@ -372,7 +373,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IFacingLogic#setDirection(int)
      */
     @Override
@@ -380,7 +381,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IFacingLogic#setDirection(float, float,
      * net.minecraft.entity.EntityLivingBase)
      */
@@ -409,7 +410,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IActiveLogic#getActive()
      */
     @Override
@@ -419,7 +420,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tconstruct.library.util.IActiveLogic#setActive(boolean)
      */
     @Override
@@ -432,7 +433,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Get the current state of redstone-connected power.
-     * 
+     *
      * @return Redstone powered state
      */
     @Override
@@ -442,7 +443,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Set the redstone powered state.
-     * 
+     *
      * @param flag
      *        true: powered / false: not powered
      */
@@ -456,7 +457,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Update Tile Entity.
-     * 
+     *
      * @see net.minecraft.tileentity.TileEntity#updateEntity()
      */
     @Override
@@ -569,7 +570,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Melt items liquid output.
-     * 
+     *
      * @param slot the slot
      * @param fluid the fluid
      * @param doMix the do mix
@@ -595,7 +596,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Melt items solid output.
-     * 
+     *
      * @param slot the slot
      * @param stack the stack
      * @param doMix the do mix
@@ -616,7 +617,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Gets the normal result for.
-     * 
+     *
      * @param itemstack the stack
      * @return the normal result for
      */
@@ -626,7 +627,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Gets the liquid mixed result for.
-     * 
+     *
      * @param fluidstack
      *        the stack
      * @return the liquid mixed result for
@@ -643,7 +644,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Gets the solid mixed result for.
-     * 
+     *
      * @param fluidstack the stack
      * @return the solid mixed result for
      */
@@ -697,7 +698,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Get internal temperature for smelting.
-     * 
+     *
      * @return internal temperature value
      */
     public final int getInternalTemperature() {
@@ -716,7 +717,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Get melting point for item in slot.
-     * 
+     *
      * @param slot the slot
      * @return the melting point for slot
      */
@@ -738,7 +739,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Checks if controller is burning fuel.
-     * 
+     *
      * @return true, burning
      */
     public final boolean isBurning() {
@@ -747,7 +748,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Checks for fuel available.
-     * 
+     *
      * @return true, fuel is available
      */
     public final boolean hasFuel() {
@@ -756,7 +757,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Get fuel gauge scaled for display.
-     * 
+     *
      * @param scale the scale
      * @return scaled value
      */
@@ -805,7 +806,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final int getFuelBurnTime() {
         return this.fuelBurnTime;
     }
-    
+
     /**
      * Sets the current fuel burn time.
      *
@@ -814,10 +815,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final void setFuelBurnTime(final int value) {
         this.fuelBurnTime = value;
     }
-    
+
     /**
      * Gets the fuel burn time by given item from the fuel handler.
-     * 
+     *
      * @param itemstack
      *        the stack
      * @return the fuel burn time
@@ -837,7 +838,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final int getFuelHeatRate() {
         return this.fuelHeatRate;
     }
-    
+
     /**
      * Sets the current fuel heat rate.
      *
@@ -846,7 +847,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final void setFuelHeatRate(final int value) {
         this.fuelHeatRate = value;
     }
-    
+
     /**
      * Get the rate of heat increase by given item from the fuel handler.
      *
@@ -859,12 +860,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
         }
         return TSFuelHandler.getHighOvenFuelHeatRate(itemstack);
     }
-    
+
     /* ==================== Inventory ==================== */
 
     /**
      * Determine is slot is valid for 'ore' processing.
-     * 
+     *
      * @param slot the slot
      * @return true if slot is valid
      */
@@ -885,7 +886,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
      */
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraft.tileentity.TileEntity#onInventoryChanged()
      */
     @Override
@@ -898,7 +899,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getSizeInventory()
      */
     @Override
@@ -908,7 +909,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getStackInSlot(int)
      */
     @Override
@@ -918,7 +919,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#decrStackSize(int, int)
      */
     @Override
@@ -941,7 +942,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getStackInSlotOnClosing(int)
      */
     @Override
@@ -951,7 +952,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * tsteelworks.lib.blocks.TSInventoryLogic#setInventorySlotContents(int,
      * net.minecraft.item.ItemStack)
@@ -966,7 +967,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#getInvName()
      */
     @Override
@@ -976,7 +977,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#isInvNameLocalized()
      */
     @Override
@@ -986,7 +987,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#isItemValidForSlot(int,
      * net.minecraft.item.ItemStack)
      */
@@ -1004,7 +1005,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * tconstruct.library.util.IMasterLogic#notifyChange(tconstruct.library.
      * util.IServantLogic, int, int, int)
@@ -1053,7 +1054,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     // updated
     /**
      * Determine if structure is valid.
-     * 
+     *
      * @param x
      *        coordinate from controller
      * @param y
@@ -1085,7 +1086,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     // Wisthy - 2014/05/02 - new method as solution for issue Toops#22
     /**
      * Determine if structure is valid.
-     * 
+     *
      * @param x
      *        coordinate from controller
      * @param y
@@ -1350,7 +1351,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Add molen metal fluidstack.
-     * 
+     *
      * @param liquid
      *        the liquid
      * @param first
@@ -1397,7 +1398,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Adds the item.
-     * 
+     *
      * @param itemstack
      *        the ItemStack
      */
@@ -1480,7 +1481,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final CoordTuple getOutputDuct() {
         return this.outputDuct;
     }
-    
+
     /**
      * Sets the output duct.
      *
@@ -1489,7 +1490,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final void setOutputDuct(final CoordTuple duct) {
         this.outputDuct = duct;
     }
-    
+
     /**
      * Dispense item.
      *
@@ -1513,7 +1514,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public boolean removeFromFluidList(final FluidStack fluidstack) {
         return this.fluidlist.remove(fluidstack);
     }
-    
+
     /**
      * Adds the to fluid list.
      *
@@ -1523,7 +1524,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public boolean addToFluidList(final FluidStack fluidstack) {
         return this.fluidlist.add(fluidstack);
     }
-    
+
     /**
      * Adds the to fluid list.
      *
@@ -1533,15 +1534,15 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public void addToFluidList(final int index, final FluidStack fluidstack) {
         this.fluidlist.add(index,fluidstack);
     }
-    
+
     /**
      * Get max liquid capacity.
-     * 
+     *
      * @return the capacity
      */
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
      */
     @Override
@@ -1551,7 +1552,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Get current liquid amount.
-     * 
+     *
      * @return the total liquid
      */
     public final int getTotalLiquid() {
@@ -1560,7 +1561,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#drain(int, boolean)
      */
     @Override
@@ -1595,7 +1596,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#fill(net.minecraftforge.fluids.
      * FluidStack, boolean)
      */
@@ -1620,7 +1621,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#getFluid()
      */
     @Override
@@ -1633,7 +1634,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Gets the total fluid amount.
-     * 
+     *
      * @return the total fluid amount
      */
     public final int getTotalFluidAmount() {
@@ -1652,7 +1653,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /**
      * Gets the fill ratio.
-     * 
+     *
      * @return the fill ratio
      */
     public final int getFillRatio() {
@@ -1661,7 +1662,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#getFluidAmount()
      */
     @Override
@@ -1671,7 +1672,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraftforge.fluids.IFluidTank#getInfo()
      */
     @Override
@@ -1687,10 +1688,10 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
     public final List<FluidStack> getFluidlist() {
         return this.fluidlist;
     }
-    
+
     /**
      * Gets the multi tank info.
-     * 
+     *
      * @return the multi tank info
      */
     public final FluidTankInfo[] getMultiTankInfo() {
@@ -1707,7 +1708,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
      */
     @Override
@@ -1751,7 +1752,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * tsteelworks.lib.blocks.TSInventoryLogic#writeToNBT(net.minecraft.nbt.
      * NBTTagCompound)
@@ -1795,7 +1796,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.minecraft.tileentity.TileEntity#getDescriptionPacket()
      */
     @Override
@@ -1807,7 +1808,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * net.minecraft.tileentity.TileEntity#onDataPacket(net.minecraft.network
      * .INetworkManager, net.minecraft.network.packet.Packet132TileEntityData)
@@ -1824,7 +1825,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#openChest()
      */
     @Override
@@ -1832,7 +1833,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.blocks.TSInventoryLogic#closeChest()
      */
     @Override
@@ -1842,7 +1843,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.IMasterLogic#getCoord()
      */
     @Override
@@ -1852,7 +1853,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.IMasterLogic#isValid()
      */
     @Override
@@ -1862,13 +1863,13 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see tsteelworks.lib.IMaster#getBlockId()
      */
     // @Override
     /**
      * Gets the block id.
-     * 
+     *
      * @return the block id
      */
     public final int getBlockId() {

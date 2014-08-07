@@ -1,12 +1,12 @@
 package tsteelworks.lib;
 
+import mantle.lib.TabTools;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import tconstruct.library.util.TabTools;
 
 public class TSteelworksRegistry{
     /** The static instance of this class */
@@ -15,17 +15,17 @@ public class TSteelworksRegistry{
     public static Logger logger = Logger.getLogger("TSteel-API");
     /** Creative tab */
     public static TabTools SteelworksCreativeTab;
-    
-    
-    
-    
+
+
+
+
 
     // just to disable the default implicit public constructor which has no sense in this helper class
 	private TSteelworksRegistry() {
 	}
 
 	/**
-     * A directory of crafting items and tools used by the mod. 
+     * A directory of crafting items and tools used by the mod.
      */
     public static HashMap<String, Item> itemDirectory = new HashMap<String, Item>();
 
@@ -37,7 +37,7 @@ public class TSteelworksRegistry{
 
     /**
      * Adds an itemstack to the directory
-     * 
+     *
      * @param name
      *            Associates the name with the stack
      * @param itemstack
@@ -53,7 +53,7 @@ public class TSteelworksRegistry{
 
     /**
      * Adds an item to the directory
-     * 
+     *
      * @param name
      *            Associates the name with the stack
      * @param itemstack
@@ -69,7 +69,7 @@ public class TSteelworksRegistry{
 
     /**
      * Retrieves an itemstack from the directory
-     * 
+     *
      * @param name
      *            The name of the item to get
      * @return Item associated with the name, or null if not present.
@@ -84,7 +84,7 @@ public class TSteelworksRegistry{
 
     /**
      * Retrieves an itemstack from the directory
-     * 
+     *
      * @param name
      *            The name of the item to get
      * @return Item associated with the name, or null if not present.
