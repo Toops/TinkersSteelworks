@@ -38,9 +38,20 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 	}
 
 	@Override
-	public boolean setPotentialMaster(IMasterLogic master, World world) {
+	public boolean setPotentialMaster(IMasterLogic logic, World world) {
 		return !hasMaster();
 	}
+
+	@Override
+	public boolean setMaster(IMasterLogic logic, World world) {
+		if (!setPotentialMaster(logic, world))
+			return false;
+
+		master = logic;
+
+		return true;
+	}
+
 
 	@Override
 	public boolean verifyMaster(IMasterLogic logic, World world) {

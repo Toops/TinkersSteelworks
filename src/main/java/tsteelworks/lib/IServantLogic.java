@@ -4,6 +4,8 @@ import mantle.world.CoordTuple;
 import net.minecraft.world.World;
 
 public interface IServantLogic {
+	public boolean hasMaster();
+
 	public CoordTuple getMasterPosition();
 
 	/**
@@ -20,7 +22,16 @@ public interface IServantLogic {
 	public boolean setPotentialMaster(IMasterLogic master, World world);
 
 	/**
-	 * Used to set and verify that this is the block's master
+	 * Checks if this block can be tied to this master
+	 *
+	 * @param master    the master to be tied to
+	 * @return whether  the servant can be tied to this master
+	 */
+	public boolean setMaster(IMasterLogic master, World world);
+
+
+	/**
+	 * Used to verify that this is the block's master
 	 *
 	 * @param master    the master
 	 * @return          is this block tied to this master ?

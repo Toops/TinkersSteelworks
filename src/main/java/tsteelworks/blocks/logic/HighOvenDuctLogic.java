@@ -50,12 +50,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	private int transferCooldown = -1;
 
-	/* ==================== Update ==================== */
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.minecraft.tileentity.TileEntity#updateEntity()
-	 */
 	@Override
 	public void updateEntity() {
 		if (this.worldObj != null && !this.worldObj.isRemote) {
@@ -92,10 +86,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return flag;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see tsteelworks.blocks.logic.TSMultiServantLogic#canUpdate()
-	 */
 	@Override
 	public boolean canUpdate() {
 		return true;
@@ -103,7 +93,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	/* ==================== Container ==================== */
 
-	public Container getGuiContainer(InventoryPlayer inventoryplayer, World world, int x, int y, int z) {
+	public Container getGuiContainer(InventoryPlayer inventoryplayer) {
 		return new HighOvenDuctContainer(inventoryplayer, this);
 	}
 
@@ -514,6 +504,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		inventory[slot] = itemstack;
 		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit()))
 			itemstack.stackSize = getInventoryStackLimit();
+
+		onInventoryChanged();
 	}
 
 	@Override
