@@ -10,6 +10,8 @@ import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.IServantLogic;
 
+import java.util.Random;
+
 public class StructureHighOven {
 	/**
 	 * Used to determine if the structure has a bottom.
@@ -45,6 +47,8 @@ public class StructureHighOven {
 	 * The amount of layers.
 	 */
 	private int nbLayers;
+
+	private Random rand = new Random();
 
 	/**
 	 * Determine if structure is valid.

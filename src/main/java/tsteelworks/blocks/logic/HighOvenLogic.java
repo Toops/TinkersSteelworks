@@ -172,7 +172,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	/**
 	 * Used to randomize things.
 	 */
-	private Random rand = new Random();
 	private String invName;
 
 	/**
@@ -298,61 +297,78 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 		if (this.internalTemp <= ROOM_TEMP)
 			return;
 
-		boolean hasUse = false;
-		for (int i = SLOT_FIRST_MELTABLE; i < structure.getNbLayers() + SLOT_FIRST_MELTABLE; i ++) {
+		boolean hasSmeltable = false;
+		for (int i = SLOT_FIRST_MELTABLE; i < structure.getNbLayers() + SLOT_FIRST_MELTABLE; i++) {
 			if (inventory.getStackInSlot(i) == null || this.meltingTemps[i] <= ROOM_TEMP)
 				continue;
 
-			hasUse = true;
+			hasSmeltable = true;
+
 			// Increase temp if its temp is lower than the High Oven's internal temp and hasn't reached melting point
-			if ((this.activeTemps[i] < this.internalTemp) && (this.activeTemps[i] < this.meltingTemps[i])) {
-				this.activeTemps[i] += (this.internalTemp > 250) ? (this.internalTemp / 250) : 1;
-				// Decrease temp if its temp is higher than the High Oven's internal
-				// temp and the High Oven's internal temp is lower than the melting point
-			} else if ((this.activeTemps[i] > this.internalTemp) && (this.internalTemp < this.meltingTemps[i])) {
-				this.activeTemps[i] -= 1;
-				// Liquify metals if the temp has reached the melting point
-			} else if (this.activeTemps[i] >= this.meltingTemps[i]) {
-				if (!worldObj.isRemote) {
-					final FluidStack result = this.getNormalResultFor(this.inventory[i]);
-					final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
-					if (resultitemstack != null) {
-						this.meltItemsSolidOutput(i, resultitemstack, true);
-					} else if (result != null) {
-						final FluidStack resultEx = this.getLiquidMixedResultFor(result);
-						if (resultEx != null) {
-							this.meltItemsLiquidOutput(i, resultEx, true);
-						} else {
-							this.meltItemsLiquidOutput(i, result, false);
-						}
+			// Decrease temp if its temp is higher than the High Oven's internal
+			//  temp and the High Oven's internal temp is lower than the melting point
+			// Liquify metals if the temp has reached the melting point
+
+			if (this.activeTemps[i] < this.internalTemp && this.activeTemps[i] < this.meltingTemps[i]) {
+				this.activeTemps[i] += this.internalTemp > 250 ? this.internalTemp / 250 : 1;
+			} else if (this.activeTemps[i] > this.internalTemp && this.internalTemp < this.meltingTemps[i]) {
+				this.activeTemps[i]--;
+			}
+
+			if (this.activeTemps[i] >= this.meltingTemps[i] && !worldObj.isRemote) {
+				final FluidStack result = this.getNormalResultFor(this.inventory.getStackInSlot(i));
+				final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
+
+				if (resultitemstack != null) {
+					this.meltItemsSolidOutput(i, resultitemstack, true);
+				} else if (result != null) {
+					final FluidStack resultEx = this.getLiquidMixedResultFor(result);
+
+					if (resultEx != null) {
+						this.meltItemsLiquidOutput(i, resultEx, true);
+					} else {
+						this.meltItemsLiquidOutput(i, result, false);
 					}
 				}
 			}
 		}
 
-		isMeltingItems = hasUse;
+		isMeltingItems = hasSmeltable;
 	}
 
 	/**
 	 * Heat fluids. (like steam)
+	 *
+	 * todo: support for other fluids
+	 *       if the temperature < heat temperature, turn fluid back to it's liquid state
+	 *       Only melt the liquid at the very bottom of the oven
+	 *       But cool every fluids
 	 */
 	private void heatFluids() {
-		if ((this.internalTemp < 1300) || (this.fluidlist.size() < 1)) {
+		if (this.internalTemp < 1300 || tank.fluidlist.isEmpty()) {
 			return;
 		}
-		// Let's make steam!
-		if ((this.getFluid().getFluid() == FluidRegistry.WATER) || (this.getFluid().getFluid() == FluidRegistry.getFluid("Steam"))) {
+
+		// Oven on ? Let's make steam!
+		if (this.getFluid().getFluid() == FluidRegistry.WATER) {
+
+		}
+
+		// Oven off ? Let's turn steam back to water \o
+		if (this.getFluid().getFluid() == FluidRegistry.WATER || this.getFluid().getFluid() == FluidRegistry.getFluid("Steam")) {
 			int amount = 0;
-			for (final FluidStack fluid : this.fluidlist) {
+
+			for (FluidStack fluid : tank.fluidlist) {
 				if (fluid.getFluid() == FluidRegistry.WATER) {
 					amount += fluid.amount;
 				}
 			}
+
 			if (amount > 0) {
 				final FluidStack steam = new FluidStack(TSContent.steamFluid.getID(), amount);
+
 				if (this.addFluidToTank(steam, false)) {
-					this.fluidlist.remove(0);
-					this.currentLiquid -= amount;
+					this.tank.drain(amount, true);
 				}
 			}
 		}
@@ -377,9 +393,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 				this.inventory[slot] = null;
 			}
 			this.activeTemps[slot] = ROOM_TEMP;
+
 			if (doMix) {
 				this.removeMixItems();
 			}
+
 			this.onInventoryChanged();
 		}
 	}
@@ -999,17 +1017,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see net.minecraftforge.fluids.IFluidTank#getFluid()
-	 */
 	@Override
 	public final FluidStack getFluid() {
-		if (this.fluidlist.size() == 0) {
-			return null;
-		}
-		return this.fluidlist.get(0);
+		return tank.getFluid();
 	}
 
 	/**
