@@ -11,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -23,28 +24,25 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.RegistryDefaulted;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
+import nf.fr.ephys.cookiecore.util.Inventory;
+import tconstruct.library.component.MultiFluidTank;
 import tconstruct.library.crafting.FluidType;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.TSContent;
 import tsteelworks.common.TSRepo;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.*;
-import tsteelworks.lib.blocks.TSInventoryLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.util.InventoryHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * The primary class for the High Oven structure's logic.
  */
-public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IRedstonePowered {
+public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandler, IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IRedstonePowered {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -99,7 +97,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	/**
 	 * The molten metal.
 	 */
-	private final ArrayList<FluidStack> fluidlist = new ArrayList<FluidStack>();
+	private MultiFluidTank tank = new MultiFluidTank();
+
+	/**
+	 * The inventory
+	 */
+	private Inventory inventory = new Inventory(4);
 
 	/**
 	 * Used to determine if the structure has a bottom.
@@ -138,9 +141,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	private byte direction;
 
 	/**
-	 * The coordinates of the structure's output duct.
+	 * The structure's output duct instance.
 	 */
-	private CoordTuple outputDuct;
+	private HighOvenDuctLogic outputDuct;
 
 	/**
 	 * The coordinates of the structure's absolute center position.
@@ -168,16 +171,6 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	private int tick;
 
 	/**
-	 * The max liquid capacity.
-	 */
-	private int maxLiquid;
-
-	/**
-	 * The current liquid amount.
-	 */
-	private int currentLiquid;
-
-	/**
 	 * The amount of blocks in the structure.
 	 */
 	private int numBricks;
@@ -190,7 +183,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	/**
 	 * The amount of layers.
 	 */
-	private int layers;
+	private int nbLayers;
 
 	/**
 	 * The fuel burn time.
@@ -213,13 +206,12 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	private Random rand = new Random();
 
 	public HighOvenLogic() {
-		super(4);
-
 		this.setRSmode(false);
+
 		this.fuelHeatRate = 3;
 		this.internalCoolDownRate = 10;
 		this.activeTemps = this.meltingTemps = new int[0];
-		this.maxTemp = this.maxTempUserSet = DEFAULT_MAX_TEMP;
+		this.maxTemp = DEFAULT_MAX_TEMP;
 	}
 
     /* ==================== Layers ==================== */
@@ -231,83 +223,87 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 * @param forceAdjust the force adjust
 	 */
 	private void adjustLayers(final int lay, final boolean forceAdjust) {
-		if ((lay != this.layers) || forceAdjust) {
-			this.needsUpdate = true;
-			this.layers = lay;
-			// TSteelworks.loginfo("layers", layers);
-			this.maxLiquid = FLUID_AMOUNT_PER_LAYER * lay;
-			this.maxTemp = this.maxTempByLayer();
-			final int[] tempActive = this.activeTemps;
-			this.activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
-			final int activeLength = tempActive.length > this.activeTemps.length ? this.activeTemps.length : tempActive.length;
-			System.arraycopy(tempActive, 0, this.activeTemps, 0, activeLength);
-			final int[] tempMelting = this.meltingTemps;
-			this.meltingTemps = new int[SLOT_FIRST_MELTABLE + lay];
-			final int meltingLength = tempMelting.length > this.meltingTemps.length ? this.meltingTemps.length : tempMelting.length;
-			System.arraycopy(tempMelting, 0, this.meltingTemps, 0, meltingLength);
-			final ItemStack[] tempInv = this.inventory;
+		if (lay == this.nbLayers && !forceAdjust)
+			return;
 
-			// maybe we should try to split inventory (and the others arrays) it
-			// two.
-			// One fixed inventory for slot 0..3 which will remains the same
-			// and a variable size inventory depending on the number of layers
-			// for the (s)meltable.
-			// Toops notes: Agreed...
-			this.inventory = new ItemStack[SLOT_FIRST_MELTABLE + lay];
-			final int invLength = tempInv.length > this.inventory.length ? this.inventory.length : tempInv.length;
-			System.arraycopy(tempInv, 0, this.inventory, 0, invLength);
-			if ((this.activeTemps.length > 0) && (this.activeTemps.length > tempActive.length)) {
-				for (int i = tempActive.length; i < this.activeTemps.length; i++) {
-					if (!this.isSmeltingSlot(i)) {
-						continue;
-					}
-					this.activeTemps[i] = ROOM_TEMP;
-					this.meltingTemps[i] = ROOM_TEMP;
+		this.needsUpdate = true;
+
+		this.nbLayers = lay;
+		this.tank.setCapacity(FLUID_AMOUNT_PER_LAYER * lay);
+		this.maxTemp = this.maxTempByLayer();
+
+		final int[] tempActive = this.activeTemps;
+		this.activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
+		final int activeLength = tempActive.length > this.activeTemps.length ? this.activeTemps.length : tempActive.length;
+		System.arraycopy(tempActive, 0, this.activeTemps, 0, activeLength);
+
+		final int[] tempMelting = this.meltingTemps;
+		this.meltingTemps = new int[SLOT_FIRST_MELTABLE + lay];
+		final int meltingLength = tempMelting.length > this.meltingTemps.length ? this.meltingTemps.length : tempMelting.length;
+		System.arraycopy(tempMelting, 0, this.meltingTemps, 0, meltingLength);
+		final ItemStack[] tempInv = this.inventory;
+
+		// maybe we should try to split inventory (and the others arrays) it
+		// two.
+		// One fixed inventory for slot 0..3 which will remains the same
+		// and a variable size inventory depending on the number of layers
+		// for the (s)meltable.
+		// Toops notes: Agreed...
+		// ephys: Meh, the inventory is changed /only/ if the structure is modified. That's not happening often is it ?
+		this.inventory = new ItemStack[SLOT_FIRST_MELTABLE + lay];
+		final int invLength = tempInv.length > this.inventory.length ? this.inventory.length : tempInv.length;
+		System.arraycopy(tempInv, 0, this.inventory, 0, invLength);
+		if ((this.activeTemps.length > 0) && (this.activeTemps.length > tempActive.length)) {
+			for (int i = tempActive.length; i < this.activeTemps.length; i++) {
+				if (!this.isSmeltingSlot(i)) {
+					continue;
 				}
+				this.activeTemps[i] = ROOM_TEMP;
+				this.meltingTemps[i] = ROOM_TEMP;
 			}
-			if (tempInv.length > this.inventory.length) {
-				for (int i = this.inventory.length; i < tempInv.length; i++) {
-					final ItemStack stack = tempInv[i];
-					if (stack != null) {
-						final float jumpX = (this.rand.nextFloat() * 0.8F) + 0.1F;
-						final float jumpY = (this.rand.nextFloat() * 0.8F) + 0.1F;
-						final float jumpZ = (this.rand.nextFloat() * 0.8F) + 0.1F;
-						int offsetX = 0;
-						int offsetZ = 0;
-						switch (this.getRenderDirection()) {
-							case 2: // +z
-								offsetZ = -1;
-								break;
-							case 3: // -z
-								offsetZ = 1;
-								break;
-							case 4: // +x
-								offsetX = -1;
-								break;
-							case 5: // -x
-								offsetX = 1;
-								break;
-							default:
-								break;
-						}
+		}
+		if (tempInv.length > this.inventory.length) {
+			for (int i = this.inventory.length; i < tempInv.length; i++) {
+				final ItemStack stack = tempInv[i];
+				if (stack != null) {
+					final float jumpX = (this.rand.nextFloat() * 0.8F) + 0.1F;
+					final float jumpY = (this.rand.nextFloat() * 0.8F) + 0.1F;
+					final float jumpZ = (this.rand.nextFloat() * 0.8F) + 0.1F;
+					int offsetX = 0;
+					int offsetZ = 0;
+					switch (this.getRenderDirection()) {
+						case 2: // +z
+							offsetZ = -1;
+							break;
+						case 3: // -z
+							offsetZ = 1;
+							break;
+						case 4: // +x
+							offsetX = -1;
+							break;
+						case 5: // -x
+							offsetX = 1;
+							break;
+						default:
+							break;
+					}
 
-						while (stack.stackSize > 0) {
-							int itemSize = this.rand.nextInt(21) + 10;
-							if (itemSize > stack.stackSize) {
-								itemSize = stack.stackSize;
-							}
-							stack.stackSize -= itemSize;
-							final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, new ItemStack(stack.getItem(), itemSize, stack.getItemDamage()));
-
-							if (stack.hasTagCompound()) {
-								entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
-							}
-							final float offset = 0.05F;
-							entityitem.motionX = (float) this.rand.nextGaussian() * offset;
-							entityitem.motionY = ((float) this.rand.nextGaussian() * offset) + 0.2F;
-							entityitem.motionZ = (float) this.rand.nextGaussian() * offset;
-							this.worldObj.spawnEntityInWorld(entityitem);
+					while (stack.stackSize > 0) {
+						int itemSize = this.rand.nextInt(21) + 10;
+						if (itemSize > stack.stackSize) {
+							itemSize = stack.stackSize;
 						}
+						stack.stackSize -= itemSize;
+						final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, new ItemStack(stack.getItem(), itemSize, stack.getItemDamage()));
+
+						if (stack.hasTagCompound()) {
+							entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+						}
+						final float offset = 0.05F;
+						entityitem.motionX = (float) this.rand.nextGaussian() * offset;
+						entityitem.motionY = ((float) this.rand.nextGaussian() * offset) + 0.2F;
+						entityitem.motionZ = (float) this.rand.nextGaussian() * offset;
+						this.worldObj.spawnEntityInWorld(entityitem);
 					}
 				}
 			}
@@ -320,25 +316,18 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 * @return the int
 	 */
 	public int maxTempByLayer() {
-		final int layerAdjustment = (this.layers - 1) * 500;
-		final int finalCalc = (DEFAULT_MAX_TEMP + layerAdjustment) < DEFAULT_MAX_TEMP ? DEFAULT_MAX_TEMP : DEFAULT_MAX_TEMP + layerAdjustment;
-		return finalCalc;
+		return DEFAULT_MAX_TEMP + (this.nbLayers - 1) * 500;
 	}
 
 	/**
-	 * Gets the amount of layers in the structure.
+	 * Gets the amount of nbLayers in the structure.
 	 *
-	 * @return the layers
+	 * @return the nbLayers
 	 */
 	public int getLayers() {
-		return this.layers;
+		return this.nbLayers;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see net.minecraft.tileentity.TileEntity#canUpdate()
-	 */
 	@Override
 	public boolean canUpdate() {
 		return true;
@@ -545,7 +534,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	private void heatItems() {
 		if (this.internalTemp > ROOM_TEMP) {
 			boolean hasUse = false;
-			for (int i = SLOT_FIRST_MELTABLE; i < (this.layers + SLOT_FIRST_MELTABLE); i += 1) {
+			for (int i = SLOT_FIRST_MELTABLE; i < (this.nbLayers + SLOT_FIRST_MELTABLE); i += 1) {
 				// If an item is present and meltable
 				if (this.isStackInSlot(i) && (this.meltingTemps[i] > ROOM_TEMP)) {
 					hasUse = true;
@@ -767,7 +756,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 */
 	private void updateTemperatures() {
 		this.isMeltingItems = true;
-		for (int i = SLOT_FIRST_MELTABLE; i < (this.layers + SLOT_FIRST_MELTABLE); i += 1) {
+		for (int i = SLOT_FIRST_MELTABLE; i < (this.nbLayers + SLOT_FIRST_MELTABLE); i += 1) {
 			this.meltingTemps[i] = AdvancedSmelting.getLiquifyTemperature(this.inventory[i]);
 		}
 	}
@@ -1095,7 +1084,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 			checkLayers += this.recurseStructureDown(x, y - 1, z, 0);
 		}
 
-		if ((this.structureHasTop != this.structureHasBottom != this.validStructure) || (checkLayers != this.layers)) {
+		if ((this.structureHasTop != this.structureHasBottom != this.validStructure) || (checkLayers != this.nbLayers)) {
 			if (this.structureHasBottom && this.structureHasTop) {
 				this.adjustLayers(checkLayers, false);
 				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
@@ -1149,9 +1138,9 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 		// TSteelworks.loginfo("HOL - checkValidStructure - hasTop: "+structureHasTop);
 		// TSteelworks.loginfo("HOL - checkValidStructure - oldHasTop: "+oldStructureHasTop);
 
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldLayers: "+this.layers);
+		// TSteelworks.loginfo("HOL - checkValidStructure - oldLayers: "+this.nbLayers);
 
-		if ((oldStructureHasBottom != this.structureHasBottom) || (oldStructureHasTop != this.structureHasTop) || (this.layers != checkedLayers)) {
+		if ((oldStructureHasBottom != this.structureHasBottom) || (oldStructureHasTop != this.structureHasTop) || (this.nbLayers != checkedLayers)) {
 			if (this.structureHasBottom && this.structureHasTop && (checkedLayers > 0)) {
 				this.adjustLayers(checkedLayers, false);
 				this.validStructure = true;
@@ -1698,11 +1687,14 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	 *
 	 * @see tsteelworks.lib.blocks.TSInventoryLogic#readFromNBT(net.minecraft.nbt.NBTTagCompound)
 	 */
+	/*
+	 * maxtemp is replaceable by maxTempByLayer()
+	 */
 	@Override
 	public final void readFromNBT(final NBTTagCompound tags) {
-		this.layers = tags.getInteger(TSRepo.NBTNames.layers);
+		this.nbLayers = tags.getInteger(TSRepo.NBTNames.layers);
 		this.maxTemp = tags.getInteger(TSRepo.NBTNames.maxTemp);
-		this.inventory = new ItemStack[4 + this.layers];
+		this.inventory = new ItemStack[4 + this.nbLayers];
 
 		final int[] duct = tags.getIntArray(TSRepo.NBTNames.outputDuct);
 		if (duct.length > 2) {
@@ -1771,7 +1763,7 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 		nbt.setInteger(TSRepo.NBTNames.fuelHeatRate, this.fuelHeatRate);
 		nbt.setInteger(TSRepo.NBTNames.currentLiquid, this.currentLiquid);
 		nbt.setInteger(TSRepo.NBTNames.maxLiquid, this.maxLiquid);
-		nbt.setInteger(TSRepo.NBTNames.layers, this.layers);
+		nbt.setInteger(TSRepo.NBTNames.layers, this.nbLayers);
 		nbt.setInteger(TSRepo.NBTNames.maxTemp, this.maxTemp);
 		nbt.setIntArray(TSRepo.NBTNames.meltingTemps, this.meltingTemps);
 		nbt.setIntArray(TSRepo.NBTNames.activeTemps, this.activeTemps);
@@ -1818,5 +1810,36 @@ public class HighOvenLogic extends TSInventoryLogic implements IActiveLogic, IFa
 	@Override
 	public final boolean isValid() {
 		return this.validStructure;
+	}
+
+	/* =============== IFluidHandler ============== */
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		return new FluidTankInfo[0];
 	}
 }
