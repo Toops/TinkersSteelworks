@@ -2,12 +2,10 @@ package tsteelworks.blocks.logic;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.world.CoordTuple;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSourceImpl;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -20,11 +18,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IRegistry;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.RegistryDefaulted;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
+import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.util.Inventory;
 import tconstruct.library.component.MultiFluidTank;
 import tconstruct.library.crafting.FluidType;
@@ -34,6 +31,7 @@ import tsteelworks.common.TSRepo;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.*;
 import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.structure.StructureHighOven;
 import tsteelworks.util.InventoryHelper;
 
 import java.util.List;
@@ -89,6 +87,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 */
 	public static final int ROOM_TEMP = 20;
 
+	public static final int INTERNAL_COOLDOWN_RATE = 10;
+
 	/**
 	 * The dispense behavior.
 	 */
@@ -101,29 +101,28 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 
 	/**
 	 * The inventory
+	 * 4 first slots are for oxidizer, reducer, purifier and fuel
+	 * 6 nexts slots (depending on structure size) are for metals
+	 * (yes I'm locking this to 6 slots, sorry it feels better that way
+	 * as the high oven smelts uber quickly)
 	 */
-	private Inventory inventory = new Inventory(4);
+	private Inventory inventory = new Inventory(10);
 
 	/**
-	 * Used to determine if the structure has a bottom.
+	 * Handles the multiblock structure
 	 */
-	private boolean structureHasBottom;
+	private StructureHighOven structure = new StructureHighOven();
 
 	/**
-	 * Used to determine if the structure has a top.
+	 * Used to determine if the controller needs to be updated.
 	 */
-	private boolean structureHasTop;
+	private boolean needsUpdate;
 
 	/**
 	 * Used to determine if the controller is being supplied with a redstone
 	 * signal.
 	 */
-	private boolean redstoneActivated;
-
-	/**
-	 * Used to determine if the structure needs to be updated.
-	 */
-	private boolean needsUpdate;
+	private boolean redstoneActivated = false;
 
 	/**
 	 * Used to determine if the controller is melting items.
@@ -131,24 +130,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	private boolean isMeltingItems;
 
 	/**
-	 * Used to determine if the structure is valid.
-	 */
-	private boolean validStructure;
-
-	/**
 	 * Used to determine the controller's facing direction.
 	 */
 	private byte direction;
-
-	/**
-	 * The structure's output duct instance.
-	 */
-	private HighOvenDuctLogic outputDuct;
-
-	/**
-	 * The coordinates of the structure's absolute center position.
-	 */
-	private CoordTuple centerPos;
 
 	/**
 	 * The internal temperature.
@@ -158,12 +142,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	/**
 	 * The current fuel heat rate (gain).
 	 */
-	private int fuelHeatRate;
-
-	/**
-	 * The internal cool down rate.
-	 */
-	private int internalCoolDownRate;
+	private int fuelHeatRate = 3;
 
 	/**
 	 * Tick tock, tick tock.
@@ -171,19 +150,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	private int tick;
 
 	/**
-	 * The amount of blocks in the structure.
-	 */
-	private int numBricks;
-
-	/**
 	 * The max temperature.
 	 */
-	private int maxTemp;
-
-	/**
-	 * The amount of layers.
-	 */
-	private int nbLayers;
+	private int maxTemp = DEFAULT_MAX_TEMP;
 
 	/**
 	 * The fuel burn time.
@@ -193,122 +162,18 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	/**
 	 * The active temperatures of melting items.
 	 */
-	private int[] activeTemps;
+	private int[] activeTemps = new int[0];
 
 	/**
 	 * The melting point temperatures if melting items.
 	 */
-	private int[] meltingTemps;
+	private int[] meltingTemps = new int[0];
 
 	/**
 	 * Used to randomize things.
 	 */
 	private Random rand = new Random();
-
-	public HighOvenLogic() {
-		this.setRSmode(false);
-
-		this.fuelHeatRate = 3;
-		this.internalCoolDownRate = 10;
-		this.activeTemps = this.meltingTemps = new int[0];
-		this.maxTemp = DEFAULT_MAX_TEMP;
-	}
-
-    /* ==================== Layers ==================== */
-
-	/**
-	 * Adjust Layers for inventory containment.
-	 *
-	 * @param lay         Layer
-	 * @param forceAdjust the force adjust
-	 */
-	private void adjustLayers(final int lay, final boolean forceAdjust) {
-		if (lay == this.nbLayers && !forceAdjust)
-			return;
-
-		this.needsUpdate = true;
-
-		this.nbLayers = lay;
-		this.tank.setCapacity(FLUID_AMOUNT_PER_LAYER * lay);
-		this.maxTemp = this.maxTempByLayer();
-
-		final int[] tempActive = this.activeTemps;
-		this.activeTemps = new int[SLOT_FIRST_MELTABLE + lay];
-		final int activeLength = tempActive.length > this.activeTemps.length ? this.activeTemps.length : tempActive.length;
-		System.arraycopy(tempActive, 0, this.activeTemps, 0, activeLength);
-
-		final int[] tempMelting = this.meltingTemps;
-		this.meltingTemps = new int[SLOT_FIRST_MELTABLE + lay];
-		final int meltingLength = tempMelting.length > this.meltingTemps.length ? this.meltingTemps.length : tempMelting.length;
-		System.arraycopy(tempMelting, 0, this.meltingTemps, 0, meltingLength);
-		final ItemStack[] tempInv = this.inventory;
-
-		// maybe we should try to split inventory (and the others arrays) it
-		// two.
-		// One fixed inventory for slot 0..3 which will remains the same
-		// and a variable size inventory depending on the number of layers
-		// for the (s)meltable.
-		// Toops notes: Agreed...
-		// ephys: Meh, the inventory is changed /only/ if the structure is modified. That's not happening often is it ?
-		this.inventory = new ItemStack[SLOT_FIRST_MELTABLE + lay];
-		final int invLength = tempInv.length > this.inventory.length ? this.inventory.length : tempInv.length;
-		System.arraycopy(tempInv, 0, this.inventory, 0, invLength);
-		if ((this.activeTemps.length > 0) && (this.activeTemps.length > tempActive.length)) {
-			for (int i = tempActive.length; i < this.activeTemps.length; i++) {
-				if (!this.isSmeltingSlot(i)) {
-					continue;
-				}
-				this.activeTemps[i] = ROOM_TEMP;
-				this.meltingTemps[i] = ROOM_TEMP;
-			}
-		}
-		if (tempInv.length > this.inventory.length) {
-			for (int i = this.inventory.length; i < tempInv.length; i++) {
-				final ItemStack stack = tempInv[i];
-				if (stack != null) {
-					final float jumpX = (this.rand.nextFloat() * 0.8F) + 0.1F;
-					final float jumpY = (this.rand.nextFloat() * 0.8F) + 0.1F;
-					final float jumpZ = (this.rand.nextFloat() * 0.8F) + 0.1F;
-					int offsetX = 0;
-					int offsetZ = 0;
-					switch (this.getRenderDirection()) {
-						case 2: // +z
-							offsetZ = -1;
-							break;
-						case 3: // -z
-							offsetZ = 1;
-							break;
-						case 4: // +x
-							offsetX = -1;
-							break;
-						case 5: // -x
-							offsetX = 1;
-							break;
-						default:
-							break;
-					}
-
-					while (stack.stackSize > 0) {
-						int itemSize = this.rand.nextInt(21) + 10;
-						if (itemSize > stack.stackSize) {
-							itemSize = stack.stackSize;
-						}
-						stack.stackSize -= itemSize;
-						final EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord + jumpX + offsetX, this.yCoord + jumpY, this.zCoord + jumpZ + offsetZ, new ItemStack(stack.getItem(), itemSize, stack.getItemDamage()));
-
-						if (stack.hasTagCompound()) {
-							entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
-						}
-						final float offset = 0.05F;
-						entityitem.motionX = (float) this.rand.nextGaussian() * offset;
-						entityitem.motionY = ((float) this.rand.nextGaussian() * offset) + 0.2F;
-						entityitem.motionZ = (float) this.rand.nextGaussian() * offset;
-						this.worldObj.spawnEntityInWorld(entityitem);
-					}
-				}
-			}
-		}
-	}
+	private String invName;
 
 	/**
 	 * Max temp by layer.
@@ -316,16 +181,14 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 * @return the int
 	 */
 	public int maxTempByLayer() {
-		return DEFAULT_MAX_TEMP + (this.nbLayers - 1) * 500;
+		return DEFAULT_MAX_TEMP + (structure.getNbLayers() - 1) * 500;
 	}
 
 	/**
-	 * Gets the amount of nbLayers in the structure.
-	 *
-	 * @return the nbLayers
+	 * @return the high oven structure handler
 	 */
-	public int getLayers() {
-		return this.nbLayers;
+	public StructureHighOven getStructure() {
+		return structure;
 	}
 
 	@Override
@@ -333,133 +196,36 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 		return true;
 	}
 
-    /* ==================== Misc ==================== */
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tsteelworks.lib.blocks.TSInventoryLogic#getDefaultName()
-	 */
-	@Override
-	public String getDefaultName() {
-		return "crafters.HighOven";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * tsteelworks.lib.blocks.TSInventoryLogic#getGuiContainer(net.minecraft
-	 * .entity.player.InventoryPlayer, net.minecraft.world.World, int, int, int)
-	 */
-	@Override
-	public Container getGuiContainer(final InventoryPlayer inventoryplayer, final World world, final int x, final int y, final int z) {
-		return new HighOvenContainer(inventoryplayer, this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * tsteelworks.lib.blocks.TSInventoryLogic#isUseableByPlayer(net.minecraft
-	 * .entity.player.EntityPlayer)
-	 */
-	@Override
-	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
-		if (worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this)
-			return false;
-
-		return entityplayer.getDistance(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64D;
-	}
-
-	@Override
-	public void openInventory() {
-
-	}
-
-	@Override
-	public void closeInventory() {
-
-	}
-
     /* ==================== Facing Logic ==================== */
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
-	 */
 	@Override
 	public byte getRenderDirection() {
 		return this.direction;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
-	 */
 	@Override
 	public ForgeDirection getForgeDirection() {
 		return ForgeDirection.VALID_DIRECTIONS[this.direction];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IFacingLogic#setDirection(int)
-	 */
 	@Override
 	public void setDirection(final int side) {}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IFacingLogic#setDirection(float, float,
-	 * net.minecraft.entity.EntityLivingBase)
-	 */
 	@Override
 	public void setDirection(final float yaw, final float pitch, final EntityLivingBase player) {
-		final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
-		switch (facing) {
-			case 0:
-				this.direction = 2;
-				break;
-			case 1:
-				this.direction = 5;
-				break;
-			case 2:
-				this.direction = 3;
-				break;
-			case 3:
-				this.direction = 4;
-				break;
-			default:
-				break;
-		}
+		this.direction = (byte) BlockHelper.orientationToMetadataXZ(yaw);
 	}
 
     /* ==================== Active Logic ==================== */
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IActiveLogic#getActive()
-	 */
 	@Override
 	public boolean getActive() {
-		return this.validStructure && this.isBurning();
+		return this.structure.isValid() && this.isBurning();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see tconstruct.library.util.IActiveLogic#setActive(boolean)
-	 */
 	@Override
 	public void setActive(final boolean flag) {
-		this.needsUpdate = true;
-		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		needsUpdate = true;
 	}
 
     /* ==================== IRedstonePowered ==================== */
@@ -482,96 +248,93 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	@Override
 	public void setRSmode(final boolean flag) {
 		this.redstoneActivated = flag;
+
 		this.setActive(true);
 	}
 
     /* ==================== Smelting Logic ==================== */
 
-	/**
-	 * Update Tile Entity.
-	 *
-	 * @see net.minecraft.tileentity.TileEntity#updateEntity()
-	 */
 	@Override
 	public void updateEntity() {
 		this.tick++;
-		// item smelting
-		if ((this.tick % 4) == 0) {
+
+		if (this.tick % 4 == 0)
 			this.heatItems();
-		}
-		// structural checks amd fuel guage updates
-		if ((this.tick % 20) == 0) {
-			if (!this.validStructure) {
+
+		// structural checks and fuel gauge updates
+		if (this.tick % 20 == 0) {
+			if (!structure.isValid())
 				this.checkValidPlacement();
-			}
+
 			if (this.isBurning()) {
 				this.fuelBurnTime -= 3;
-				this.internalTemp = Math.min(this.internalTemp + this.fuelHeatRate, this.maxTempByLayer());
+				this.internalTemp = Math.min(this.internalTemp + this.fuelHeatRate, maxTemp);
 			} else {
-				this.internalTemp = Math.max(this.internalTemp - this.internalCoolDownRate, ROOM_TEMP);
+				this.internalTemp = Math.max(this.internalTemp - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
 			}
-			if (this.validStructure && (this.fuelBurnTime <= 0)) {
+
+			if (structure.isValid() && this.fuelBurnTime <= 0) {
 				this.updateFuelGauge();
 			}
-			if (this.needsUpdate) {
-				this.needsUpdate = false;
+
+			if (needsUpdate) {
+				needsUpdate = false;
 				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
-		// fluid heating (steam)
-		if ((this.tick % 40) == 0) {
+
+		if (this.tick == 40)
 			this.heatFluids();
-		}
+
 		// reset tick to 0, back to the beginning we go~
-		if (this.tick == 60) {
+		if (this.tick == 60)
 			this.tick = 0;
-		}
 	}
 
 	/**
 	 * Process item heating and liquifying.
 	 */
 	private void heatItems() {
-		if (this.internalTemp > ROOM_TEMP) {
-			boolean hasUse = false;
-			for (int i = SLOT_FIRST_MELTABLE; i < (this.nbLayers + SLOT_FIRST_MELTABLE); i += 1) {
-				// If an item is present and meltable
-				if (this.isStackInSlot(i) && (this.meltingTemps[i] > ROOM_TEMP)) {
-					hasUse = true;
-					// Increase temp if its temp is lower than the High Oven's internal temp and hasn't reached melting point
-					if ((this.activeTemps[i] < this.internalTemp) && (this.activeTemps[i] < this.meltingTemps[i])) {
-						this.activeTemps[i] += (this.internalTemp > 250) ? (this.internalTemp / 250) : 1;
-						// Decrease temp if its temp is higher than the High Oven's internal
-						// temp and the High Oven's internal temp is lower than the melting point
-					} else if ((this.activeTemps[i] > this.internalTemp) && (this.internalTemp < this.meltingTemps[i])) {
-						this.activeTemps[i] -= 1;
-						// Liquify metals if the temp has reached the melting point
-					} else if (this.activeTemps[i] >= this.meltingTemps[i]) {
-						if (!worldObj.isRemote) {
-							final FluidStack result = this.getNormalResultFor(this.inventory[i]);
-							final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
-							if (resultitemstack != null) {
-								this.meltItemsSolidOutput(i, resultitemstack, true);
-							} else if (result != null) {
-								final FluidStack resultEx = this.getLiquidMixedResultFor(result);
-								if (resultEx != null) {
-									this.meltItemsLiquidOutput(i, resultEx, true);
-								} else {
-									this.meltItemsLiquidOutput(i, result, false);
-								}
-							}
+		if (this.internalTemp <= ROOM_TEMP)
+			return;
+
+		boolean hasUse = false;
+		for (int i = SLOT_FIRST_MELTABLE; i < structure.getNbLayers() + SLOT_FIRST_MELTABLE; i ++) {
+			if (inventory.getStackInSlot(i) == null || this.meltingTemps[i] <= ROOM_TEMP)
+				continue;
+
+			hasUse = true;
+			// Increase temp if its temp is lower than the High Oven's internal temp and hasn't reached melting point
+			if ((this.activeTemps[i] < this.internalTemp) && (this.activeTemps[i] < this.meltingTemps[i])) {
+				this.activeTemps[i] += (this.internalTemp > 250) ? (this.internalTemp / 250) : 1;
+				// Decrease temp if its temp is higher than the High Oven's internal
+				// temp and the High Oven's internal temp is lower than the melting point
+			} else if ((this.activeTemps[i] > this.internalTemp) && (this.internalTemp < this.meltingTemps[i])) {
+				this.activeTemps[i] -= 1;
+				// Liquify metals if the temp has reached the melting point
+			} else if (this.activeTemps[i] >= this.meltingTemps[i]) {
+				if (!worldObj.isRemote) {
+					final FluidStack result = this.getNormalResultFor(this.inventory[i]);
+					final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
+					if (resultitemstack != null) {
+						this.meltItemsSolidOutput(i, resultitemstack, true);
+					} else if (result != null) {
+						final FluidStack resultEx = this.getLiquidMixedResultFor(result);
+						if (resultEx != null) {
+							this.meltItemsLiquidOutput(i, resultEx, true);
+						} else {
+							this.meltItemsLiquidOutput(i, result, false);
 						}
 					}
-				} else {
-					this.activeTemps[i] = ROOM_TEMP;
 				}
 			}
-			this.isMeltingItems = hasUse;
 		}
+
+		isMeltingItems = hasUse;
 	}
 
 	/**
-	 * Heat fluids.
+	 * Heat fluids. (like steam)
 	 */
 	private void heatFluids() {
 		if ((this.internalTemp < 1300) || (this.fluidlist.size() < 1)) {
@@ -985,17 +748,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 
 	@Override
 	public String getInventoryName() {
-		return this.isInvNameLocalized() ? this.invName : this.getDefaultName();
+		return hasCustomInventoryName() ? this.invName : "crafters.HighOven";
 	}
 
 	@Override
 	public boolean hasCustomInventoryName() {
-		return false;
-	}
-
-	@Override
-	public boolean isInvNameLocalized() {
-		return (this.invName != null) && (this.invName.length() > 0);
+		return invName == null;
 	}
 
 	/*
@@ -1017,13 +775,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 
     /* ==================== Multiblock ==================== */
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * tconstruct.library.util.IMasterLogic#notifyChange(tconstruct.library.
-	 * util.IServantLogic, int, int, int)
-	 */
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
 		this.checkValidPlacement();
@@ -1034,338 +785,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 */
 	@Override
 	public void checkValidPlacement() {
-		switch (this.getRenderDirection()) {
-			case 2: // +z
-				this.alignInitialPlacement(this.xCoord, this.yCoord, this.zCoord + 1);
-				break;
-			case 3: // -z
-				this.alignInitialPlacement(this.xCoord, this.yCoord, this.zCoord - 1);
-				break;
-			case 4: // +x
-				this.alignInitialPlacement(this.xCoord + 1, this.yCoord, this.zCoord);
-				break;
-			case 5: // -x
-				this.alignInitialPlacement(this.xCoord - 1, this.yCoord, this.zCoord);
-				break;
-			default:
-				break;
-		}
-	}
+		int[] centerBlock =  BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, BlockHelper.getOppositeSide(getRenderDirection()));
 
-	/**
-	 * Begin structure alignment.
-	 *
-	 * @param x coordinate from controller
-	 * @param y coordinate from controller
-	 * @param z coordinate from controller
-	 */
-	public void alignInitialPlacement(final int x, final int y, final int z) {
-		this.checkValidStructure(x, y, z);
-	}
-
-	// TODO Wisthy - 2014/05/02 - solution for issue Toops#22 should be
-	// somewhere there. Method should be refactored the same way DTL has been
-	// updated
-
-	/**
-	 * Determine if structure is valid.
-	 *
-	 * @param x coordinate from controller
-	 * @param y coordinate from controller
-	 * @param z coordinate from controller
-	 * @see {@link HighOvenLogic#checkValidStructure(int, int, int)}
-	 */
-	@Deprecated
-	public void checkValidStructureOld(final int x, final int y, final int z) {
-		int checkLayers = 0;
-		if (this.checkSameLevel(x, y, z)) {
-			checkLayers++;
-			checkLayers += this.recurseStructureUp(x, y + 1, z, 0);
-			checkLayers += this.recurseStructureDown(x, y - 1, z, 0);
-		}
-
-		if ((this.structureHasTop != this.structureHasBottom != this.validStructure) || (checkLayers != this.nbLayers)) {
-			if (this.structureHasBottom && this.structureHasTop) {
-				this.adjustLayers(checkLayers, false);
-				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-				this.validStructure = true;
-			} else {
-				this.internalTemp = ROOM_TEMP;
-				this.validStructure = false;
-			}
-		}
-	}
-
-	// Wisthy - 2014/05/02 - new method as solution for issue Toops#22
-
-	/**
-	 * Determine if structure is valid.
-	 *
-	 * @param x coordinate from controller
-	 * @param y coordinate from controller
-	 * @param z coordinate from controller
-	 */
-	public void checkValidStructure(final int x, final int y, final int z) {
-		// TSteelworks.loginfo("HOL - checkValidStructure(x="+x+", y="+y+", z="+z+")");
-        /*
-         * store old validation variables
-         */
-		final boolean oldStructureHasBottom = this.structureHasBottom;
-		final boolean oldStructureHasTop = this.structureHasTop;
-		// boolean oldValidStructure = validStructure;
-
-        /*
-         * reset all validation variables
-         */
-		this.structureHasBottom = false;
-		this.structureHasTop = false;
-		// validStructure = false;
-
-		int checkedLayers = 0;
-
-		if (this.checkSameLevel(x, y, z)) {
-			// TSteelworks.loginfo("HOL - checkValidStructure - same level ok");
-			checkedLayers++;
-			checkedLayers += this.recurseStructureUp(x, y + 1, z, 0);
-			// TSteelworks.loginfo("HOL - checkValidStructure - up: "+checkedLayers);
-			checkedLayers += this.recurseStructureDown(x, y - 1, z, 0);
-			// TSteelworks.loginfo("HOL - checkValidStructure - down: "+checkedLayers);
-		}
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - hasBottom: "+structureHasBottom);
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldHasBottom: "+oldStructureHasBottom);
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - hasTop: "+structureHasTop);
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldHasTop: "+oldStructureHasTop);
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldLayers: "+this.nbLayers);
-
-		if ((oldStructureHasBottom != this.structureHasBottom) || (oldStructureHasTop != this.structureHasTop) || (this.nbLayers != checkedLayers)) {
-			if (this.structureHasBottom && this.structureHasTop && (checkedLayers > 0)) {
-				this.adjustLayers(checkedLayers, false);
-				this.validStructure = true;
-			} else {
-				this.internalTemp = ROOM_TEMP;
-				this.validStructure = false;
-			}
-			worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
-	}
-
-	/**
-	 * Scan the controller layer of the structure for valid components.
-	 *
-	 * @param x coordinate from center
-	 * @param y coordinate from center
-	 * @param z coordinate from center
-	 * @return block count
-	 */
-	public boolean checkSameLevel(final int x, final int y, final int z) {
-		this.numBricks = 0;
-
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				if (!worldObj.isAirBlock(xPos, y, zPos)) {
-					return false;
-				}
-			}
-		}
-		// Check outer layer
-		// Scans in a swastica-like pattern
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-		return this.numBricks == 8;
-	}
-
-	/**
-	 * Scan up the structure for valid components.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int recurseStructureUp(final int x, final int y, final int z, final int count) {
-		this.numBricks = 0;
-		int increment = count;
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				final Block block = worldObj.getBlock(xPos, y, zPos);
-
-				if (!block.isAir(worldObj, xPos, y, zPos)) {
-					if (this.validBlockID(block)) {
-						return this.validateTop(x, y, z, increment);
-					}
-
-					return increment;
-				}
-			}
-		}
-
-		// Check outer layer
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-
-		if (this.numBricks != 8) {
-			return increment;
-		}
-
-		increment++;
-		return this.recurseStructureUp(x, y + 1, z, increment);
-	}
-
-	/**
-	 * Scan down the structure for valid components.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int recurseStructureDown(final int x, final int y, final int z, final int count) {
-		this.numBricks = 0;
-		int increment = count;
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				final Block block = worldObj.getBlock(xPos, y, zPos);
-
-				if ((block != null) && !block.isAir(worldObj, xPos, y, zPos)) {
-					if (this.validBlockID(block)) {
-						return this.validateBottom(x, y, z, increment);
-					}
-
-					return increment;
-				}
-			}
-		}
-
-		// Check outer layer X
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-
-		// Check outer layer Z
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-
-		if (this.numBricks != 8) {
-			return increment;
-		}
-
-		increment++;
-		return this.recurseStructureDown(x, y - 1, z, increment);
-	}
-
-	/**
-	 * Determine if layer is a valid top layer.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int validateTop(final int x, final int y, final int z, final int count) {
-		int topBricks = 0;
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			for (int zPos = z - 1; zPos <= (z + 1); zPos++) {
-				if (this.validBlockID(worldObj.getBlock(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
-					topBricks += this.checkBricks(xPos, y, zPos);
-				}
-			}
-		}
-
-		this.structureHasTop = topBricks == 9;
-		return count;
-	}
-
-	/**
-	 * Determine if layer is a valid bottom layer.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int validateBottom(final int x, final int y, final int z, final int count) {
-		int bottomBricks = 0;
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			for (int zPos = z - 1; zPos <= (z + 1); zPos++) {
-				if (this.validBlockID(this.worldObj.getBlock(xPos, y, zPos)) && (this.worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
-					bottomBricks += this.checkBricks(xPos, y, zPos);
-				}
-			}
-		}
-
-		this.structureHasBottom = bottomBricks == 9;
-		if (this.structureHasBottom) {
-			this.centerPos = new CoordTuple(x, y + 1, z);
-		}
-
-		return count;
-	}
-
-	/**
-	 * Increments bricks, sets them as part of the structure.
-	 *
-	 * @param x coordinate
-	 * @param y coordinate
-	 * @param z coordinate
-	 * @return int brick incement
-	 */
-	private int checkBricks(final int x, final int y, final int z) {
-		int tempBricks = 0;
-		final Block block = this.worldObj.getBlock(x, y, z);
-
-		if (this.validBlockID(block)) {
-			final TileEntity te = this.worldObj.getTileEntity(x, y, z);
-
-			if (te == this) {
-				tempBricks++;
-			} else if (te instanceof IServantLogic) {
-				final IServantLogic servant = (IServantLogic) te;
-
-				if (servant.hasMaster() && servant.verifyMaster(this, worldObj)) {
-					tempBricks++;
-				} else if (servant.setMaster(this, worldObj)) {
-					tempBricks++;
-				}
-			}
-		}
-
-		return tempBricks;
-	}
-
-	/**
-	 * Determine if block is a valid highoven component.
-	 *
-	 * @param block the block
-	 * @return valid
-	 */
-	private boolean validBlockID(final Block block) {
-		return block.equals(TSContent.highoven);
+		structure.alignInitialPlacement(centerBlock[0], centerBlock[1], centerBlock[2]);
 	}
 
     /* ==================== Fluid Handling ==================== */
@@ -1445,26 +867,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 * @param itemstack the stack
 	 * @return item sent
 	 */
-	final boolean sendItemToDuct(final HighOvenDuctLogic duct, final ItemStack itemstack) {
+	public boolean sendItemToDuct(final HighOvenDuctLogic duct, final ItemStack itemstack) {
 		return itemstack == null || nf.fr.ephys.cookiecore.helpers.InventoryHelper.insertItem(duct, itemstack);
-	}
-
-	/**
-	 * Gets the output duct.
-	 *
-	 * @return the output duct
-	 */
-	public final CoordTuple getOutputDuct() {
-		return this.outputDuct;
-	}
-
-	/**
-	 * Sets the output duct.
-	 *
-	 * @param duct the new output duct
-	 */
-	public final void setOutputDuct(final CoordTuple duct) {
-		this.outputDuct = duct;
 	}
 
 	/**
@@ -1472,7 +876,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 *
 	 * @param itemstack the stack
 	 */
-	final void dispenseItem(final ItemStack itemstack) {
+	private void dispenseItem(final ItemStack itemstack) {
 		final BlockSourceImpl blocksourceimpl = new BlockSourceImpl(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 		final IBehaviorDispenseItem ibehaviordispenseitem = (IBehaviorDispenseItem) this.dispenseBehavior.getObject(itemstack.getItem());
 
@@ -1516,7 +920,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	 *
 	 * @return the capacity
 	 */
-    /*
+	/*
      * (non-Javadoc)
      *
      * @see net.minecraftforge.fluids.IFluidTank#getCapacity()
@@ -1794,11 +1198,23 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 
     /* ==================== IInventory ==================== */
 
-	@Override
-	public void openChest() { }
+    public Container getGuiContainer(final InventoryPlayer inventoryplayer) {
+	    return new HighOvenContainer(inventoryplayer, this);
+    }
 
 	@Override
-	public void closeChest() { }
+	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+		if (worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this)
+			return false;
+
+		return entityplayer.getDistance(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64D;
+	}
+
+	@Override
+	public void openInventory() {}
+
+	@Override
+	public void closeInventory() {}
 
     /* =============== IMaster =============== */
 
