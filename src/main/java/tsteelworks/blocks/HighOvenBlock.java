@@ -9,14 +9,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tconstruct.library.TConstructRegistry;
+import tconstruct.smeltery.TinkerSmeltery;
+import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.*;
 import tsteelworks.client.block.DeepTankRender;
@@ -25,7 +25,6 @@ import tsteelworks.common.TSRepo;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
 import tsteelworks.lib.IMasterLogic;
-import tsteelworks.lib.IRedstonePowered;
 import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
@@ -280,52 +279,63 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	private void spawnHighGolem(World world, int x, int y, int z) {
-		final boolean check1 = (world.getBlock(x, y - 1, z) == TContent.smeltery) && (world.getBlockMetadata(x, y - 1, z) > 1);
-		final boolean check2 = (world.getBlock(x, y - 2, z) == TContent.smeltery) && (world.getBlockMetadata(x, y - 2, z) > 1);
+		final boolean hasTorso = (world.getBlock(x, y - 1, z) == TinkerSmeltery.smeltery) && (world.getBlockMetadata(x, y - 1, z) > 1);
+		final boolean hasFeet = (world.getBlock(x, y - 2, z) == TinkerSmeltery.smeltery) && (world.getBlockMetadata(x, y - 2, z) > 1);
 
-		if (check1 && check2) {
-			if (!world.isRemote) {
+		if (hasTorso && hasFeet) {
+			if (world.isRemote) {
+				for (int l = 0; l < 120; ++l)
+					world.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), y - 2 + world.rand.nextDouble() * 2.5D, z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+			} else {
 				world.setBlockToAir(x, y, z);
 				world.setBlockToAir(x, y - 1, z);
 				world.setBlockToAir(x, y - 2, z);
+
 				final HighGolem entityhighgolem = new HighGolem(world);
 				entityhighgolem.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
 				world.spawnEntityInWorld(entityhighgolem);
-				world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
-				for (int l = 0; l < 120; ++l)
-					TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+
+				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
 			}
 		}
 	}
 
 	private void spawnSteelGolem(World world, int x, int y, int z) {
-		ItemStack blockSteel = new ItemStack(TContent.metalBlock, 1, 9);
-		ItemStack blockArdite = new ItemStack(TContent.metalBlock, 1, 1);
-		final boolean check1 = InventoryHelper.matchBlockAtLocation(world, x, y - 1, z, TContent.meatBlock);
-		final boolean check2 = InventoryHelper.matchBlockAtLocationWithMeta(world, x + 1, y - 1, z, blockSteel) && InventoryHelper.matchBlockAtLocationWithMeta(world, x - 1, y - 1, z, blockSteel);
-		final boolean check3 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z + 1, blockSteel) && InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z - 1, blockSteel);
-		final boolean check4 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 2, z, blockArdite);
+		if (world.isRemote) return;
 
-		if (check1 && check4 && (check2 || check3)) {
-			if (!world.isRemote) {
-				world.setBlockToAir(x, y, z);
-				world.setBlockToAir(x, y - 1, z);
-				if (check2) {
-					world.setBlockToAir(x + 1, y - 1, z);
-					world.setBlockToAir(x - 1, y - 1, z);
+		ItemStack blockArdite = new ItemStack(TinkerWorld.metalBlock, 1, 1);
+
+		// check torso & foot
+		if (world.getBlock(x, y - 1, z).equals(TinkerWorld.meatBlock) && InventoryHelper.isBlockEqual(blockArdite, world, x, y - 2, z)) {
+			boolean armOnXAxis = InventoryHelper.isBlockEqual("blockSteel", world, x + 1, y - 1, z) && InventoryHelper.isBlockEqual("blockSteel", world, x - 1, y - 1, z);
+
+			if (armOnXAxis || (InventoryHelper.isBlockEqual("blockSteel", world, x, y - 1, z - 1) && InventoryHelper.isBlockEqual("blockSteel", world, x, y - 1, z + 1))) {
+				if (world.isRemote) {
+					for (int l = 0; l < 120; ++l)
+						world.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), y - 2 + world.rand.nextDouble() * 2.5D, z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
 				} else {
-					world.setBlockToAir(x, y - 1, z + 1);
-					world.setBlockToAir(x, y - 1, z - 1);
-				}
-				world.setBlockToAir(x, y - 2, z);
+					// remove block golem
+					world.setBlockToAir(x, y, z);
+					world.setBlockToAir(x, y - 1, z);
 
-				final SteelGolem entitysteelgolem = new SteelGolem(world);
-				entitysteelgolem.setPlayerCreated(true);
-				entitysteelgolem.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
-				world.spawnEntityInWorld(entitysteelgolem);
-				world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
-				for (int l = 0; l < 120; ++l)
-					TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+					if (armOnXAxis) {
+						world.setBlockToAir(x + 1, y - 1, z);
+						world.setBlockToAir(x - 1, y - 1, z);
+					} else {
+						world.setBlockToAir(x, y - 1, z + 1);
+						world.setBlockToAir(x, y - 1, z - 1);
+					}
+
+					world.setBlockToAir(x, y - 2, z);
+
+					// spawn entity golem
+					SteelGolem golem = new SteelGolem(world);
+					golem.setPlayerCreated(true);
+					golem.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
+					world.spawnEntityInWorld(golem);
+
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
+				}
 			}
 		}
 	}
