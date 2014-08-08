@@ -379,7 +379,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 			smeltableInventory.decrStackSize(slot, 1);
 
-			this.activeTemps[slot] = ROOM_TEMP;
+			activeTemps[slot] = ROOM_TEMP;
 
 			if (doMix)
 				this.removeMixItems();
@@ -394,9 +394,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @param doMix the do mix
 	 */
 	private void meltItemsSolidOutput(final int slot, final ItemStack stack, final Boolean doMix) {
-		decrStackSize(slot, 1);
+		smeltableInventory.decrStackSize(slot, 1);
 
-		this.activeTemps[slot] = ROOM_TEMP;
+		activeTemps[slot] = ROOM_TEMP;
 
 		if (doMix)
 			this.removeMixItems();
@@ -422,7 +422,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public FluidStack getLiquidMixedResultFor(final FluidStack fluidstack) {
 		final FluidType resultType = FluidType.getFluidType(fluidstack.getFluid());
-		final FluidType mixResult = AdvancedSmelting.getMixFluidSmeltingResult(resultType, getStackInSlot(SLOT_OXIDIZER), getStackInSlot(SLOT_REDUCER), getStackInSlot(SLOT_PURIFIER));
+		final FluidType mixResult = AdvancedSmelting.getMixFluidSmeltingResult(resultType,
+				inventory.getStackInSlot(SLOT_OXIDIZER),
+				inventory.getStackInSlot(SLOT_REDUCER),
+				inventory.getStackInSlot(SLOT_PURIFIER));
 
 		if (mixResult == null) return null;
 
@@ -437,7 +440,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public ItemStack getSolidMixedResultFor(final FluidStack fluidstack) {
 		final FluidType resultType = FluidType.getFluidType(fluidstack.getFluid());
-		final ItemStack mixResult = AdvancedSmelting.getMixItemSmeltingResult(resultType, getStackInSlot(SLOT_OXIDIZER), getStackInSlot(SLOT_REDUCER), getStackInSlot(SLOT_PURIFIER));
+		final ItemStack mixResult = AdvancedSmelting.getMixItemSmeltingResult(resultType,
+				inventory.getStackInSlot(SLOT_OXIDIZER),
+				inventory.getStackInSlot(SLOT_REDUCER),
+				inventory.getStackInSlot(SLOT_PURIFIER));
+
 		if (mixResult == null) return null;
 
 		return new ItemStack(mixResult.getItem(), mixResult.stackSize, mixResult.getItemDamage());
@@ -459,7 +466,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	private void removeMixItems() {
 		for (int i = SLOT_OXIDIZER; i < SLOT_FUEL; i++) {
-			ItemStack stack = getStackInSlot(i);
+			ItemStack stack = inventory.getStackInSlot(i);
 			if (stack == null)
 				continue;
 
