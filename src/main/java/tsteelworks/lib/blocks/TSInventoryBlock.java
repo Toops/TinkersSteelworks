@@ -1,176 +1,111 @@
 package tsteelworks.lib.blocks;
 
-import java.util.Random;
-
+import mantle.blocks.iface.IActiveLogic;
+import mantle.blocks.iface.IFacingLogic;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tconstruct.library.util.IActiveLogic;
-import tconstruct.library.util.IFacingLogic;
+import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tsteelworks.common.TSRepo;
+import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.INamable;
+import tsteelworks.lib.IServantLogic;
 
-public abstract class TSInventoryBlock extends BlockContainer
-{
-    public static boolean isActive (IBlockAccess world, int x, int y, int z)
-    {
-        final TileEntity logic = world.getBlockTileEntity(x, y, z);
-        if (logic instanceof IActiveLogic)
-            return ((IActiveLogic) logic).getActive();
-        return false;
-    }
+public abstract class TSInventoryBlock extends BlockContainer {
+	private IIcon[] icons;
 
-    protected Random rand = new Random();
+	public TSInventoryBlock(Material material) {
+		super(material);
+	}
 
-    int side = -1;
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		final TileEntity te = world.getTileEntity(x, y, z);
 
-    /* Textures */
-    public Icon[] icons;
+		if (te instanceof IInventory) {
+			InventoryHelper.dropContents((IInventory) te, world, x, y, z);
+		}
 
-    protected TSInventoryBlock(int id, Material material)
-    {
-        super(id, material);
-    }
+		if (te instanceof IServantLogic)
+			((IServantLogic) te).notifyMasterOfChange();
 
-    @Override
-    public void breakBlock (World par1World, int x, int y, int z, int blockID, int meta)
-    {
-        final TileEntity te = par1World.getBlockTileEntity(x, y, z);
+		super.breakBlock(world, x, y, z, block, meta);
+	}
 
-        if ((te != null) && (te instanceof TSInventoryLogic))
-        {
-            final TSInventoryLogic logic = (TSInventoryLogic) te;
-            logic.removeBlock();
-            for (int iter = 0; iter < logic.getSizeInventory(); ++iter)
-            {
-                final ItemStack stack = logic.getStackInSlot(iter);
+	@Override
+	public abstract TileEntity createTileEntity(World world, int metadata);
 
-                if ((stack != null) && logic.canDropInventorySlot(iter))
-                {
-                    final float jumpX = (rand.nextFloat() * 0.8F) + 0.1F;
-                    final float jumpY = (rand.nextFloat() * 0.8F) + 0.1F;
-                    final float jumpZ = (rand.nextFloat() * 0.8F) + 0.1F;
+	@Override
+	public int damageDropped(int meta) {
+		return meta;
+	}
 
-                    while (stack.stackSize > 0)
-                    {
-                        int itemSize = rand.nextInt(21) + 10;
+	/**
+	 * @return the GUI id or -1 if the gui does not exist
+	 */
+	public abstract int getGui(World world, int x, int y, int z, EntityPlayer entityplayer);
 
-                        if (itemSize > stack.stackSize)
-                            itemSize = stack.stackSize;
+	public abstract Object getModInstance();
 
-                        stack.stackSize -= itemSize;
-                        final EntityItem entityitem = new EntityItem(par1World, x + jumpX, y + jumpY, z + jumpZ, new ItemStack(stack.itemID, itemSize, stack.getItemDamage()));
+	public abstract String[] getTextureNames();
 
-                        if (stack.hasTagCompound())
-                            entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ) {
+		if (player.isSneaking())
+			return false;
 
-                        final float offset = 0.05F;
-                        entityitem.motionX = (float) rand.nextGaussian() * offset;
-                        entityitem.motionY = ((float) rand.nextGaussian() * offset) + 0.2F;
-                        entityitem.motionZ = (float) rand.nextGaussian() * offset;
-                        par1World.spawnEntityInWorld(entityitem);
-                    }
-                }
-            }
-        }
+		int guiID = getGui(world, x, y, z, player);
 
-        super.breakBlock(par1World, x, y, z, blockID, meta);
-    }
+		if (guiID != -1) {
+			if (!world.isRemote)
+				player.openGui(getModInstance(), guiID, world, x, y, z);
 
-    /* Logic backend */
-    @Override
-    public TileEntity createNewTileEntity (World var1)
-    {
-        return null;
-    }
+			return true;
+		}
 
-    /* Inventory */
+		return false;
+	}
 
-    @Override
-    public abstract TileEntity createTileEntity (World world, int metadata);
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
+		if (logic instanceof IFacingLogic) {
+			final IFacingLogic direction = (IFacingLogic) logic;
 
-    /* Placement */
+			if (entityliving == null)
+				direction.setDirection(0);
+			else
+				direction.setDirection(entityliving.rotationYaw * 4F, entityliving.rotationPitch, entityliving);
+		}
 
-    @Override
-    public int damageDropped (int meta)
-    {
-        return meta;
-    }
+		if (stack.hasDisplayName() && logic instanceof INamable) {
+			((INamable) logic).setCustomName(stack.getDisplayName());
+		}
+	}
 
-    public abstract Integer getGui (World world, int x, int y, int z, EntityPlayer entityplayer);
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister) {
+		final String[] textureNames = getTextureNames();
+		icons = new IIcon[textureNames.length];
 
-    public abstract Object getModInstance ();
+		for (int i = 0; i < icons.length; ++i)
+			icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
+	}
 
-    public abstract String[] getTextureNames ();
+	public static boolean isActive(IBlockAccess world, int x, int y, int z) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
 
-    @Override
-    public boolean onBlockActivated (World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ)
-    {
-        if (player.isSneaking())
-            return false;
-
-        final Integer integer = getGui(world, x, y, z, player);
-        if ((integer == null) || (integer == -1))
-            return false;
-        else
-        {
-            if (!world.isRemote)
-                player.openGui(getModInstance(), integer, world, x, y, z);
-            return true;
-        }
-    }
-
-    //This class does not have an actual block placed in the world
-    @Override
-    public int onBlockPlaced (World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta)
-    {
-        this.side = side;
-        return meta;
-    }
-
-    @SuppressWarnings ("deprecation")
-    @Override
-    public void onBlockPlacedBy (World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack)
-    {
-        final TileEntity logic = world.getBlockTileEntity(x, y, z);
-        if (logic instanceof IFacingLogic)
-        {
-            final IFacingLogic direction = (IFacingLogic) logic;
-            if (side != -1)
-            {
-                direction.setDirection(side);
-                side = -1;
-            }
-            if (entityliving == null)
-                direction.setDirection(0F, 0F, null);
-            else
-                direction.setDirection(entityliving.rotationYaw * 4F, entityliving.rotationPitch, entityliving);
-        }
-
-        if (logic instanceof TSInventoryLogic)
-        {
-            final TSInventoryLogic inv = (TSInventoryLogic) logic;
-            inv.placeBlock(entityliving, stack);
-            if (stack.hasDisplayName())
-                inv.setInvName(stack.getDisplayName());
-        }
-    }
-
-    @Override
-    public void registerIcons (IconRegister iconRegister)
-    {
-        final String[] textureNames = getTextureNames();
-        icons = new Icon[textureNames.length];
-
-        for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
-    }
+		return logic instanceof IActiveLogic && ((IActiveLogic) logic).getActive();
+	}
 }

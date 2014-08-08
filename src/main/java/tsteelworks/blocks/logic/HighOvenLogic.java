@@ -1,6 +1,8 @@
 package tsteelworks.blocks.logic;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import mantle.blocks.iface.*;
+import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
 import net.minecraft.block.BlockSourceImpl;
 import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
@@ -33,6 +35,8 @@ import tsteelworks.common.TSContent;
 import tsteelworks.common.TSRepo;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.*;
+import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.structure.IStructure;
 import tsteelworks.structure.StructureHighOven;
@@ -43,7 +47,7 @@ import java.util.Arrays;
 /**
  * The primary class for the High Oven structure's logic.
  */
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -719,7 +723,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public boolean hasCustomInventoryName() {
-		return invName == null;
+		return invName != null;
 	}
 
 	@Override
@@ -907,5 +911,15 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void onChunkLoaded() {
 		checkValidPlacement();
+	}
+
+	@Override
+	public void setCustomName(String name) {
+		this.invName = name;
+	}
+
+	@Override
+	public String getCustomName() {
+		return invName;
 	}
 }

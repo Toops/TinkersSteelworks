@@ -1,11 +1,17 @@
 package tsteelworks.blocks;
 
 import mantle.world.CoordTuple;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import tsteelworks.common.TSContent;
 
+/*
+ * Todo: implement
+ *
+ * If I get the idea, which might be wrong, this fluid is supposed to harden when it's in contact with air ?
+ */
 public class CementFluidBlock extends TSBaseFluid {
 	public CoordTuple origin;
 
@@ -19,101 +25,16 @@ public class CementFluidBlock extends TSBaseFluid {
 		origin = new CoordTuple(x, y, z);
 	}
 
-	/**
-	 * Forces coment to check to see if it is colliding with air, and then decide what it should harden to.
-	 */
-	private void checkForHarden(World world, int x, int y, int z) {
-		if (world.getBlockId(x, y, z) == this.blockID || (world.getBlockId(x, y, z) == TSContent.cementBlock.blockID)) {
-			boolean harden = false;
-			if (!this.isFlowingVertically(world, x, y, z)) {
-				if (harden || validHardenCoords(world, x, y, z - 1))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x, y, z + 1))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x - 1, y, z))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x - 1, y, z))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x + 1, y, z + 1))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x + 1, y, z - 1))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x - 1, y, z - 1))
-					;
-				harden = true;
-				if (harden || validHardenCoords(world, x + 1, y, z + 1))
-					;
-				harden = true;
-			}
-			if (harden || validHardenCoords(world, x, y - 1, z))
-				;
-			harden = true;
-			if (harden || validHardenCoords(world, x, y + 1, z))
-				;
-			harden = true;
-			if (harden) {
-				world.setBlock(x, y, z, TSContent.cementBlock.blockID);
-				//                this.triggerCementMixEffects(world, x, y, z);
-				if (this.isFlowingVertically(world, x, y, z))
-					onNeighborBlockChange(world, x, y, z, blockID);
-			}
-		}
-	}
-
-	public void traceToSource(World world, int x, int y, int z, int amount) {
-		for (int xScan = 0; xScan < amount; xScan++)
-			for (int yScan = 0; yScan < amount; yScan++)
-				for (int zScan = 0; zScan < amount; zScan++) {
-					if (world.getBlockId(x - xScan, y - yScan, z - zScan) == blockID && (world.getBlockMetadata(x - xScan, y - yScan, z - zScan) != 3))// || world.getBlockMetadata(x - xScan, y - yScan, z - zScan) == 1))
-					{
-						world.setBlock(x - xScan, y - yScan, z - zScan, TSContent.cementBlock.blockID);
-						break;
-					}
-				}
-	}
-
-    /* IFluidBlock */
-/*    @Override
-    public FluidStack drain(World world, int x, int y, int z, boolean doDrain)
-    {
-        if (!isSourceBlock(world, x, y, z))
-        {
-            return null;
-        }
-
-        if (doDrain)
-        {
-//            world.setBlockToAir(x, y, z);
-            checkForHarden(world, x, y, z);
-        }
-
-        return stack.copy();
-    }*/
-
 	public boolean validHardenCoords(World world, int x, int y, int z) {
-		return (world.getBlockMaterial(x, y, z) == Material.air || world.getBlockId(x, y, z) == TSContent.cementBlock.blockID);
-	}
+		Block block = world.getBlock(x, y, z);
 
-	//    public boolean isSourceBlock(IBlockAccess world, int x, int y, int z)
-	//    {
-	//        return (world.getBlockId(x, y, z) == blockID && world.getBlockMetadata(x, y, z) == 0);//|| (world.getBlockId(x, y, z) == TSContent.cementBlock.blockID));
-	//    }
+		return block.getMaterial() == Material.air || block == TSContent.cementBlock;
+	}
 
 	/**
 	 * Creates fizzing sound and smoke. Used when lava flows over block or mixes with water.
 	 */
 	protected void triggerCementMixEffects(World world, int x, int y, int z) {
-		world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
-
-		//        for (int l = 0; l < 8; ++l)
-		//        {
-		//            world.spawnParticle("largesmoke", (double)x + Math.random(), (double)y + 1.2D, (double)z + Math.random(), 0.0D, 0.0D, 0.0D);
-		//        }
+		world.playSoundEffect(x + 0.5F, y + 0.5F, z + 0.5F, "random.fizz", 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
 	}
 }
