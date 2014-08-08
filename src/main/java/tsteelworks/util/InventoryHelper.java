@@ -68,7 +68,7 @@ public class InventoryHelper {
 		return false;
 	}
 
-	public static boolean isOre(ItemStack stack) {
+	public static boolean itemIsOre(ItemStack stack) {
 		int[] ids = OreDictionary.getOreIDs(stack);
 
 		for (int id : ids) {
