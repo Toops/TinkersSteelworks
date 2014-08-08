@@ -1,8 +1,8 @@
 package tsteelworks.blocks;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import tsteelworks.common.TSRepo;
@@ -10,17 +10,17 @@ import tsteelworks.common.TSRepo;
 public class TSBaseFluid extends BlockFluidClassic {
 	String texture;
 	boolean alpha;
-	public Icon stillIcon;
-	public Icon flowIcon;
+	public IIcon stillIcon;
+	public IIcon flowIcon;
 	public int renderColor = 16777215;
 
-	public TSBaseFluid(int id, Fluid fluid, Material material, String texture) {
-		super(id, fluid, material);
+	public TSBaseFluid(Fluid fluid, Material material, String texture) {
+		super(fluid, material);
 		this.texture = texture;
 	}
 
-	public TSBaseFluid(int id, Fluid fluid, Material material, String texture, boolean alpha) {
-		this(id, fluid, material, texture);
+	public TSBaseFluid(Fluid fluid, Material material, String texture, boolean alpha) {
+		this(fluid, material, texture);
 		this.alpha = alpha;
 	}
 
@@ -29,46 +29,17 @@ public class TSBaseFluid extends BlockFluidClassic {
 		return alpha ? 1 : 0;
 	}
 
-	//    @Override
-	//    public int getBlockColor()
-	//    {
-	//        return renderColor;
-	//    }
-	//
-	//    @Override
-	//    /**
-	//     * Returns the color this block should be rendered. Used by leaves.
-	//     */
-	//    public int getRenderColor(int par1)
-	//    {
-	//        return renderColor;
-	//    }
-
-	//    @Override
-
-	/**
-	 * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
-	 * when first determining what to render.
-	 */
-	//    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
-	//    {
-	//        return renderColor;
-	//    }
-	//
-	//    public void setRenderColor(int colorvalue)
-	//    {
-	//        renderColor = colorvalue;
-	//    }
 	@Override
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerBlockIcons(IIconRegister iconRegister) {
 		stillIcon = iconRegister.registerIcon(TSRepo.textureDir + texture);
 		flowIcon = iconRegister.registerIcon(TSRepo.textureDir + texture + "_flow");
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 		if (side == 0 || side == 1)
 			return stillIcon;
+
 		return flowIcon;
 	}
 }
