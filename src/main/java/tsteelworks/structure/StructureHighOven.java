@@ -1,18 +1,12 @@
 package tsteelworks.structure;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import tsteelworks.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.IServantLogic;
 
-import java.util.Random;
-
-public class StructureHighOven {
+public class StructureHighOven implements IStructure {
 	/**
 	 * Used to determine if the structure has a bottom.
 	 */
@@ -33,8 +27,6 @@ public class StructureHighOven {
 	 */
 	private int nbLayers;
 
-	private Random rand = new Random();
-
 	private HighOvenLogic controller;
 
 	public StructureHighOven(HighOvenLogic tile) {
@@ -48,7 +40,8 @@ public class StructureHighOven {
 	 * @param y controller y coordinate
 	 * @param z structure center z coordinate
 	 */
-	public void checkValidStructure(final int x, final int y, final int z) {
+	@Override
+	public void validateStructure(final int x, final int y, final int z) {
 		final boolean wasValid = validStructure;
 		final boolean structureHadBottom = structureHasBottom;
 		final boolean structureHadTop = structureHasTop;
@@ -197,10 +190,12 @@ public class StructureHighOven {
 		return block.equals(TSContent.highoven);
 	}
 
+	@Override
 	public int getNbLayers() {
 		return nbLayers;
 	}
 
+	@Override
 	public boolean isValid() {
 		return validStructure;
 	}
