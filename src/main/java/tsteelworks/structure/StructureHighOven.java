@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import tsteelworks.blocks.logic.HighOvenDuctLogic;
+import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.common.TSContent;
 import tsteelworks.lib.IServantLogic;
 
@@ -34,117 +35,93 @@ public class StructureHighOven {
 	private HighOvenDuctLogic outputDuct;
 
 	/**
-	 * The coordinates of the structure's absolute center position.
-	 */
-	private CoordTuple centerPos;
-
-	/**
-	 * The amount of blocks in the structure.
-	 */
-	private int numBricks;
-
-	/**
 	 * The amount of layers.
 	 */
 	private int nbLayers;
 
 	private Random rand = new Random();
 
-	/**
-	 * Determine if structure is valid.
-	 *
-	 * @param x coordinate from controller
-	 * @param y coordinate from controller
-	 * @param z coordinate from controller
-	 */
-	public void checkValidStructure(final int x, final int y, final int z) {
-		// TSteelworks.loginfo("HOL - checkValidStructure(x="+x+", y="+y+", z="+z+")");
-        /*
-         * store old validation variables
-         */
-		final boolean oldStructureHasBottom = this.structureHasBottom;
-		final boolean oldStructureHasTop = this.structureHasTop;
-		// boolean oldValidStructure = validStructure;
+	private HighOvenLogic controller;
 
-        /*
-         * reset all validation variables
-         */
-		this.structureHasBottom = false;
-		this.structureHasTop = false;
-		// validStructure = false;
-
-		int checkedLayers = 0;
-
-		if (this.checkSameLevel(x, y, z)) {
-			// TSteelworks.loginfo("HOL - checkValidStructure - same level ok");
-			checkedLayers++;
-			checkedLayers += this.recurseStructureUp(x, y + 1, z, 0);
-			// TSteelworks.loginfo("HOL - checkValidStructure - up: "+checkedLayers);
-			checkedLayers += this.recurseStructureDown(x, y - 1, z, 0);
-			// TSteelworks.loginfo("HOL - checkValidStructure - down: "+checkedLayers);
-		}
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - hasBottom: "+structureHasBottom);
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldHasBottom: "+oldStructureHasBottom);
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - hasTop: "+structureHasTop);
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldHasTop: "+oldStructureHasTop);
-
-		// TSteelworks.loginfo("HOL - checkValidStructure - oldLayers: "+this.nbLayers);
-
-		if ((oldStructureHasBottom != this.structureHasBottom) || (oldStructureHasTop != this.structureHasTop) || (this.nbLayers != checkedLayers)) {
-			if (this.structureHasBottom && this.structureHasTop && (checkedLayers > 0)) {
-				this.adjustLayers(checkedLayers, false);
-				this.validStructure = true;
-			} else {
-				this.internalTemp = ROOM_TEMP;
-				this.validStructure = false;
-			}
-			worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
+	public StructureHighOven(HighOvenLogic tile) {
+		this.controller = tile;
 	}
 
 	/**
-	 * Begin structure alignment.
+	 * Determine if structure is valid.
 	 *
-	 * @param x coordinate from controller
-	 * @param y coordinate from controller
-	 * @param z coordinate from controller
+	 * @param x structure center x coordinate
+	 * @param y controller y coordinate
+	 * @param z structure center z coordinate
 	 */
-	public void alignInitialPlacement(final int x, final int y, final int z) {
-		this.checkValidStructure(x, y, z);
+	public void checkValidStructure(final int x, final int y, final int z) {
+		final boolean structureHadBottom = structureHasBottom;
+		final boolean structureHadTop = structureHasTop;
+		final int oldNbLayers = nbLayers;
+
+		nbLayers = 0;
+		if (checkHollowLayer(x, y, z)) {
+			nbLayers++;
+
+			structureHasTop = recurseStructureUp(x, y + 1, z);
+			structureHasBottom = recurseStructureDown(x, y - 1, z);
+		}
+
+		validStructure = structureHasBottom && structureHasTop && nbLayers > 0;
+
+		if (structureHadBottom != structureHasBottom || structureHadTop != structureHasTop || nbLayers != oldNbLayers) {
+			controller.onStructureChange(this);
+		}
 	}
 
 	/**
 	 * Scan the controller layer of the structure for valid components.
 	 *
-	 * @param x coordinate from center
-	 * @param y coordinate from center
-	 * @param z coordinate from center
+	 * @param x coordinate of the center
+	 * @param y y level of layer
+	 * @param z coordinate of the center
 	 * @return block count
 	 */
-	public boolean checkSameLevel(final int x, final int y, final int z) {
-		this.numBricks = 0;
+	public boolean checkHollowLayer(final int x, final int y, final int z) {
+		// Check the structure: (= unchecked, * checked)
+		// ===
+		// =*=
+		// ===
+		if (!controller.getWorldObj().isAirBlock(x, y, z)) {
+			return false;
+		}
 
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				if (!worldObj.isAirBlock(xPos, y, zPos)) {
+		// ***
+		// =*=
+		// ***
+		for (int xOffset = -1; xOffset <= 1; xOffset++) {
+			if (!this.checkBricks(x + xOffset, y, z - 1) || !this.checkBricks(x + xOffset, y, z + 1))
+				return false;
+		}
+
+		// ***
+		// ***
+		// ***
+		return this.checkBricks(x - 1, y, z) && this.checkBricks(x + 1, y, z);
+	}
+
+	/**
+	 * Determine if layer is a valid plain layer.
+	 *
+	 * @param x     coordinate of the center of the layer
+	 * @param y     coordinate of the layer
+	 * @param z     coordinate of the center of the layer
+	 * @return the layer is valid
+	 */
+	public boolean checkPlainLayer(final int x, final int y, final int z) {
+		for (int xOffset = -1; xOffset <= 1; xOffset++) {
+			for (int zOffset = -1; zOffset <= 1; zOffset++) {
+				if (controller.getWorldObj().getBlockMetadata(x + xOffset, y, z + zOffset) == 0 || !this.checkBricks(x + xOffset, y, z + zOffset))
 					return false;
-				}
 			}
 		}
-		// Check outer layer
-		// Scans in a swastica-like pattern
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-		return this.numBricks == 8;
+
+		return true;
 	}
 
 	/**
@@ -153,44 +130,15 @@ public class StructureHighOven {
 	 * @param x     coordinate from center
 	 * @param y     coordinate from center
 	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
+	 * @return the upper part of the structure is valid
 	 */
-	public int recurseStructureUp(final int x, final int y, final int z, final int count) {
-		this.numBricks = 0;
-		int increment = count;
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				final Block block = worldObj.getBlock(xPos, y, zPos);
-
-				if (!block.isAir(worldObj, xPos, y, zPos)) {
-					if (this.validBlockID(block)) {
-						return this.validateTop(x, y, z, increment);
-					}
-
-					return increment;
-				}
-			}
+	public boolean recurseStructureUp(final int x, final int y, final int z) {
+		if (checkHollowLayer(x, y, z)) {
+			nbLayers++;
+			return this.recurseStructureUp(x, y + 1, z);
 		}
 
-		// Check outer layer
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-
-		if (this.numBricks != 8) {
-			return increment;
-		}
-
-		increment++;
-		return this.recurseStructureUp(x, y + 1, z, increment);
+		return checkPlainLayer(x, y, z);
 	}
 
 	/**
@@ -199,126 +147,47 @@ public class StructureHighOven {
 	 * @param x     coordinate from center
 	 * @param y     coordinate from center
 	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
+	 * @return the lower part of the structure is valid
 	 */
-	public int recurseStructureDown(final int x, final int y, final int z, final int count) {
-		this.numBricks = 0;
-		int increment = count;
-		// Check inside
-		for (int xPos = x; xPos <= x; xPos++) {
-			for (int zPos = z; zPos <= z; zPos++) {
-				final Block block = worldObj.getBlock(xPos, y, zPos);
-
-				if ((block != null) && !block.isAir(worldObj, xPos, y, zPos)) {
-					if (this.validBlockID(block)) {
-						return this.validateBottom(x, y, z, increment);
-					}
-
-					return increment;
-				}
-			}
+	public boolean recurseStructureDown(final int x, final int y, final int z) {
+		if (checkHollowLayer(x, y, z)) {
+			nbLayers++;
+			return this.recurseStructureUp(x, y - 1, z);
 		}
 
-		// Check outer layer X
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			this.numBricks += this.checkBricks(xPos, y, z - 1);
-			this.numBricks += this.checkBricks(xPos, y, z + 1);
-		}
-
-		// Check outer layer Z
-		for (int zPos = z; zPos <= z; zPos++) {
-			this.numBricks += this.checkBricks(x - 1, y, zPos);
-			this.numBricks += this.checkBricks(x + 1, y, zPos);
-		}
-
-		if (this.numBricks != 8) {
-			return increment;
-		}
-
-		increment++;
-		return this.recurseStructureDown(x, y - 1, z, increment);
+		return checkPlainLayer(x, y, z);
 	}
 
 	/**
-	 * Determine if layer is a valid top layer.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int validateTop(final int x, final int y, final int z, final int count) {
-		int topBricks = 0;
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			for (int zPos = z - 1; zPos <= (z + 1); zPos++) {
-				if (this.validBlockID(worldObj.getBlock(xPos, y, zPos)) && (worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
-					topBricks += this.checkBricks(xPos, y, zPos);
-				}
-			}
-		}
-
-		this.structureHasTop = topBricks == 9;
-		return count;
-	}
-
-	/**
-	 * Determine if layer is a valid bottom layer.
-	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
-	 * @param count current amount of blocks
-	 * @return block count
-	 */
-	public int validateBottom(final int x, final int y, final int z, final int count) {
-		int bottomBricks = 0;
-		for (int xPos = x - 1; xPos <= (x + 1); xPos++) {
-			for (int zPos = z - 1; zPos <= (z + 1); zPos++) {
-				if (this.validBlockID(this.worldObj.getBlock(xPos, y, zPos)) && (this.worldObj.getBlockMetadata(xPos, y, zPos) >= 1)) {
-					bottomBricks += this.checkBricks(xPos, y, zPos);
-				}
-			}
-		}
-
-		this.structureHasBottom = bottomBricks == 9;
-		if (this.structureHasBottom) {
-			this.centerPos = new CoordTuple(x, y + 1, z);
-		}
-
-		return count;
-	}
-
-	/**
-	 * Increments bricks, sets them as part of the structure.
+	 * Tells if the brick at the specified coordinates are valid for this structure
 	 *
 	 * @param x coordinate
 	 * @param y coordinate
 	 * @param z coordinate
-	 * @return int brick incement
+	 * @return the brick is valid
 	 */
-	private int checkBricks(final int x, final int y, final int z) {
-		int tempBricks = 0;
-		final Block block = this.worldObj.getBlock(x, y, z);
+	private boolean checkBricks(final int x, final int y, final int z) {
+		final Block block = controller.getWorldObj().getBlock(x, y, z);
 
-		if (this.validBlockID(block)) {
-			final TileEntity te = this.worldObj.getTileEntity(x, y, z);
+		if (!this.validBlock(block)) {
+			return false;
+		}
 
-			if (te == this) {
-				tempBricks++;
-			} else if (te instanceof IServantLogic) {
-				final IServantLogic servant = (IServantLogic) te;
+		final TileEntity te = controller.getWorldObj().getTileEntity(x, y, z);
 
-				if (servant.hasMaster() && servant.verifyMaster(this, worldObj)) {
-					tempBricks++;
-				} else if (servant.setMaster(this, worldObj)) {
-					tempBricks++;
-				}
+		if (te == controller) {
+			return true;
+		}
+
+		if (te instanceof IServantLogic) {
+			final IServantLogic servant = (IServantLogic) te;
+
+			if ((servant.hasMaster() && servant.verifyMaster(controller, controller.getWorldObj())) || servant.setMaster(controller, controller.getWorldObj())) {
+				return true;
 			}
 		}
 
-		return tempBricks;
+		return false;
 	}
 
 	/**
@@ -327,7 +196,7 @@ public class StructureHighOven {
 	 * @param block the block
 	 * @return valid
 	 */
-	private boolean validBlockID(final Block block) {
+	private boolean validBlock(final Block block) {
 		return block.equals(TSContent.highoven);
 	}
 
@@ -348,7 +217,6 @@ public class StructureHighOven {
 	public final void setOutputDuct(final CoordTuple duct) {
 		this.outputDuct = duct;
 	}
-
 
 	/**
 	 * Adjust Layers for inventory containment.

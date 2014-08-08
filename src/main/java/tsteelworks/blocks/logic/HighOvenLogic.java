@@ -110,7 +110,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	/**
 	 * Handles the multiblock structure
 	 */
-	private StructureHighOven structure = new StructureHighOven();
+	private StructureHighOven structure = new StructureHighOven(this);
 
 	/**
 	 * Used to determine if the controller needs to be updated.
@@ -753,7 +753,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public void checkValidPlacement() {
 		int[] centerBlock =  BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, BlockHelper.getOppositeSide(getRenderDirection()));
 
-		structure.alignInitialPlacement(centerBlock[0], centerBlock[1], centerBlock[2]);
+		structure.checkValidStructure(centerBlock[0], centerBlock[1], centerBlock[2]);
 	}
 
     /* ==================== Fluid Handling ==================== */
@@ -764,11 +764,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @param liquid the liquid
 	 * @return Success
 	 */
-	final boolean addFluidToTank(final FluidStack liquid) {
+	public boolean addFluidToTank(final FluidStack liquid) {
 		// TODO: Tank should only hold multiple fluids under certain special circumstances ex water & steam, anything & slag
 
 		if (tank.fill(ForgeDirection.UNKNOWN, liquid, false) != liquid.amount)
 			return false;
+
+		needsUpdate = true;
 
 		tank.fill(ForgeDirection.UNKNOWN, liquid, true);
 
@@ -780,7 +782,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 *
 	 * @param itemstack the ItemStack
 	 */
-	final void addItem(final ItemStack itemstack) {
+	public void addItem(final ItemStack itemstack) {
 		if (structure.getDuct() != null) {
 			nf.fr.ephys.cookiecore.helpers.InventoryHelper.insertItem(structure.getDuct(), itemstack);
 		} else {
@@ -871,5 +873,16 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public final int getFillRatio() {
 		return tank.getNbFluids() == 0 ? 0 : tank.getCapacity() / tank.getFluidAmount();
+	}
+
+	public void onStructureChange(StructureHighOven structure) {
+		if (this.structureHasBottom && this.structureHasTop && (checkedLayers > 0)) {
+			this.adjustLayers(checkedLayers, false);
+			this.validStructure = true;
+		} else {
+			this.internalTemp = ROOM_TEMP;
+			this.validStructure = false;
+		}
+		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 }
