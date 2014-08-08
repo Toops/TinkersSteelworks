@@ -447,4 +447,8 @@ public class StructureHighOven {
 	public boolean isValid() {
 		return validStructure;
 	}
+
+	public HighOvenDuctLogic getDuct() {
+		return outputDuct;
+	}
 }
