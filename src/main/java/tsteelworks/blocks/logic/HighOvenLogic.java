@@ -12,7 +12,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -20,9 +19,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistryDefaulted;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
-import nf.fr.ephys.cookiecore.helpers.FluidHelper;
 import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
@@ -37,12 +36,10 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.structure.StructureHighOven;
 import tsteelworks.util.InventoryHelper;
 
-import java.util.List;
-
 /**
  * The primary class for the High Oven structure's logic.
  */
-public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandler, IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IRedstonePowered {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -350,7 +347,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 		if (internalTemp < 1300 || tank.getNbFluids() == 0) return;
 
 		// Let's make steam!
-		if (getFluid().getFluid() != FluidRegistry.WATER && getFluid().getFluid() != FluidRegistry.getFluid("Steam"))
+		if (tank.getFluid().getFluid() != FluidRegistry.WATER && tank.getFluid().getFluid() != FluidRegistry.getFluid("Steam"))
 			return;
 
 		int amount = 0;
@@ -805,57 +802,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 		}
 	}
 
-	/**
-	 * Get max liquid capacity.
-	 *
-	 * @return the capacity
-	 */
-	@Override
-	public final int getCapacity() {
-		return tank.getCapacity();
-	}
-
-	@Override
-	public final FluidStack drain(final int maxDrain, final boolean doDrain) {
-
-	}
-
-	@Override
-	public final int fill(final FluidStack resource, final boolean doFill) {
-		int filled = tank.fill(resource, doFill);
-
-		if (doFill && filled != 0)
-			needsUpdate = true;
-
-		return filled;
-	}
-
-	@Override
-	public final FluidStack getFluid() {
-		return tank.getFluid();
-	}
-
-	/**
-	 * Gets the fill ratio.
-	 *
-	 * @return the fill ratio
-	 */
-	public final int getFillRatio() {
-		return tank.getNbFluids() == 0 ? 0 : tank.getCapacity() / tank.getFluidAmount();
-	}
-
-	@Override
-	public final int getFluidAmount() {
-		return tank.getFluidAmount();
-	}
-
-	@Override
-	public final FluidTankInfo getInfo() {
-		return tank.getInfo();
-	}
-
     /* ==================== NBT ==================== */
-
 	@Override
 	public final void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -909,7 +856,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 	}
 
     /* =============== IMaster =============== */
-
 	@Override
 	public final CoordTuple getCoord() {
 		return new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
@@ -917,37 +863,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IFluidHandl
 
 	@Override
 	public final boolean isValid() {
-		return this.validStructure;
+		return structure.isValid();
 	}
 
-	/* =============== IFluidHandler ============== */
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		return 0;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		return null;
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return new FluidTankInfo[0];
+	/**
+	 * @return the fill ratio
+	 */
+	public final int getFillRatio() {
+		return tank.getNbFluids() == 0 ? 0 : tank.getCapacity() / tank.getFluidAmount();
 	}
 }
