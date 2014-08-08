@@ -21,6 +21,7 @@ import net.minecraft.util.RegistryDefaulted;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
@@ -36,10 +37,12 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.structure.StructureHighOven;
 import tsteelworks.util.InventoryHelper;
 
+import java.util.Arrays;
+
 /**
  * The primary class for the High Oven structure's logic.
  */
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -172,6 +175,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Used to randomize things.
 	 */
 	private String invName;
+
+	/**
+	 * The structure's output duct instance.
+	 */
+	private HighOvenDuctLogic outputDuct;
 
 	/**
 	 * Max temp by layer.
@@ -783,8 +791,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @param itemstack the ItemStack
 	 */
 	public void addItem(final ItemStack itemstack) {
-		if (structure.getDuct() != null) {
-			nf.fr.ephys.cookiecore.helpers.InventoryHelper.insertItem(structure.getDuct(), itemstack);
+		if (outputDuct != null) {
+			nf.fr.ephys.cookiecore.helpers.InventoryHelper.insertItem(outputDuct, itemstack);
 		} else {
 			dispenseItem(itemstack);
 		}
@@ -876,13 +884,40 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	public void onStructureChange(StructureHighOven structure) {
-		if (this.structureHasBottom && this.structureHasTop && (checkedLayers > 0)) {
-			this.adjustLayers(checkedLayers, false);
-			this.validStructure = true;
-		} else {
-			this.internalTemp = ROOM_TEMP;
-			this.validStructure = false;
+		needsUpdate = true;
+		if (!structure.isValid()) {
+			internalTemp = ROOM_TEMP;
+
+			return;
 		}
-		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+
+		final int oldNbLayers = activeTemps.length;
+		final int nbLayers = structure.getNbLayers();
+
+		this.tank.setCapacity(FLUID_AMOUNT_PER_LAYER * nbLayers);
+		this.maxTemp = this.maxTempByLayer();
+
+		if (nbLayers > oldNbLayers) {
+			activeTemps = Arrays.copyOf(activeTemps, nbLayers);
+			meltingTemps = Arrays.copyOf(meltingTemps, nbLayers);
+
+			for (int i = oldNbLayers; i < nbLayers; i++) {
+				if (!this.isSmeltingSlot(i))
+					continue;
+
+				this.activeTemps[i] = ROOM_TEMP;
+				this.meltingTemps[i] = ROOM_TEMP;
+			}
+		}
+
+		this.inventory.setInventorySize(nbLayers);
+
+		int[] dumpCoords = BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, direction);
+		this.inventory.dumpOverflow(worldObj, dumpCoords[0], dumpCoords[1], dumpCoords[2]);
+	}
+
+	@Override
+	public void onChunkLoaded() {
+		checkValidPlacement();
 	}
 }
