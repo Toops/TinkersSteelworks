@@ -1,94 +1,56 @@
 package tsteelworks.blocks;
 
-import java.util.List;
-import java.util.Random;
-
-import net.minecraft.block.BlockSand;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import tsteelworks.common.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 
-public class DustStorageBlock extends BlockSand
-{
-    public static final String[] TEXTURE_NAMES = new String[] { "gunpowder", "sugar" };
-    public Icon[] icons;
+import java.util.List;
 
-    public DustStorageBlock(int id)
-    {
-        super(id, Material.sand);
-        setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        setStepSound(soundSandFootstep);
-    }
+public class DustStorageBlock extends BlockFalling {
+	public static final String[] TEXTURE_NAMES = new String[] {"gunpowder", "sugar"};
+	public IIcon[] icons;
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#damageDropped(int)
-     */
-    @Override
-    public int damageDropped (int meta)
-    {
-        return meta;
-    }
+	public DustStorageBlock() {
+		super(Material.sand);
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#getBlockHardness(net.minecraft.world.World, int, int, int)
-     */
-    @Override
-    public float getBlockHardness (World world, int x, int y, int z)
-    {
-        return 3f;
-    }
+		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setStepSound(soundTypeSand);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#getIcon(int, int)
-     */
-    @Override
-    public Icon getIcon (int side, int meta)
-    {
-        return icons[meta];
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#getSubBlocks(int, net.minecraft.creativetab.CreativeTabs, java.util.List)
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked"})
 	@Override
-    public void getSubBlocks (int id, CreativeTabs tab, List list)
-    {
-    	for (int iter = 0; iter < 2; iter++)
-            list.add(new ItemStack(id, 1, iter));
-    }
-    
-    
+	public int damageDropped(int meta) {
+		return meta;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#idDropped(int, java.util.Random, int)
-     */
-    @Override
-    public int idDropped (int par1, Random par2Random, int par3)
-    {
-        return blockID;
-    }
+	@Override
+	public float getBlockHardness(World world, int x, int y, int z) {
+		return 3f;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see net.minecraft.block.Block#registerIcons(net.minecraft.client.renderer.texture.IconRegister)
-     */
-    @Override
-    public void registerIcons (IconRegister iconRegister)
-    {
-        icons = new Icon[TEXTURE_NAMES.length];
+	@Override
+	public IIcon getIcon(int side, int meta) {
+		return icons[meta];
+	}
 
-        for (int i = 0; i < icons.length; ++i)
-            icons[i] = iconRegister.registerIcon(TSRepo.textureDir + TEXTURE_NAMES[i] + "_block");
-    }
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Override
+	public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+		for (int iter = 0; iter < 2; iter++)
+			list.add(new ItemStack(item, 1, iter));
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister) {
+		icons = new IIcon[TEXTURE_NAMES.length];
+
+		for (int i = 0; i < icons.length; ++i)
+			icons[i] = iconRegister.registerIcon(TSRepo.textureDir + TEXTURE_NAMES[i] + "_block");
+	}
 }

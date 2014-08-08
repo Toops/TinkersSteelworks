@@ -38,7 +38,7 @@ public class TSManual extends TSCraftingItem
     @Override
     public ItemStack onItemRightClick (ItemStack stack, World world, EntityPlayer player)
     {
-        player.openGui(TSteelworks.instance, TSteelworks.proxy.manualGuiID, world, 0, 0, 0);
+        player.openGui(TSteelworks.instance, TSteelworks.proxy.MANUAL_GUI_ID, world, 0, 0, 0);
         return stack;
     }
 }

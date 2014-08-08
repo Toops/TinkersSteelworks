@@ -97,27 +97,6 @@ public class TSClientProxy extends TSCommonProxy
         pageClasses.put(type, clazz);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#getClientGuiElement(int, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World, int, int, int)
-     */
-    @Override
-    public Object getClientGuiElement (int id, EntityPlayer player, World world, int x, int y, int z)
-    {
-        if (id == highovenGuiID)
-            return new HighOvenGui(player.inventory, (HighOvenLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (id == highovenDuctGuiID)
-            return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (id == deeptankGuiID)
-            return new DeepTankGui(player.inventory, (DeepTankLogic) world.getBlockTileEntity(x, y, z), world, x, y, z);
-        if (id == manualGuiID)
-        {
-            final ItemStack stack = player.getCurrentEquippedItem();
-            return new TSManualGui(stack, TSClientProxy.getManualFromStack(stack));
-        }
-        return null;
-    }
-
     public void initManualIcons ()
     {
         // Blocks
@@ -152,7 +131,7 @@ public class TSClientProxy extends TSCommonProxy
         TSClientRegistry.registerManualIcon("sandblock", new ItemStack(Block.sand));
         TSClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TContent.craftedSoil, 1, 3));
         TSClientRegistry.registerManualIcon("hambone", new ItemStack(TContent.meatBlock, 1, 0));
-        
+
         // TCON
         TSClientRegistry.registerManualIcon("smelterybook", TConstructClientRegistry.getManualIcon("smelterybook"));
         TSClientRegistry.registerManualIcon("smeltery", TConstructClientRegistry.getManualIcon("smeltery"));
@@ -240,29 +219,29 @@ public class TSClientProxy extends TSCommonProxy
     public void initManualRecipes ()
     {
         final ItemStack charcoal = new ItemStack(Item.coal, 1, 1);
-        
+
         final ItemStack ingotIron = new ItemStack(Item.ingotIron, 1);
         final ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
         final ItemStack dustGunpwoder = new ItemStack(Item.gunpowder, 1, 0);
         final ItemStack dustRedstone = new ItemStack(Item.redstone, 1, 0);
         final ItemStack dustAluminum = TConstructRegistry.getItemStack("dustAluminum");
         final ItemStack blockSand = new ItemStack(Block.sand, 1, 0);
-        
+
         TSClientRegistry.registerManualHighOvenRecipe("steelsmelting", ingotSteel, ingotIron, dustGunpwoder, dustRedstone, blockSand);
-        
+
         final ItemStack ingotPigIron = TConstructRegistry.getItemStack("ingotPigIron");
         final ItemStack dustSugar = new ItemStack(Item.sugar, 1, 0);
         final ItemStack bonemeal = new ItemStack(Item.dyePowder, 1, 15);
         final ItemStack blockHambone = new ItemStack(TContent.meatBlock, 1, 0);
-        
+
         TSClientRegistry.registerManualHighOvenRecipe("pigironsmelting", ingotPigIron, ingotIron, dustSugar, bonemeal, blockHambone);
-        
+
         final ItemStack scorchedbrick = new ItemStack(TSContent.materialsTS);
         final ItemStack stoneBlock = new ItemStack(Block.stone);
         final ItemStack coal = new ItemStack(Item.coal, 1, 0);
-        
+
         TSClientRegistry.registerManualHighOvenRecipe("scorchedbricksmelting", scorchedbrick, stoneBlock, coal, null, new ItemStack(Block.sand, 1, 0));
-        
+
         final ItemStack netherquartz = new ItemStack(Item.netherQuartz);
         final ItemStack essenceberry = new ItemStack(TContent.oreBerries, 1, 5);
         final ItemStack graveyardsoil = new ItemStack(TContent.craftedSoil, 1, 3);
@@ -273,52 +252,52 @@ public class TSClientProxy extends TSCommonProxy
         ItemStack ironpick = ToolBuilder.instance.buildTool(new ItemStack(TContent.pickaxeHead, 1, 6), new ItemStack(TContent.toolRod, 1, 2), new ItemStack(TContent.binding, 1, 6), "");
         TSClientRegistry.registerManualIcon("ironpick", ironpick);
         TSClientRegistry.registerManualModifier("vacuousmod", ironpick.copy(), new ItemStack(Block.hopperBlock), new ItemStack(Item.enderPearl));
-        
+
         final ItemStack lapis = new ItemStack(Item.dyePowder, 1, 4);
-        
+
         final ItemStack charcoalBlock = new ItemStack(TSContent.charcoalBlock);
         final ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
         final ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
 
         final ItemStack brick = new ItemStack(Item.brick);
         final ItemStack brickBlock = new ItemStack(Block.brick);
-        
+
         final ItemStack scorchedbrickBlock = new ItemStack(TSContent.highoven, 1, 2);
-        
+
         TSClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TContent.moltenStone, 1), brick);
         TSClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TContent.moltenStone, 1), brickBlock);
 
-        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), 
-                                                                            scorchedbrick, scorchedbrick, 
+        TSClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2),
+                                                                            scorchedbrick, scorchedbrick,
                                                                             scorchedbrick, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), 
-                                                                            scorchedbrick, scorchedbrick, scorchedbrick, 
+        TSClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0),
+                                                                            scorchedbrick, scorchedbrick, scorchedbrick,
                                                                             scorchedbrick, null, scorchedbrick,
                                                                             scorchedbrick, scorchedbrick, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1), 
-                                                                        scorchedbrick, null, scorchedbrick, 
-                                                                        scorchedbrick, null, scorchedbrick, 
+        TSClientRegistry.registerManualLargeRecipe("highovenydrain", new ItemStack(TSContent.highoven, 1, 1),
+                                                                        scorchedbrick, null, scorchedbrick,
+                                                                        scorchedbrick, null, scorchedbrick,
                                                                         scorchedbrick, null, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("highovenyduct", new ItemStack(TSContent.highoven, 1, 12), 
-                                                                        scorchedbrick, scorchedbrick, scorchedbrick, 
-                                                                        null, null, null, 
+        TSClientRegistry.registerManualLargeRecipe("highovenyduct", new ItemStack(TSContent.highoven, 1, 12),
+                                                                        scorchedbrick, scorchedbrick, scorchedbrick,
+                                                                        null, null, null,
                                                                         scorchedbrick, scorchedbrick, scorchedbrick);
-        TSClientRegistry.registerManualLargeRecipe("deeptank", new ItemStack(TSContent.highoven, 1, 13), 
-                                                                    scorchedbrick, scorchedbrick, scorchedbrick, 
-                                                                    scorchedbrick, lapis, scorchedbrick, 
+        TSClientRegistry.registerManualLargeRecipe("deeptank", new ItemStack(TSContent.highoven, 1, 13),
+                                                                    scorchedbrick, scorchedbrick, scorchedbrick,
+                                                                    scorchedbrick, lapis, scorchedbrick,
                                                                     scorchedbrick, scorchedbrick, scorchedbrick);
-        
-        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock, 
-                                                                    charcoal, charcoal, charcoal, 
-                                                                    charcoal, charcoal, charcoal, 
+
+        TSClientRegistry.registerManualLargeRecipe("charcoalblock", charcoalBlock,
+                                                                    charcoal, charcoal, charcoal,
+                                                                    charcoal, charcoal, charcoal,
                                                                     charcoal, charcoal, charcoal);
-        TSClientRegistry.registerManualLargeRecipe("gunpowderblock", gunpowderBlock, 
-                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder, 
-                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder, 
+        TSClientRegistry.registerManualLargeRecipe("gunpowderblock", gunpowderBlock,
+                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder,
+                                                                    dustGunpwoder, dustGunpwoder, dustGunpwoder,
                                                                     dustGunpwoder, dustGunpwoder, dustGunpwoder);
-        TSClientRegistry.registerManualLargeRecipe("sugarcube", sugarBlock, 
-                                                                    dustSugar, dustSugar, dustSugar, 
-                                                                    dustSugar, dustSugar, dustSugar, 
+        TSClientRegistry.registerManualLargeRecipe("sugarcube", sugarBlock,
+                                                                    dustSugar, dustSugar, dustSugar,
+                                                                    dustSugar, dustSugar, dustSugar,
                                                                     dustSugar, dustSugar, dustSugar);
     }
 
@@ -334,7 +313,7 @@ public class TSClientProxy extends TSCommonProxy
             }
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * @see tsteelworks.common.TSCommonProxy#postInit()
@@ -374,7 +353,7 @@ public class TSClientProxy extends TSCommonProxy
         RenderingRegistry.registerEntityRenderingHandler(EntityLimestoneBrick.class, new RenderSnowball(TSContent.materialsTS, 1));
         RenderingRegistry.registerBlockHandler(new DeepTankRender());
         RenderingRegistry.registerBlockHandler(new MachineRender());
-        
+
         addRenderMappings();
     }
 
@@ -398,9 +377,9 @@ public class TSClientProxy extends TSCommonProxy
             doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
         else
             TConstruct.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-            
+
     }
-    
+
     public EntityFX doSpawnParticle (String par1Str, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         if (mc == null)

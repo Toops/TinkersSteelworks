@@ -1,24 +1,31 @@
 package tsteelworks.blocks;
 
+import mantle.blocks.iface.IFacingLogic;
+import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import tconstruct.library.TConstructRegistry;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.*;
 import tsteelworks.client.block.DeepTankRender;
+import tsteelworks.common.GuiHandler;
 import tsteelworks.common.TSRepo;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
 import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.IRedstonePowered;
 import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
@@ -29,99 +36,56 @@ import java.util.List;
 import java.util.Random;
 
 public class HighOvenBlock extends TSInventoryBlock {
-	static ArrayList<CoordTuple> directions = new ArrayList<CoordTuple>(6);
-	Random rand;
-	String texturePrefix = "";
+	public static final int META_HIGHOVEN = 0;
+	public static final int META_DRAIN = 1;
 
-	public HighOvenBlock(int id) {
-		super(id, Material.rock);
-		setHardness(3F);
-		setResistance(20F);
-		setStepSound(soundMetalFootstep);
-		rand = new Random();
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-		setUnlocalizedName("tsteelworks.HighOven");
+	public static final int META_DUCT = 12;
+	public static final int META_TANK = 13;
+
+	public static ArrayList<CoordTuple> directions = new ArrayList<>(6);
+	static {
+		directions.add(new CoordTuple(0, -1, 0));
+		directions.add(new CoordTuple(0, 1, 0));
+		directions.add(new CoordTuple(0, 0, -1));
+		directions.add(new CoordTuple(0, 0, 1));
+		directions.add(new CoordTuple(-1, 0, 0));
+		directions.add(new CoordTuple(1, 0, 0));
 	}
 
-	public HighOvenBlock(int id, String prefix) {
-		this(id);
+	private String texturePrefix = "";
+
+	public HighOvenBlock() {
+		super(Material.rock);
+
+		setHardness(3F);
+		setResistance(20F);
+		setStepSound(soundTypeMetal);
+
+		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setBlockName("tsteelworks.HighOven");
+	}
+
+	public HighOvenBlock(String prefix) {
+		this();
+
 		texturePrefix = prefix;
 	}
 
-	/**
-	 * Called on server worlds only when the block has been replaced by a different block ID, or the same block with a
-	 * different metadata value, but before the new metadata value is set. Args: World, x, y, z, old block ID, old
-	 * metadata
-	 */
 	@Override
-	public void breakBlock(World world, int x, int y, int z, int blockID, int meta) {
-		final TileEntity logic = world.getBlockTileEntity(x, y, z);
-		if (logic instanceof IServantLogic)
-			((IServantLogic) logic).notifyMasterOfChange();
-		if (logic instanceof HighOvenDuctLogic) {
-			if (logic != null) {
-				for (int j1 = 0; j1 < ((HighOvenDuctLogic) logic).getSizeInventory(); ++j1) {
-					ItemStack itemstack = ((HighOvenDuctLogic) logic).getStackInSlot(j1);
-
-					if (itemstack != null) {
-						float f = rand.nextFloat() * 0.8F + 0.1F;
-						float f1 = rand.nextFloat() * 0.8F + 0.1F;
-						float f2 = rand.nextFloat() * 0.8F + 0.1F;
-
-						while (itemstack.stackSize > 0) {
-							int k1 = this.rand.nextInt(21) + 10;
-
-							if (k1 > itemstack.stackSize) {
-								k1 = itemstack.stackSize;
-							}
-
-							itemstack.stackSize -= k1;
-							EntityItem entityitem = new EntityItem(world, (double) ((float) x + f), (double) ((float) y + f1), (double) ((float) z + f2), new ItemStack(itemstack.itemID, k1, itemstack.getItemDamage()));
-
-							if (itemstack.hasTagCompound()) {
-								entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
-							}
-
-							float f3 = 0.05F;
-							entityitem.motionX = (double) ((float) rand.nextGaussian() * f3);
-							entityitem.motionY = (double) ((float) rand.nextGaussian() * f3 + 0.2F);
-							entityitem.motionZ = (double) ((float) rand.nextGaussian() * f3);
-							world.spawnEntityInWorld(entityitem);
-						}
-					}
-				}
-				world.func_96440_m(x, y, z, blockID);
-			}
-		}
-		super.breakBlock(world, x, y, z, blockID, meta);
-	}
-
-	@Override
-	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		final TileEntity logic = world.getBlockTileEntity(x, y, z);
-		return (logic instanceof IMasterLogic);
-	}
-
-	@Override
-	public boolean canCreatureSpawn(EnumCreatureType type, World world, int x, int y, int z) {
+	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world) {
-		return null;
-	}
-
-	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createNewTileEntity(World world, int metadata) {
 		switch (metadata) {
-			case 0:
+			case META_HIGHOVEN:
 				return new HighOvenLogic();
-			case 1:
+			case META_DRAIN:
 				return new HighOvenDrainLogic();
-			case 12:
+			case META_DUCT:
 				return new HighOvenDuctLogic();
-			case 13:
+			case META_TANK:
 				return new DeepTankLogic();
 		}
 		return new TSMultiServantLogic();
@@ -138,10 +102,11 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
-	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side) {
-		final TileEntity logic = world.getBlockTileEntity(x, y, z);
+	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
 		final short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
 		final int meta = world.getBlockMetadata(x, y, z);
+
 		if (meta == 0)
 			if (side == direction) {
 				if (isActive(world, x, y, z))
@@ -177,25 +142,24 @@ public class HighOvenBlock extends TSInventoryBlock {
 		return icons[3 + meta];
 	}
 
-	@SuppressWarnings("static-access")
 	@Override
-	public Integer getGui(World world, int x, int y, int z, EntityPlayer entityplayer) {
+	public int getGui(World world, int x, int y, int z, EntityPlayer entityplayer) {
 		final int meta = world.getBlockMetadata(x, y, z);
-		world.getBlockTileEntity(x, y, z);
+
 		switch (meta) {
 			case 0:
-				return TSteelworks.proxy.highovenGuiID;
+				return GuiHandler.HIGHOVEN_GUI_ID;
 			case 12:
-				return TSteelworks.proxy.highovenDuctGuiID;
+				return GuiHandler.HIGHOVEN_DUCT_GUI_ID;
 			case 13:
-				return TSteelworks.proxy.deeptankGuiID;
+				return GuiHandler.DEEPTANK_GUI_ID;
 			default:
-				return null;
+				return -1;
 		}
 	}
 
 	@Override
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 		if (meta < 2) {
 			final int sideTex = side == 3 ? 1 : 0;
 			return icons[sideTex + (meta * 3)];
@@ -214,16 +178,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 		return icons[3 + meta];
 	}
 
-	// Currently unused
-	public int getIndirectPowerLevelTo(World world, int x, int y, int z, int side) {
-		if (world.isBlockNormalCube(x, y, z))
-			return world.getBlockPowerInput(x, y, z);
-		else {
-			final int i1 = world.getBlockId(x, y, z);
-			return i1 == 0 ? 0 : Block.blocksList[i1].isProvidingWeakPower(world, x, y, z, side);
-		}
-	}
-
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
 		return !isActive(world, x, y, z) ? 0 : 9;
@@ -236,7 +190,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	public void getSubBlocks(int id, CreativeTabs tab, List list) {
+	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
 		for (int iter = 0; iter < 14; iter++)
 			if (iter != 3)
 				list.add(new ItemStack(id, 1, iter));
@@ -248,27 +202,14 @@ public class HighOvenBlock extends TSInventoryBlock {
 		if (!texturePrefix.equals(""))
 			for (int i = 0; i < textureNames.length; i++)
 				textureNames[i] = texturePrefix + "_" + textureNames[i];
-		return textureNames;
-	}
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ) {
-		final int meta = world.getBlockMetadata(x, y, z);
-		if (player.isSneaking())
-			return false;
-		final Integer integer = getGui(world, x, y, z, player);
-		if ((integer == null) || (integer == -1))
-			return false;
-		if ((meta == 0) || (meta == 12) || (meta == 13)) {
-			player.openGui(getModInstance(), integer, world, x, y, z);
-			return true;
-		}
-		return false;
+		return textureNames;
 	}
 
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
+
 		if (world.getBlockMetadata(x, y, z) == 0) {
 			spawnHighGolem(world, x, y, z);
 			spawnSteelGolem(world, x, y, z);
@@ -278,24 +219,14 @@ public class HighOvenBlock extends TSInventoryBlock {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack) {
 		super.onBlockPlacedBy(world, x, y, z, entityliving, stack);
-		if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 13)
-			onBlockPlacedElsewhere(world, x, y, z, entityliving);
-	}
-
-	public void onBlockPlacedElsewhere(World world, int x, int y, int z, EntityLivingBase entityliving) {
-		if (world.getBlockMetadata(x, y, z) == 0) {
-			final HighOvenLogic logic = (HighOvenLogic) world.getBlockTileEntity(x, y, z);
-			logic.checkValidPlacement();
-		}
-		if (world.getBlockMetadata(x, y, z) == 13) {
-			final DeepTankLogic logic = (DeepTankLogic) world.getBlockTileEntity(x, y, z);
-			logic.checkValidPlacement();
+		if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 13) {
+			((IMasterLogic) world.getTileEntity(x, y, z)).checkValidPlacement();
 		}
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, int x, int y, int z, int nBlockID) {
-		final TileEntity logic = world.getBlockTileEntity(x, y, z);
+	public void onNeighborBlockChange(World world, int x, int y, int z, Block nBlockID) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
 		if (logic instanceof IServantLogic)
 			((IServantLogic) logic).notifyMasterOfChange();
 		else if (logic instanceof IMasterLogic)
@@ -307,14 +238,9 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
-	public int quantityDropped(final Random random) {
-		return 1;
-	}
-
-	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
 		if (isActive(world, x, y, z)) {
-			final TileEntity logic = world.getBlockTileEntity(x, y, z);
+			final TileEntity logic = world.getTileEntity(x, y, z);
 			byte face = 0;
 			if (logic instanceof IFacingLogic)
 				face = ((IFacingLogic) logic).getRenderDirection();
@@ -345,30 +271,26 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
-	public void registerIcons(IconRegister iconRegister) {
+	public void registerBlockIcons(IIconRegister iconRegister) {
 		final String[] textureNames = getTextureNames();
-		icons = new Icon[textureNames.length];
+		icons = new IIcon[textureNames.length];
 
 		for (int i = 0; i < icons.length; ++i)
 			icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
 	}
 
 	private void spawnHighGolem(World world, int x, int y, int z) {
-
-		final boolean check1 = ((world.getBlockId(x, y - 1, z) == TContent.smeltery.blockID) && (world.getBlockMetadata(x, y - 1, z) > 1));
-		final boolean check2 = ((world.getBlockId(x, y - 2, z) == TContent.smeltery.blockID) && (world.getBlockMetadata(x, y - 2, z) > 1));
+		final boolean check1 = (world.getBlock(x, y - 1, z) == TContent.smeltery) && (world.getBlockMetadata(x, y - 1, z) > 1);
+		final boolean check2 = (world.getBlock(x, y - 2, z) == TContent.smeltery) && (world.getBlockMetadata(x, y - 2, z) > 1);
 
 		if (check1 && check2) {
 			if (!world.isRemote) {
-				world.setBlock(x, y, z, 0, 0, 2);
-				world.setBlock(x, y - 1, z, 0, 0, 2);
-				world.setBlock(x, y - 2, z, 0, 0, 2);
+				world.setBlockToAir(x, y, z);
+				world.setBlockToAir(x, y - 1, z);
+				world.setBlockToAir(x, y - 2, z);
 				final HighGolem entityhighgolem = new HighGolem(world);
 				entityhighgolem.setLocationAndAngles(x + 0.5D, y - 1.95D, z + 0.5D, 0.0F, 0.0F);
 				world.spawnEntityInWorld(entityhighgolem);
-				world.notifyBlockChange(x, y, z, 0);
-				world.notifyBlockChange(x, y - 1, z, 0);
-				world.notifyBlockChange(x, y - 2, z, 0);
 				world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
 				for (int l = 0; l < 120; ++l)
 					TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
@@ -379,23 +301,23 @@ public class HighOvenBlock extends TSInventoryBlock {
 	private void spawnSteelGolem(World world, int x, int y, int z) {
 		ItemStack blockSteel = new ItemStack(TContent.metalBlock, 1, 9);
 		ItemStack blockArdite = new ItemStack(TContent.metalBlock, 1, 1);
-		final boolean check1 = InventoryHelper.matchBlockAtLocation(world, x, y - 1, z, TContent.meatBlock.blockID);
+		final boolean check1 = InventoryHelper.matchBlockAtLocation(world, x, y - 1, z, TContent.meatBlock);
 		final boolean check2 = InventoryHelper.matchBlockAtLocationWithMeta(world, x + 1, y - 1, z, blockSteel) && InventoryHelper.matchBlockAtLocationWithMeta(world, x - 1, y - 1, z, blockSteel);
 		final boolean check3 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z + 1, blockSteel) && InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 1, z - 1, blockSteel);
 		final boolean check4 = InventoryHelper.matchBlockAtLocationWithMeta(world, x, y - 2, z, blockArdite);
 
 		if (check1 && check4 && (check2 || check3)) {
 			if (!world.isRemote) {
-				world.setBlock(x, y, z, 0, 0, 2);
-				world.setBlock(x, y - 1, z, 0, 0, 2);
+				world.setBlockToAir(x, y, z);
+				world.setBlockToAir(x, y - 1, z);
 				if (check2) {
-					world.setBlock(x + 1, y - 1, z, 0, 0, 2);
-					world.setBlock(x - 1, y - 1, z, 0, 0, 2);
+					world.setBlockToAir(x + 1, y - 1, z);
+					world.setBlockToAir(x - 1, y - 1, z);
 				} else {
-					world.setBlock(x, y - 1, z + 1, 0, 0, 2);
-					world.setBlock(x, y - 1, z - 1, 0, 0, 2);
+					world.setBlockToAir(x, y - 1, z + 1);
+					world.setBlockToAir(x, y - 1, z - 1);
 				}
-				world.setBlock(x, y - 2, z, 0, 0, 2);
+				world.setBlockToAir(x, y - 2, z);
 
 				final SteelGolem entitysteelgolem = new SteelGolem(world);
 				entitysteelgolem.setPlayerCreated(true);
@@ -404,33 +326,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 				world.playSoundEffect((double) x + 0.5D, (double) y + 0.5D, (double) z + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
 				for (int l = 0; l < 120; ++l)
 					TSteelworks.proxy.spawnParticle("scorchedbrick", x + world.rand.nextDouble(), (y - 2) + (world.rand.nextDouble() * 2.5D), z + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
-				world.notifyBlockChange(x, y, z, 0);
-				if (check2) {
-					world.notifyBlockChange(x + 1, y - 1, z, 0);
-					world.notifyBlockChange(x - 1, y - 1, z, 0);
-				} else {
-					world.notifyBlockChange(x, y - 1, z + 1, 0);
-					world.notifyBlockChange(x, y - 1, z - 1, 0);
-				}
-				world.notifyBlockChange(x, y - 2, z, 0);
 			}
 		}
 	}
-
-	boolean activeRedstone(World world, int x, int y, int z) {
-		final Block wire = Block.blocksList[world.getBlockId(x, y, z)];
-		if ((wire != null) && (wire.blockID == Block.redstoneWire.blockID))
-			return world.getBlockMetadata(x, y, z) > 0;
-		return false;
-	}
-
-	static {
-		directions.add(new CoordTuple(0, -1, 0));
-		directions.add(new CoordTuple(0, 1, 0));
-		directions.add(new CoordTuple(0, 0, -1));
-		directions.add(new CoordTuple(0, 0, 1));
-		directions.add(new CoordTuple(-1, 0, 0));
-		directions.add(new CoordTuple(1, 0, 0));
-	}
-
 }

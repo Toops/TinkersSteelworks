@@ -91,12 +91,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return true;
 	}
 
-	/* ==================== Container ==================== */
-
-	public Container getGuiContainer(InventoryPlayer inventoryplayer) {
-		return new HighOvenDuctContainer(inventoryplayer, this);
-	}
-
 	/* ==================== Redstone Logic ==================== */
 
 	/**

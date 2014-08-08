@@ -7,23 +7,21 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tsteelworks.common.TSRepo;
-import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.INamable;
+import tsteelworks.lib.IRedstonePowered;
 import tsteelworks.lib.IServantLogic;
 
 public abstract class TSInventoryBlock extends BlockContainer {
-	private IIcon[] icons;
+	protected IIcon[] icons;
 
 	public TSInventoryBlock(Material material) {
 		super(material);
@@ -44,7 +42,11 @@ public abstract class TSInventoryBlock extends BlockContainer {
 	}
 
 	@Override
-	public abstract TileEntity createTileEntity(World world, int metadata);
+	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
+
+		return (logic instanceof IRedstonePowered);
+	}
 
 	@Override
 	public int damageDropped(int meta) {

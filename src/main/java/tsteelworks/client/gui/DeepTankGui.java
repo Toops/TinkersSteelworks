@@ -34,10 +34,9 @@ public class DeepTankGui extends TSContainerGui
     public DeepTankLogic logic;
     String username;
     boolean wasClicking;
-    
-    public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank, World world, int x, int y, int z)
-    {
-        super((TSActiveContainer) tank.getGuiContainer(inventoryplayer, world, x, y, z));
+
+    public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
+        super((TSActiveContainer) tank.getGuiContainer(inventoryplayer));
         logic = tank;
         username = inventoryplayer.player.username;
         xSize = 248;
