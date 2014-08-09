@@ -11,16 +11,16 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.modifiers.tools.ModInteger;
+import tconstruct.smeltery.TinkerSmeltery;
+import tconstruct.tools.TinkerTools;
+import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.*;
 import tsteelworks.blocks.logic.*;
@@ -162,84 +162,109 @@ public class TSContent {
 	}
 
 	public void registerFluids() {
+		LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
 		ItemStack bucket = new ItemStack(Items.bucket);
-		boolean doRegisterSteamBlock = false;
 
-		steamFluid = new Fluid("steam");
-		if (!FluidRegistry.registerFluid(steamFluid)) {
-			steamFluid = FluidRegistry.getFluid("steam");
-			if (steamFluid.canBePlacedInWorld()) {
-				fluids[0] = steamFluid;
-				fluidBlocks[0] = steamBlock;
-			} else {
-				TSteelworks.loginfo("Attempted to acquire another mod's steam block, but it is missing! Obtaining TSteelworks steam block instead.");
-				doRegisterSteamBlock = true;
-			}
-		} else
-			doRegisterSteamBlock = true;
-		if (doRegisterSteamBlock) {
-			steamBlock = new SteamFluidBlock(ConfigCore.steam, steamFluid, Material.air).setUnlocalizedName("steam");
-			fluids[0] = steamFluid;
-			fluidBlocks[0] = steamBlock;
+		/* Steam */
+		steamFluid = FluidRegistry.getFluid("steam");
+		if (steamFluid == null) {
+			steamFluid = new Fluid("steam");
+			steamFluid.setDensity(-1).setViscosity(5).setTemperature(1300).setGaseous(true);
+
+			FluidRegistry.registerFluid(steamFluid);
+		}
+
+		if (!steamFluid.canBePlacedInWorld()) {
+			steamBlock = new TSBaseFluid(steamFluid, Material.air, "liquid_steam").setBlockName("steam").setLightOpacity(0);
 			GameRegistry.registerBlock(steamBlock, "steam");
-			steamBlock.setLightOpacity(0);
-			steamFluid.setBlockID(steamBlock.blockID).setLuminosity(0).setDensity(18).setViscosity(5).setTemperature(1300).setGaseous(true);
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), new ItemStack(bucketsTS, 1, 0), bucket));
+		} else {
+			steamBlock = steamFluid.getBlock();
 		}
 
-		moltenLimestoneFluid = new Fluid("limestone.molten");
-		if (!FluidRegistry.registerFluid(moltenLimestoneFluid))
-			moltenLimestoneFluid = FluidRegistry.getFluid("limestone.molten");
-		moltenLimestone = new TSBaseFluid(ConfigCore.moltenLimestone, moltenLimestoneFluid, Material.lava, "liquid_limestone").setUnlocalizedName("molten.limestone");
-		GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
-		fluids[1] = moltenLimestoneFluid;
-		fluidBlocks[1] = moltenLimestone;
-		moltenLimestoneFluid.setBlockID(moltenLimestone).setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
-		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), bucket));
-
-		liquidCementFluid = new Fluid("cement.liquid");
-		if (!FluidRegistry.registerFluid(liquidCementFluid))
-			liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
-		liquidCement = new CementFluidBlock(ConfigCore.liquidCement, liquidCementFluid, Material.air, "liquid_cement").setUnlocalizedName("liquid.cement");
-		GameRegistry.registerBlock(liquidCement, "liquid.cement");
-		fluids[2] = liquidCementFluid;
-		fluidBlocks[2] = liquidCement;
-		liquidCementFluid.setBlockID(liquidCement).setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
-		FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), bucket));
-
-		// Table Casting
-		LiquidCasting tableCasting = TConstructRegistry.instance.getTableCasting();
-
-		for (int fluidID = 0; fluidID < 2; fluidID++) {
-			tableCasting.addCastingRecipe(new ItemStack(bucketsTS, 1, fluidID), new FluidStack(fluids[fluidID], FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
+		if (filledBucket == null) {
+			filledBucket = new ItemStack(bucketsTS, 1, 0);
+			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), filledBucket, bucket));
 		}
+
+		tableCasting.addCastingRecipe(filledBucket, new FluidStack(steamFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+
+		/* Limestone */
+		moltenLimestoneFluid = FluidRegistry.getFluid("limestone.molten");
+		if (moltenLimestoneFluid == null) {
+			moltenLimestoneFluid = new Fluid("limestone.molten").setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
+
+			FluidRegistry.registerFluid(moltenLimestoneFluid);
+		}
+
+		if (!moltenLimestoneFluid.canBePlacedInWorld()) {
+			moltenLimestone = new TSBaseFluid(moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
+			GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
+
+			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), bucket));
+		} else {
+			moltenLimestone = moltenLimestoneFluid.getBlock();
+		}
+
+		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(moltenLimestoneFluid, 1000), bucket);
+		if (filledBucket == null) {
+			filledBucket = new ItemStack(bucketsTS, 1, 1);
+			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), filledBucket, bucket));
+		}
+
+		tableCasting.addCastingRecipe(filledBucket, new FluidStack(moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+
+		/* Cement */
+		liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
+		if (liquidCementFluid == null) {
+			liquidCementFluid = new Fluid("cement.liquid").setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
+
+			FluidRegistry.registerFluid(liquidCementFluid);
+		}
+
+		if (!liquidCementFluid.canBePlacedInWorld()) {
+			liquidCement = new CementFluidBlock(liquidCementFluid, Material.air, "liquid_cement").setBlockName("liquid.cement");
+			GameRegistry.registerBlock(liquidCement, "liquid.cement");
+
+			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), bucket));
+		} else {
+			liquidCement = liquidCementFluid.getBlock();
+		}
+
+		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(liquidCementFluid, 1000), bucket);
+		if (filledBucket == null) {
+			filledBucket = new ItemStack(bucketsTS, 1, 2);
+			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), filledBucket, bucket));
+		}
+
+		tableCasting.addCastingRecipe(filledBucket, new FluidStack(liquidCementFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 	}
 
 	public void oreRegistry() {
 		// Vanilla
-		ensureOreIsRegistered("blockSand", new ItemStack(Block.sand));
-		ensureOreIsRegistered("dustRedstone", new ItemStack(Item.redstone));
-		ensureOreIsRegistered("dustGunpowder", new ItemStack(Item.gunpowder));
-		ensureOreIsRegistered("dustSugar", new ItemStack(Item.sugar));
-		ensureOreIsRegistered("coal", new ItemStack(Item.coal, 1, 0)); // TE3 registers as "coal"
-		OreDictionary.registerOre("fuelCoal", new ItemStack(Item.coal, 1, 0));
-		ensureOreIsRegistered("fuelCharcoal", new ItemStack(Item.coal, 1, 1));
-		ensureOreIsRegistered("itemClay", new ItemStack(Item.clay));
+		ensureOreIsRegistered("blockSand", new ItemStack(Blocks.sand));
+		ensureOreIsRegistered("dustRedstone", new ItemStack(Items.redstone));
+		ensureOreIsRegistered("dustGunpowder", new ItemStack(Items.gunpowder));
+		ensureOreIsRegistered("dustSugar", new ItemStack(Items.sugar));
+		ensureOreIsRegistered("coal", new ItemStack(Items.coal, 1, 0));
+		OreDictionary.registerOre("fuelCoal", new ItemStack(Items.coal, 1, 0));
+		ensureOreIsRegistered("fuelCharcoal", new ItemStack(Items.coal, 1, 1));
+		ensureOreIsRegistered("itemClay", new ItemStack(Items.clay_ball));
+
 		// TSteelworks
-		OreDictionary.registerOre("blockCoal", new ItemStack(charcoalBlock));
-		OreDictionary.registerOre("blockCharcoal", new ItemStack(charcoalBlock)); // Mekanism compat
 		OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
 		OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
 		OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
+
 		// TConstuct
-		OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TContent.craftedSoil, 1, 3));
+		OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TinkerTools.craftedSoil, 1, 3));
 		// * Dual registry for smelting (slag) purposes (we need the ore prefix)
-		OreDictionary.registerOre("oreberryIron", new ItemStack(TContent.oreBerries, 1, 0));
-		OreDictionary.registerOre("oreberryCopper", new ItemStack(TContent.oreBerries, 1, 2));
-		OreDictionary.registerOre("oreberryTin", new ItemStack(TContent.oreBerries, 1, 3));
-		OreDictionary.registerOre("oreberryAluminum", new ItemStack(TContent.oreBerries, 1, 4));
-		OreDictionary.registerOre("oreberryAluminium", new ItemStack(TContent.oreBerries, 1, 4));
-		OreDictionary.registerOre("oreberryEssence", new ItemStack(TContent.oreBerries, 1, 5));
+		OreDictionary.registerOre("oreberryIron", new ItemStack(TinkerWorld.oreBerries, 1, 0));
+		OreDictionary.registerOre("oreberryCopper", new ItemStack(TinkerWorld.oreBerries, 1, 2));
+		OreDictionary.registerOre("oreberryTin", new ItemStack(TinkerWorld.oreBerries, 1, 3));
+		OreDictionary.registerOre("oreberryAluminum", new ItemStack(TinkerWorld.oreBerries, 1, 4));
+		OreDictionary.registerOre("oreberryAluminium", new ItemStack(TinkerWorld.oreBerries, 1, 4));
+		OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 	}
 
 	void ensureOreIsRegistered(String oreName, ItemStack is) {

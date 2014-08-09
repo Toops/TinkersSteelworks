@@ -7,7 +7,6 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import tsteelworks.common.core.TSRepo;
 
-// todo: steam fluid - "liquid_steam" (texture) & setAlpha(true)
 public class TSBaseFluid extends BlockFluidClassic {
 	private String texture;
 	private boolean alpha = false;
