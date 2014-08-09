@@ -41,16 +41,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 	public static final int META_DUCT = 12;
 	public static final int META_TANK = 13;
 
-	public static ArrayList<CoordTuple> directions = new ArrayList<>(6);
-	static {
-		directions.add(new CoordTuple(0, -1, 0));
-		directions.add(new CoordTuple(0, 1, 0));
-		directions.add(new CoordTuple(0, 0, -1));
-		directions.add(new CoordTuple(0, 0, 1));
-		directions.add(new CoordTuple(-1, 0, 0));
-		directions.add(new CoordTuple(1, 0, 0));
-	}
-
 	private String texturePrefix = "";
 
 	public HighOvenBlock() {

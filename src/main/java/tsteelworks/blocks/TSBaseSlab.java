@@ -1,109 +1,100 @@
 package tsteelworks.blocks;
 
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tsteelworks.lib.TSteelworksRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class TSBaseSlab extends Block
-{
-    Block modelBlock;
-    int startingMeta;
-    int totalSize;
+import java.util.List;
 
-    public TSBaseSlab(int id, Material material)
-    {
-        super(id, material);
-        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-    }
+public class TSBaseSlab extends Block {
+	private Block modelBlock;
+	private int startingMeta;
+	private int totalSize;
 
-    public TSBaseSlab(int id, Material material, Block model, int meta, int totalSize)
-    {
-        super(id, material);
-        this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-        this.modelBlock = model;
-        this.startingMeta = meta;
-        this.totalSize = totalSize;
-    }
+	public TSBaseSlab(Material material) {
+		super(material);
+		this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+	}
 
-    @SuppressWarnings ("rawtypes")
-    @Override
-    public void addCollisionBoxesToList (World world, int x, int y, int z, AxisAlignedBB axisalignedbb, List arraylist, Entity entity)
-    {
-        setBlockBoundsBasedOnState(world, x, y, z);
-        super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, arraylist, entity);
-    }
+	public TSBaseSlab(Material material, Block model, int meta, int totalSize) {
+		this(material);
 
-    public void setBlockBoundsForItemRender ()
-    {
-        setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-    }
+		this.modelBlock = model;
+		this.startingMeta = meta;
+		this.totalSize = totalSize;
+	}
 
-    public void setBlockBoundsBasedOnState (IBlockAccess world, int x, int y, int z)
-    {
-        int meta = world.getBlockMetadata(x, y, z) / 8;
-        float minY = meta == 1 ? 0.5F : 0.0F;
-        float maxY = meta == 1 ? 1.0F : 0.5F;
-        setBlockBounds(0.0F, minY, 0F, 1.0F, maxY, 1.0F);
-    }
+	@Override
+	public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB axisalignedbb, List arraylist, Entity entity) {
+		setBlockBoundsBasedOnState(world, x, y, z);
 
-    public int onBlockPlaced (World par1World, int blockX, int blockY, int blockZ, int side, float clickX, float clickY, float clickZ, int metadata)
-    {
-        if (side == 1)
-            return metadata;
-        if (side == 0 || clickY >= 0.5F)
-            return metadata | 8;
+		super.addCollisionBoxesToList(world, x, y, z, axisalignedbb, arraylist, entity);
+	}
 
-        return metadata;
-    }
+	@Override
+	public void setBlockBoundsForItemRender() {
+		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+	}
 
-    public boolean isOpaqueCube ()
-    {
-        return false;
-    }
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+		int meta = world.getBlockMetadata(x, y, z) / 8;
+		float minY = meta == 1 ? 0.5F : 0.0F;
+		float maxY = meta == 1 ? 1.0F : 0.5F;
 
-    public boolean renderAsNormalBlock ()
-    {
-        return false;
-    }
+		setBlockBounds(0.0F, minY, 0F, 1.0F, maxY, 1.0F);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons (IconRegister iconRegister)
-    {
-    }
+	@Override
+	public int onBlockPlaced(World par1World, int blockX, int blockY, int blockZ, int side, float clickX, float clickY, float clickZ, int metadata) {
+		if (side == 1)
+			return metadata;
+		if (side == 0 || clickY >= 0.5F)
+			return metadata | 8;
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Icon getIcon (int side, int meta)
-    {
-        meta = meta % 8 + startingMeta;
-        return modelBlock.getIcon(side, meta);
-    }
+		return metadata;
+	}
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
-    @Override
-    public void getSubBlocks (int id, CreativeTabs tab, List list)
-    {
-        for (int iter = 0; iter < totalSize; iter++)
-        {
-            list.add(new ItemStack(id, 1, iter));
-        }
-    }
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
-    public int damageDropped (int meta)
-    {
-        return meta % 8;
-    }
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister iconRegister) {}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int meta) {
+		meta = meta % 8 + startingMeta;
+
+		return modelBlock.getIcon(side, meta);
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Override
+	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
+		for (int iter = 0; iter < totalSize; iter++) {
+			list.add(new ItemStack(id, 1, iter));
+		}
+	}
+
+	public int damageDropped(int meta) {
+		return meta % 8;
+	}
 }
