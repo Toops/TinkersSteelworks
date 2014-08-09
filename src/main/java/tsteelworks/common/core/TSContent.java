@@ -83,7 +83,7 @@ public class TSContent {
 	/**
 	 * Register Items
 	 */
-	void registerItems() {
+	public void registerItems() {
 		materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
 		GameRegistry.registerItem(materialsTS, "Materials");
 		TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
@@ -111,8 +111,7 @@ public class TSContent {
 	/**
 	 * Register Blocks and TileEntities (Logic)
 	 */
-	@SuppressWarnings("static-access")
-	void registerBlocks() {
+	public void registerBlocks() {
 	    /* High Oven */
 		highoven = new HighOvenBlock().setBlockName("HighOven");
 		GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
@@ -149,23 +148,20 @@ public class TSContent {
 			charcoalBlock = charcoalBlocks.get(0);
 		}
 
-		dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
+		dustStorageBlock = new DustStorageBlock().setBlockName("tsteelworks.dustblock");
 		GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
 
-		limestoneBlock = new LimestoneBlock(ConfigCore.limestone).setUnlocalizedName("Limestone");
+		limestoneBlock = new LimestoneBlock().setBlockName("Limestone");
 		GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
 
-		limestoneSlab = new LimestoneSlab(ConfigCore.limestoneSlab).setUnlocalizedName("LimestoneSlab");
-		limestoneSlab.stepSound = Block.soundStoneFootstep;
+		limestoneSlab = new LimestoneSlab().setBlockName("LimestoneSlab").setStepSound(Block.soundTypeStone);
 		GameRegistry.registerBlock(limestoneSlab, LimestoneSlabItemBlock.class, "LimestoneSlab");
 
-		cementBlock = new CementBlock(ConfigCore.cement).setUnlocalizedName("tsteelworks.cement");
-		cementBlock.stepSound = Block.soundStoneFootstep;
+		cementBlock = new CementBlock().setBlockName("tsteelworks.cement").setStepSound(Block.soundTypeStone);
 		GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");
 	}
 
-	@SuppressWarnings("static-access")
-	void registerFluids() {
+	public void registerFluids() {
 		ItemStack bucket = new ItemStack(Items.bucket);
 		boolean doRegisterSteamBlock = false;
 
