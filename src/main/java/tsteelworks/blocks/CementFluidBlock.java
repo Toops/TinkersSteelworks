@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 
 /*
  * Todo: implement

@@ -1,9 +1,11 @@
-package tsteelworks.common;
+package tsteelworks.common.core;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -36,6 +38,8 @@ import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.modifiers.tools.TSActiveOmniMod;
 
+import java.util.List;
+
 public class TSContent {
 	public static Item materialsTS;
 	public static Item bucketsTS;
@@ -51,20 +55,18 @@ public class TSContent {
 	public static Block limestoneSlab;
 	public static Block cementBlock;
 	public static Block machine;
-	public static Block charcoalBlock;
+	public static Block tsCharcoalBlock;
 	public static Block dustStorageBlock;
 	public static Block steamBlock;
 	public static Block moltenLimestone;
 	public static Block liquidCement;
+
 	public static Fluid steamFluid;
 	public static Fluid moltenLimestoneFluid;
 	public static Fluid liquidCementFluid;
 
+	public static ItemStack charcoalBlock;
 	public static ItemStack thaumcraftAlumentum;
-	//public static ItemStack railcraftBlockCoalCoke;
-
-	public static Fluid[] fluids = new Fluid[3];
-	public static Block[] fluidBlocks = new Block[3];
 	public static ItemArmor.ArmorMaterial materialSteel;
 
 	/**
@@ -112,7 +114,7 @@ public class TSContent {
 	@SuppressWarnings("static-access")
 	void registerBlocks() {
 	    /* High Oven */
-		highoven = new HighOvenBlock(ConfigCore.highoven).setUnlocalizedName("HighOven");
+		highoven = new HighOvenBlock().setBlockName("HighOven");
 		GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
 		GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
 		GameRegistry.registerTileEntity(HighOvenDrainLogic.class, "TSteelworks.HighOvenDrain");
@@ -120,17 +122,33 @@ public class TSContent {
 		GameRegistry.registerTileEntity(DeepTankLogic.class, "TSteelworks.DeepTank");
 		GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
 
-		scorchedSlab = new ScorchedSlab(ConfigCore.scorchedSlab).setUnlocalizedName("ScorchedSlab");
-		scorchedSlab.stepSound = Block.soundStoneFootstep;
+		/* Slabs */
+		scorchedSlab = new ScorchedSlab().setBlockName("ScorchedSlab");
+		scorchedSlab.stepSound = Block.soundTypeStone;
 		GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
+
         /* Machines */
-		machine = new MachineBlock(ConfigCore.machine).setUnlocalizedName("Machine");
+		machine = new MachineBlock().setBlockName("Machine");
 		GameRegistry.registerBlock(machine, MachineItemBlock.class, "Machine");
 		GameRegistry.registerTileEntity(TurbineLogic.class, "TSteelworks.Machine");
+
         /* Raw Vanilla Materials */
-		charcoalBlock = new TSBaseBlock(ConfigCore.charcoalStorageBlock, Material.rock, 5.0f, new String[] {"charcoal_block"}).setUnlocalizedName("tsteelworks.blocks.charcoal");
-		GameRegistry.registerBlock(charcoalBlock, "blockCharcoal");
-		charcoalBlock.setBurnProperties(charcoalBlock.blockID, 15, 30);
+		List<ItemStack> charcoalBlocks = OreDictionary.getOres("blockCharcoal");
+
+		if (charcoalBlocks.isEmpty()) {
+			tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
+			Blocks.fire.setFireInfo(tsCharcoalBlock, 15, 30);
+
+			GameRegistry.registerBlock(tsCharcoalBlock, "blockCharcoal");
+
+			OreDictionary.registerOre("blockCharcoal", tsCharcoalBlock);
+
+			charcoalBlock = new ItemStack(tsCharcoalBlock);
+			GameRegistry.registerFuelHandler(new FuelHandler(charcoalBlock, 15000));
+		} else {
+			charcoalBlock = charcoalBlocks.get(0);
+		}
+
 		dustStorageBlock = new DustStorageBlock(ConfigCore.dustStorageBlock).setUnlocalizedName("DustStorage").setUnlocalizedName("tsteelworks.dustblock");
 		GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
 
@@ -148,13 +166,13 @@ public class TSContent {
 
 	@SuppressWarnings("static-access")
 	void registerFluids() {
-		ItemStack bucket = new ItemStack(Item.bucketEmpty);
+		ItemStack bucket = new ItemStack(Items.bucket);
 		boolean doRegisterSteamBlock = false;
+
 		steamFluid = new Fluid("steam");
 		if (!FluidRegistry.registerFluid(steamFluid)) {
 			steamFluid = FluidRegistry.getFluid("steam");
-			if (steamFluid.getBlockID() != -1) {
-				steamBlock = Block.blocksList[steamFluid.getBlockID()];
+			if (steamFluid.canBePlacedInWorld()) {
 				fluids[0] = steamFluid;
 				fluidBlocks[0] = steamBlock;
 			} else {

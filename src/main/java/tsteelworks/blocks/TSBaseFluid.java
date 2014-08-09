@@ -5,23 +5,30 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.TSRepo;
 
+// todo: steam fluid - "liquid_steam" (texture) & setAlpha(true)
 public class TSBaseFluid extends BlockFluidClassic {
-	String texture;
-	boolean alpha;
-	public IIcon stillIcon;
-	public IIcon flowIcon;
-	public int renderColor = 16777215;
+	private String texture;
+	private boolean alpha = false;
+	private IIcon stillIcon;
+	private IIcon flowIcon;
 
 	public TSBaseFluid(Fluid fluid, Material material, String texture) {
 		super(fluid, material);
+
 		this.texture = texture;
 	}
 
 	public TSBaseFluid(Fluid fluid, Material material, String texture, boolean alpha) {
 		this(fluid, material, texture);
 		this.alpha = alpha;
+	}
+
+	public TSBaseFluid setAlpha(boolean alpha) {
+		this.alpha = alpha;
+
+		return this;
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package tsteelworks.client;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.ForgeSubscribe;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -11,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TSClientEvents
 {
     Minecraft mc = Minecraft.getMinecraft();
-    
+
     @ForgeSubscribe
     public void postStitch (TextureStitchEvent.Post event)
     {

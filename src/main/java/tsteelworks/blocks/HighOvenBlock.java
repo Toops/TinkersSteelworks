@@ -1,7 +1,6 @@
 package tsteelworks.blocks;
 
 import mantle.blocks.iface.IFacingLogic;
-import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -15,22 +14,21 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.*;
 import tsteelworks.client.block.DeepTankRender;
-import tsteelworks.common.GuiHandler;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.GuiHandler;
+import tsteelworks.common.core.TSRepo;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
-import tsteelworks.util.InventoryHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -51,7 +49,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 		setStepSound(soundTypeMetal);
 
 		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
-		setBlockName("tsteelworks.HighOven");
 	}
 
 	public HighOvenBlock(String prefix) {

@@ -1,6 +1,5 @@
 package tsteelworks.blocks;
 
-import mantle.world.CoordTuple;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -10,10 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 

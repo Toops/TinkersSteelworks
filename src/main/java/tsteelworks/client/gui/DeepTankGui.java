@@ -15,7 +15,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,8 +23,8 @@ import org.lwjgl.opengl.GL12;
 
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.DeepTankLogic;
-import tsteelworks.common.TSRepo;
-import tsteelworks.common.TSRecipes;
+import tsteelworks.common.core.TSRepo;
+import tsteelworks.common.core.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
 import cpw.mods.fml.common.network.PacketDispatcher;
 

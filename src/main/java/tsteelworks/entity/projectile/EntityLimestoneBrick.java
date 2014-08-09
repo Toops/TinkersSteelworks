@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import tconstruct.common.TContent;
 import tconstruct.library.tools.AbilityHelper;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 
 public class EntityLimestoneBrick extends EntityThrowable
 {

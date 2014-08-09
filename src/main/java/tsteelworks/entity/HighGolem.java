@@ -16,7 +16,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
 
 public class HighGolem extends EntityGolem implements IRangedAttackMob
@@ -97,7 +97,7 @@ public class HighGolem extends EntityGolem implements IRangedAttackMob
         }
 
     }
-    
+
     /**
      * Returns the sound this mob makes when it is hurt.
      */
@@ -105,7 +105,7 @@ public class HighGolem extends EntityGolem implements IRangedAttackMob
     {
         return "mob.irongolem.hit";
     }
-    
+
     /**
      * Returns the sound this mob makes on death.
      */
@@ -113,7 +113,7 @@ public class HighGolem extends EntityGolem implements IRangedAttackMob
     {
         return "mob.irongolem.death";
     }
-    
+
     @Override
     protected void applyEntityAttributes ()
     {

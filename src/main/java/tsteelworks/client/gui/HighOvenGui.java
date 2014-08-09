@@ -25,8 +25,8 @@ import org.lwjgl.opengl.GL12;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import tsteelworks.TSteelworks;
 import tsteelworks.blocks.logic.HighOvenLogic;
-import tsteelworks.common.TSRepo;
-import tsteelworks.common.TSRecipes;
+import tsteelworks.common.core.TSRepo;
+import tsteelworks.common.core.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
 
 public class HighOvenGui extends TSContainerGui
@@ -276,9 +276,9 @@ public class HighOvenGui extends TSContainerGui
                 drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
         if (!logic.isStackInSlot(3))
             drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
-        if (slotSize > 0) 
+        if (slotSize > 0)
         {
-            for (int i = 0; i < slotSize; i++) 
+            for (int i = 0; i < slotSize; i++)
             {
                 if (!logic.isStackInSlot(i+4))
                 {

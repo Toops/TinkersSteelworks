@@ -13,7 +13,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import tconstruct.blocks.LiquidMetalFinite;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.ConfigCore;
 
 public class TSEventHandler

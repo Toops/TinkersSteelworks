@@ -12,9 +12,10 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
 import net.minecraftforge.common.MinecraftForge;
-import tsteelworks.common.TSCommonProxy;
-import tsteelworks.common.TSContent;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.GuiHandler;
+import tsteelworks.common.core.TSCommonProxy;
+import tsteelworks.common.core.TSContent;
+import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSLogger;
@@ -78,7 +79,7 @@ public class TSteelworks {
 
 		GameRegistry.registerWorldGenerator(new TSBaseWorldGenerator(), 8);
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
 		PluginController.getController().preInit();
 	}
@@ -104,24 +105,5 @@ public class TSteelworks {
 		// Initialize dealloying information at the last possible minute, to ensure that other
 		// mods have a chance to get their alloying information to TCon.
 		AlloyInfo.init();
-		//        TSteelworks.logger.logAlloyList();
 	}
-
-	@SuppressWarnings("static-access")
-	public static void loginfo(String desc) { logger.info(desc); }
-
-	@SuppressWarnings("static-access")
-	public static void loginfo(String desc, int value) { logger.info(desc + ": " + value); }
-
-	@SuppressWarnings("static-access")
-	public static void loginfo(String desc, float value) { logger.info(desc + ": " + value); }
-
-	@SuppressWarnings("static-access")
-	public static void loginfo(String desc, String text) { logger.info(desc + ": " + text); }
-
-	@SuppressWarnings("static-access")
-	public static void loginfo(String desc, boolean flag) { logger.info(desc + ": " + flag); }
-
-	@SuppressWarnings("static-access")
-	public static void logError(String msg, Throwable thrown) { logger.error(msg, thrown); }
 }

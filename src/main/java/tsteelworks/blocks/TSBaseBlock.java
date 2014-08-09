@@ -9,7 +9,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
@@ -42,16 +42,6 @@ public class TSBaseBlock extends Block {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		return meta < icons.length ? icons[meta] : icons[0];
-	}
-
-	@SideOnly(Side.CLIENT)
-	public int getSideTextureIndex(int side) {
-		if (side == 0)
-			return 2;
-		if (side == 1)
-			return 0;
-
-		return 1;
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})

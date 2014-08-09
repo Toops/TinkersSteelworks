@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import tsteelworks.common.TSRepo;
+import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 
 public class TSArmorBasic extends ItemArmor {

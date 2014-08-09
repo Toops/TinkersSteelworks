@@ -13,11 +13,9 @@ import net.minecraft.client.particle.EntityBreakingFX;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.w3c.dom.Document;
@@ -29,18 +27,11 @@ import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.crafting.ToolBuilder;
 import tconstruct.library.tools.ToolCore;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.DeepTankLogic;
-import tsteelworks.blocks.logic.HighOvenDuctLogic;
-import tsteelworks.blocks.logic.HighOvenLogic;
 import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.block.MachineRender;
 import tsteelworks.client.block.SmallFontRenderer;
 import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.client.entity.RenderSteelGolem;
-import tsteelworks.client.gui.DeepTankGui;
-import tsteelworks.client.gui.HighOvenDuctGui;
-import tsteelworks.client.gui.HighOvenGui;
-import tsteelworks.client.gui.TSManualGui;
 import tsteelworks.client.pages.TSBlankPage;
 import tsteelworks.client.pages.TSBlockCastPage;
 import tsteelworks.client.pages.TSBookPage;
@@ -57,8 +48,8 @@ import tsteelworks.client.pages.TSSidebarPage;
 import tsteelworks.client.pages.TSTextPage;
 import tsteelworks.client.pages.TSTitlePage;
 import tsteelworks.client.pages.TSToolPage;
-import tsteelworks.common.TSCommonProxy;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSCommonProxy;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
 import tsteelworks.entity.projectile.EntityLimestoneBrick;
@@ -316,7 +307,7 @@ public class TSClientProxy extends TSCommonProxy
 
     /*
      * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#postInit()
+     * @see tsteelworks.common.core.TSCommonProxy#postInit()
      */
     @Override
     public void postInit ()
@@ -325,7 +316,7 @@ public class TSClientProxy extends TSCommonProxy
 
     /*
      * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#readManuals()
+     * @see tsteelworks.common.core.TSCommonProxy#readManuals()
      */
     @Override
     public void readManuals ()
@@ -339,7 +330,7 @@ public class TSClientProxy extends TSCommonProxy
 
     /*
      * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#registerRenderer()
+     * @see tsteelworks.common.core.TSCommonProxy#registerRenderer()
      */
     @Override
     public void registerRenderer ()
@@ -359,7 +350,7 @@ public class TSClientProxy extends TSCommonProxy
 
     /*
      * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#registerSounds()
+     * @see tsteelworks.common.core.TSCommonProxy#registerSounds()
      */
     @Override
     public void registerSounds ()
@@ -368,7 +359,7 @@ public class TSClientProxy extends TSCommonProxy
 
     /*
      * (non-Javadoc)
-     * @see tsteelworks.common.TSCommonProxy#spawnParticle(java.lang.String, double, double, double, double, double, double)
+     * @see tsteelworks.common.core.TSCommonProxy#spawnParticle(java.lang.String, double, double, double, double, double, double)
      */
     @Override
     public void spawnParticle (String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ)

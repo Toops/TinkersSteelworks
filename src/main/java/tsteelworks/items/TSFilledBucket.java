@@ -14,7 +14,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -116,12 +116,12 @@ public class TSFilledBucket extends ItemBucket
                 /*if (TSContent.fluidBlocks[type] instanceof BlockFluidFinite)
                     metadata = 7;*/
                 world.setBlock(clickX, clickY, clickZ, TSContent.fluidBlocks[type].blockID, metadata, 3);
-//                if (TSContent.fluidBlocks[type] instanceof CementFluidBlock) 
+//                if (TSContent.fluidBlocks[type] instanceof CementFluidBlock)
 //                {
-//                    
+//
 //                }
 
-                    
+
             } catch (ArrayIndexOutOfBoundsException ex) {
                 TSteelworks.logger.warning("AIOBE occured when placing bucket into world; " + ex);
                 return false;

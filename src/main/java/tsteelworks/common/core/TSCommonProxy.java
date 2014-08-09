@@ -1,4 +1,4 @@
-package tsteelworks.common;
+package tsteelworks.common.core;
 
 public class TSCommonProxy {
 	public void postInit() {}

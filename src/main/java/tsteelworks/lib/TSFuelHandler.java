@@ -6,12 +6,12 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.common.TContent;
-import tsteelworks.common.TSContent;
+import tsteelworks.common.core.TSContent;
 import cpw.mods.fml.common.IFuelHandler;
 
 public class TSFuelHandler implements IFuelHandler
 {
-    // Inter-mod generic fuel registry 
+    // Inter-mod generic fuel registry
     @Override
     public int getBurnTime (ItemStack fuel)
     {
@@ -24,7 +24,7 @@ public class TSFuelHandler implements IFuelHandler
         }
         return 0;
     }
-    
+
     public int getHighOvenFuelBurnTime (ItemStack fuel)
     {
         final int i = fuel.getItem().itemID;
@@ -54,10 +54,10 @@ public class TSFuelHandler implements IFuelHandler
 //        if (TSteelworks.railcraftAvailable && TSContent.railcraftBlockCoalCoke != null)
 //            if (fuel.itemID == TSContent.railcraftBlockCoalCoke.itemID)
 //                return 420 * 12;
-        
+
         return 0;
     }
-    
+
     public static int getHighOvenFuelHeatRate (ItemStack fuel)
     {
         final int i = fuel.getItem().itemID;

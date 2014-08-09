@@ -1,11 +1,11 @@
-package tsteelworks.common;
+package tsteelworks.common.core;
 
 
 public class TSRepo {
 	public static final String modId = "TSteelworks";
 	public static final String modName = "Tinkers' Steelworks";
 	public static final String modVer = "1.7.10-1.0.0";
-	public static final String modServProxy = "tsteelworks.common.TSCommonProxy";
+	public static final String modServProxy = "tsteelworks.common.core.TSCommonProxy";
 	public static final String modClientProxy = "tsteelworks.client.TSClientProxy";
 	public static final String modRequire = "required-after:TConstruct;required-after:Forge@[10.13.0.1199,);required-after:cookiecore@[1.1.0,)";
 	public static final String textureDir = "tsteelworks:";
