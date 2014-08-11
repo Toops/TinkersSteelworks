@@ -34,7 +34,7 @@ import tconstruct.library.crafting.FluidType;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.inventory.HighOvenContainer;
+import tsteelworks.common.container.HighOvenContainer;
 import tsteelworks.lib.*;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.structure.IStructure;

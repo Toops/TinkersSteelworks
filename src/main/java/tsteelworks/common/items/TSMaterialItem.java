@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import tsteelworks.entity.projectile.EntityScorchedBrick;
+import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 
 import java.util.List;
 

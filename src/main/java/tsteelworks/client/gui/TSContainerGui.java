@@ -24,8 +24,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import tsteelworks.inventory.TSActiveContainer;
-import tsteelworks.inventory.TSActiveSlot;
+import tsteelworks.common.container.TSActiveContainer;
+import tsteelworks.common.container.TSActiveSlot;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

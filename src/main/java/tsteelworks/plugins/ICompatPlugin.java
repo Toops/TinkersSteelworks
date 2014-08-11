@@ -1,18 +1,16 @@
 package tsteelworks.plugins;
 
-public interface ICompatPlugin
-{
+public interface ICompatPlugin {
 
-    // Mod ID the plugin handles
-    public abstract String getModId ();
+	/** Mod ID the plugin handles */
+	public abstract String getModId();
 
-    // Called during TCon Init
-    public abstract void init ();
+	/** Called during TS Init */
+	public abstract void init();
 
-    // Called during TCon PostInit
-    public abstract void postInit ();
+	/** Called during TS PostInit */
+	public abstract void postInit();
 
-    // Called during TCon PreInit
-    public abstract void preInit ();
-
+	/** Called during TS PreInit */
+	public abstract void preInit();
 }

@@ -50,10 +50,10 @@ import tsteelworks.client.pages.TSTitlePage;
 import tsteelworks.client.pages.TSToolPage;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.entity.HighGolem;
-import tsteelworks.entity.SteelGolem;
-import tsteelworks.entity.projectile.EntityLimestoneBrick;
-import tsteelworks.entity.projectile.EntityScorchedBrick;
+import tsteelworks.common.entity.HighGolem;
+import tsteelworks.common.entity.SteelGolem;
+import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
+import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.client.TSClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

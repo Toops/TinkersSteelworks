@@ -1,4 +1,4 @@
-package tsteelworks.entity;
+package tsteelworks.common.entity;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,7 +13,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.entity.projectile.EntityScorchedBrick;
+import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 
 public class HighGolem extends EntityGolem implements IRangedAttackMob {
 	public HighGolem(World world) {

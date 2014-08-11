@@ -1,7 +1,6 @@
-package tsteelworks.entity.projectile;
+package tsteelworks.common.entity.projectile;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.world.World;
 
 public class EntityScorchedBrick extends EntityBrick {

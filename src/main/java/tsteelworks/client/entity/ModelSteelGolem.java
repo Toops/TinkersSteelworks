@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
-import tsteelworks.entity.SteelGolem;
+import tsteelworks.common.entity.SteelGolem;
 
 public class ModelSteelGolem extends ModelBase
 {
@@ -27,7 +27,7 @@ public class ModelSteelGolem extends ModelBase
     {
         this(par1, -7.0F);
     }
-    
+
     public ModelSteelGolem(float par1, float par2)
     {
         textureWidth = 128;
@@ -110,7 +110,7 @@ public class ModelSteelGolem extends ModelBase
         this.steelGolemFrontLeg.rotateAngleX = MathHelper.cos(f * 0.6662F + (float)Math.PI) * 1.4F * f1;
         this.steelGolemRightLeg.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
-    
+
     /**
      * Used for easily adding entity-dependent animations. The second and third float params here are the same second
      * and third as in the setRotationAngles method.
@@ -141,7 +141,7 @@ public class ModelSteelGolem extends ModelBase
             }
         }
     }
-    
+
     private float func_78172_a(float par1, float par2)
     {
         return (Math.abs(par1 % par2 - par2 * 0.5F) - par2 * 0.25F) / (par2 * 0.25F);

@@ -33,15 +33,15 @@ import tsteelworks.common.items.TSArmorBasic;
 import tsteelworks.common.items.TSManual;
 import tsteelworks.common.items.TSMaterialItem;
 import tsteelworks.common.items.blocks.*;
-import tsteelworks.entity.HighGolem;
-import tsteelworks.entity.SteelGolem;
-import tsteelworks.entity.projectile.EntityLimestoneBrick;
-import tsteelworks.entity.projectile.EntityScorchedBrick;
+import tsteelworks.common.entity.HighGolem;
+import tsteelworks.common.entity.SteelGolem;
+import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
+import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import tsteelworks.modifiers.tools.TSActiveOmniMod;
+import tsteelworks.common.modifier.TSActiveOmniMod;
 
 import java.util.List;
 

@@ -1,10 +1,8 @@
-package tsteelworks.entity.projectile;
+package tsteelworks.common.entity.projectile;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.projectile.EntityEgg;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -14,7 +12,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import tconstruct.library.tools.AbilityHelper;
 import tconstruct.smeltery.TinkerSmeltery;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.core.TSContent;
 
 public class EntityBrick extends EntityThrowable {

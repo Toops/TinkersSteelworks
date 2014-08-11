@@ -3,7 +3,7 @@ package tsteelworks.client.entity;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import tsteelworks.entity.HighGolem;
+import tsteelworks.common.entity.HighGolem;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

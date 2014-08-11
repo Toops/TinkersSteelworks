@@ -25,7 +25,7 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.core.TSRecipes;
-import tsteelworks.inventory.TSActiveContainer;
+import tsteelworks.common.container.TSActiveContainer;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class DeepTankGui extends TSContainerGui

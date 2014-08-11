@@ -12,9 +12,9 @@ import tsteelworks.client.gui.DeepTankGui;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;
 import tsteelworks.client.gui.TSManualGui;
-import tsteelworks.inventory.DeepTankContainer;
-import tsteelworks.inventory.HighOvenContainer;
-import tsteelworks.inventory.HighOvenDuctContainer;
+import tsteelworks.common.container.DeepTankContainer;
+import tsteelworks.common.container.HighOvenContainer;
+import tsteelworks.common.container.HighOvenDuctContainer;
 
 public class GuiHandler implements IGuiHandler {
 	public static final int MANUAL_GUI_ID = -1;

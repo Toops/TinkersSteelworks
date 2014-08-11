@@ -1,4 +1,4 @@
-package tsteelworks.entity.projectile;
+package tsteelworks.common.entity.projectile;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;

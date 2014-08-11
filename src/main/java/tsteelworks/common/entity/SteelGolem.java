@@ -1,4 +1,4 @@
-package tsteelworks.entity;
+package tsteelworks.common.entity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

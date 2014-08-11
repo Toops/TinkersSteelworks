@@ -1,4 +1,4 @@
-package tsteelworks.inventory;
+package tsteelworks.common.container;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

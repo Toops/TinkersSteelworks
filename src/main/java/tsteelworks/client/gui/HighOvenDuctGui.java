@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.inventory.TSActiveContainer;
+import tsteelworks.common.container.TSActiveContainer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

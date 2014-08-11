@@ -27,7 +27,7 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.core.TSRecipes;
-import tsteelworks.inventory.TSActiveContainer;
+import tsteelworks.common.container.TSActiveContainer;
 
 public class HighOvenGui extends TSContainerGui
 {
