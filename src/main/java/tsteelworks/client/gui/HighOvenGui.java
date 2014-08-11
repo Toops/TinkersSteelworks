@@ -97,14 +97,14 @@ public class HighOvenGui extends TSContainerGui
             }
             else if (name.contains("Molten"))
             {
-                final int ingots = liquid.amount / TSRecipes.ingotLiquidValue;
+                final int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
                 if (ingots > 0)
                     list.add("Ingots: " + ingots);
-                final int mB = liquid.amount % TSRecipes.ingotLiquidValue;
+                final int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
                 if (mB > 0)
                 {
-                    final int nuggets = mB / TSRecipes.nuggetLiquidValue;
-                    final int junk = (mB % TSRecipes.nuggetLiquidValue);
+                    final int nuggets = mB / TSRecipes.NUGGET_LIQUID_VALUE;
+                    final int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
                     if (nuggets > 0)
                         list.add("Nuggets: " + nuggets);
                     if (junk > 0)

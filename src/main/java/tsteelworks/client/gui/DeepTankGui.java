@@ -188,14 +188,14 @@ public class DeepTankGui extends TSContainerGui
             }
             else if (name.contains("Molten"))
             {
-                int ingots = liquid.amount / TSRecipes.ingotLiquidValue;
+                int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
                 if (ingots > 0)
                     list.add("Ingots: " + ingots);
-                int mB = liquid.amount % TSRecipes.ingotLiquidValue;
+                int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
                 if (mB > 0)
                 {
-                    int nuggets = mB / TSRecipes.nuggetLiquidValue;
-                    int junk = (mB % TSRecipes.nuggetLiquidValue);
+                    int nuggets = mB / TSRecipes.NUGGET_LIQUID_VALUE;
+                    int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
                     if (nuggets > 0)
                         list.add("Nuggets: " + nuggets);
                     if (junk > 0)
@@ -204,10 +204,10 @@ public class DeepTankGui extends TSContainerGui
             }
             else if (name.equals("Seared Stone"))
             {
-                int ingots = liquid.amount / TSRecipes.ingotLiquidValue;
+                int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
                 if (ingots > 0)
                     list.add("Blocks: " + ingots);
-                int mB = liquid.amount % TSRecipes.ingotLiquidValue;
+                int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
                 if (mB > 0)
                     list.add("mB: " + mB);
             }

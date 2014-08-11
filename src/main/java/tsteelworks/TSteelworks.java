@@ -12,7 +12,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
 import net.minecraftforge.common.MinecraftForge;
-import tconstruct.library.TConstructRegistry;
 import tsteelworks.common.core.GuiHandler;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
@@ -23,7 +22,9 @@ import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
-import tsteelworks.util.TSEventHandler;
+import tsteelworks.common.core.TSEventHandler;
+import tsteelworks.plugins.fmp.CompatFMP;
+import tsteelworks.plugins.waila.Waila;
 import tsteelworks.worldgen.TSBaseWorldGenerator;
 
 /**
@@ -50,12 +51,14 @@ public class TSteelworks {
 
 	public static TSContent content;
 	public static TSEventHandler events;
-	public static TSFuelHandler fuelHandler;
 	public static boolean thermalExpansionAvailable;
 	public static boolean railcraftAvailable;
 
+	private PluginController pluginController = new PluginController();
+
 	public TSteelworks() {
-		PluginController.getController().registerBuiltins();
+		pluginController.registerPlugin(new CompatFMP());
+		pluginController.registerPlugin(new Waila());
 	}
 
 	@EventHandler
@@ -71,8 +74,6 @@ public class TSteelworks {
 		events = new TSEventHandler();
 		MinecraftForge.EVENT_BUS.register(events);
 
-		fuelHandler = new TSFuelHandler();
-
 		content.oreRegistry();
 		proxy.registerRenderer();
 		proxy.readManuals();
@@ -82,12 +83,12 @@ public class TSteelworks {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
-		PluginController.getController().preInit();
+		pluginController.preInit();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		PluginController.getController().init();
+		pluginController.init();
 	}
 
 	@EventHandler
@@ -100,11 +101,6 @@ public class TSteelworks {
 		content.modIntegration();
 		content.registerMixerMaterials();
 
-		GameRegistry.registerFuelHandler(fuelHandler);
-		PluginController.getController().postInit();
-
-		// Initialize dealloying information at the last possible minute, to ensure that other
-		// mods have a chance to get their alloying information to TCon.
-		AlloyInfo.init();
+		pluginController.postInit();
 	}
 }

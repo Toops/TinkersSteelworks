@@ -1,4 +1,4 @@
-package tsteelworks.util;
+package tsteelworks.common.core;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

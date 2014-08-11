@@ -11,7 +11,7 @@ public class TSFuelHandler {
 	 * Alumentum lasts a while but takes ages to produce enough heat
 	 * Coal Coke produces more heat than charcoal and last longer too
 	 */
-	public int getHighOvenFuelBurnTime(ItemStack fuel) {
+	public static int getHighOvenFuelBurnTime(ItemStack fuel) {
 		if (fuel.isItemEqual(TSContent.charcoalBlock))
 			return 4200;
 

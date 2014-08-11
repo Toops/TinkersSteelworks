@@ -1,6 +1,7 @@
 package tsteelworks.lib.crafting;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -27,14 +28,27 @@ public class AdvancedSmelting {
 	/**
 	 * Adds mappings between a block and its liquid.
 	 *
-	 * @param block     The ID of the block to liquify and render
-	 * @param metadata    The metadata of the block to liquify and render
-	 * @param temperature How hot the block should be before liquifying. Max temp in the
-	 *                    Smeltery is 800, other structures may vary
-	 * @param output      The result of the process in liquid form
+	 * @param block         The instance of the block to liquify
+	 * @param metadata      The metadata of the block to liquify
+	 * @param temperature   How hot the block should be before liquifying. Max temp in the
+	 *                      Smeltery is 800, other structures may vary
+	 * @param output        The result of the process in liquid form
 	 */
 	public static void addMelting(Block block, int metadata, int temperature, FluidStack output) {
 		addMelting(new ItemStack(block, 1, metadata), temperature, output);
+	}
+
+	/**
+	 * Adds mappings between an item and its liquid.
+	 *
+	 * @param item          The instance of the item to liquify and render
+	 * @param metadata      The metadata of the block to liquify and render
+	 * @param temperature   How hot the block should be before liquifying. Max temp in the
+	 *                      Smeltery is 800, other structures may vary
+	 * @param output        The result of the process in liquid form
+	 */
+	public static void addMelting(Item item, int metadata, int temperature, FluidStack output) {
+		addMelting(new ItemStack(item, 1, metadata), temperature, output);
 	}
 
 	/**
