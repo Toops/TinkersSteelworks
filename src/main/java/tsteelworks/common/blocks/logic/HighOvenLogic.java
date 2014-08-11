@@ -1,7 +1,7 @@
 package tsteelworks.common.blocks.logic;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import mantle.blocks.iface.*;
+import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
 import net.minecraft.block.BlockSourceImpl;
@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
+import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
@@ -35,12 +36,9 @@ import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.inventory.HighOvenContainer;
 import tsteelworks.lib.*;
-import tsteelworks.lib.IMasterLogic;
-import tsteelworks.lib.IServantLogic;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.structure.IStructure;
 import tsteelworks.structure.StructureHighOven;
-import tsteelworks.util.InventoryHelper;
 
 import java.util.Arrays;
 
@@ -71,6 +69,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * (charcoal, charcoal block, etc)
 	 */
 	public static final int SLOT_FUEL = 3;
+
+	/**
+	 * Smeltables (4 -> 10)
+	 */
+	public static final int SLOT_FIRST_MELTABLE = 4;
 
 	/**
 	 * The amount of fluid the tank may gain per layer - multiplier.
@@ -902,7 +905,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			}
 		}
 
-		this.smeltableInventory.setInventorySize(nbLayers);
+		int inventorySize = Math.min(nbLayers, 6);
+		this.smeltableInventory.setInventorySize(inventorySize);
 
 		int[] dumpCoords = BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, direction);
 		this.smeltableInventory.dumpOverflow(worldObj, dumpCoords[0], dumpCoords[1], dumpCoords[2]);
@@ -921,5 +925,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public String getCustomName() {
 		return invName;
+	}
+
+	public IStructure getStructure() {
+		return structure;
+	}
+
+	public IInventory getSmeltableInventory() {
+		return smeltableInventory;
 	}
 }
