@@ -1,99 +1,18 @@
 package tsteelworks.util;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.ConfigCore;
-
-import java.util.Random;
 
 public class TSEventHandler {
-	private Random random = new Random();
-
-	@SubscribeEvent
-	public void onInteract(EntityInteractEvent event) {
-		// Reserved for future use...
-	    /*if (event.target.getClass() == EntityPig.class)
-        {
-            EntityPig pig = (EntityPig) event.target;
-
-            EntityPlayer player = (EntityPlayer) event.entityPlayer;
-            ItemStack itemstack = player.inventory.getCurrentItem();
-
-            if (itemstack != null)
-            {
-                boolean affected = false;
-
-            }
-        }*/
-		if (event.target.getClass() == EntityHorse.class) {
-			EntityHorse horse = (EntityHorse) event.target;
-
-			EntityPlayer player = (EntityPlayer) event.entityPlayer;
-			ItemStack itemstack = player.inventory.getCurrentItem();
-
-			if (itemstack != null) {
-				boolean affected = false;
-				// func_110256_cu returns undead horse types
-				if (!horse.func_110256_cu()) {
-
-					float heal = 0.0F;
-					short grow = 0;
-					byte temper = 0;
-
-					if (itemstack.itemID == ConfigCore.dustStorageBlock && itemstack.getItemDamage() == 1) {
-						heal = 9.0F;
-						grow = 60;
-						temper = 4;
-
-						if (horse.getHealth() < horse.getMaxHealth() && heal > 0.0F) {
-							horse.heal(heal);
-							affected = true;
-						}
-
-						if (!horse.isAdultHorse() && grow > 0) {
-							horse.addGrowth(grow);
-							affected = true;
-						}
-
-						if (temper > 0 && (affected || !horse.isTame()) && temper < horse.getMaxTemper()) {
-							affected = true;
-							horse.increaseTemper(temper);
-						}
-
-						if (affected) {
-							horse.worldObj.playSoundAtEntity(horse, "eating", 1.0F, 1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F);
-						}
-
-						if (!horse.isTame() && !affected) {
-							if (itemstack != null && itemstack.func_111282_a(player, horse)) {
-								return;
-							}
-
-							horse.makeHorseRearWithSound();
-							return;
-						}
-						if (affected) {
-							if (!player.capabilities.isCreativeMode && --itemstack.stackSize == 0) {
-								player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
-							}
-
-							return;
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@SubscribeEvent
 	public void bucketFill(FillBucketEvent evt) {
-		if (evt.current.getItem() == Item.bucketEmpty && evt.target.typeOfHit == EnumMovingObjectType.TILE) {
+		if (evt.current.getItem() == Items.bucket && evt.target.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
 			int hitX = evt.target.blockX;
 			int hitY = evt.target.blockY;
 			int hitZ = evt.target.blockZ;
@@ -102,24 +21,26 @@ public class TSEventHandler {
 				return;
 			}
 
-			int bID = evt.world.getBlockId(hitX, hitY, hitZ);
-			for (int id = 0; id < TSContent.fluidBlocks.length; id++) {
-				if (bID == TSContent.fluidBlocks[id].blockID) {
-					if (evt.entityPlayer.capabilities.isCreativeMode) {
-						evt.world.setBlockToAir(hitX, hitY, hitZ);
-					} else {
-						if (TSContent.fluidBlocks[id] instanceof LiquidMetalFinite) // may be useful in future...
-						{
-							evt.world.setBlockToAir(hitX, hitY, hitZ);
-						} else {
-							evt.world.setBlockToAir(hitX, hitY, hitZ);
-						}
+			Block fluidBlock = evt.world.getBlock(hitX, hitY, hitZ);
+			ItemStack bucket = null;
 
-						evt.setResult(Result.ALLOW);
-						evt.result = new ItemStack(TSContent.bucketsTS, 1, id);
-					}
-				}
+			if (fluidBlock == TSContent.steamBlock) {
+				bucket = TSContent.bucketSteam;
+			} else if (fluidBlock == TSContent.moltenLimestone) {
+				bucket = TSContent.bucketLimestone;
+			} else if (fluidBlock == TSContent.liquidCement) {
+				bucket = TSContent.bucketCement;
 			}
+
+			if (bucket == null)
+				return;
+
+			if (evt.entityPlayer == null || !evt.entityPlayer.capabilities.isCreativeMode) {
+				evt.result = bucket.copy();
+				evt.setResult(Event.Result.ALLOW);
+			}
+
+			evt.world.setBlockToAir(hitX, hitY, hitZ);
 		}
 	}
 }
