@@ -3,6 +3,7 @@ package tsteelworks.common.core;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.items.ItemUtils;
+import mantle.lib.TabTools;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
@@ -77,6 +78,8 @@ public class TSContent {
 	public static ItemStack charcoalBlock;
 	public static ItemStack thaumcraftAlumentum;
 	public static ItemArmor.ArmorMaterial materialSteel;
+
+	public static final TabTools creativeTab = new TabTools("");
 
 	/**
 	 * Content Constructor
@@ -301,39 +304,40 @@ public class TSContent {
 	 * Register mixer materials
 	 */
 	public void registerMixerMaterials() {
-		AdvancedSmelting.registerMixItem("dustGunpowder", HighOvenLogic.SLOT_OXIDIZER, 1, 33);
-		AdvancedSmelting.registerMixItem("dustSulphur", HighOvenLogic.SLOT_OXIDIZER, 1, 29);
-		AdvancedSmelting.registerMixItem("dustSaltpeter", HighOvenLogic.SLOT_PURIFIER, 1, 30);
-		AdvancedSmelting.registerMixItem("dustSaltpetre", HighOvenLogic.SLOT_PURIFIER, 1, 30);
-		AdvancedSmelting.registerMixItem("dustSugar", HighOvenLogic.SLOT_OXIDIZER, 1, 62);
-		AdvancedSmelting.registerMixItem("fuelCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
-		AdvancedSmelting.registerMixItem("coal", HighOvenLogic.SLOT_OXIDIZER, 1, 43);
-		AdvancedSmelting.registerMixItem("dustCoal", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
-		AdvancedSmelting.registerMixItem("dyeLime", HighOvenLogic.SLOT_OXIDIZER, 1, 37);
+		AdvancedSmelting.registerMixItem("dustGunpowder", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 33);
+		AdvancedSmelting.registerMixItem("dustSulphur", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 29);
+		AdvancedSmelting.registerMixItem("dustSugar", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 62);
+		AdvancedSmelting.registerMixItem("fuelCoal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 43);
+		AdvancedSmelting.registerMixItem("coal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 43);
+		AdvancedSmelting.registerMixItem("dustCoal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 37);
+		AdvancedSmelting.registerMixItem("dyeLime", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 37);
 
-		AdvancedSmelting.registerMixItem("dustRedstone", HighOvenLogic.SLOT_PURIFIER, 1, 65);
-		AdvancedSmelting.registerMixItem("dustManganese", HighOvenLogic.SLOT_PURIFIER, 1, 47);
-		AdvancedSmelting.registerMixItem("oreManganese", HighOvenLogic.SLOT_PURIFIER, 1, 51);
-		AdvancedSmelting.registerMixItem("dustAluminum", HighOvenLogic.SLOT_PURIFIER, 1, 60);
-		AdvancedSmelting.registerMixItem("dustAluminium", HighOvenLogic.SLOT_PURIFIER, 1, 60);
-		AdvancedSmelting.registerMixItem("dyeWhite", HighOvenLogic.SLOT_PURIFIER, 1, 37);
-		AdvancedSmelting.registerMixItem("oreberryEssence", HighOvenLogic.SLOT_PURIFIER, 1, 27);
+		AdvancedSmelting.registerMixItem("dustRedstone", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 65);
+		AdvancedSmelting.registerMixItem("dustManganese", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 47);
+		AdvancedSmelting.registerMixItem("oreManganese", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 51);
+		AdvancedSmelting.registerMixItem("dustAluminum", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 60);
+		AdvancedSmelting.registerMixItem("dustAluminium", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 60);
+		AdvancedSmelting.registerMixItem("dyeWhite", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 37);
+		AdvancedSmelting.registerMixItem("oreberryEssence", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 27);
+		AdvancedSmelting.registerMixItem("dustSaltpeter", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 30);
+		AdvancedSmelting.registerMixItem("dustSaltpetre", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 30);
 
-		AdvancedSmelting.registerMixItem("blockSand", HighOvenLogic.SLOT_REDUCER, 1, 100);
-		AdvancedSmelting.registerMixItem("hambone", HighOvenLogic.SLOT_REDUCER, 1, 73);
-		AdvancedSmelting.registerMixItem("blockGraveyardDirt", HighOvenLogic.SLOT_REDUCER, 1, 59);
+		AdvancedSmelting.registerMixItem("blockSand", AdvancedSmelting.MixData.MixType.REDUCER, 1, 100);
+		AdvancedSmelting.registerMixItem("hambone", AdvancedSmelting.MixData.MixType.REDUCER, 1, 73);
+		AdvancedSmelting.registerMixItem("blockGraveyardDirt", AdvancedSmelting.MixData.MixType.REDUCER, 1, 59);
 	}
 
 	/**
 	 * Initialize the Steelworks creative tab with an icon.
 	 */
 	private void setupCreativeTabs() {
-		TSteelworksRegistry.SteelworksCreativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
+		creativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
 	}
 
 	public void createEntities() {
 		EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
 		EntityRegistry.registerModEntity(EntityLimestoneBrick.class, "LimestoneBrick", 1, TSteelworks.instance, 32, 3, true);
+
 		// TODO: Register with registerModEntity instead. We do this because registerModEntity does not seemingly add a mob spawner egg.
 		EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
 		EntityRegistry.registerGlobalEntityID(SteelGolem.class, "SteelGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
@@ -356,17 +360,6 @@ public class TSContent {
 				thaumcraftAlumentum = new ItemStack(thaumcraftResource, 1, 0);
 			}
 		}
-
-		// BlockCube and ItemCube not detected. :/ WTF railcraft?
-        /*if (TSteelworks.railcraftAvailable)
-        {
-            Object objBlockCube = TContent.getStaticItem("BlockCube", "mods.railcraft.common.blocks.aesthetics.cube");
-            if (objBlockCube != null)
-            {
-                TSteelworks.logger.info("Railcraft detected. Registering fuels.");
-                railcraftBlockCoalCoke = new ItemStack((Item) objBlockCube, 1, 0);
-            }
-        }*/
 	}
 
 	public void registerModifiers() {

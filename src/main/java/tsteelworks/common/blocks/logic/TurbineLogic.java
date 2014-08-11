@@ -22,7 +22,7 @@ import tconstruct.library.util.IActiveLogic;
 import tsteelworks.lib.IFacingLogic;
 import tsteelworks.lib.blocks.TSInventoryLogic;
 
-public class TurbineLogic extends TSInventoryLogic implements IActiveLogic, IFacingLogic, IFluidHandler
+public class TurbineLogic extends TileEntity implements IFluidHandler, IActiveLogic, IFacingLogic, IFluidHandler
 {
     byte direction;
     int tick;

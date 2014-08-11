@@ -12,6 +12,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
 import net.minecraftforge.common.MinecraftForge;
+import tconstruct.library.TConstructRegistry;
 import tsteelworks.common.core.GuiHandler;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
