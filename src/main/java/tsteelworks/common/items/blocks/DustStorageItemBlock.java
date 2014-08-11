@@ -24,9 +24,9 @@ public class DustStorageItemBlock extends ItemBlock {
 		setHasSubtypes(true);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	@SideOnly(Side.CLIENT)
+	@SuppressWarnings({"unchecked"})
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean par4) {
 		switch (stack.getItemDamage()) {
 			case 0:
