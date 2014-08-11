@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.core.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;

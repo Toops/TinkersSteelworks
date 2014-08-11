@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import tconstruct.client.TProxyClient;
 import tconstruct.client.block.BlockSkinRenderHelper;
 import tconstruct.library.util.CoordTuple;
-import tsteelworks.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.DeepTankLogic;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
@@ -72,14 +72,14 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
                     // This if statement is simply to save a little processing if it's symetrical
                     if (logic.getInnerMaxX() == logic.getInnerMaxZ())
                     {
-                    
+
                         for (int i = 0; i < logic.innerSpaceTotal(); i++)
                         {
                             float minX = i % (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
                             float minZ = i / (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
                             float maxX = i % (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
                             float maxZ = i / (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
-                            
+
                             renderer.setRenderBounds(minX, renderBase, minZ, maxX, renderHeight, maxZ);
                             int rx = posX + i % logic.getInnerMaxX();
                             int ry = posY + yBase;
@@ -95,12 +95,12 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
                         for (int i = 0; i < logic.innerSpaceTotal(); i++)
                         {
                             int modZ = getRenderZOffset(logic.getInnerMaxX(), logic.getInnerMaxZ());
-                            
+
                             float minX = i % (logic.getInnerMaxX()) == 0 ? -0.001F : 0F;
                             float minZ = i / (logic.getInnerMaxZ()) == 0 ? -0.001F : 0F;
                             float maxX = i % (logic.getInnerMaxX()) == 2 ? 1.001F : 1F;
                             float maxZ = i / (logic.getInnerMaxZ()) == 2 ? 1.001F : 1F;
-                            
+
                             renderer.setRenderBounds(minX, renderBase, minZ, maxX, renderHeight, maxZ);
                             int rx = posX + i % logic.getInnerMaxX();
                             int ry = posY + yBase;
@@ -122,7 +122,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
         }
         return true;
     }
-    
+
     // TODO: Write an algorithm for this arbitrary slop
     public int getRenderZOffset (int x, int z)
     {
@@ -183,7 +183,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler
         }
         return z; // This should never happen.
     }
-    
+
     @Override
     public boolean shouldRender3DInInventory ()
     {

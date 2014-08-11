@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import tsteelworks.blocks.logic.HighOvenDuctLogic;
+import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 
 public class HighOvenDuctContainer extends TSActiveContainer
 {

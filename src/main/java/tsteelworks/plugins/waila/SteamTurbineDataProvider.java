@@ -10,7 +10,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.plugins.waila.WailaRegistrar;
-import tsteelworks.blocks.logic.TurbineLogic;
+import tsteelworks.common.blocks.logic.TurbineLogic;
 
 public class SteamTurbineDataProvider implements IWailaDataProvider
 {
@@ -44,7 +44,7 @@ public class SteamTurbineDataProvider implements IWailaDataProvider
         }
         return currenttip;
     }
-    
+
     @Override
     public List<String> getWailaTail (ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
     {

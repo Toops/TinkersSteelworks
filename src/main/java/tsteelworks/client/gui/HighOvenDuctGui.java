@@ -7,7 +7,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.HighOvenDuctLogic;
+import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.inventory.TSActiveContainer;
 

@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
-import tsteelworks.blocks.logic.DeepTankLogic;
-import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
 
 // inspired from the one from TConstruct
 public class HighOvenTankDataProvider implements IWailaDataProvider {
@@ -30,12 +30,12 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see mcp.mobius.waila.api.IWailaBlock#getWailaBody(net.minecraft.item.ItemStack, java.util.List, mcp.mobius.waila.api.IWailaDataAccessor, mcp.mobius.waila.api.IWailaConfigHandler)
 	 */
 	@Override
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {	
+	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 	    if (accessor.getTileEntity() instanceof DeepTankLogic)
         {
 	        DeepTankLogic te = (DeepTankLogic) accessor.getTileEntity();
@@ -64,7 +64,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
         }
 		return currenttip;
 	}
-	
+
 	   /* (non-Javadoc)
      * @see mcp.mobius.waila.api.IWailaBlock#getWailaTail(net.minecraft.item.ItemStack, java.util.List, mcp.mobius.waila.api.IWailaDataAccessor, mcp.mobius.waila.api.IWailaConfigHandler)
      */

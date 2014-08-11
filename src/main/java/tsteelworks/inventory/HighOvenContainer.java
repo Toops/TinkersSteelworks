@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
 
 public class HighOvenContainer extends TSActiveContainer
 {
@@ -22,7 +22,7 @@ public class HighOvenContainer extends TSActiveContainer
         addSlotToContainer(new Slot(highoven, logic.SLOT_OXIDIZER, 55, 16)); // oxidizer
         addSlotToContainer(new Slot(highoven, logic.SLOT_REDUCER, 55, 34)); // reducer
         addSlotToContainer(new Slot(highoven, logic.SLOT_PURIFIER, 55, 52)); // purifier
-        addSlotToContainer(new Slot(highoven, logic.SLOT_FUEL, 126, 52)); // fuel        
+        addSlotToContainer(new Slot(highoven, logic.SLOT_FUEL, 126, 52)); // fuel
         /* HighOven Ore inventory */
         for (int y = 0; y < highoven.getLayers(); y++)
             addDualSlotToContainer(new TSActiveSlot(highoven, logic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));

@@ -2,7 +2,7 @@ package tsteelworks.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.IServantLogic;
 

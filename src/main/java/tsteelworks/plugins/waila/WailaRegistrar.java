@@ -5,9 +5,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.DeepTankLogic;
-import tsteelworks.blocks.logic.HighOvenLogic;
-import tsteelworks.blocks.logic.TurbineLogic;
+import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.TurbineLogic;
 
 public class WailaRegistrar
 {
@@ -20,7 +20,7 @@ public class WailaRegistrar
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), DeepTankLogic.class);
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
 		registrar.registerBodyProvider(new SteamTurbineDataProvider(), TurbineLogic.class);
-		
+
 		//config
 		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal", "Show Total");
 		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit", "Adjust bucket units");

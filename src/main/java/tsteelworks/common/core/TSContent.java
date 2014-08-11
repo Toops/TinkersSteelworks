@@ -2,38 +2,43 @@ package tsteelworks.common.core;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import mantle.items.ItemUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.library.crafting.ToolBuilder;
+import tconstruct.library.crafting.ModifyBuilder;
 import tconstruct.modifiers.tools.ModInteger;
-import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.*;
-import tsteelworks.blocks.logic.*;
+import tsteelworks.common.blocks.*;
+import tsteelworks.common.blocks.logic.*;
+import tsteelworks.common.items.TSArmorBasic;
+import tsteelworks.common.items.TSManual;
+import tsteelworks.common.items.TSMaterialItem;
+import tsteelworks.common.items.blocks.*;
 import tsteelworks.entity.HighGolem;
 import tsteelworks.entity.SteelGolem;
 import tsteelworks.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.entity.projectile.EntityScorchedBrick;
-import tsteelworks.items.TSArmorBasic;
-import tsteelworks.items.TSFilledBucket;
-import tsteelworks.items.TSManual;
-import tsteelworks.items.TSMaterialItem;
-import tsteelworks.items.blocks.*;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.modifiers.tools.TSActiveOmniMod;
@@ -42,7 +47,11 @@ import java.util.List;
 
 public class TSContent {
 	public static Item materialsTS;
-	public static Item bucketsTS;
+
+	public static ItemStack bucketSteam;
+	public static ItemStack bucketCement;
+	public static ItemStack bucketLimestone;
+
 	public static Item bookManual;
 	public static Item helmetSteel;
 	public static Item chestplateSteel;
@@ -84,23 +93,22 @@ public class TSContent {
 	 * Register Items
 	 */
 	public void registerItems() {
-		materialsTS = new TSMaterialItem(ConfigCore.materials).setUnlocalizedName("tsteelworks.Materials");
+		materialsTS = new TSMaterialItem().setUnlocalizedName("tsteelworks.Materials");
 		GameRegistry.registerItem(materialsTS, "Materials");
 		TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
 
-		bookManual = new TSManual(ConfigCore.manual);
+		bookManual = new TSManual();
 		GameRegistry.registerItem(bookManual, "tsteelManual");
-
-		bucketsTS = new TSFilledBucket(ConfigCore.buckets);
-		GameRegistry.registerItem(bucketsTS, "buckets");
 
 		if (ConfigCore.enableSteelArmor) {
 			materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[] {3, 7, 5, 3}, 10);
 			materialSteel.customCraftingMaterial = TConstructRegistry.getItemStack("ingotSteel").getItem();
-			helmetSteel = new TSArmorBasic(ConfigCore.steelHelmet, materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
-			chestplateSteel = new TSArmorBasic(ConfigCore.steelChestplate, materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
-			leggingsSteel = new TSArmorBasic(ConfigCore.steelLeggings, materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
-			bootsSteel = new TSArmorBasic(ConfigCore.steelBoots, materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
+
+			helmetSteel = new TSArmorBasic(materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
+			chestplateSteel = new TSArmorBasic(materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
+			leggingsSteel = new TSArmorBasic(materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
+			bootsSteel = new TSArmorBasic(materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
+
 			GameRegistry.registerItem(helmetSteel, "helmetSteel");
 			GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
 			GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
@@ -183,9 +191,14 @@ public class TSContent {
 
 		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
 		if (filledBucket == null) {
-			filledBucket = new ItemStack(bucketsTS, 1, 0);
+			Item bucketSteam = new ItemBucket(steamBlock);
+			GameRegistry.registerItem(bucketSteam, "steamBucket");
+
+			filledBucket = new ItemStack(bucketSteam, 1, 0);
 			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), filledBucket, bucket));
 		}
+
+		bucketSteam = filledBucket;
 
 		tableCasting.addCastingRecipe(filledBucket, new FluidStack(steamFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 
@@ -200,17 +213,20 @@ public class TSContent {
 		if (!moltenLimestoneFluid.canBePlacedInWorld()) {
 			moltenLimestone = new TSBaseFluid(moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
 			GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
-
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), new ItemStack(bucketsTS, 1, 1), bucket));
 		} else {
 			moltenLimestone = moltenLimestoneFluid.getBlock();
 		}
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(moltenLimestoneFluid, 1000), bucket);
 		if (filledBucket == null) {
-			filledBucket = new ItemStack(bucketsTS, 1, 1);
+			Item bucketLimestone = new ItemBucket(moltenLimestone);
+			GameRegistry.registerItem(bucketLimestone, "limestoneBucket");
+
+			filledBucket = new ItemStack(bucketLimestone, 1, 1);
 			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), filledBucket, bucket));
 		}
+
+		bucketLimestone = filledBucket;
 
 		tableCasting.addCastingRecipe(filledBucket, new FluidStack(moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 
@@ -225,17 +241,20 @@ public class TSContent {
 		if (!liquidCementFluid.canBePlacedInWorld()) {
 			liquidCement = new CementFluidBlock(liquidCementFluid, Material.air, "liquid_cement").setBlockName("liquid.cement");
 			GameRegistry.registerBlock(liquidCement, "liquid.cement");
-
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), new ItemStack(bucketsTS, 1, 2), bucket));
 		} else {
 			liquidCement = liquidCementFluid.getBlock();
 		}
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(liquidCementFluid, 1000), bucket);
 		if (filledBucket == null) {
-			filledBucket = new ItemStack(bucketsTS, 1, 2);
+			Item bucketCement = new ItemBucket(liquidCement);
+			GameRegistry.registerItem(bucketCement, "cementBucket");
+
+			filledBucket = new ItemStack(bucketCement, 1, 2);
 			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), filledBucket, bucket));
 		}
+
+		bucketCement = filledBucket;
 
 		tableCasting.addCastingRecipe(filledBucket, new FluidStack(liquidCementFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 	}
@@ -267,10 +286,15 @@ public class TSContent {
 		OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 	}
 
-	void ensureOreIsRegistered(String oreName, ItemStack is) {
-		final int oreId = OreDictionary.getOreID(is);
-		if (oreId == -1)
-			OreDictionary.registerOre(oreName, is);
+	public void ensureOreIsRegistered(String oreName, ItemStack is) {
+		int ids[] = OreDictionary.getOreIDs(is);
+
+		for (int id : ids) {
+			if (OreDictionary.getOreName(id).equals(oreName))
+				return;
+		}
+
+		OreDictionary.registerOre(oreName, is);
 	}
 
 	/**
@@ -323,13 +347,16 @@ public class TSContent {
 	}
 
 	public void modIntegration() {
-		if (TContent.thaumcraftAvailable) {
-			Object objResource = TContent.getStaticItem("itemResource", "thaumcraft.common.config.ConfigItems");
-			if (objResource != null) {
-				TSteelworks.loginfo("Thaumcraft detected. Registering fuels.");
-				thaumcraftAlumentum = new ItemStack((Item) objResource, 1, 0);
+		if (TinkerTools.thaumcraftAvailable) {
+			Item thaumcraftResource = ItemUtils.getItemFromUniqueName("thaumcraft:itemResource");
+
+			if (thaumcraftResource != null) {
+				TSLogger.info("Thaumcraft detected. Registering fuels.");
+
+				thaumcraftAlumentum = new ItemStack(thaumcraftResource, 1, 0);
 			}
 		}
+
 		// BlockCube and ItemCube not detected. :/ WTF railcraft?
         /*if (TSteelworks.railcraftAvailable)
         {
@@ -342,13 +369,12 @@ public class TSContent {
         }*/
 	}
 
-	@SuppressWarnings("static-access")
-	void registerModifiers() {
-		ToolBuilder tb = ToolBuilder.instance;
-		ItemStack hopper = new ItemStack(Block.hopperBlock);
-		ItemStack enderpearl = new ItemStack(Item.enderPearl);
-		String local = StatCollector.translateToLocal("modifier.tool.vacuous");
-		tb.registerToolMod(new ModInteger(new ItemStack[] {hopper, enderpearl}, 50, "Vacuous", 5, "\u00A7a", local));
+	public void registerModifiers() {
+		ItemStack hopper = new ItemStack(Blocks.hopper);
+		ItemStack enderpearl = new ItemStack(Items.ender_pearl);
+		String modifierName = StatCollector.translateToLocal("modifier.tool.vacuous");
+
+		ModifyBuilder.registerModifier(new ModInteger(new ItemStack[] {hopper, enderpearl}, 50, "Vacuous", 5, EnumChatFormatting.GREEN.toString(), modifierName));
 
 		TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
 	}

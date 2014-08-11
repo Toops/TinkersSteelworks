@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL12;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import tsteelworks.TSteelworks;
-import tsteelworks.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.core.TSRecipes;
 import tsteelworks.inventory.TSActiveContainer;
