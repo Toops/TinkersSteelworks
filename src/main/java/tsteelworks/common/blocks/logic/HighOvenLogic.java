@@ -418,7 +418,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the normal result for
 	 */
 	public FluidStack getNormalResultFor(final ItemStack itemstack) {
-		return AdvancedSmelting.getMeltingResult(itemstack);
+		AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(itemstack);
+
+		return data == null ? null : data.getResult();
 	}
 
 	/**
@@ -428,15 +430,16 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the liquid mixed result for
 	 */
 	public FluidStack getLiquidMixedResultFor(final FluidStack fluidstack) {
-		final FluidType resultType = FluidType.getFluidType(fluidstack.getFluid());
-		final FluidType mixResult = AdvancedSmelting.getMixFluidSmeltingResult(resultType,
+		final FluidStack mixResult = AdvancedSmelting.getMixFluidSmeltingResult(fluidstack.getFluid(),
 				inventory.getStackInSlot(SLOT_OXIDIZER),
 				inventory.getStackInSlot(SLOT_REDUCER),
-				inventory.getStackInSlot(SLOT_PURIFIER));
+				inventory.getStackInSlot(SLOT_PURIFIER)
+		);
 
-		if (mixResult == null) return null;
+		if (mixResult != null)
+			mixResult.amount = fluidstack.amount;
 
-		return new FluidStack(mixResult.fluid, fluidstack.amount);
+		return mixResult;
 	}
 
 	/**
@@ -446,15 +449,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the solid mixed result for
 	 */
 	public ItemStack getSolidMixedResultFor(final FluidStack fluidstack) {
-		final FluidType resultType = FluidType.getFluidType(fluidstack.getFluid());
-		final ItemStack mixResult = AdvancedSmelting.getMixItemSmeltingResult(resultType,
+		return AdvancedSmelting.getMixItemSmeltingResult(fluidstack.getFluid(),
 				inventory.getStackInSlot(SLOT_OXIDIZER),
 				inventory.getStackInSlot(SLOT_REDUCER),
 				inventory.getStackInSlot(SLOT_PURIFIER));
-
-		if (mixResult == null) return null;
-
-		return new ItemStack(mixResult.getItem(), mixResult.stackSize, mixResult.getItemDamage());
 	}
 
 	/**
@@ -477,12 +475,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (stack == null)
 				continue;
 
-			final int consumeChance = AdvancedSmelting.getMixItemConsumeChance(stack);
-			final int consumeAmount = AdvancedSmelting.getMixItemConsumeAmount(stack);
+			AdvancedSmelting.MixData mixData = AdvancedSmelting.getMixItemData(stack);
 
-			if (MathHelper.random.nextInt(100) <= consumeChance) {
-				if (stack.stackSize >= consumeAmount) {
-					inventory.decrStackSize(i, consumeAmount);
+			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
+				if (stack.stackSize >= mixData.getConsumeAmount()) {
+					inventory.decrStackSize(i, mixData.getConsumeAmount());
 				}
 			}
 		}
@@ -525,8 +522,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	private void updateTemperatures() {
 		isMeltingItems = true;
 
-		for (int i = 0; i < structure.getNbLayers(); i ++) {
-			this.meltingTemps[i] = AdvancedSmelting.getLiquifyTemperature(smeltableInventory.getStackInSlot(i));
+		for (int i = 0; i < inventory.getSizeInventory(); i ++) {
+			AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(smeltableInventory.getStackInSlot(i));
+
+			this.meltingTemps[i] = data == null ? ROOM_TEMP : data.getMeltingPoint();
 		}
 	}
 
@@ -772,7 +771,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public boolean addFluidToTank(final FluidStack liquid) {
 		// TODO: Tank should only hold multiple fluids under certain special circumstances ex water & steam, anything & slag
-
 		if (tank.fill(ForgeDirection.UNKNOWN, liquid, false) != liquid.amount)
 			return false;
 

@@ -1,17 +1,13 @@
 package tsteelworks.lib.crafting;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.library.crafting.FluidType;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.HashMap;
 
 /**
  * @author Toops
