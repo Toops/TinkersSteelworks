@@ -64,20 +64,4 @@ public class TSLogger {
 	public static void error(String msg, Throwable thrown) {
 		logger.error(msg, thrown);
 	}
-
-	void logAlloyList() {
-		if (!TSteelworks.DEBUG_MODE)
-			return;
-
-		for (int i = 0; i < AlloyInfo.alloys.size(); ++i) {
-			FluidStack f = AlloyInfo.alloys.get(i).result.copy();
-			f.amount = 1000;
-			ArrayList<FluidStack> result = AlloyInfo.deAlloy(f);
-
-			System.out.println("Alloy " + AlloyInfo.alloys.get(i).result.getFluid().getName() + " produces:");
-			for (int j = 0; j < result.size(); ++j) {
-				System.out.println(result.get(j).amount + " mB of " + result.get(j).getFluid().getName());
-			}
-		}
-	}
 }
