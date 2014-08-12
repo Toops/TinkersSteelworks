@@ -32,6 +32,7 @@ import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tconstruct.library.crafting.FluidType;
 import tsteelworks.TSteelworks;
+import tsteelworks.common.core.FuelHandler;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.container.HighOvenContainer;
@@ -45,7 +46,7 @@ import java.util.Arrays;
 /**
  * The primary class for the High Oven structure's logic.
  */
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -612,7 +613,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			return 0;
 		}
 
-		return TSteelworks.fuelHandler.getHighOvenFuelBurnTime(itemstack);
+		return TSFuelHandler.getHighOvenFuelBurnTime(itemstack);
 	}
 
 	/**
@@ -931,5 +932,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	public IInventory getSmeltableInventory() {
 		return smeltableInventory;
+	}
+
+	@Override
+	public MultiFluidTank getFluidTank() {
+		return tank;
 	}
 }

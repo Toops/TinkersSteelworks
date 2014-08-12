@@ -30,6 +30,10 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 		return master.getCoord();
 	}
 
+	public IMasterLogic getMaster() {
+		return master;
+	}
+
 	@Override
 	public void notifyMasterOfChange() {
 		if (hasMaster()) {

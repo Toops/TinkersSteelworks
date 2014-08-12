@@ -1,302 +1,100 @@
 package tsteelworks.common.blocks.logic;
 
-import tsteelworks.lib.IFacingLogic;
+import mantle.blocks.iface.IFacingLogic;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.*;
+import nf.fr.ephys.cookiecore.helpers.BlockHelper;
+import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import tsteelworks.lib.IFluidTankHolder;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic {
-    byte direction;
+	byte direction;
 
-    // ========== TileEntity ===========
+	// ========== HighOvenDrainLogic ===========
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see tsteelworks.blocks.logic.TSMultiServantLogic#canUpdate()
-     */
-    @Override
-    public boolean canUpdate() {
-        return false;
-    }
+	public MultiFluidTank getTank() {
+		return getMaster() instanceof IFluidTankHolder ? ((IFluidTankHolder) getMaster()).getFluidTank() : null;
+	}
 
-    // ========== HighOvenDrainLogic ===========
+	// ========== IFacingLogic ===========
 
-    public int getControllerLogicType() {
-        final int mx = getMasterPosition().x;
-        final int my = getMasterPosition().y;
-        final int mz = getMasterPosition().z;
-        if (worldObj.getBlockTileEntity(mx, my, mz) instanceof HighOvenLogic) {
-            return 1;
-        }
-        if (worldObj.getBlockTileEntity(mx, my, mz) instanceof DeepTankLogic) {
-            return 2;
-        }
-        return 0;
-    }
+	@Override
+	public byte getRenderDirection() {
+		return direction;
+	}
 
-    public HighOvenLogic getHighOvenController() {
-        final int mx = getMasterPosition().x;
-        final int my = getMasterPosition().y;
-        final int mz = getMasterPosition().z;
-        return (HighOvenLogic) worldObj.getBlockTileEntity(mx, my, mz);
-    }
+	@Override
+	public ForgeDirection getForgeDirection() {
+		return ForgeDirection.VALID_DIRECTIONS[direction];
+	}
 
-    public DeepTankLogic getDeepTankController() {
-        final int mx = getMasterPosition().x;
-        final int my = getMasterPosition().y;
-        final int mz = getMasterPosition().z;
-        return (DeepTankLogic) worldObj.getBlockTileEntity(mx, my, mz);
-    }
+	@Override
+	public void setDirection(int side) {}
 
-    public IFluidTank getControllerTank() {
-        int type = getControllerLogicType();
-        if (type == 1) return getHighOvenController();
-        if (type == 2) return getDeepTankController();
-        return null;
-    }
+	@Override
+	public void setDirection(float yaw, float pitch, EntityLivingBase player) {
+		direction = (byte) BlockHelper.orientationToMetadataXZ(yaw);
+	}
 
-    // ========== IFacingLogic ===========
+	// ========== IFluidHandler ===========
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see tconstruct.library.util.IFacingLogic#getRenderDirection()
-     */
-    @Override
-    public byte getRenderDirection() {
-        return direction;
-    }
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		MultiFluidTank tank = getTank();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see tconstruct.library.util.IFacingLogic#getForgeDirection()
-     */
-    @Override
-    public ForgeDirection getForgeDirection() {
-        return ForgeDirection.VALID_DIRECTIONS[direction];
-    }
+		return tank != null && tank.canDrain(from, fluid);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see tconstruct.library.util.IFacingLogic#setDirection(int)
-     */
-    @Override
-    public void setDirection(int side) {}
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		MultiFluidTank tank = getTank();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see tconstruct.library.util.IFacingLogic#setDirection(float, float,
-     * net.minecraft.entity.EntityLivingBase)
-     */
-    @Override
-    public void setDirection(float yaw, float pitch, EntityLivingBase player) {
-        if (pitch > 45)
-            direction = 1;
-        else
-            if (pitch < -45)
-                direction = 0;
-            else {
-                final int facing = MathHelper.floor_double((yaw / 360) + 0.5D) & 3;
-                switch (facing) {
-                    case 0:
-                        direction = 2;
-                        break;
-                    case 1:
-                        direction = 5;
-                        break;
-                    case 2:
-                        direction = 3;
-                        break;
-                    case 3:
-                        direction = 4;
-                        break;
-                }
-            }
-    }
+		return tank == null ? null : tank.drain(from, resource, doDrain);
+	}
 
-    // ========== IFluidHandler ===========
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		MultiFluidTank tank = getTank();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#canDrain(net.minecraftforge.common
-     * .ForgeDirection, net.minecraftforge.fluids.Fluid)
-     */
-    @Override
-    public boolean canDrain(ForgeDirection from, Fluid fluid) {
-        // Check that the drain is coming from the from the front of the block
-        // and that the fluid to be drained is in the master.
-        boolean containsFluid = fluid == null;
-        if (fluid != null) {
-            int type = getControllerLogicType();
-            if (type == 1) {
-                for (final FluidStack fstack : getHighOvenController().getFluidlist())
-                    if (fstack.fluidID == fluid.getID()) {
-                        containsFluid = true;
-                        break;
-                    }
-            }
-            if (type == 2) {
-                for (final FluidStack fstack : getDeepTankController().getFluidList())
-                    if (fstack.fluidID == fluid.getID()) {
-                        containsFluid = true;
-                        break;
-                    }
-            }
-        }
-        return containsFluid;
-    }
+		return tank == null ? null : tank.drain(from, maxDrain, doDrain);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#drain(net.minecraftforge.common
-     * .ForgeDirection, net.minecraftforge.fluids.FluidStack, boolean)
-     */
-    @Override
-    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-        return null;
-    }
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		MultiFluidTank tank = getTank();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#drain(net.minecraftforge.common
-     * .ForgeDirection, int, boolean)
-     */
-    @Override
-    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-        if (hasValidMaster() && canDrain(from, null)) {
-            return getControllerTank().drain(maxDrain, doDrain);
-        } else {
-            return null;
-        }
-    }
+		return tank != null && tank.canFill(from, fluid);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#canFill(net.minecraftforge.common
-     * .ForgeDirection, net.minecraftforge.fluids.Fluid)
-     */
-    @Override
-    public boolean canFill(ForgeDirection from, Fluid fluid) {
-        if (!this.hasValidMaster()) return false;
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		MultiFluidTank tank = getTank();
 
-        if (getControllerTank().getFluidAmount() >= getControllerTank().getCapacity()) return false;
-        //int type = getControllerLogicType();
-        //if (type == 1) if (getHighOvenController().getTotalFluidAmount() >= getHighOvenController().getCapacity()) return false;
-        //if (type == 2) if (getDeepTankController().getTotalFluidAmount() >= getDeepTankController().getCapacity()) return false;
-        return true;
+		return tank == null ? 0 : tank.fill(from, resource, doFill);
+	}
 
-    }
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		MultiFluidTank tank = getTank();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#fill(net.minecraftforge.common
-     * .ForgeDirection, net.minecraftforge.fluids.FluidStack, boolean)
-     */
-    @Override
-    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-        if (hasValidMaster() && (resource != null) && canFill(from, resource.getFluid())) {
-            if (doFill)
-                return this.getControllerTank().fill(resource, doFill);
-            else
-                return resource.amount;
-        } else
-            return 0;
-    }
+		return tank == null ? null : tank.getTankInfo(from);
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * net.minecraftforge.fluids.IFluidHandler#getTankInfo(net.minecraftforge
-     * .common.ForgeDirection)
-     */
-    @Override
-    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        if (hasValidMaster() && ((from == getForgeDirection()) || (from == getForgeDirection().getOpposite()) || (from == ForgeDirection.UNKNOWN))) {
-            int type = getControllerLogicType();
-            if (type == 1) return new FluidTankInfo[] { getHighOvenController().getInfo() };
-            if (type == 2) return new FluidTankInfo[] { getDeepTankController().getInfo() };
-            return null;
-        }
-        return null;
-    }
+	// ========== NBT ===========
 
-    // ========== NBT ===========
+	@Override
+	public void readCustomNBT(NBTTagCompound tags) {
+		super.readFromNBT(tags);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * tsteelworks.blocks.logic.TSMultiServantLogic#readFromNBT(net.minecraft
-     * .nbt.NBTTagCompound)
-     */
-    @Override
-    public void readFromNBT(NBTTagCompound tags) {
-        super.readFromNBT(tags);
-        direction = tags.getByte("Direction");
-    }
+		direction = tags.getByte("Direction");
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * tsteelworks.blocks.logic.TSMultiServantLogic#writeToNBT(net.minecraft
-     * .nbt.NBTTagCompound)
-     */
-    @Override
-    public void writeToNBT(NBTTagCompound tags) {
-        super.writeToNBT(tags);
-        tags.setByte("Direction", direction);
-    }
+	@Override
+	public void writeCustomNBT(NBTTagCompound tags) {
+		super.writeToNBT(tags);
 
-    // ========== Packet Handling ===========
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * tsteelworks.blocks.logic.TSMultiServantLogic#onDataPacket(net.minecraft
-     * .network.INetworkManager,
-     * net.minecraft.network.packet.Packet132TileEntityData)
-     */
-    @Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet) {
-        readFromNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see tsteelworks.blocks.logic.TSMultiServantLogic#getDescriptionPacket()
-     */
-    @Override
-    public Packet getDescriptionPacket() {
-        final NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-    }
+		tags.setByte("Direction", direction);
+	}
 }
