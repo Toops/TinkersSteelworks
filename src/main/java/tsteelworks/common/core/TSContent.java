@@ -64,7 +64,6 @@ public class TSContent {
 	public static Block limestoneBlock;
 	public static Block limestoneSlab;
 	public static Block cementBlock;
-	public static Block machine;
 	public static Block tsCharcoalBlock;
 	public static Block dustStorageBlock;
 	public static Block steamBlock;
@@ -136,11 +135,6 @@ public class TSContent {
 		scorchedSlab = new ScorchedSlab().setBlockName("ScorchedSlab");
 		scorchedSlab.stepSound = Block.soundTypeStone;
 		GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
-
-        /* Machines */
-		machine = new MachineBlock().setBlockName("Machine");
-		GameRegistry.registerBlock(machine, MachineItemBlock.class, "Machine");
-		GameRegistry.registerTileEntity(TurbineLogic.class, "TSteelworks.Machine");
 
         /* Raw Vanilla Materials */
 		List<ItemStack> charcoalBlocks = OreDictionary.getOres("blockCharcoal");
