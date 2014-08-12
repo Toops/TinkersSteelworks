@@ -1,375 +1,218 @@
 package tsteelworks.client.gui;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.helpers.RenderHelper;
+import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import org.lwjgl.opengl.GL11;
+import tsteelworks.TSteelworks;
+import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.container.DeepTankContainer;
+import tsteelworks.common.core.TSRepo;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+public class DeepTankGui extends GuiContainer {
+	private static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+	private static final int TANK_WIDTH = 104;
+	private static final int TANK_HEIGHT = 104;
 
-import tsteelworks.TSteelworks;
-import tsteelworks.common.blocks.logic.DeepTankLogic;
-import tsteelworks.common.core.TSRepo;
-import tsteelworks.common.core.TSRecipes;
-import tsteelworks.common.container.TSActiveContainer;
-import cpw.mods.fml.common.network.PacketDispatcher;
+	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
+		super(new DeepTankContainer(inventoryplayer, tank));
 
-public class DeepTankGui extends TSContainerGui
-{
-    public DeepTankLogic logic;
-    String username;
-    boolean wasClicking;
+		xSize = 248;
+	}
 
-    public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
-        super((TSActiveContainer) tank.getGuiContainer(inventoryplayer));
-        logic = tank;
-        username = inventoryplayer.player.username;
-        xSize = 248;
-    }
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+		final String title = StatCollector.translateToLocal("tank.DeepTank");
 
-    @Override
-    public void drawScreen (int mouseX, int mouseY, float par3)
-    {
-        super.drawScreen(mouseX, mouseY, par3);
-    }
+		fontRendererObj.drawString(title, ((xSize / 2) - (fontRendererObj.getStringWidth(title) / 2)), 17, 0x404040);
 
-    @SuppressWarnings ("unused")
-    @Override
-    protected void drawGuiContainerForegroundLayer (int mouseX, int mouseY)
-    {
-        final String title = StatCollector.translateToLocal("tank.DeepTank");
-        fontRenderer.drawString(title, ((xSize / 2) - (fontRenderer.getStringWidth(title) / 2)), 17, 0x404040);
+		final int cornerX = (width - xSize) / 2 + 20;
+		final int cornerY = (height - ySize) / 2 + 12;
 
-        int base = 0;
-        int cornerX = (width - xSize) / 2 + 20;
-        int cornerY = (height - ySize) / 2 + 12;
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
 
-        for (FluidStack liquid : logic.getFluidList())
-        {
-            int basePos = 54;
-            int initialLiquidSize = 0;
-            int liquidSize = 0;//liquid.amount * 104 / liquidLayers;
-            if (logic.getCapacity() > 0)
-            {
-                int total = logic.getTotalLiquid();
-                int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
-                if (liquidLayers > 0)
-                {
-                    liquidSize = liquid.amount * 104 / liquidLayers;
-                    if (liquidSize == 0)
-                        liquidSize = 1;
-                    base += liquidSize;
-                }
-            }
+		if (fluidTank.getCapacity() == 0) return;
 
-            int leftX = cornerX + basePos;
-            int topY = (cornerY + 120) - base;
-            int sizeX = 104;
-            int sizeY = liquidSize;
-            if (mouseX >= leftX && mouseX <= leftX + sizeX && mouseY >= topY && mouseY < topY + sizeY)
-            {
-                drawFluidStackTooltip(liquid, mouseX - cornerX + 36, mouseY - cornerY);
+		final int topY = cornerY + 120;
+		final int leftX = cornerX + 54;
 
-            }
-        }
-    }
+		int liquidOffset = 0;
+		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
+			FluidStack stack = fluidTank.getFluid(i);
 
-    private static final ResourceLocation background = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
+			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer (float f, int mouseX, int mouseY)
-    {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(background);
-        int cornerX = (width - xSize) / 2 + 20;
-        int cornerY = (height - ySize) / 2 + 12;
-        drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 120, ySize);
+			if (mouseX >= leftX
+					&& mouseX <= leftX + TANK_WIDTH
+					&& mouseY >= topY + liquidOffset
+					&& mouseY < topY + liquidOffset + liquidSize) {
+				drawFluidStackTooltip(stack, mouseX, mouseY);
+			}
 
-        //Liquids - molten metal
-        mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-        int base = 0;
-        for (FluidStack liquid : logic.getFluidList())
-        {
-            Icon renderIndex = liquid.getFluid().getStillIcon();
-            int basePos = 54;
-            if (logic.getCapacity() > 0)
-            {
-                int total = logic.getTotalLiquid();
-                int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
-                if (liquidLayers > 0)
-                {
-                    int liquidSize = liquid.amount * 104 / liquidLayers;
-                    if (liquidSize == 0)
-                        liquidSize = 1;
-                    while (liquidSize > 0)
-                    {
-                        int size = liquidSize >= 16 ? 16 : liquidSize;
-                        if (renderIndex != null)
-                        {
-                            drawLiquidRect(cornerX + basePos, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 16, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 32, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 48, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 64, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 80, (cornerY + 120) - size - base, renderIndex, 16, size);
-                            drawLiquidRect(cornerX + basePos + 96, (cornerY + 120) - size - base, renderIndex, 8, size);
-                        }
-                        liquidSize -= size;
-                        base += size;
-                    }
-                }
-            }
-        }
+			liquidOffset += liquidSize;
+		}
+	}
 
-        //Liquid gague
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		this.mc.getTextureManager().bindTexture(BACKGROUND);
+		int cornerX = (width - xSize) / 2 + 20;
+		int cornerY = (height - ySize) / 2 + 12;
+		drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 120, ySize);
 
-        this.mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(cornerX + 54, cornerY + 16, 120, 0, 104, 104);
-    }
+		//Liquids
+		RenderHelper.loadBlockMap();
 
-    @SuppressWarnings ({ "unchecked", "rawtypes" })
-    protected void drawFluidStackTooltip (FluidStack par1ItemStack, int par2, int par3)
-    {
-        this.zLevel = 100;
-        List list = getLiquidTooltip(par1ItemStack, this.mc.gameSettings.advancedItemTooltips);
+		final int leftX = cornerX + 54;
 
-        for (int k = 0; k < list.size(); ++k)
-        {
-            list.set(k, EnumChatFormatting.GRAY + (String) list.get(k));
-        }
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
 
-        this.drawToolTip(list, par2, par3);
-        this.zLevel = 0;
-    }
+		int liquidOffset = 0;
+		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
+			FluidStack stack = fluidTank.getFluid(i);
+			IIcon icon = stack.getFluid().getStillIcon();
 
-    @SuppressWarnings ({ "rawtypes", "unchecked" })
-    public List getLiquidTooltip (FluidStack liquid, boolean par2)
-    {
-        ArrayList list = new ArrayList();
-        if (liquid.fluidID == -37)
-        {
-            list.add("\u00A7f" + StatCollector.translateToLocal("gui.smeltery1"));
-            list.add("mB: " + liquid.amount);
-        }
-        else
-        {
-            String name = StatCollector.translateToLocal("fluid." + FluidRegistry.getFluidName(liquid));
-            list.add("\u00A7f" + name);
-            if (name.equals("Liquified Emerald"))
-            {
-                list.add("Emeralds: " + liquid.amount / 640f);
-            }
-            else if (name.equals("Molten Glass"))
-            {
-                int blocks = liquid.amount / 1000;
-                if (blocks > 0)
-                    list.add("Blocks: " + blocks);
-                int panels = (liquid.amount % 1000) / 250;
-                if (panels > 0)
-                    list.add("Panels: " + panels);
-                int mB = (liquid.amount % 1000) % 250;
-                if (mB > 0)
-                    list.add("mB: " + mB);
-            }
-            else if (name.contains("Molten"))
-            {
-                int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
-                if (ingots > 0)
-                    list.add("Ingots: " + ingots);
-                int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
-                if (mB > 0)
-                {
-                    int nuggets = mB / TSRecipes.NUGGET_LIQUID_VALUE;
-                    int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
-                    if (nuggets > 0)
-                        list.add("Nuggets: " + nuggets);
-                    if (junk > 0)
-                        list.add("mB: " + junk);
-                }
-            }
-            else if (name.equals("Seared Stone"))
-            {
-                int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
-                if (ingots > 0)
-                    list.add("Blocks: " + ingots);
-                int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
-                if (mB > 0)
-                    list.add("mB: " + mB);
-            }
-            else
-            {
-                list.add("mB: " + liquid.amount);
-            }
-        }
-        return list;
-    }
+			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-    @SuppressWarnings ("rawtypes")
-    protected void drawToolTip (List par1List, int par2, int par3)
-    {
-        if (!par1List.isEmpty())
-        {
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-            int k = 0;
-            Iterator iterator = par1List.iterator();
+			drawTexturedRect(icon, leftX, TANK_WIDTH, cornerY + 120 + liquidOffset, liquidSize, 1);
 
-            while (iterator.hasNext())
-            {
-                String s = (String) iterator.next();
-                int l = this.fontRenderer.getStringWidth(s);
+			liquidOffset += liquidSize;
+		}
 
-                if (l > k)
-                {
-                    k = l;
-                }
-            }
+		//Liquid gauge
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            int i1 = par2 + 12;
-            int j1 = par3 - 12;
-            int k1 = 8;
+		this.mc.getTextureManager().bindTexture(BACKGROUND);
+		drawTexturedModalRect(cornerX + 54, cornerY + 16, 120, 0, 104, 104);
+	}
 
-            if (par1List.size() > 1)
-            {
-                k1 += 2 + (par1List.size() - 1) * 10;
-            }
+	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {
+		List<String> tooltips = new ArrayList<>();
 
-            if (i1 + k > this.width)
-            {
-                i1 -= 28 + k;
-            }
+		tooltips.add(liquid.getFluid().getLocalizedName(liquid));
+		tooltips.add(EnumChatFormatting.LIGHT_PURPLE + "mB: " + liquid.amount);
 
-            if (j1 + k1 + 6 > this.height)
-            {
-                j1 = this.height - k1 - 6;
-            }
+		drawHoveringText(tooltips, x, z, fontRendererObj);
+	}
 
-            this.zLevel = 300.0F;
-            itemRenderer.zLevel = 300.0F;
-            int l1 = -267386864;
-            this.drawGradientRect(i1 - 3, j1 - 4, i1 + k + 3, j1 - 3, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 3, i1 + k + 3, j1 + k1 + 4, l1, l1);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 - 4, j1 - 3, i1 - 3, j1 + k1 + 3, l1, l1);
-            this.drawGradientRect(i1 + k + 3, j1 - 3, i1 + k + 4, j1 + k1 + 3, l1, l1);
-            int i2 = 1347420415;
-            int j2 = (i2 & 16711422) >> 1 | i2 & -16777216;
-            this.drawGradientRect(i1 - 3, j1 - 3 + 1, i1 - 3 + 1, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 + k + 2, j1 - 3 + 1, i1 + k + 3, j1 + k1 + 3 - 1, i2, j2);
-            this.drawGradientRect(i1 - 3, j1 - 3, i1 + k + 3, j1 - 3 + 1, i2, i2);
-            this.drawGradientRect(i1 - 3, j1 + k1 + 2, i1 + k + 3, j1 + k1 + 3, j2, j2);
+	// TODO: move this to RenderHelper
+	public static void drawTexturedRect(IIcon icon, int x, int width, int y, int height, int zIndex) {
+		int nbChunksX = width / 16;
+		int nbChunksY = height / 16;
 
-            for (int k2 = 0; k2 < par1List.size(); ++k2)
-            {
-                String s1 = (String) par1List.get(k2);
-                this.fontRenderer.drawStringWithShadow(s1, i1, j1, -1);
+		int xRemainer = width % 16;
+		int yRemainer = height % 16;
 
-                if (k2 == 0)
-                {
-                    j1 += 2;
-                }
+		for (int i = 0; i < nbChunksX; i++) {
+			int xStart = x + 16 * i;
+			for (int j = 0; j < nbChunksY; j++) {
+				int yStart = y + 16 * i;
 
-                j1 += 10;
-            }
+				drawTexturedRectStretch(icon, xStart, 16, yStart, 16, zIndex);
+			}
 
-            this.zLevel = 0.0F;
-            itemRenderer.zLevel = 0.0F;
-        }
-    }
+			// draw Y remainder
+			int yStart = y + 16 * nbChunksY;
 
-    public void drawLiquidRect (int startU, int startV, Icon par3Icon, int endU, int endV)
-    {
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(startU + 0, startV + endV, this.zLevel, par3Icon.getMinU(), par3Icon.getMaxV());//Bottom left
-        tessellator.addVertexWithUV(startU + endU, startV + endV, this.zLevel, par3Icon.getMaxU(), par3Icon.getMaxV());//Bottom right
-        tessellator.addVertexWithUV(startU + endU, startV + 0, this.zLevel, par3Icon.getMaxU(), par3Icon.getMinV());//Top right
-        tessellator.addVertexWithUV(startU + 0, startV + 0, this.zLevel, par3Icon.getMinU(), par3Icon.getMinV()); //Top left
-        tessellator.draw();
-    }
+			drawTexturedRectStretch(icon, xStart, 16, yStart, yRemainer, zIndex);
+		}
 
-    @SuppressWarnings ({ "unused", "static-access" })
-    @Override
-    public void mouseClicked (int mouseX, int mouseY, int mouseButton)
-    {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+		// draw X remainder
+		int xStart = x + 16 * nbChunksX;
+		for (int i = 0; i < nbChunksY; i++) {
+			int yStart = y + 16 * i;
 
-        int base = 0;
-        int cornerX = (width - xSize) / 2 + 20;
-        int cornerY = (height - ySize) / 2 + 12;
-        int fluidToBeBroughtUp = -1;
+			drawTexturedRectStretch(icon, xStart, xRemainer, yStart, 16, zIndex);
+		}
 
-        for (FluidStack liquid : logic.getFluidList())
-        {
-            int basePos = 54;
-            int initialLiquidSize = 0;
-            int liquidSize = 0;//liquid.amount * 104 / liquidLayers;
-            if (logic.getCapacity() > 0)
-            {
-                int total = logic.getTotalLiquid();
-                int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
-                if (liquidLayers > 0)
-                {
-                    liquidSize = liquid.amount * 104 / liquidLayers;
-                    if (liquidSize == 0)
-                        liquidSize = 1;
-                    base += liquidSize;
-                }
-            }
-            int leftX = cornerX + basePos;
-            int topY = (cornerY + 120) - base;
-            int sizeX = 104;
-            int sizeY = liquidSize;
-            if (mouseX >= leftX && mouseX <= leftX + sizeX && mouseY >= topY && mouseY < topY + sizeY)
-            {
-                fluidToBeBroughtUp = liquid.fluidID;
+		// draw the corner
+		int yStart = y + 16 * nbChunksY;
 
-                Packet250CustomPayload packet = new Packet250CustomPayload();
+		drawTexturedRectStretch(icon, xStart, xRemainer, yStart, yRemainer, zIndex);
+	}
 
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                DataOutputStream dos = new DataOutputStream(bos);
+	/**
+	 * Draw a textured rectangle with a stretched texture to fit the cube
+	 */
+	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, int zIndex) {
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMaxV());
+		tessellator.addVertexWithUV(x + width, y + height, zIndex, icon.getMaxU(), icon.getMaxV());
+		tessellator.addVertexWithUV(x + width, y, zIndex, icon.getMaxU(), icon.getMinV());
+		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMinV());
+		tessellator.draw();
+	}
 
-                try
-                {
-                    dos.write(TSRepo.tankPacketID);
+	@Override
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-                    dos.writeInt(logic.worldObj.provider.dimensionId);
-                    dos.writeInt(logic.xCoord);
-                    dos.writeInt(logic.yCoord);
-                    dos.writeInt(logic.zCoord);
+		int base = 0;
+		int cornerX = (width - xSize) / 2 + 20;
+		int cornerY = (height - ySize) / 2 + 12;
+		int fluidToBeBroughtUp = -1;
 
-                    dos.writeBoolean(this.isShiftKeyDown());
+		for (FluidStack liquid : logic.getFluidList()) {
+			int basePos = 54;
+			int initialLiquidSize = 0;
+			int liquidSize = 0;//liquid.amount * 104 / liquidLayers;
+			if (logic.getCapacity() > 0) {
+				int total = logic.getTotalLiquid();
+				int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
+				if (liquidLayers > 0) {
+					liquidSize = liquid.amount * 104 / liquidLayers;
+					if (liquidSize == 0)
+						liquidSize = 1;
+					base += liquidSize;
+				}
+			}
+			int leftX = cornerX + basePos;
+			int topY = (cornerY + 120) - base;
+			int sizeX = 104;
+			int sizeY = liquidSize;
+			if (mouseX >= leftX && mouseX <= leftX + sizeX && mouseY >= topY && mouseY < topY + sizeY) {
+				fluidToBeBroughtUp = liquid.fluidID;
 
-                    dos.writeInt(fluidToBeBroughtUp);
-                }
-                catch (Exception e)
-                {
-                   TSteelworks.logError("an error occured", e);
-                }
+				Packet250CustomPayload packet = new Packet250CustomPayload();
 
-                packet.channel = TSRepo.modChan;
-                packet.data = bos.toByteArray();
-                packet.length = bos.size();
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				DataOutputStream dos = new DataOutputStream(bos);
 
-                PacketDispatcher.sendPacketToServer(packet);
-            }
-        }
-    }
+				try {
+					dos.write(TSRepo.tankPacketID);
+
+					dos.writeInt(logic.worldObj.provider.dimensionId);
+					dos.writeInt(logic.xCoord);
+					dos.writeInt(logic.yCoord);
+					dos.writeInt(logic.zCoord);
+
+					dos.writeBoolean(isShiftKeyDown());
+
+					dos.writeInt(fluidToBeBroughtUp);
+				} catch (Exception e) {
+					TSteelworks.logError("an error occured", e);
+				}
+
+				packet.channel = TSRepo.modChan;
+				packet.data = bos.toByteArray();
+				packet.length = bos.size();
+
+				PacketDispatcher.sendPacketToServer(packet);
+			}
+		}
+	}
 }
