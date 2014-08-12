@@ -938,4 +938,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public MultiFluidTank getFluidTank() {
 		return tank;
 	}
+
+	public HighOvenDuctLogic getOutputDuct() {
+		return outputDuct;
+	}
+
+	public void setOutputDuct(HighOvenDuctLogic outputDuct) {
+		this.outputDuct = outputDuct;
+	}
 }
