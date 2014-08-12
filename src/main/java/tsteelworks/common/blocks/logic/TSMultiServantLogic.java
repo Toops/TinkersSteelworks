@@ -48,7 +48,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 
 	@Override
 	public boolean setMaster(IMasterLogic logic, World world) {
-		if (!setPotentialMaster(logic, world))
+		if (hasMaster())
 			return false;
 
 		master = logic;
@@ -59,11 +59,8 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 
 	@Override
 	public boolean verifyMaster(IMasterLogic logic, World world) {
-		if (hasMaster()) return true;
+		return hasMaster() && master == logic;
 
-		master = logic;
-
-		return true;
 	}
 
 	@Override

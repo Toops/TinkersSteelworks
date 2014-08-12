@@ -2,32 +2,20 @@ package tsteelworks.structure;
 
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.smeltery.TinkerSmeltery;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.ConfigCore;
 
 import java.util.*;
 
 public class StructureDeepTank implements IStructure {
-	/**
-	 * The structure has bottom.
-	 */
-	private boolean structureHasBottom;
-
-	/**
-	 * The structure has top.
-	 */
-	private boolean structureHasTop;
-
-	/**
-	 * Update needed.
-	 */
-	private boolean needsUpdate;
-
 	/**
 	 * The structure is valid.
 	 */
@@ -38,18 +26,15 @@ public class StructureDeepTank implements IStructure {
 	 */
 	private CoordTuple borderPos;
 
-	/**
-	 * The number of blocks in the structure.
-	 */
-	private int numBricks;
-
 	private int xWidth;
 	private int zWidth;
 
 	/**
-	 * The amount of layers.
+	 * The amount of layers. This does not count the top & bottom
 	 */
-	private int layers;
+	private int nbLayers;
+
+	private ItemStack glassType = null;
 
 	/**
 	 * The valid glass blocks permitted in the structure.
@@ -88,22 +73,117 @@ public class StructureDeepTank implements IStructure {
 
 	@Override
 	public void validateStructure(int x, int y, int z) {
-		scanControllerLayer(x, y, z, logic.getRenderDirection());
+		scanControllerLayer(x, y, z);
 
-		if (borderPos == null) {
-			validStructure = false;
-			return;
-		}
+		boolean wasValid = validStructure;
+		validStructure = borderPos != null && areLayersValid();
 
-		scanLayers();
-
-		validStructure = true;
-
-		logic.onStructureChange(this);
+		// don't update if the structure wasn't valid and is still not
+		if (wasValid || validStructure)
+			logic.onStructureChange(this);
 	}
 
-	public void scanLayers() {
+	private boolean areLayersValid() {
+		glassType = null;
+		nbLayers = 0;
 
+		return scanPlainLayer(borderPos.y) && (recursiveScanDown(borderPos.y - 1) || recursiveScanUp(borderPos.y + 1));
+	}
+
+	private boolean recursiveScanDown(int y) {
+		if (scanHollowLayer(y)) {
+			nbLayers++;
+			return recursiveScanDown(y - 1);
+		}
+
+		return scanPlainLayer(y);
+	}
+
+	private boolean recursiveScanUp(int y) {
+		if (scanHollowLayer(y)) {
+			nbLayers++;
+			return recursiveScanUp(y + 1);
+		}
+
+		return scanPlainLayer(y);
+	}
+
+	/**
+	 * Checks the layer is hollow and the outer line is valid glass
+	 */
+	private boolean scanHollowLayer(int y) {
+		// check inner section is empty
+		for (int x = 1; x < xWidth - 1; x++) {
+			for (int z = 1; z < zWidth - 1; z++) {
+				Block block = logic.getWorldObj().getBlock(borderPos.x + x, y, borderPos.z + z);
+
+				if (!block.getMaterial().equals(Material.air)) return false;
+			}
+		}
+
+		// check outer section is filled with glass
+		for (int x = 0; x < xWidth; x++) {
+			if (!isValidBlock(borderPos.x + x, y, borderPos.z) || !isValidBlock(borderPos.x + x, y, borderPos.z + zWidth - 1))
+				return false;
+		}
+
+		for (int z = 1; z < zWidth - 1; z++) {
+			if (!isValidBlock(borderPos.x, y, borderPos.z + z) || !isValidBlock(borderPos.x + xWidth - 1, y, borderPos.z + z))
+				return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks the whole layer is filled with valid bricks
+	 */
+	private boolean scanPlainLayer(int y) {
+		for (int x = 0; x < xWidth; x++) {
+			for (int z = 0; z < xWidth; z++) {
+				if (!isValidBlock(borderPos.x + x, y, borderPos.z + z))
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	private boolean isValidBlock(int x, int y, int z) {
+		Block block = logic.getWorldObj().getBlock(x, y, z);
+		int metadata = logic.getWorldObj().getBlockMetadata(x, y, z);
+
+		if (glassType != null) {
+			if (glassType.getItemDamage() == metadata && block.equals(Block.getBlockFromItem(glassType.getItem())))
+				return true;
+		} else if (isValidGlass(block, metadata)) {
+			glassType = new ItemStack(block, metadata);
+
+			return true;
+		}
+
+		TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
+		if (te instanceof TSMultiServantLogic) {
+			TSMultiServantLogic servant = (TSMultiServantLogic) te;
+
+			if (servant.hasMaster() && servant.verifyMaster(logic, logic.getWorldObj()))
+				return true;
+			else if (servant.setMaster(logic, logic.getWorldObj())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isValidGlass(Block block, int meta) {
+		for (ItemStack glass : glassBlocks) {
+			if (glass.getItemDamage() == meta && block.equals(Block.getBlockFromItem(glass.getItem()))) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -112,9 +192,8 @@ public class StructureDeepTank implements IStructure {
 	 * @param x1 controller x coordinate
 	 * @param y layer y pos
 	 * @param z1 controller z coordinate
-	 * @param orientation the controller orientation
 	 */
-	public void scanControllerLayer(int x1, int y, int z1, int orientation) {
+	private void scanControllerLayer(int x1, int y, int z1) {
 		borderPos = null;
 
 		// get the x width
@@ -175,7 +254,7 @@ public class StructureDeepTank implements IStructure {
 
 	@Override
 	public int getNbLayers() {
-		return layers;
+		return nbLayers;
 	}
 
 	public int getXWidth() {
