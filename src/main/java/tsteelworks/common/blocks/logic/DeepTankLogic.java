@@ -153,14 +153,14 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 
 		this.fluidTank.readFromNBT(tags.getCompoundTag("Tank"));
 
-		this.direction = tags.getByte(TSRepo.NBTNames.direction);
+		this.direction = tags.getByte(TSRepo.NBTNames.DIRECTION);
 	}
 
 	@Override
 	public void writeToNBT(final NBTTagCompound tags) {
 		super.writeToNBT(tags);
 
-		tags.setByte(TSRepo.NBTNames.direction, this.direction);
+		tags.setByte(TSRepo.NBTNames.DIRECTION, this.direction);
 
 		NBTHelper.setWritable(tags, "Tank", fluidTank);
 	}

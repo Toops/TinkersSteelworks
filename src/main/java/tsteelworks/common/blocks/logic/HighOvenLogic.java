@@ -30,9 +30,7 @@ import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
-import tconstruct.library.crafting.FluidType;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.core.FuelHandler;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.container.HighOvenContainer;
@@ -43,9 +41,7 @@ import tsteelworks.structure.StructureHighOven;
 
 import java.util.Arrays;
 
-/**
- * The primary class for the High Oven structure's logic.
- */
+// todo: don't store the output drain, find it when rebuilding
 public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
 	/**
 	 * Oxidizer Slot - Redox agent.
@@ -819,15 +815,15 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		tank.readFromNBT(nbt.getCompoundTag("tank"));
 
-		internalTemp = nbt.getInteger(TSRepo.NBTNames.internalTemp);
-		isMeltingItems = nbt.getBoolean(TSRepo.NBTNames.inUse);
+		internalTemp = nbt.getInteger(TSRepo.NBTNames.INTERNAL_TEMP);
+		isMeltingItems = nbt.getBoolean(TSRepo.NBTNames.IN_USE);
 
-		direction = nbt.getByte(TSRepo.NBTNames.direction);
-		setFuelBurnTime(nbt.getInteger(TSRepo.NBTNames.useTime));
-		setFuelHeatRate(nbt.getInteger(TSRepo.NBTNames.fuelHeatRate));
+		direction = nbt.getByte(TSRepo.NBTNames.DIRECTION);
+		setFuelBurnTime(nbt.getInteger(TSRepo.NBTNames.USE_TIME));
+		setFuelHeatRate(nbt.getInteger(TSRepo.NBTNames.FUEL_HEAT_RATE));
 
-		meltingTemps = nbt.getIntArray(TSRepo.NBTNames.meltingTemps);
-		activeTemps = nbt.getIntArray(TSRepo.NBTNames.activeTemps);
+		meltingTemps = nbt.getIntArray(TSRepo.NBTNames.MELTING_TEMPS);
+		activeTemps = nbt.getIntArray(TSRepo.NBTNames.ACTIVE_TEMPS);
 	}
 
 	@Override
@@ -839,15 +835,15 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		NBTHelper.setWritable(nbt, "tank", tank);
 
-		nbt.setInteger(TSRepo.NBTNames.internalTemp, internalTemp);
-		nbt.setBoolean(TSRepo.NBTNames.inUse, isMeltingItems);
+		nbt.setInteger(TSRepo.NBTNames.INTERNAL_TEMP, internalTemp);
+		nbt.setBoolean(TSRepo.NBTNames.IN_USE, isMeltingItems);
 
-		nbt.setByte(TSRepo.NBTNames.direction, this.direction);
-		nbt.setInteger(TSRepo.NBTNames.useTime, this.fuelBurnTime);
-		nbt.setInteger(TSRepo.NBTNames.fuelHeatRate, this.fuelHeatRate);
+		nbt.setByte(TSRepo.NBTNames.DIRECTION, this.direction);
+		nbt.setInteger(TSRepo.NBTNames.USE_TIME, this.fuelBurnTime);
+		nbt.setInteger(TSRepo.NBTNames.FUEL_HEAT_RATE, this.fuelHeatRate);
 
-		nbt.setIntArray(TSRepo.NBTNames.meltingTemps, this.meltingTemps);
-		nbt.setIntArray(TSRepo.NBTNames.activeTemps, this.activeTemps);
+		nbt.setIntArray(TSRepo.NBTNames.MELTING_TEMPS, this.meltingTemps);
+		nbt.setIntArray(TSRepo.NBTNames.ACTIVE_TEMPS, this.activeTemps);
 	}
 
 	@Override

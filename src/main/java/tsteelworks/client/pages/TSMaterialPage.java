@@ -64,7 +64,7 @@ public class TSMaterialPage extends TSBookPage
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.enableGUIStandardItemLighting();
         manual.renderitem.zLevel = 100;
-        //renderitem.renderItemAndEffectIntoGUI(fonts, getMC().renderEngine, icons[0], localWidth + 50, localHeight + 0);
+        //renderitem.renderItemAndEffectIntoGUI(fonts, getMC().renderEngine, ICONS[0], localWidth + 50, localHeight + 0);
         manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[1], localWidth + 108, localHeight + 50);
         manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[2], localWidth + 108, localHeight + 82);
         manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[3], localWidth + 108, localHeight + 114);

@@ -37,8 +37,8 @@ public class TSBaseFluid extends BlockFluidClassic {
 
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister) {
-		stillIcon = iconRegister.registerIcon(TSRepo.textureDir + texture);
-		flowIcon = iconRegister.registerIcon(TSRepo.textureDir + texture + "_flow");
+		stillIcon = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + texture);
+		flowIcon = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + texture + "_flow");
 	}
 
 	@Override

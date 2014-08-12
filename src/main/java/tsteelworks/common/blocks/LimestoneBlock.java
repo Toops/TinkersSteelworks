@@ -89,6 +89,6 @@ public class LimestoneBlock extends TSBaseBlock {
 		icons = new IIcon[textureNames.length];
 
 		for (int i = 0; i < icons.length; ++i)
-			icons[i] = iconRegister.registerIcon(TSRepo.textureDir + textureNames[i]);
+			icons[i] = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + textureNames[i]);
 	}
 }

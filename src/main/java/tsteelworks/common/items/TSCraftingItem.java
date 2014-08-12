@@ -63,6 +63,6 @@ public class TSCraftingItem extends Item {
 
 		for (int i = 0; i < icons.length; ++i)
 			if (!(textureNames[i].equals("")))
-				icons[i] = iconRegister.registerIcon(TSRepo.textureDir + folder + textureNames[i]);
+				icons[i] = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + folder + textureNames[i]);
 	}
 }

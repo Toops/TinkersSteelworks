@@ -2,15 +2,11 @@ package tsteelworks.common.blocks.logic;
 
 import mantle.blocks.iface.IFacingLogic;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.IHopper;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
@@ -317,7 +313,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 		mode = tags.getInteger("Mode");
 		redstoneActivated = tags.getBoolean("RedstoneActivated");
-		setDirection(tags.getByte(TSRepo.NBTNames.direction));
+		setDirection(tags.getByte(TSRepo.NBTNames.DIRECTION));
 	}
 
 	@Override

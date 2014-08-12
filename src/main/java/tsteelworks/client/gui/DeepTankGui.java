@@ -11,18 +11,15 @@ import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.container.DeepTankContainer;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.common.network.PacketMoveFluidHandler;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeepTankGui extends GuiContainer {
-	private static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
+	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
 
 	private static final int TANK_WIDTH = 104;
 	private static final int TANK_HEIGHT = 104;
@@ -38,31 +35,10 @@ public class DeepTankGui extends GuiContainer {
 
 		fontRendererObj.drawString(title, ((xSize / 2) - (fontRendererObj.getStringWidth(title) / 2)), 17, 0x404040);
 
-		final int cornerX = (width - xSize) / 2 + 20;
-		final int cornerY = (height - ySize) / 2 + 12;
+		FluidStack hoveredStack = getFluidAtPos(mouseX, mouseY);
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
-
-		if (fluidTank.getCapacity() == 0) return;
-
-		final int topY = cornerY + 120;
-		final int leftX = cornerX + 54;
-
-		int liquidOffset = 0;
-		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
-			FluidStack stack = fluidTank.getFluid(i);
-
-			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
-
-			if (mouseX >= leftX
-					&& mouseX <= leftX + TANK_WIDTH
-					&& mouseY >= topY + liquidOffset
-					&& mouseY < topY + liquidOffset + liquidSize) {
-				drawFluidStackTooltip(stack, mouseX, mouseY);
-			}
-
-			liquidOffset += liquidSize;
-		}
+		if (hoveredStack != null)
+			drawFluidStackTooltip(hoveredStack, mouseX, mouseY);
 	}
 
 	@Override
@@ -147,6 +123,7 @@ public class DeepTankGui extends GuiContainer {
 	/**
 	 * Draw a textured rectangle with a stretched texture to fit the cube
 	 */
+	// TODO: move this to RenderHelper
 	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, int zIndex) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
@@ -157,62 +134,46 @@ public class DeepTankGui extends GuiContainer {
 		tessellator.draw();
 	}
 
+	private FluidStack getFluidAtPos(int posX, int posY) {
+		final int cornerX = (width - xSize) / 2 + 20;
+		final int cornerY = (height - ySize) / 2 + 12;
+
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+
+		if (fluidTank.getCapacity() == 0) return null;
+
+		final int topY = cornerY + 120;
+		final int leftX = cornerX + 54;
+
+		int liquidOffset = 0;
+		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
+			FluidStack stack = fluidTank.getFluid(i);
+
+			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
+
+			if (posX >= leftX
+					&& posX <= leftX + TANK_WIDTH
+					&& posY >= topY + liquidOffset
+					&& posY < topY + liquidOffset + liquidSize) {
+				return stack;
+			}
+
+			liquidOffset += liquidSize;
+		}
+
+		return null;
+	}
+
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		int base = 0;
-		int cornerX = (width - xSize) / 2 + 20;
-		int cornerY = (height - ySize) / 2 + 12;
-		int fluidToBeBroughtUp = -1;
+		FluidStack fluid = getFluidAtPos(mouseX, mouseY);
 
-		for (FluidStack liquid : logic.getFluidList()) {
-			int basePos = 54;
-			int initialLiquidSize = 0;
-			int liquidSize = 0;//liquid.amount * 104 / liquidLayers;
-			if (logic.getCapacity() > 0) {
-				int total = logic.getTotalLiquid();
-				int liquidLayers = (total / logic.layerFluidCapacity() + 1) * logic.layerFluidCapacity();
-				if (liquidLayers > 0) {
-					liquidSize = liquid.amount * 104 / liquidLayers;
-					if (liquidSize == 0)
-						liquidSize = 1;
-					base += liquidSize;
-				}
-			}
-			int leftX = cornerX + basePos;
-			int topY = (cornerY + 120) - base;
-			int sizeX = 104;
-			int sizeY = liquidSize;
-			if (mouseX >= leftX && mouseX <= leftX + sizeX && mouseY >= topY && mouseY < topY + sizeY) {
-				fluidToBeBroughtUp = liquid.fluidID;
+		if (fluid == null) return;
 
-				Packet250CustomPayload packet = new Packet250CustomPayload();
+		DeepTankLogic logic = ((DeepTankContainer) inventorySlots).getLogic();
 
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				DataOutputStream dos = new DataOutputStream(bos);
-
-				try {
-					dos.write(TSRepo.tankPacketID);
-
-					dos.writeInt(logic.worldObj.provider.dimensionId);
-					dos.writeInt(logic.xCoord);
-					dos.writeInt(logic.yCoord);
-					dos.writeInt(logic.zCoord);
-
-					dos.writeBoolean(isShiftKeyDown());
-
-					dos.writeInt(fluidToBeBroughtUp);
-				} catch (Exception e) {
-					TSteelworks.logError("an error occured", e);
-				}
-
-				packet.channel = TSRepo.modChan;
-				packet.data = bos.toByteArray();
-				packet.length = bos.size();
-
-				PacketDispatcher.sendPacketToServer(packet);
-			}
-		}
+		PacketMoveFluidHandler.moveFluidGUI(logic, fluid);
 	}
 }

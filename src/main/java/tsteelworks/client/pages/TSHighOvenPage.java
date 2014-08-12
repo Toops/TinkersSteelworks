@@ -40,7 +40,7 @@ public class TSHighOvenPage extends TSBookPage
     @Override
     public void renderContentLayer (int localWidth, int localHeight)
     {
-        //TODO: Cycle through recipe icons
+        //TODO: Cycle through recipe ICONS
         if (text != null) manual.fonts.drawString("\u00a7n" + text, localWidth + 50, localHeight + 4, 0);
 
         GL11.glScalef(2f, 2f, 2f);
@@ -76,8 +76,8 @@ public class TSHighOvenPage extends TSBookPage
         {
             manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2);
             if (icons[4].stackSize > 1)
-                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2, String.valueOf(icons[4].stackSize));  
-        }       
+                manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[4], (localWidth + 6) / 2, (localHeight + 112) / 2, String.valueOf(icons[4].stackSize));
+        }
         manual.renderitem.zLevel = 0;
         GL11.glScalef(0.5F, 0.5F, 0.5F);
         RenderHelper.disableStandardItemLighting();

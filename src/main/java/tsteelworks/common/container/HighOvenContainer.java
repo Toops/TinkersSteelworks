@@ -2,11 +2,13 @@ package tsteelworks.common.container;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 
-public class HighOvenContainer extends TSActiveContainer {
+public class HighOvenContainer extends Container {
 	private HighOvenLogic logic;
 
 	public HighOvenContainer(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
@@ -20,7 +22,7 @@ public class HighOvenContainer extends TSActiveContainer {
 
 	    /* HighOven Ore inventory */
 		for (int y = 0; y < highoven.getSmeltableInventory().getSizeInventory(); y++)
-			addDualSlotToContainer(new TSActiveSlot(highoven, HighOvenLogic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
+			addSlotToContainer(new TSActiveSlot(highoven, HighOvenLogic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
 
         /* Player inventory */
 		for (int column = 0; column < 3; column++)
@@ -67,5 +69,9 @@ public class HighOvenContainer extends TSActiveContainer {
 	public void updateProgressBar(int id, int value) {
 		if (id == 0)
 			logic.setFuelBurnTime(value / 12);
+	}
+
+	public HighOvenLogic getLogic() {
+		return logic;
 	}
 }

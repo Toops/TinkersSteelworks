@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,10 +18,8 @@ import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.ConfigCore;
-import tsteelworks.lib.TSFuelHandler;
 import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
-import tsteelworks.lib.crafting.AlloyInfo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.common.core.TSEventHandler;
 import tsteelworks.plugins.fmp.CompatFMP;
@@ -35,24 +34,25 @@ import tsteelworks.worldgen.TSBaseWorldGenerator;
  *
  * @author Toops
  */
-@Mod(modid = TSRepo.modId, name = TSRepo.modName, version = TSRepo.modVer, dependencies = TSRepo.modRequire)
+@Mod(modid = TSRepo.MOD_ID, name = TSRepo.MOD_NAME, version = TSRepo.MOD_VER, dependencies = TSRepo.MOD_REQUIRE)
 public class TSteelworks {
-	// Shared logger
-	public static final boolean DEBUG_MODE = false; // for logging (change to false before release!)
+	public static final boolean DEBUG_MODE = false;
 
 	// todo: add getters
 	public static TSLogger logger;
 
-	@Instance(TSRepo.modId)
+	@Instance(TSRepo.MOD_ID)
 	public static TSteelworks instance;
 
-	@SidedProxy(clientSide = TSRepo.modClientProxy, serverSide = TSRepo.modServProxy)
+	@SidedProxy(clientSide = TSRepo.MOD_CLIENT_PROXY, serverSide = TSRepo.MOD_SERV_PROXY)
 	public static TSCommonProxy proxy;
 
 	public static TSContent content;
 	public static TSEventHandler events;
 	public static boolean thermalExpansionAvailable;
 	public static boolean railcraftAvailable;
+
+	private SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel(TSRepo.MOD_ID);
 
 	private PluginController pluginController = new PluginController();
 
@@ -67,7 +67,7 @@ public class TSteelworks {
 		logger.introMessage();
 
 		ConfigCore.initProps(event.getSuggestedConfigurationFile());
-		TSteelworksRegistry.SteelworksCreativeTab = new TabTools(TSRepo.modId);
+		TSteelworksRegistry.SteelworksCreativeTab = new TabTools(TSRepo.MOD_ID);
 
 		content = new TSContent();
 
@@ -102,5 +102,9 @@ public class TSteelworks {
 		content.registerMixerMaterials();
 
 		pluginController.postInit();
+	}
+
+	public static SimpleNetworkWrapper getNetHandler() {
+		return instance.netHandler;
 	}
 }

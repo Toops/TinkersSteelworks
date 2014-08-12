@@ -18,11 +18,11 @@ public class TSArmorBasic extends ItemArmor {
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-		return TSRepo.textureDir + "textures/armor/" + textureName + "_" + type + ".png";
+		return TSRepo.TEXTURE_DIR + "textures/armor/" + textureName + "_" + type + ".png";
 	}
 
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister) {
-		itemIcon = par1IconRegister.registerIcon(TSRepo.textureDir + "armor/" + textureName + "_" + (armorType == 0 ? "helmet" : armorType == 1 ? "chestplate" : armorType == 2 ? "leggings" : armorType == 3 ? "boots" : "helmet"));
+		itemIcon = par1IconRegister.registerIcon(TSRepo.TEXTURE_DIR + "armor/" + textureName + "_" + (armorType == 0 ? "helmet" : armorType == 1 ? "chestplate" : armorType == 2 ? "leggings" : armorType == 3 ? "boots" : "helmet"));
 	}
 }
