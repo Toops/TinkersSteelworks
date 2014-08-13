@@ -140,7 +140,7 @@ public class HighOvenGui extends GuiContainer {
 		FluidStack liquid = getFluidAtPos(mouseX, mouseY);
 
 		if (liquid != null)
-			drawFluidStackTooltip(liquid, mouseX , mouseY);
+			drawFluidStackTooltip(liquid, mouseX - guiLeft, mouseY - guiTop);
 	}
 
 	private HighOvenLogic getLogic() {
@@ -221,15 +221,12 @@ public class HighOvenGui extends GuiContainer {
 	}
 
 	private FluidStack getFluidAtPos(int posX, int posY) {
-		final int cornerX = (width - xSize) / 2;
-		final int cornerY = (height - ySize) / 2;
-
 		MultiFluidTank fluidTank = ((HighOvenContainer) inventorySlots).getLogic().getFluidTank();
 
 		if (fluidTank.getCapacity() == 0) return null;
 
-		final int topY = cornerY + TANK_XPOS;
-		final int leftX = cornerX + 68;
+		final int bottomY = guiTop + TANK_YPOS + TANK_HEIGHT;
+		final int leftX = guiLeft + TANK_XPOS;
 
 		float liquidOffset = 0;
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
@@ -237,10 +234,8 @@ public class HighOvenGui extends GuiContainer {
 
 			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-			if (posX >= leftX
-					&& posX <= leftX + TANK_WIDTH
-					&& posY >= topY + liquidOffset
-					&& posY < topY + liquidOffset + liquidSize) {
+			if (posX >= leftX && posX <= leftX + TANK_WIDTH &&
+				posY >= bottomY - (liquidSize + liquidOffset) && posY < bottomY - liquidOffset) {
 				return stack;
 			}
 
