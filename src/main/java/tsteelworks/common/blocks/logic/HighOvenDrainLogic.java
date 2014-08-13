@@ -45,9 +45,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		MultiFluidTank tank = getTank();
-
-		return tank != null && tank.canDrain(from, fluid);
+		return getTank() != null;
 	}
 
 	@Override
@@ -66,9 +64,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		MultiFluidTank tank = getTank();
-
-		return tank != null && tank.canFill(from, fluid);
+		return getTank() != null;
 	}
 
 	@Override
@@ -82,7 +78,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		MultiFluidTank tank = getTank();
 
-		return tank == null ? null : tank.getTankInfo(from);
+		return tank == null ? new FluidTankInfo[0] : tank.getTankInfo(from);
 	}
 
 	// ========== NBT ===========

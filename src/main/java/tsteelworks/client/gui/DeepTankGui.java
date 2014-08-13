@@ -125,12 +125,17 @@ public class DeepTankGui extends GuiContainer {
 	 */
 	// TODO: move this to RenderHelper
 	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, float zIndex) {
+		float iconMinU = icon.getMinU();
+		float iconMaxU = icon.getInterpolatedU(width);
+		float iconMinV = icon.getMinV();
+		float iconMaxV = icon.getInterpolatedV(height);
+
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMaxV());
-		tessellator.addVertexWithUV(x + width, y + height, zIndex, icon.getMaxU(), icon.getMaxV());
-		tessellator.addVertexWithUV(x + width, y, zIndex, icon.getMaxU(), icon.getMinV());
-		tessellator.addVertexWithUV(x, y, zIndex, icon.getMinU(), icon.getMinV());
+		tessellator.addVertexWithUV(x, y + height, zIndex, iconMinU, iconMaxV);
+		tessellator.addVertexWithUV(x + width, y + height, zIndex, iconMaxU, iconMaxV);
+		tessellator.addVertexWithUV(x + width, y, zIndex, iconMaxU, iconMinV);
+		tessellator.addVertexWithUV(x, y, zIndex, iconMinU, iconMinV);
 		tessellator.draw();
 	}
 
