@@ -11,20 +11,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import mantle.lib.TabTools;
-import net.minecraft.item.ItemSpade;
 import net.minecraftforge.common.MinecraftForge;
-import tconstruct.TConstruct;
-import tconstruct.tools.TinkerTools;
-import tsteelworks.common.core.GuiHandler;
-import tsteelworks.common.core.TSCommonProxy;
-import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.common.core.*;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSLogger;
-import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.plugins.PluginController;
-import tsteelworks.common.core.TSEventHandler;
 import tsteelworks.plugins.fmp.CompatFMP;
 import tsteelworks.plugins.waila.Waila;
 import tsteelworks.worldgen.TSBaseWorldGenerator;
@@ -70,7 +61,6 @@ public class TSteelworks {
 		logger.introMessage();
 
 		ConfigCore.initProps(event.getSuggestedConfigurationFile());
-		TSteelworksRegistry.SteelworksCreativeTab = new TabTools(TSRepo.MOD_ID);
 
 		content = new TSContent();
 

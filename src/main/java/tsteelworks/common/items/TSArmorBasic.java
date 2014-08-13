@@ -4,15 +4,15 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.TSteelworksRegistry;
 
 public class TSArmorBasic extends ItemArmor {
 	public String textureName;
 
 	public TSArmorBasic(ArmorMaterial par2EnumArmorMaterial, int par3, String textureName) {
 		super(par2EnumArmorMaterial, 0, par3);
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 		this.textureName = textureName;
 	}
 

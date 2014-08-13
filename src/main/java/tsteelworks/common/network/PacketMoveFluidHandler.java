@@ -8,9 +8,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.blocks.logic.DeepTankLogic;
-import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
-import tsteelworks.common.blocks.logic.HighOvenLogic;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
 	public static void moveFluidGUI(TileEntity tank, FluidStack fluid) {

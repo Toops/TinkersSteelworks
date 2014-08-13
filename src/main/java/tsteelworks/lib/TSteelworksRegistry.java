@@ -1,6 +1,5 @@
 package tsteelworks.lib;
 
-import mantle.lib.TabTools;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -17,10 +16,6 @@ public class TSteelworksRegistry {
 	 * The logger instance for API
 	 */
 	public static Logger logger = Logger.getLogger("TSteel-API");
-	/**
-	 * Creative tab
-	 */
-	public static TabTools SteelworksCreativeTab;
 
 	private TSteelworksRegistry() {}
 

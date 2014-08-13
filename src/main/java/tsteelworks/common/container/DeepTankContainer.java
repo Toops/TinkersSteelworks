@@ -3,7 +3,6 @@ package tsteelworks.common.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 
 public class DeepTankContainer extends Container {

@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import tsteelworks.common.entity.HighGolem;
 
 @SideOnly(Side.CLIENT)
 public class RenderHighGolem extends RenderLiving {

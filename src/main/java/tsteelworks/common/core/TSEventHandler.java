@@ -7,7 +7,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import tsteelworks.common.core.TSContent;
 
 public class TSEventHandler {
 	@SubscribeEvent

@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class LimestoneSlab extends TSBaseSlab {
 	public LimestoneSlab() {
 		super(Material.rock);
 
-		this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		this.setCreativeTab(TSContent.creativeTab);
 		setHardness(12F);
 	}
 

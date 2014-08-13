@@ -9,8 +9,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
 
@@ -22,14 +22,14 @@ public class TSBaseBlock extends Block {
 		super(material);
 
 		setHardness(hardness);
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 	}
 
 	public TSBaseBlock(Material material, float hardness, String[] tex) {
 		super(material);
 
 		setHardness(hardness);
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 		textureNames = tex;
 	}
 

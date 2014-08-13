@@ -18,15 +18,15 @@ import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.blocks.logic.*;
 import tsteelworks.client.block.DeepTankRender;
+import tsteelworks.common.blocks.logic.*;
 import tsteelworks.common.core.GuiHandler;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
-import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.blocks.TSInventoryBlock;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 		setResistance(20F);
 		setStepSound(soundTypeMetal);
 
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 	}
 
 	public HighOvenBlock(String prefix) {

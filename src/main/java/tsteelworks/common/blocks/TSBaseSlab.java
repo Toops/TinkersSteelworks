@@ -13,7 +13,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tsteelworks.lib.TSteelworksRegistry;
+import tsteelworks.common.core.TSContent;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class TSBaseSlab extends Block {
 
 	public TSBaseSlab(Material material) {
 		super(material);
-		this.setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		this.setCreativeTab(TSContent.creativeTab);
 	}
 
 	public TSBaseSlab(Material material, Block model, int meta, int totalSize) {
@@ -86,8 +86,8 @@ public class TSBaseSlab extends Block {
 		return modelBlock.getIcon(side, meta);
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
 		for (int iter = 0; iter < totalSize; iter++) {
 			list.add(new ItemStack(id, 1, iter));

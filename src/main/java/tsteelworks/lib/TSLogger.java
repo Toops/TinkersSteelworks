@@ -1,12 +1,8 @@
 package tsteelworks.lib;
 
-import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tsteelworks.TSteelworks;
-import tsteelworks.lib.crafting.AlloyInfo;
-
-import java.util.ArrayList;
 
 public class TSLogger {
 	public static Logger logger;

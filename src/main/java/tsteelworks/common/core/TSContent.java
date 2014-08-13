@@ -30,19 +30,19 @@ import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.*;
 import tsteelworks.common.blocks.logic.*;
-import tsteelworks.common.items.TSArmorBasic;
-import tsteelworks.common.items.TSManual;
-import tsteelworks.common.items.TSMaterialItem;
-import tsteelworks.common.items.blocks.*;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
+import tsteelworks.common.items.TSArmorBasic;
+import tsteelworks.common.items.TSManual;
+import tsteelworks.common.items.TSMaterialItem;
+import tsteelworks.common.items.blocks.*;
+import tsteelworks.common.modifier.TSActiveOmniMod;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import tsteelworks.common.modifier.TSActiveOmniMod;
 
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class TSContent {
 	public static ItemStack thaumcraftAlumentum;
 	public static ItemArmor.ArmorMaterial materialSteel;
 
-	public static final TabTools creativeTab = new TabTools("");
+	public static final TabTools creativeTab = new TabTools(TSRepo.MOD_ID);
 
 	/**
 	 * Content Constructor

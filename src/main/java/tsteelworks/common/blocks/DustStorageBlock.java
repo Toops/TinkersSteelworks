@@ -8,8 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class DustStorageBlock extends BlockFalling {
 	public DustStorageBlock() {
 		super(Material.sand);
 
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 		setStepSound(soundTypeSand);
 	}
 

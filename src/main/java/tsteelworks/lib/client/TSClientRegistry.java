@@ -1,7 +1,6 @@
 package tsteelworks.lib.client;
 
 import net.minecraft.item.ItemStack;
-import tconstruct.library.crafting.ToolBuilder;
 
 import java.util.HashMap;
 import java.util.Map;

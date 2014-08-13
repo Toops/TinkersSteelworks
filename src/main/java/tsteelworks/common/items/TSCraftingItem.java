@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class TSCraftingItem extends Item {
 	public IIcon[] icons;
 
 	public TSCraftingItem(String[] names, String[] tex, String folder) {
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 
 		setMaxDamage(0);
 		setHasSubtypes(true);

@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.TSteelworksRegistry;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class ScorchedSlab extends TSBaseSlab {
 	public ScorchedSlab() {
 		super(Material.rock);
 
-		setCreativeTab(TSteelworksRegistry.SteelworksCreativeTab);
+		setCreativeTab(TSContent.creativeTab);
 		setHardness(12F);
 	}
 
