@@ -31,11 +31,6 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 		return master != null && master.isValid();
 	}
 
-	@Override
-	public CoordTuple getMasterPosition() {
-		return master.getCoord();
-	}
-
 	public IMasterLogic getMaster() {
 		return master;
 	}
@@ -49,11 +44,6 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 
 	@Override
 	public boolean setPotentialMaster(IMasterLogic logic, World world) {
-		return !hasMaster();
-	}
-
-	@Override
-	public boolean setMaster(IMasterLogic logic, World world) {
 		if (hasMaster())
 			return false;
 
@@ -62,16 +52,9 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 		return true;
 	}
 
-
 	@Override
 	public boolean verifyMaster(IMasterLogic logic, World world) {
-		return hasMaster() && master == logic;
-
-	}
-
-	@Override
-	public void invalidateMaster(IMasterLogic logic, World world) {
-		this.master = null;
+		return master == logic;
 	}
 
 	@Override

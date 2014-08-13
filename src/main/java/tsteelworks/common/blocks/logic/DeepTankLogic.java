@@ -189,7 +189,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 
 	@Override
 	public boolean isValid() {
-		return structure.isValid();
+		return !tileEntityInvalid && structure.isValid();
 	}
 
 	@Override

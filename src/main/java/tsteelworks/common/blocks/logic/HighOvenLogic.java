@@ -247,8 +247,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public void updateEntity() {
 		this.tick++;
 
-		if (this.tick % 4 == 0)
+		if (this.tick % 4 == 0) {
 			this.heatItems();
+
+			System.out.println("Server fluidtank " + tank.getNbFluids() +" - " + tank.getFluidAmount());
+		}
 
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
@@ -283,7 +286,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			return;
 
 		boolean hasSmeltable = false;
-		for (int i = 0; i < structure.getNbLayers(); i++) {
+		for (int i = 0; i < smeltableInventory.getSizeInventory(); i++) {
 			if (smeltableInventory.getStackInSlot(i) == null || this.meltingTemps[i] <= ROOM_TEMP)
 				continue;
 
@@ -503,11 +506,17 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		for (int i = 0; i < smeltableInventory.getSizeInventory(); i ++) {
 			ItemStack stack = smeltableInventory.getStackInSlot(i);
 
-			if (stack == null) continue;
+			if (stack == null) {
+				meltingTemps[i] = activeTemps[i] = ROOM_TEMP;
+				continue;
+			}
 
 			AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(stack);
 
-			this.meltingTemps[i] = data == null ? ROOM_TEMP : data.getMeltingPoint();
+			if (data == null)
+				meltingTemps[i] = activeTemps[i] = ROOM_TEMP;
+			else
+				this.meltingTemps[i] = data.getMeltingPoint();
 		}
 	}
 
@@ -555,6 +564,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.fuelHeatRate = HighOvenLogic.getFuelHeatRate(fuel);
 
 		inventory.decrStackSize(SLOT_FUEL, 1);
+		markDirty();
 	}
 
 	/**
@@ -834,13 +844,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
     /* =============== IMaster =============== */
 	@Override
-	public final CoordTuple getCoord() {
+	public CoordTuple getCoord() {
 		return new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
-	public final boolean isValid() {
-		return structure.isValid();
+	public boolean isValid() {
+		return !tileEntityInvalid && structure.isValid();
 	}
 
 	@Override

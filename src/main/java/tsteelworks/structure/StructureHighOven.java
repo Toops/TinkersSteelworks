@@ -172,7 +172,7 @@ public class StructureHighOven implements IStructure {
 		if (te instanceof IServantLogic) {
 			final IServantLogic servant = (IServantLogic) te;
 
-			if ((servant.hasMaster() && servant.verifyMaster(controller, controller.getWorldObj())) || servant.setMaster(controller, controller.getWorldObj())) {
+			if (servant.verifyMaster(controller, controller.getWorldObj()) || servant.setPotentialMaster(controller, controller.getWorldObj())) {
 				return true;
 			}
 		}

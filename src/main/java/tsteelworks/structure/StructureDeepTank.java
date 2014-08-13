@@ -168,9 +168,7 @@ public class StructureDeepTank implements IStructure {
 		if (te instanceof TSMultiServantLogic) {
 			TSMultiServantLogic servant = (TSMultiServantLogic) te;
 
-			if (servant.hasMaster() && servant.verifyMaster(logic, logic.getWorldObj()))
-				return true;
-			else if (servant.setMaster(logic, logic.getWorldObj())) {
+			if (servant.verifyMaster(logic, logic.getWorldObj()) || servant.setPotentialMaster(logic, logic.getWorldObj())) {
 				return true;
 			}
 		}

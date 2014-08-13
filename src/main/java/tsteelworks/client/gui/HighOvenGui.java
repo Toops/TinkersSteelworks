@@ -100,7 +100,7 @@ public class HighOvenGui extends GuiContainer {
 
 				if (slotTemperature > 0 && maxTemperature > 0) {
 					final int size = (16 * slotTemperature / maxTemperature) + 1;
-					drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((i - 4) * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
+					drawTexturedModalRect(cornerX + 24, (cornerY + 7 + (i * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
 				}
 
 				if (logic.getSmeltableInventory().getStackInSlot(i) == null) {
