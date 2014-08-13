@@ -168,30 +168,25 @@ public class HighOvenGui extends GuiContainer {
 		list.add(EnumChatFormatting.WHITE + liquid.getFluid().getLocalizedName(liquid));
 
 		String name = liquid.getFluid().getName();
-		if (name.contains("Emerald")) {
-			list.add("Emeralds: " + (liquid.amount / 640f));
 
-			return list;
-		}
-
-		if (name.contains("Glass")) {
+		if (name.contains("emerald")) {
+			list.add(EnumChatFormatting.GRAY + "Emeralds: " + (liquid.amount / 640f));
+		} else if (name.contains("glass")) {
 			int blocks = liquid.amount / 1000;
 			if (blocks > 0)
-				list.add("Blocks: " + blocks);
+				list.add(EnumChatFormatting.GRAY + "Blocks: " + blocks);
 
 			int panels = (liquid.amount % 1000) / 250;
 			if (panels > 0)
-				list.add("Panels: " + panels);
+				list.add(EnumChatFormatting.GRAY + "Panels: " + panels);
 
 			int mB = (liquid.amount % 1000) % 250;
 			if (mB > 0)
-				list.add("mB: " + mB);
-		}
-
-		if (name.contains("Molten")) {
+				list.add(EnumChatFormatting.GRAY + "mB: " + mB);
+		} else if (name.contains("molten")) {
 			int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
 			if (ingots > 0)
-				list.add("Ingots: " + ingots);
+				list.add(EnumChatFormatting.GRAY + "Ingots: " + ingots);
 
 			int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
 			if (mB > 0) {
@@ -199,11 +194,13 @@ public class HighOvenGui extends GuiContainer {
 				int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
 
 				if (nuggets > 0)
-					list.add("Nuggets: " + nuggets);
+					list.add(EnumChatFormatting.GRAY + "Nuggets: " + nuggets);
 
 				if (junk > 0)
-					list.add("mB: " + junk);
+					list.add(EnumChatFormatting.GRAY + "mB: " + junk);
 			}
+		} else {
+			list.add(EnumChatFormatting.GRAY + "mB: " + liquid.amount);
 		}
 
 		return list;

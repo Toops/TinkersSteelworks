@@ -127,8 +127,8 @@ public class DeepTankGui extends GuiContainer {
 	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, float zIndex) {
 		float iconMinU = icon.getMinU();
 		float iconMaxU = icon.getInterpolatedU(width);
-		float iconMinV = icon.getMinV();
-		float iconMaxV = icon.getInterpolatedV(height);
+		float iconMinV = icon.getInterpolatedV(16 - height);
+		float iconMaxV = icon.getMaxV();
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
