@@ -14,6 +14,7 @@ import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.container.HighOvenContainer;
 import tsteelworks.common.core.TSRecipes;
+import tsteelworks.common.network.PacketMoveFluidHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,10 +210,12 @@ public class HighOvenGui extends GuiContainer {
 
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+
 		FluidStack fluid = getFluidAtPos(mouseX, mouseY);
 
 		if (fluid != null) {
-			// todo: send packet fluid down (world, coords, fluid id, isShiftDown)
+			PacketMoveFluidHandler.moveFluidGUI(getLogic(), fluid);
 		}
 	}
 

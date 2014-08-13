@@ -5,12 +5,15 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
+import tsteelworks.common.blocks.logic.HighOvenLogic;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
-	public static void moveFluidGUI(DeepTankLogic tank, FluidStack fluid) {
+	public static void moveFluidGUI(TileEntity tank, FluidStack fluid) {
 		PacketMoveFluid packet = new PacketMoveFluid(
 				tank.xCoord,
 				(short) tank.yCoord,

@@ -97,7 +97,6 @@ public class TSRecipes {
 
 	public static void createRecipes() {
 		craftManual();
-		craftMachines();
 		craftScorchedStone();
 		craftLimestone();
 		craftStone();
@@ -130,17 +129,6 @@ public class TSRecipes {
 
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Mantle.mantleBook, 1), true, 50);
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Items.book, 1), true, 50);
-	}
-
-	public static void craftMachines() {
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.machine, 1, 0),
-				"aca", "#d#", "#r#",
-				'#', "ingotBronze",
-				'a', "ingotAluminumBrass",
-				'c', "ingotSteel",
-				'r', new ItemStack(Items.redstone),
-				'd', new ItemStack(Blocks.piston)
-		));
 	}
 
 	public static void craftScorchedStone() {
