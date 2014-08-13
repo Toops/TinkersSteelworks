@@ -1,6 +1,7 @@
 package tsteelworks.lib;
 
 import mantle.world.CoordTuple;
+import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.structure.IStructure;
 
 public interface IMasterLogic {
@@ -33,4 +34,6 @@ public interface IMasterLogic {
 	public void checkValidPlacement();
 
 	public void onStructureChange(IStructure structure);
+
+	public IStructure getStructure();
 }

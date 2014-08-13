@@ -4,31 +4,24 @@ import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
-import tsteelworks.common.blocks.logic.TurbineLogic;
+import tsteelworks.lib.TSLogger;
 
-public class WailaRegistrar
-{
-	@SuppressWarnings ("static-access")
-    public static void wailaCallback (IWailaRegistrar registrar)
-	{
-		TSteelworks.logger.info("[Waila-Compat] Got registrar: " + registrar);
+public class WailaRegistrar {
+	public static void wailaCallback(IWailaRegistrar registrar) {
+		TSLogger.info("[Waila-Compat] Got registrar: " + registrar);
 
 		// Tanks
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), DeepTankLogic.class);
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
-		registrar.registerBodyProvider(new SteamTurbineDataProvider(), TurbineLogic.class);
 
 		//config
 		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal", "Show Total");
 		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit", "Adjust bucket units");
 	}
 
-	public static String fluidNameHelper (FluidStack f)
-	{
-	    return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
+	public static String fluidNameHelper(FluidStack f) {
+		return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
 	}
-
 }
