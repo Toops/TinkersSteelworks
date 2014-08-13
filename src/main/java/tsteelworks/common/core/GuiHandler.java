@@ -1,6 +1,7 @@
 package tsteelworks.common.core;
 
 import cpw.mods.fml.common.network.IGuiHandler;
+import mantle.client.gui.GuiManual;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -33,7 +34,7 @@ public class GuiHandler implements IGuiHandler {
 				return new DeepTankGui(player.inventory, (DeepTankLogic) world.getTileEntity(x, y, z));
 			case MANUAL_GUI_ID:
 				final ItemStack stack = player.getCurrentEquippedItem();
-				return new TSManualGui(stack, TSClientProxy.getManualFromStack(stack));
+				return new GuiManual(stack, TSClientProxy.getManualFromStack(stack));
 		}
 
 		return null;
@@ -50,7 +51,7 @@ public class GuiHandler implements IGuiHandler {
 				return new DeepTankContainer(player.inventory, (DeepTankLogic) world.getTileEntity(x, y, z));
 			case MANUAL_GUI_ID:
 				final ItemStack stack = player.getCurrentEquippedItem();
-				return new TSManualGui(stack, TSClientProxy.getManualFromStack(stack));
+				return new GuiManual(stack, TSClientProxy.getManualFromStack(stack));
 		}
 
 		return null;

@@ -165,7 +165,7 @@ public class HighOvenGui extends GuiContainer {
 			return 0xFF0000;
 	}
 
-	// todo: move this to lib, localize
+	// todo: localize
 	public static List<String> getLiquidTooltip(FluidStack liquid) {
 		List<String> list = new ArrayList<>();
 
@@ -218,7 +218,7 @@ public class HighOvenGui extends GuiContainer {
 		FluidStack fluid = getFluidAtPos(mouseX, mouseY);
 
 		if (fluid != null) {
-			// todo: send packet fluid down
+			// todo: send packet fluid down (world, coords, fluid id, isShiftDown)
 		}
 	}
 
