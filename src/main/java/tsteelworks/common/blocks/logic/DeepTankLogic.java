@@ -18,8 +18,8 @@ import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
-import tsteelworks.structure.IStructure;
-import tsteelworks.structure.StructureDeepTank;
+import tsteelworks.common.structure.IStructure;
+import tsteelworks.common.structure.StructureDeepTank;
 
 // todo: different fluid capacity depending on glass type
 // todo: make the dealloyer a part of the deep tank: any fluid piped in will be dealloyed

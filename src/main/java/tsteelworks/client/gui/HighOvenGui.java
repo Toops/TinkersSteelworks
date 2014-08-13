@@ -49,8 +49,6 @@ public class HighOvenGui extends GuiContainer {
 		HighOvenLogic logic = getLogic();
 		MultiFluidTank tank = logic.getFluidTank();
 
-		System.out.println("nbFluids client:" + tank.getFluidAmount());
-
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 

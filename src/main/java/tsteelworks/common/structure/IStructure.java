@@ -1,4 +1,4 @@
-package tsteelworks.structure;
+package tsteelworks.common.structure;
 
 public interface IStructure {
 	public void validateStructure(final int x, final int y, final int z);

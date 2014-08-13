@@ -18,7 +18,7 @@ import tsteelworks.lib.TSLogger;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;
 import tsteelworks.plugins.waila.Waila;
-import tsteelworks.worldgen.TSBaseWorldGenerator;
+import tsteelworks.common.worldgen.TSBaseWorldGenerator;
 
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks

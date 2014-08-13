@@ -22,10 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
-import nf.fr.ephys.cookiecore.helpers.BlockHelper;
-import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
-import nf.fr.ephys.cookiecore.helpers.MathHelper;
-import nf.fr.ephys.cookiecore.helpers.NBTHelper;
+import nf.fr.ephys.cookiecore.helpers.*;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.TSteelworks;
@@ -33,8 +30,8 @@ import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.*;
 import tsteelworks.lib.crafting.AdvancedSmelting;
-import tsteelworks.structure.IStructure;
-import tsteelworks.structure.StructureHighOven;
+import tsteelworks.common.structure.IStructure;
+import tsteelworks.common.structure.StructureHighOven;
 
 import java.util.Arrays;
 
@@ -249,12 +246,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		if (this.tick % 4 == 0) {
 			this.heatItems();
-
-			System.out.println("Server fluidtank " + tank.getNbFluids() +" - " + tank.getFluidAmount());
 		}
 
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
+			DebugHelper.sidedDebug(worldObj, "Server fluidtank " + tank.getNbFluids() +" - " + tank.getFluidAmount());
+
 			if (!structure.isValid())
 				this.checkValidPlacement();
 
@@ -531,15 +528,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return this.fuelBurnTime > 0;
 	}
 
-	/**
-	 * Checks for fuel available.
-	 *
-	 * @return true, fuel is available
-	 */
-	public boolean hasFuel() {
-		return HighOvenLogic.getFuelBurnTime(inventory.getStackInSlot(SLOT_FUEL)) > 0;
-	}
-
 	public int getFuelBurnTime() {
 		return this.fuelBurnTime;
 	}
@@ -783,14 +771,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
     /* ==================== NBT ==================== */
 	@Override
-	public final void readFromNBT(NBTTagCompound nbt) {
+	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
 		if (nbt.hasKey("smeltableInventory"))
 			smeltableInventory.readFromNBT(nbt.getCompoundTag("smeltableInventory"));
 
 		if (nbt.hasKey("inventory")) {
-			System.out.println(nbt.getCompoundTag("inventory").getInteger("nbStacks"));
 			inventory.readFromNBT(nbt.getCompoundTag("inventory"));
 		}
 
@@ -808,7 +795,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	@Override
-	public final void writeToNBT(final NBTTagCompound nbt) {
+	public void writeToNBT(final NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
 		NBTHelper.setWritable(nbt, "smeltableInventory", smeltableInventory);

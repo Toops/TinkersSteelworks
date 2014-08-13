@@ -1,4 +1,4 @@
-package tsteelworks.structure;
+package tsteelworks.common.structure;
 
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;

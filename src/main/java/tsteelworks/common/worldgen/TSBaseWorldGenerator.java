@@ -1,4 +1,4 @@
-package tsteelworks.worldgen;
+package tsteelworks.common.worldgen;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.world.World;

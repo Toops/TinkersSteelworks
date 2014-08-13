@@ -1,7 +1,7 @@
 package tsteelworks.lib;
 
 import mantle.world.CoordTuple;
-import tsteelworks.structure.IStructure;
+import tsteelworks.common.structure.IStructure;
 
 public interface IMasterLogic {
 	/**

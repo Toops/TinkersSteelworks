@@ -1,4 +1,4 @@
-package tsteelworks.structure;
+package tsteelworks.common.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
