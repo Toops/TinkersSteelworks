@@ -10,22 +10,22 @@ public class StructureHighOven implements IStructure {
 	/**
 	 * Used to determine if the structure has a bottom.
 	 */
-	private boolean structureHasBottom;
+	private boolean structureHasBottom = false;
 
 	/**
 	 * Used to determine if the structure has a top.
 	 */
-	private boolean structureHasTop;
+	private boolean structureHasTop = false;
 
 	/**
 	 * Used to determine if the structure is valid.
 	 */
-	private boolean validStructure;
+	private boolean validStructure = false;
 
 	/**
 	 * The amount of layers.
 	 */
-	private int nbLayers;
+	private int nbLayers = 0;
 
 	private HighOvenLogic controller;
 

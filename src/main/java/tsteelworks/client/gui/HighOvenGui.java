@@ -11,7 +11,6 @@ import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
-import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.container.HighOvenContainer;
 import tsteelworks.common.core.TSRecipes;
 import tsteelworks.common.network.PacketMoveFluidHandler;
@@ -30,8 +29,6 @@ public class HighOvenGui extends GuiContainer {
 		super(new HighOvenContainer(inventoryplayer, highoven));
 
 		xSize = 248;
-
-		highoven.updateFuelDisplay();
 	}
 
 	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {
@@ -51,6 +48,8 @@ public class HighOvenGui extends GuiContainer {
 		// Liquids - molten metal
 		HighOvenLogic logic = getLogic();
 		MultiFluidTank tank = logic.getFluidTank();
+
+		System.out.println("nbFluids client:" + tank.getFluidAmount());
 
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
@@ -96,15 +95,15 @@ public class HighOvenGui extends GuiContainer {
 
 			// Temperatures & icons
 			for (int i = 0; i < nbSlots; i++) {
-				int slotTemperature = logic.getTempForSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) - 20;
-				int maxTemperature = logic.getMeltingPointForSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) - 20;
+				int slotTemperature = logic.getTempForSlot(i) - 20;
+				int maxTemperature = logic.getMeltingPointForSlot(i) - 20;
 
 				if (slotTemperature > 0 && maxTemperature > 0) {
 					final int size = (16 * slotTemperature / maxTemperature) + 1;
 					drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((i - 4) * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
 				}
 
-				if (logic.getStackInSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) == null) {
+				if (logic.getSmeltableInventory().getStackInSlot(i) == null) {
 					drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
 				}
 			}
@@ -223,7 +222,7 @@ public class HighOvenGui extends GuiContainer {
 		final int cornerX = (width - xSize) / 2;
 		final int cornerY = (height - ySize) / 2;
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+		MultiFluidTank fluidTank = ((HighOvenContainer) inventorySlots).getLogic().getFluidTank();
 
 		if (fluidTank.getCapacity() == 0) return null;
 

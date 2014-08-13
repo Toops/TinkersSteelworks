@@ -23,7 +23,7 @@ public class GuiHandler implements IGuiHandler {
 	public static final int DEEPTANK_GUI_ID = 2;
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch (ID) {
 			case HIGHOVEN_GUI_ID:
 				return new HighOvenGui(player.inventory, (HighOvenLogic) world.getTileEntity(x, y, z));
@@ -40,7 +40,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch (ID) {
 			case HIGHOVEN_DUCT_GUI_ID:
 				return new HighOvenDuctContainer(player.inventory, (HighOvenDuctLogic) world.getTileEntity(x, y, z));

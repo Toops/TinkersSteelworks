@@ -32,8 +32,8 @@ public class ScorchedSlab extends TSBaseSlab {
 		return TSContent.highoven.getIcon(side, meta + 4);
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
 		for (int iter = 0; iter < 8; iter++) {
 			list.add(new ItemStack(id, 1, iter));

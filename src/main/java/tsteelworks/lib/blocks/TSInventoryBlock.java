@@ -54,7 +54,7 @@ public abstract class TSInventoryBlock extends BlockContainer {
 	}
 
 	/**
-	 * @return the GUI id or -1 if the gui does not exist
+	 * @return the GUI id or -1 if the gui does not exist, -2 if it exists but we should not open it
 	 */
 	public abstract int getGui(World world, int x, int y, int z, EntityPlayer entityplayer);
 
@@ -70,7 +70,7 @@ public abstract class TSInventoryBlock extends BlockContainer {
 		int guiID = getGui(world, x, y, z, player);
 
 		if (guiID != -1) {
-			if (!world.isRemote)
+			if (guiID != -2 && !world.isRemote)
 				player.openGui(getModInstance(), guiID, world, x, y, z);
 
 			return true;
@@ -88,7 +88,7 @@ public abstract class TSInventoryBlock extends BlockContainer {
 			if (entityliving == null)
 				direction.setDirection(0);
 			else
-				direction.setDirection(entityliving.rotationYaw * 4F, entityliving.rotationPitch, entityliving);
+				direction.setDirection(entityliving.rotationYaw, entityliving.rotationPitch, entityliving);
 		}
 
 		if (stack.hasDisplayName() && logic instanceof INamable) {

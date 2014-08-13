@@ -74,6 +74,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 			case META_TANK:
 				return new DeepTankLogic();
 		}
+
 		return new TSMultiServantLogic();
 	}
 
@@ -133,11 +134,29 @@ public class HighOvenBlock extends TSInventoryBlock {
 		final int meta = world.getBlockMetadata(x, y, z);
 
 		switch (meta) {
-			case 0:
+			case META_HIGHOVEN:
+				HighOvenLogic logic = (HighOvenLogic) world.getTileEntity(x, y, z);
+
+				if (!logic.isValid()) {
+					logic.checkValidPlacement();
+
+					if (!logic.isValid()) return -2;
+				}
+
 				return GuiHandler.HIGHOVEN_GUI_ID;
-			case 12:
+			case META_DUCT:
 				return GuiHandler.HIGHOVEN_DUCT_GUI_ID;
-			case 13:
+			case META_TANK:
+				DeepTankLogic tank = (DeepTankLogic) world.getTileEntity(x, y, z);
+
+				if (!tank.isValid()) {
+					tank.validate();
+
+					tank.checkValidPlacement();
+
+					if (!tank.isValid()) return -2;
+				}
+
 				return GuiHandler.DEEPTANK_GUI_ID;
 			default:
 				return -1;
@@ -174,8 +193,8 @@ public class HighOvenBlock extends TSInventoryBlock {
 		return TSteelworks.instance;
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
 		for (int iter = 0; iter < 14; iter++)
 			if (iter != 3)
@@ -205,6 +224,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack stack) {
 		super.onBlockPlacedBy(world, x, y, z, entityliving, stack);
+
 		if (world.getBlockMetadata(x, y, z) == 0 || world.getBlockMetadata(x, y, z) == 13) {
 			((IMasterLogic) world.getTileEntity(x, y, z)).checkValidPlacement();
 		}

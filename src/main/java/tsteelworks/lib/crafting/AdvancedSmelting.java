@@ -214,7 +214,12 @@ public class AdvancedSmelting {
 
 		@Override
 		public boolean equals(Object obj) {
-			return obj instanceof Meltable && ItemStack.areItemStacksEqual(((Meltable) obj).itemStack, itemStack);
+			return obj instanceof Meltable && ((Meltable) obj).itemStack.isItemEqual(itemStack);
+		}
+
+		@Override
+		public int hashCode() {
+			return itemStack.getItem().hashCode();
 		}
 	}
 

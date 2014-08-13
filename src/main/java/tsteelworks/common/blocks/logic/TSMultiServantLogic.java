@@ -1,20 +1,26 @@
 package tsteelworks.common.blocks.logic;
 
+import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
+import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 
-public class TSMultiServantLogic extends TileEntity implements IServantLogic, IChunkNotify {
+public class TSMultiServantLogic extends TileEntity implements IServantLogic, IChunkNotify, IFacingLogic {
 	private IMasterLogic master;
 	/** Used to get the master on chunk load */
 	private CoordTuple masterPos;
+
+	private byte direction;
 
 	@Override
 	public boolean canUpdate() {
@@ -88,6 +94,8 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 
 			masterPos = new CoordTuple(xCenter, yCenter, zCenter);
 		}
+
+		direction = tags.getByte("direction");
 	}
 
 	public void writeCustomNBT(NBTTagCompound tags) {
@@ -100,6 +108,8 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 			tags.setInteger("yCenter", coords.y);
 			tags.setInteger("zCenter", coords.z);
 		}
+
+		tags.setByte("direction", direction);
 	}
 
 	@Override
@@ -124,5 +134,25 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 		writeCustomNBT(tag);
 
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+	}
+
+	@Override
+	public byte getRenderDirection() {
+		return direction;
+	}
+
+	@Override
+	public ForgeDirection getForgeDirection() {
+		return ForgeDirection.getOrientation(direction);
+	}
+
+	@Override
+	public void setDirection(int i) {
+		direction = (byte) i;
+	}
+
+	@Override
+	public void setDirection(float v, float v1, EntityLivingBase entityLivingBase) {
+		direction = (byte) BlockHelper.orientationToMetadataXZ(entityLivingBase.rotationYaw);
 	}
 }

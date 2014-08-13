@@ -9,8 +9,6 @@ import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +29,6 @@ import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.TSteelworks;
-import tsteelworks.common.container.HighOvenContainer;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.*;
@@ -42,6 +39,7 @@ import tsteelworks.structure.StructureHighOven;
 import java.util.Arrays;
 
 // todo: don't store the output drain, find it when rebuilding
+// todo: remove System.out.println
 public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
 	/**
 	 * Oxidizer Slot - Redox agent.
@@ -113,11 +111,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Handles the multiblock structure
 	 */
 	private IStructure structure = new StructureHighOven(this);
-
-	/**
-	 * Used to determine if the controller needs to be updated.
-	 */
-	private boolean needsUpdate;
 
 	/**
 	 * Used to determine if the controller is being supplied with a redstone
@@ -211,7 +204,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public void setDirection(final float yaw, final float pitch, final EntityLivingBase player) {
-		this.direction = (byte) BlockHelper.orientationToMetadataXZ(yaw);
+		this.direction = (byte) BlockHelper.orientationToMetadataXZ(player.rotationYaw);
 	}
 
     /* ==================== Active Logic ==================== */
@@ -222,9 +215,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	@Override
-	public void setActive(final boolean flag) {
-		needsUpdate = true;
-	}
+	public void setActive(final boolean flag) {}
 
     /* ==================== IRedstonePowered ==================== */
 
@@ -273,11 +264,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 			if (structure.isValid() && this.fuelBurnTime <= 0) {
 				this.updateFuelGauge();
-			}
-
-			if (needsUpdate) {
-				needsUpdate = false;
-				worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
 
@@ -337,17 +323,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	/**
 	 * Heat fluids. (like steam)
-	 *
-	 * todo: support for other fluids
-	 *       if the temperature < heat temperature, turn fluid back to it's liquid state
-	 *       Only melt the liquid at the very bottom of the oven
-	 *       But cool every fluids
 	 */
 	private void heatFluids() {
 		if (internalTemp < 1300 || tank.getNbFluids() == 0) return;
 
 		// Let's make steam!
-		if (tank.getFluid().getFluid() != FluidRegistry.WATER && tank.getFluid().getFluid() != FluidRegistry.getFluid("Steam"))
+		if (tank.getFluid(0).getFluid() != FluidRegistry.WATER && tank.getFluid(0).getFluid() != FluidRegistry.getFluid("Steam"))
 			return;
 
 		int amount = 0;
@@ -364,6 +345,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 			if (this.addFluidToTank(steam)) {
 				tank.drain(ForgeDirection.UNKNOWN, water, true);
+
+				markDirty();
 			}
 		}
 	}
@@ -500,7 +483,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the temp for slot
 	 */
 	public int getTempForSlot(final int slot) {
-		return (this.isSmeltingSlot(slot)) ? this.activeTemps[slot] : ROOM_TEMP;
+		return this.activeTemps[slot];
 	}
 
 	/**
@@ -510,17 +493,19 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the melting point for slot
 	 */
 	public int getMeltingPointForSlot(final int slot) {
-		return (this.isSmeltingSlot(slot)) ? this.meltingTemps[slot] : ROOM_TEMP;
+		return this.meltingTemps[slot];
 	}
 
 	/**
 	 * Update melting temperatures for items.
 	 */
 	private void updateTemperatures() {
-		isMeltingItems = true;
+		for (int i = 0; i < smeltableInventory.getSizeInventory(); i ++) {
+			ItemStack stack = smeltableInventory.getStackInSlot(i);
 
-		for (int i = 0; i < inventory.getSizeInventory(); i ++) {
-			AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(smeltableInventory.getStackInSlot(i));
+			if (stack == null) continue;
+
+			AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(stack);
 
 			this.meltingTemps[i] = data == null ? ROOM_TEMP : data.getMeltingPoint();
 		}
@@ -566,21 +551,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		int fuelBurnTime = HighOvenLogic.getFuelBurnTime(fuel);
 		if (fuelBurnTime <= 0) return;
 
-		this.needsUpdate = true;
 		this.fuelBurnTime = fuelBurnTime;
 		this.fuelHeatRate = HighOvenLogic.getFuelHeatRate(fuel);
 
 		inventory.decrStackSize(SLOT_FUEL, 1);
-	}
-
-	/**
-	 * Update fuel gauge display.
-	 */
-	public void updateFuelDisplay() {
-		if (hasFuel()) {
-			this.needsUpdate = true;
-			worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-		}
 	}
 
 	/**
@@ -640,17 +614,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return slot > SLOT_FUEL;
 	}
 
-	public Container getGuiContainer(final InventoryPlayer inventoryplayer) {
-		return new HighOvenContainer(inventoryplayer, this);
-	}
-
 	@Override
 	public void markDirty() {
 		super.markDirty();
 
 		this.updateTemperatures();
 
-		this.needsUpdate = true;
+		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
 	@Override
@@ -666,7 +636,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public ItemStack getStackInSlot(final int slot) {
 		if (isSmeltingSlot(slot))
-			return smeltableInventory.getStackInSlot(slot);
+			return smeltableInventory.getStackInSlot(slot - SLOT_FIRST_MELTABLE);
 
 		return inventory.getStackInSlot(slot);
 	}
@@ -676,11 +646,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		ItemStack stack;
 
 		if (isSmeltingSlot(slot))
-			stack = smeltableInventory.decrStackSize(slot, quantity);
+			stack = smeltableInventory.decrStackSize(slot - SLOT_FIRST_MELTABLE, quantity);
 		else
 			stack = inventory.decrStackSize(slot, quantity);
 
-		markDirty();
+		if (stack != null)
+			markDirty();
 
 		return stack;
 	}
@@ -690,11 +661,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		ItemStack stack;
 
 		if (isSmeltingSlot(slot))
-			stack = smeltableInventory.getStackInSlotOnClosing(slot);
+			stack = smeltableInventory.getStackInSlotOnClosing(slot - SLOT_FIRST_MELTABLE);
 		else
 			stack = inventory.getStackInSlotOnClosing(slot);
 
-		markDirty();
+		if (stack != null)
+			markDirty();
 
 		return stack;
 	}
@@ -702,7 +674,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void setInventorySlotContents(final int slot, final ItemStack itemstack) {
 		if (isSmeltingSlot(slot))
-			smeltableInventory.setInventorySlotContents(slot, itemstack);
+			smeltableInventory.setInventorySlotContents(slot - SLOT_FIRST_MELTABLE, itemstack);
 		else
 			inventory.setInventorySlotContents(slot, itemstack);
 
@@ -765,9 +737,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		if (tank.fill(ForgeDirection.UNKNOWN, liquid, false) != liquid.amount)
 			return false;
 
-		needsUpdate = true;
-
 		tank.fill(ForgeDirection.UNKNOWN, liquid, true);
+
+		markDirty();
 
 		return true;
 	}
@@ -804,8 +776,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public final void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		smeltableInventory.readFromNBT(nbt.getCompoundTag("smeltableInventory"));
-		smeltableInventory.readFromNBT(nbt.getCompoundTag("smeltableInventory"));
+		if (nbt.hasKey("smeltableInventory"))
+			smeltableInventory.readFromNBT(nbt.getCompoundTag("smeltableInventory"));
+
+		if (nbt.hasKey("inventory")) {
+			System.out.println(nbt.getCompoundTag("inventory").getInteger("nbStacks"));
+			inventory.readFromNBT(nbt.getCompoundTag("inventory"));
+		}
 
 		tank.readFromNBT(nbt.getCompoundTag("tank"));
 
@@ -825,7 +802,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		super.writeToNBT(nbt);
 
 		NBTHelper.setWritable(nbt, "smeltableInventory", smeltableInventory);
-		NBTHelper.setWritable(nbt, "smeltableInventory", smeltableInventory);
+		NBTHelper.setWritable(nbt, "inventory", inventory);
 
 		NBTHelper.setWritable(nbt, "tank", tank);
 
@@ -868,37 +845,33 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public void onStructureChange(IStructure structure) {
-		needsUpdate = true;
 		if (!structure.isValid()) {
 			internalTemp = ROOM_TEMP;
+		} else {
+			final int oldNbLayers = activeTemps.length;
+			final int nbLayers = structure.getNbLayers();
 
-			return;
-		}
+			this.tank.setCapacity(FLUID_AMOUNT_PER_LAYER * nbLayers);
+			this.maxTemp = this.maxTempByLayer();
 
-		final int oldNbLayers = activeTemps.length;
-		final int nbLayers = structure.getNbLayers();
+			int inventorySize = Math.min(nbLayers, 6);
+			this.smeltableInventory.setInventorySize(inventorySize);
 
-		this.tank.setCapacity(FLUID_AMOUNT_PER_LAYER * nbLayers);
-		this.maxTemp = this.maxTempByLayer();
+			if (nbLayers > oldNbLayers) {
+				activeTemps = Arrays.copyOf(activeTemps, nbLayers);
+				meltingTemps = Arrays.copyOf(meltingTemps, nbLayers);
 
-		if (nbLayers > oldNbLayers) {
-			activeTemps = Arrays.copyOf(activeTemps, nbLayers);
-			meltingTemps = Arrays.copyOf(meltingTemps, nbLayers);
-
-			for (int i = oldNbLayers; i < nbLayers; i++) {
-				if (!this.isSmeltingSlot(i))
-					continue;
-
-				this.activeTemps[i] = ROOM_TEMP;
-				this.meltingTemps[i] = ROOM_TEMP;
+				for (int i = oldNbLayers; i < inventorySize; i++) {
+					this.activeTemps[i] = ROOM_TEMP;
+					this.meltingTemps[i] = ROOM_TEMP;
+				}
 			}
+
+			int[] dumpCoords = BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, direction);
+			this.smeltableInventory.dumpOverflow(worldObj, dumpCoords[0], dumpCoords[1], dumpCoords[2]);
 		}
 
-		int inventorySize = Math.min(nbLayers, 6);
-		this.smeltableInventory.setInventorySize(inventorySize);
-
-		int[] dumpCoords = BlockHelper.getAdjacentBlock(xCoord, yCoord, zCoord, direction);
-		this.smeltableInventory.dumpOverflow(worldObj, dumpCoords[0], dumpCoords[1], dumpCoords[2]);
+		markDirty();
 	}
 
 	@Override
