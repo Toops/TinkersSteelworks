@@ -11,6 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
+import tconstruct.smeltery.gui.SmelteryGui;
+import tconstruct.smeltery.model.SmelteryRender;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.network.PacketMoveFluidHandler;
@@ -130,7 +132,7 @@ public class DeepTankGui extends GuiContainer {
 		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMaxV());
 		tessellator.addVertexWithUV(x + width, y + height, zIndex, icon.getMaxU(), icon.getMaxV());
 		tessellator.addVertexWithUV(x + width, y, zIndex, icon.getMaxU(), icon.getMinV());
-		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMinV());
+		tessellator.addVertexWithUV(x, y, zIndex, icon.getMinU(), icon.getMinV());
 		tessellator.draw();
 	}
 

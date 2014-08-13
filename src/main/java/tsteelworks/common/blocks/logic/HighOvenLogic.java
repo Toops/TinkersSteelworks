@@ -22,21 +22,23 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
-import nf.fr.ephys.cookiecore.helpers.*;
+import nf.fr.ephys.cookiecore.helpers.BlockHelper;
+import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
+import nf.fr.ephys.cookiecore.helpers.MathHelper;
+import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.*;
-import tsteelworks.lib.crafting.AdvancedSmelting;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureHighOven;
+import tsteelworks.lib.*;
+import tsteelworks.lib.crafting.AdvancedSmelting;
 
 import java.util.Arrays;
 
-// todo: don't store the output drain, find it when rebuilding
-// todo: remove System.out.println
+// todo: don't store the output drain in NBT, find it when rebuilding
 public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
 	/**
 	 * Oxidizer Slot - Redox agent.
@@ -250,8 +252,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
-			DebugHelper.sidedDebug(worldObj, "Server fluidtank " + tank.getNbFluids() +" - " + tank.getFluidAmount());
-
 			if (!structure.isValid())
 				this.checkValidPlacement();
 

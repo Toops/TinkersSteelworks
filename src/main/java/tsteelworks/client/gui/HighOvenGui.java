@@ -22,6 +22,9 @@ public class HighOvenGui extends GuiContainer {
 	private static final int TANK_WIDTH = 35;
 	private static final int TANK_HEIGHT = 52;
 
+	private static final int TANK_XPOS = 179;
+	private static final int TANK_YPOS = 16;
+
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
 
@@ -41,9 +44,8 @@ public class HighOvenGui extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(BACKGROUND);
-		final int cornerX = ((width - xSize) / 2);
-		final int cornerY = (height - ySize) / 2;
-		drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
+
+		drawTexturedModalRect(guiLeft + 46, guiTop, 0, 0, 176, ySize);
 
 		// Liquids - molten metal
 		HighOvenLogic logic = getLogic();
@@ -52,29 +54,29 @@ public class HighOvenGui extends GuiContainer {
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-			int xLeft = cornerX + 179;
-			int yBottom = cornerY;
+			int xLeft = guiLeft + TANK_XPOS;
+			int yBottom = guiTop;
 			for (int i = 0; i < tank.getNbFluids(); i++) {
 				FluidStack liquid = tank.getFluid(i);
 				IIcon icon = liquid.getFluid().getStillIcon();
 
-				int liquidSize = liquid.amount / tank.getCapacity() * TANK_HEIGHT;
+				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				DeepTankGui.drawTexturedRect(icon, xLeft, TANK_WIDTH, yBottom, liquidSize, zLevel);
+				DeepTankGui.drawTexturedRect(icon, xLeft, TANK_WIDTH, yBottom, (int) liquidSize, zLevel);
 
 				yBottom += liquidSize;
 			}
 		}
 
-		// Liquid gague
+		// Liquid gauge
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(BACKGROUND);
-		drawTexturedModalRect(cornerX + 179, cornerY + 16, 176, 76, 35, 52);
+		drawTexturedModalRect(guiLeft + TANK_XPOS, guiTop + TANK_YPOS, 176, 76, TANK_WIDTH, TANK_HEIGHT);
 
 		// Burn progress
 		if (logic.isBurning()) {
 			int scale = logic.getFuelBurnTime() / 42;
-			drawTexturedModalRect(cornerX + 127, (cornerY + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
+			drawTexturedModalRect(guiLeft + 127, (guiTop + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
 		}
 
 		// Side inventory
@@ -82,14 +84,14 @@ public class HighOvenGui extends GuiContainer {
 
 		if (nbSlots > 0) {
 			// Draw Top
-			drawTexturedModalRect(cornerX + 16, cornerY, 176, 14, 36, 6);
+			drawTexturedModalRect(guiLeft + 16, guiTop, 176, 14, 36, 6);
 			// Iterate one slot at a time and draw it. Each slot is 18 px high.
 			for (int iter = 0; iter < nbSlots; iter++)
-				drawTexturedModalRect(cornerX + 16, (cornerY + 6) + (iter * 18), 176, 21, 36, 18);//(iter * 18) + 18);
+				drawTexturedModalRect(guiLeft + 16, (guiTop + 6) + (iter * 18), 176, 21, 36, 18);//(iter * 18) + 18);
 
 			final int dy = nbSlots > 1 ? nbSlots * 18 : 18;
 			// Draw Bottom
-			drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 176, 39, 36, 7);
+			drawTexturedModalRect(guiLeft + 16, guiTop + 6 + dy, 176, 39, 36, 7);
 
 			// Temperatures & icons
 			for (int i = 0; i < nbSlots; i++) {
@@ -98,23 +100,20 @@ public class HighOvenGui extends GuiContainer {
 
 				if (slotTemperature > 0 && maxTemperature > 0) {
 					final int size = (16 * slotTemperature / maxTemperature) + 1;
-					drawTexturedModalRect(cornerX + 24, (cornerY + 7 + (i * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
-				}
-
-				if (logic.getSmeltableInventory().getStackInSlot(i) == null) {
-					drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
+					drawTexturedModalRect(guiLeft + 24, (guiTop + 7 + (i * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
 				}
 			}
 		}
 
 		final String temp = logic.getInternalTemperature() + "°c";
-		fontRendererObj.drawString(temp, (cornerX - (fontRendererObj.getStringWidth(temp) / 2)) + 135, cornerY + 20, getTempColor());
+		fontRendererObj.drawString(temp, (guiLeft - (fontRendererObj.getStringWidth(temp) / 2)) + 135, guiTop + 20, getTempColor());
 
+		// draw slot icons
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.getTextureManager().bindTexture(ICONS);
 
-		final int slotX = cornerX + 54;
-		final int slotY = cornerY + 16;
+		final int slotX = guiLeft + 54;
+		final int slotY = guiTop + TANK_YPOS;
 		for (int i = 0; i < 3; i++) {
 			if (logic.getStackInSlot(i) == null)
 				drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
@@ -122,6 +121,12 @@ public class HighOvenGui extends GuiContainer {
 
 		if (logic.getStackInSlot(3) == null)
 			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
+
+		for (int i = 0; i < nbSlots; i++) {
+			if (logic.getSmeltableInventory().getStackInSlot(i) == null) {
+				drawTexturedModalRect(guiLeft + 27, (guiTop + 7) + (i * 18), 4 * 18, 234, 18, 18);
+			}
+		}
 	}
 
 	@Override
@@ -224,14 +229,14 @@ public class HighOvenGui extends GuiContainer {
 
 		if (fluidTank.getCapacity() == 0) return null;
 
-		final int topY = cornerY + 179;
+		final int topY = cornerY + TANK_XPOS;
 		final int leftX = cornerX + 68;
 
-		int liquidOffset = 0;
+		float liquidOffset = 0;
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
 			FluidStack stack = fluidTank.getFluid(i);
 
-			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
+			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
 			if (posX >= leftX
 					&& posX <= leftX + TANK_WIDTH
