@@ -141,10 +141,9 @@ public class TSContent {
 
 		if (charcoalBlocks.isEmpty()) {
 			tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
-			Blocks.fire.setFireInfo(tsCharcoalBlock, 15, 30);
-
 			GameRegistry.registerBlock(tsCharcoalBlock, "blockCharcoal");
 
+			Blocks.fire.setFireInfo(tsCharcoalBlock, 15, 30);
 			OreDictionary.registerOre("blockCharcoal", tsCharcoalBlock);
 
 			charcoalBlock = new ItemStack(tsCharcoalBlock);

@@ -3,7 +3,6 @@ package tsteelworks.lib;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
-import tsteelworks.TSteelworks;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class ConfigCore {
 				glassBlocks.add(stack);
 		}
 
-		modTankGlassBlocks = (ItemStack[]) glassBlocks.toArray();
+		modTankGlassBlocks = glassBlocks.toArray(new ItemStack[glassBlocks.size()]);
 
 		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod").getBoolean(false);
 		hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);

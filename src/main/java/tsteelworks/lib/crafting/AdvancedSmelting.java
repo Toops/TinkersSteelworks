@@ -282,16 +282,25 @@ public class AdvancedSmelting {
 			if (o == null || getClass() != o.getClass())
 				return false;
 
-			MixCombo mix = (MixCombo) o;
+			MixCombo mixCombo = (MixCombo) o;
 
-			return fluidname.equals(mix.fluidname) && oxydizer.equals(mix.oxydizer) && purifier.equals(mix.purifier) && reducer.equals(mix.reducer);
+			if (!fluidname.equals(mixCombo.fluidname))
+				return false;
+			if (oxydizer != null ? !oxydizer.equals(mixCombo.oxydizer) : mixCombo.oxydizer != null)
+				return false;
+			if (purifier != null ? !purifier.equals(mixCombo.purifier) : mixCombo.purifier != null)
+				return false;
+			if (reducer != null ? !reducer.equals(mixCombo.reducer) : mixCombo.reducer != null)
+				return false;
+
+			return true;
 		}
 
 		@Override
 		public int hashCode() {
-			int result = oxydizer.hashCode();
-			result = 31 * result + reducer.hashCode();
-			result = 31 * result + purifier.hashCode();
+			int result = oxydizer != null ? oxydizer.hashCode() : 0;
+			result = 31 * result + (reducer != null ? reducer.hashCode() : 0);
+			result = 31 * result + (purifier != null ? purifier.hashCode() : 0);
 			result = 31 * result + fluidname.hashCode();
 			return result;
 		}

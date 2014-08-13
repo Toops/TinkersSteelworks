@@ -116,10 +116,7 @@ public class TSClientProxy extends TSCommonProxy {
 		// end todo
 
 		// Modifier recipes
-		ItemStack ironpick = ToolBuilder.instance.buildTool(new ItemStack(TinkerTools.pickaxeHead, 1, 6), new ItemStack(TinkerTools.toolRod, 1, 2), new ItemStack(TinkerTools.binding, 1, 6), "");
-
-		MantleClientRegistry.registerManualIcon("ironpick", ironpick);
-		TConstructClientRegistry.registerManualModifier("vacuousmod", ironpick.copy(), new ItemStack(Blocks.hopper), new ItemStack(Items.ender_pearl));
+		TConstructClientRegistry.registerManualModifier("vacuousmod", MantleClientRegistry.getManualIcon("pickicon"), new ItemStack(Blocks.hopper), new ItemStack(Items.ender_pearl));
 
 		final ItemStack lapis = new ItemStack(Items.dye, 1, 4);
 
