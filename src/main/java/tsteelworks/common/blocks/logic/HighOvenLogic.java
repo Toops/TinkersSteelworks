@@ -104,7 +104,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * as the high oven smelts uber quickly)
 	 */
 	private SizeableInventory inventory = new SizeableInventory(4);
-	private SizeableInventory smeltableInventory = new SizeableInventory(6);
+	private SizeableInventory smeltableInventory = new SizeableInventory(0);
 
 	/**
 	 * Handles the multiblock structure

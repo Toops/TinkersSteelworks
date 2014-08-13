@@ -11,8 +11,6 @@ import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
-import tconstruct.smeltery.gui.SmelteryGui;
-import tconstruct.smeltery.model.SmelteryRender;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.network.PacketMoveFluidHandler;
@@ -97,29 +95,29 @@ public class DeepTankGui extends GuiContainer {
 		for (int i = 0; i < nbChunksX; i++) {
 			int xStart = x + 16 * i;
 			for (int j = 0; j < nbChunksY; j++) {
-				int yStart = y + 16 * i;
+				int yStart = y - 16 * j;
 
 				drawTexturedRectStretch(icon, xStart, 16, yStart, 16, zIndex);
 			}
 
-			// draw Y remainder
-			int yStart = y + 16 * nbChunksY;
+			// draw Y remainder (horizontal line)
+			int yStart = y - 16 * nbChunksY;
 
-			drawTexturedRectStretch(icon, xStart, 16, yStart, yRemainer, zIndex);
+			drawTexturedRectStretch(icon, xStart, 16, yStart + (16 - yRemainer), yRemainer, zIndex);
 		}
 
-		// draw X remainder
+		// draw X remainder (vertical line)
 		int xStart = x + 16 * nbChunksX;
 		for (int i = 0; i < nbChunksY; i++) {
-			int yStart = y + 16 * i;
+			int yStart = y - 16 * i;
 
 			drawTexturedRectStretch(icon, xStart, xRemainer, yStart, 16, zIndex);
 		}
 
 		// draw the corner
-		int yStart = y + 16 * nbChunksY;
+		int yStart = y - 16 * nbChunksY;
 
-		drawTexturedRectStretch(icon, xStart, xRemainer, yStart, yRemainer, zIndex);
+		drawTexturedRectStretch(icon, xStart, xRemainer, yStart + (16 - yRemainer), yRemainer, zIndex);
 	}
 
 	/**
@@ -147,11 +145,11 @@ public class DeepTankGui extends GuiContainer {
 		final int topY = cornerY + 120;
 		final int leftX = cornerX + 54;
 
-		int liquidOffset = 0;
+		float liquidOffset = 0;
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
 			FluidStack stack = fluidTank.getFluid(i);
 
-			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
+			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
 			if (posX >= leftX
 					&& posX <= leftX + TANK_WIDTH

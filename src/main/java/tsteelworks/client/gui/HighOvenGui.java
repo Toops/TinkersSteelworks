@@ -54,17 +54,16 @@ public class HighOvenGui extends GuiContainer {
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-			int xLeft = guiLeft + TANK_XPOS;
-			int yBottom = guiTop;
+			float yBottom = guiTop + TANK_HEIGHT;
 			for (int i = 0; i < tank.getNbFluids(); i++) {
 				FluidStack liquid = tank.getFluid(i);
 				IIcon icon = liquid.getFluid().getStillIcon();
 
 				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				DeepTankGui.drawTexturedRect(icon, xLeft, TANK_WIDTH, yBottom, (int) liquidSize, zLevel);
+				DeepTankGui.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) liquidSize, zLevel);
 
-				yBottom += liquidSize;
+				yBottom -= liquidSize;
 			}
 		}
 
