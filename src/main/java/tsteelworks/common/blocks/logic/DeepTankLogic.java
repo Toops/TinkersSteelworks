@@ -241,4 +241,8 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		return fluidTank.getTankInfo(from);
 	}
+
+	public StructureDeepTank getStructure() {
+		return structure;
+	}
 }

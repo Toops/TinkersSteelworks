@@ -264,4 +264,8 @@ public class StructureDeepTank implements IStructure {
 	public int getZWidth() {
 		return zWidth;
 	}
+
+	public CoordTuple getBorderPos() {
+		return borderPos;
+	}
 }

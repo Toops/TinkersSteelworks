@@ -84,7 +84,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 
 	@Override
 	public int getRenderType() {
-		return DeepTankRender.deeptankModel;
+		return DeepTankRender.DEEPTANK_MODEL;
 	}
 
 	@Override
