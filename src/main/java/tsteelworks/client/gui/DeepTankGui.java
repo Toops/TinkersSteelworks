@@ -85,7 +85,7 @@ public class DeepTankGui extends GuiContainer {
 	}
 
 	// TODO: move this to RenderHelper
-	public static void drawTexturedRect(IIcon icon, int x, int width, int y, int height, int zIndex) {
+	public static void drawTexturedRect(IIcon icon, int x, int width, int y, int height, float zIndex) {
 		int nbChunksX = width / 16;
 		int nbChunksY = height / 16;
 
@@ -124,7 +124,7 @@ public class DeepTankGui extends GuiContainer {
 	 * Draw a textured rectangle with a stretched texture to fit the cube
 	 */
 	// TODO: move this to RenderHelper
-	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, int zIndex) {
+	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, float zIndex) {
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
 		tessellator.addVertexWithUV(x, y + height, zIndex, icon.getMinU(), icon.getMaxV());

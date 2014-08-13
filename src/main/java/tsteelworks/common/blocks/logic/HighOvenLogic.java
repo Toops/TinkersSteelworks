@@ -546,14 +546,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return HighOvenLogic.getFuelBurnTime(inventory.getStackInSlot(SLOT_FUEL)) > 0;
 	}
 
-	/**
-	 * Get fuel gauge scaled for display.
-	 *
-	 * @param scale the scale
-	 * @return scaled value
-	 */
-	public int getScaledFuelGauge(final int scale) {
-		return (int) Math.ceil(this.fuelBurnTime / (float) scale);
+	public int getFuelBurnTime() {
+		return this.fuelBurnTime;
 	}
 
 	/**

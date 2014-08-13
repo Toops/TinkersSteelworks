@@ -46,31 +46,25 @@ public class HighOvenGui extends GuiContainer {
 		final int cornerX = ((width - xSize) / 2);
 		final int cornerY = (height - ySize) / 2;
 		drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 176, ySize);
-		// Liquids - molten metal
-		mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-		int base = 0;
-		for (final FluidStack liquid : logic.getFluidlist()) {
-			final IIcon renderIndex = liquid.getFluid().getStillIcon();
-			final int basePos = 179;
-			if (logic.getCapacity() > 0) {
-				final int total = logic.getTotalLiquid();
-				final int liquidLayers = ((total / 20000) + 1) * 20000;
-				if (liquidLayers > 0) {
-					int liquidSize = (liquid.amount * 52) / liquidLayers;
-					if (liquidSize == 0)
-						liquidSize = 1;
-					while (liquidSize > 0) {
-						final int size = liquidSize >= 16 ? 16 : liquidSize;
-						if (renderIndex != null) {
-							drawLiquidRect(cornerX + basePos, (cornerY + 68) - size - base, renderIndex, 16, size);
-							drawLiquidRect(cornerX + basePos + 16, (cornerY + 68) - size - base, renderIndex, 16, size);
-							drawLiquidRect(cornerX + basePos + 32, (cornerY + 68) - size - base, renderIndex, 3, size);
-						}
 
-						liquidSize -= size;
-						base += size;
-					}
-				}
+		// Liquids - molten metal
+		HighOvenLogic logic = getLogic();
+		MultiFluidTank tank = logic.getFluidTank();
+
+		if (tank.getCapacity() != 0) {
+			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+
+			int xLeft = cornerX + 179;
+			int yBottom = cornerY;
+			for (int i = 0; i < tank.getNbFluids(); i++) {
+				FluidStack liquid = tank.getFluid(i);
+				IIcon icon = liquid.getFluid().getStillIcon();
+
+				int liquidSize = liquid.amount / tank.getCapacity() * TANK_HEIGHT;
+
+				DeepTankGui.drawTexturedRect(icon, xLeft, TANK_WIDTH, yBottom, liquidSize, zLevel);
+
+				yBottom += liquidSize;
 			}
 		}
 
@@ -79,57 +73,57 @@ public class HighOvenGui extends GuiContainer {
 		mc.getTextureManager().bindTexture(BACKGROUND);
 		drawTexturedModalRect(cornerX + 179, cornerY + 16, 176, 76, 35, 52);
 
-		int scale;
 		// Burn progress
 		if (logic.isBurning()) {
-			scale = logic.getScaledFuelGauge(42);
+			int scale = logic.getFuelBurnTime() / 42;
 			drawTexturedModalRect(cornerX + 127, (cornerY + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
 		}
 
 		// Side inventory
-		int slotSize = logic.getLayers();
-		if (slotSize > 6)
-			slotSize = 6;
-		if (slotSize > 0) {
+		int nbSlots = logic.getSmeltableInventory().getSizeInventory();
+
+		if (nbSlots > 0) {
 			// Draw Top
 			drawTexturedModalRect(cornerX + 16, cornerY, 176, 14, 36, 6);
 			// Iterate one slot at a time and draw it. Each slot is 18 px high.
-			for (int iter = 0; iter < slotSize; iter++)
+			for (int iter = 0; iter < nbSlots; iter++)
 				drawTexturedModalRect(cornerX + 16, (cornerY + 6) + (iter * 18), 176, 21, 36, 18);//(iter * 18) + 18);
-			final int dy = slotSize > 1 ? slotSize * 18 : 18;
+
+			final int dy = nbSlots > 1 ? nbSlots * 18 : 18;
 			// Draw Bottom
 			drawTexturedModalRect(cornerX + 16, cornerY + 6 + dy, 176, 39, 36, 7);
-		}
-		// Temperatures
-		for (int iter = 0; iter < (slotSize + 4); iter++) {
-			final int slotTemp = logic.getTempForSlot(iter + slotPos) - 20;
-			final int maxTemp = logic.getMeltingPointForSlot(iter + slotPos) - 20;
-			if ((slotTemp > 0) && (maxTemp > 0)) {
-				final int size = ((16 * slotTemp) / maxTemp) + 1;
-				drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((iter - 4) * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
-			}
-		}
 
-		final String s = new String("\u00B0".toCharArray());
-		final String temp = new String(logic.getInternalTemperature() + s + "c");
-		fontRenderer.drawString(temp, (cornerX - (fontRenderer.getStringWidth(temp) / 2)) + 135, cornerY + 20, getTempColor());
+			// Temperatures & icons
+			for (int i = 0; i < nbSlots; i++) {
+				int slotTemperature = logic.getTempForSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) - 20;
+				int maxTemperature = logic.getMeltingPointForSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) - 20;
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(ICONS);
-		final int slotX = cornerX + 54;
-		final int slotY = cornerY + 16;
-		for (int i = 0; i < 3; i++)
-			if (!logic.isStackInSlot(i))
-				drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
-		if (!logic.isStackInSlot(3))
-			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
-		if (slotSize > 0) {
-			for (int i = 0; i < slotSize; i++) {
-				if (!logic.isStackInSlot(i + 4)) {
+				if (slotTemperature > 0 && maxTemperature > 0) {
+					final int size = (16 * slotTemperature / maxTemperature) + 1;
+					drawTexturedModalRect(cornerX + 24, (cornerY + 7 + ((i - 4) * 18) + 16) - size, 212, (14 + (15 + 16)) - size, 5, size);
+				}
+
+				if (logic.getStackInSlot(i + HighOvenLogic.SLOT_FIRST_MELTABLE) == null) {
 					drawTexturedModalRect(cornerX + 27, (cornerY + 7) + (i * 18), 4 * 18, 234, 18, 18);
 				}
 			}
 		}
+
+		final String temp = logic.getInternalTemperature() + "°c";
+		fontRendererObj.drawString(temp, (cornerX - (fontRendererObj.getStringWidth(temp) / 2)) + 135, cornerY + 20, getTempColor());
+
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		mc.getTextureManager().bindTexture(ICONS);
+
+		final int slotX = cornerX + 54;
+		final int slotY = cornerY + 16;
+		for (int i = 0; i < 3; i++) {
+			if (logic.getStackInSlot(i) == null)
+				drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
+		}
+
+		if (logic.getStackInSlot(3) == null)
+			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
 	}
 
 	@Override

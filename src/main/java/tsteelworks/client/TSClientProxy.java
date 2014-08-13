@@ -222,8 +222,9 @@ public class TSClientProxy extends TSCommonProxy {
 
 				return entityfx;
 			}
-		} else
-			return null;
+		}
+
+		return null;
 	}
 
 	private void initManualPages() {
