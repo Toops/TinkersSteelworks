@@ -219,12 +219,16 @@ public class HighOvenGui extends GuiContainer {
 	}
 
 	private FluidStack getFluidAtPos(int posX, int posY) {
+		final int leftX = guiLeft + TANK_XPOS;
+
+		if (posX < leftX || posX > leftX + TANK_WIDTH)
+			return null;
+
 		MultiFluidTank fluidTank = ((HighOvenContainer) inventorySlots).getLogic().getFluidTank();
 
 		if (fluidTank.getCapacity() == 0) return null;
 
 		final int bottomY = guiTop + TANK_YPOS + TANK_HEIGHT;
-		final int leftX = guiLeft + TANK_XPOS;
 
 		float liquidOffset = 0;
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
@@ -232,8 +236,7 @@ public class HighOvenGui extends GuiContainer {
 
 			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-			if (posX >= leftX && posX <= leftX + TANK_WIDTH &&
-				posY >= bottomY - (liquidSize + liquidOffset) && posY < bottomY - liquidOffset) {
+			if (posY >= bottomY - (liquidSize + liquidOffset) && posY < bottomY - liquidOffset) {
 				return stack;
 			}
 

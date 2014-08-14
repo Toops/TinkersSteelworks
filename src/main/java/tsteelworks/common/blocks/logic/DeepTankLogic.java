@@ -16,6 +16,7 @@ import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.common.core.TSRepo;
 import tsteelworks.lib.ConfigCore;
+import tsteelworks.lib.IFluidTankHolder;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 import tsteelworks.common.structure.IStructure;
@@ -23,7 +24,7 @@ import tsteelworks.common.structure.StructureDeepTank;
 
 // todo: different fluid capacity depending on glass type (no glass = 20 bucket per block)
 // todo: make the dealloyer a part of the deep tank: any fluid piped in will be dealloyed
-public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IChunkNotify {
+public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IChunkNotify, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.
 	 */
@@ -108,7 +109,8 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		return fluidTank.getCapacity();
 	}
 
-	public MultiFluidTank getTank() {
+	@Override
+	public MultiFluidTank getFluidTank() {
 		return fluidTank;
 	}
 

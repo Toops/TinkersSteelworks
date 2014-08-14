@@ -22,6 +22,8 @@ public class DeepTankGui extends GuiContainer {
 
 	private static final int TANK_WIDTH = 104;
 	private static final int TANK_HEIGHT = 104;
+	private static final int TANK_YPOS = 120;
+	private static final int TANK_XPOS = 54;
 
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
 		super(new DeepTankContainer(inventoryplayer, tank));
@@ -35,7 +37,7 @@ public class DeepTankGui extends GuiContainer {
 
 		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 17, 0x404040);
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
 		final String capacity = String.format(StatCollector.translateToLocal("tank.capacity"), fluidTank.getFluidAmount(), fluidTank.getCapacity());
 
@@ -44,41 +46,39 @@ public class DeepTankGui extends GuiContainer {
 		FluidStack hoveredStack = getFluidAtPos(mouseX, mouseY);
 
 		if (hoveredStack != null)
-			drawFluidStackTooltip(hoveredStack, mouseX, mouseY);
+			drawFluidStackTooltip(hoveredStack, mouseX - guiLeft, mouseY - guiTop);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(BACKGROUND);
-		int cornerX = (width - xSize) / 2 + 20;
-		int cornerY = (height - ySize) / 2 + 12;
-		drawTexturedModalRect(cornerX + 46, cornerY, 0, 0, 120, ySize);
+
+		drawTexturedModalRect(guiLeft + 46, guiTop, 0, 0, 120, ySize);
 
 		//Liquids
 		RenderHelper.loadBlockMap();
 
-		final int leftX = cornerX + 54;
+		MultiFluidTank tank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+		float yBottom = guiTop + TANK_HEIGHT;
+		for (int i = 0; i < tank.getNbFluids(); i++) {
+			FluidStack liquid = tank.getFluid(i);
+			IIcon icon = liquid.getFluid().getStillIcon();
 
-		int liquidOffset = 0;
-		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
-			FluidStack stack = fluidTank.getFluid(i);
-			IIcon icon = stack.getFluid().getStillIcon();
+			float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
+			// the render is still broken because we're clipping float to ints and it causes imprecision
+			RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
 
-			RenderHelper.drawTexturedRect(icon, leftX, TANK_WIDTH, cornerY + 120 + liquidOffset, liquidSize, 1);
-
-			liquidOffset += liquidSize;
+			yBottom -= Math.round(liquidSize);
 		}
 
 		//Liquid gauge
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		this.mc.getTextureManager().bindTexture(BACKGROUND);
-		drawTexturedModalRect(cornerX + 54, cornerY + 16, 120, 0, 104, 104);
+		drawTexturedModalRect(guiLeft + 54, guiTop + 16, 120, 0, 104, 104);
 	}
 
 	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {
@@ -91,15 +91,16 @@ public class DeepTankGui extends GuiContainer {
 	}
 
 	private FluidStack getFluidAtPos(int posX, int posY) {
-		final int cornerX = (width - xSize) / 2 + 20;
-		final int cornerY = (height - ySize) / 2 + 12;
+		final int leftX = guiLeft + TANK_XPOS;
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+		if (posX < leftX || posX > leftX + TANK_WIDTH)
+			return null;
+
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
 		if (fluidTank.getCapacity() == 0) return null;
 
-		final int topY = cornerY + 120;
-		final int leftX = cornerX + 54;
+		final int bottomY = guiTop + TANK_YPOS + TANK_HEIGHT;
 
 		float liquidOffset = 0;
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
@@ -107,10 +108,7 @@ public class DeepTankGui extends GuiContainer {
 
 			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-			if (posX >= leftX
-					&& posX <= leftX + TANK_WIDTH
-					&& posY >= topY + liquidOffset
-					&& posY < topY + liquidOffset + liquidSize) {
+			if (posY >= bottomY - (liquidSize + liquidOffset) && posY < bottomY - liquidOffset) {
 				return stack;
 			}
 

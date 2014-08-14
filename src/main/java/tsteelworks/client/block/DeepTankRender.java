@@ -41,7 +41,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 		if (!logic.isValid()) return true;
 
-		MultiFluidTank tank = logic.getTank();
+		MultiFluidTank tank = logic.getFluidTank();
 
 		if (tank.getCapacity() == 0) return true;
 
