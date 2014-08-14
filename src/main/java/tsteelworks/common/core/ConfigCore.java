@@ -14,7 +14,6 @@ public class ConfigCore {
 	public static boolean hardcoreFlintAndSteel;
 	public static boolean hardcoreAnvil;
 	public static int ingotsPerOre;
-	public static int deeptankCapacityMultiplier;
 	public static boolean enableDuctVacuum;
 	public static boolean enableTE3SlagOutput;
 
@@ -60,8 +59,6 @@ public class ConfigCore {
 		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
 
 		enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present").getBoolean(true);
-
-		deeptankCapacityMultiplier = config.get("Deep Tank", "Fluid Capacity Multiplier", 4, "Determines how many buckets of fluid per internal block space").getInt(4);
 
 		String[] items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
 				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +

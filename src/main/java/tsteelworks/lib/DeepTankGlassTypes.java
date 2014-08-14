@@ -13,6 +13,10 @@ public class DeepTankGlassTypes {
 		return glassTypes.get(new GlassType(block, metadata));
 	}
 
+	public static Integer getBlockCapacity(GlassType glass) {
+		return glassTypes.get(glass);
+	}
+
 	public static void addGlassType(ItemStack stack, int capacity) {
 		glassTypes.put(new GlassType(stack), capacity);
 
@@ -70,6 +74,11 @@ public class DeepTankGlassTypes {
 			this.metadata = item.getItemDamage() > 15 ? null : item.getItemDamage();
 		}
 
+		public GlassType(GlassType glass) {
+			this.metadata = glass.metadata;
+			this.block = glass.block;
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o)
@@ -94,7 +103,17 @@ public class DeepTankGlassTypes {
 		public int hashCode() {
 			int result = metadata != null ? metadata.hashCode() : 0;
 			result = 31 * result + block.hashCode();
+
 			return result;
 		}
+
+		public void setMetadata(Integer metadata) {
+			this.metadata = metadata;
+		}
+
+		public void setBlock(Block block) {
+			this.block = block;
+		}
+
 	}
 }
