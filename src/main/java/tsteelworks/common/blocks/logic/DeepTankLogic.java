@@ -44,7 +44,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	private int tick;
 
 	public int calcFluidCapacity(int totalSpace) {
-		return FluidContainerRegistry.BUCKET_VOLUME * structure.getGlassCapacity() * totalSpace;
+		return structure.getGlassCapacity() * totalSpace;
 	}
 
 	public void onStructureChange(IStructure str) {
