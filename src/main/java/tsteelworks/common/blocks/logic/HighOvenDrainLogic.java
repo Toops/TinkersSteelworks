@@ -4,21 +4,26 @@ import mantle.blocks.iface.IFacingLogic;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
-import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.lib.IFluidTankHolder;
+import tsteelworks.lib.IMasterLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic {
-	byte direction;
+	private byte direction;
 
 	// ========== HighOvenDrainLogic ===========
 
-	public MultiFluidTank getTank() {
-		return getMaster() instanceof IFluidTankHolder ? ((IFluidTankHolder) getMaster()).getFluidTank() : null;
+	public IFluidHandler getTank() {
+		IMasterLogic master = getMaster();
+
+		if (master instanceof IFluidTankHolder)
+			return ((IFluidTankHolder) getMaster()).getFluidTank();
+
+		if (master instanceof IFluidHandler)
+			return (IFluidHandler) master;
+
+		return null;
 	}
 
 	// ========== IFacingLogic ===========
@@ -50,14 +55,14 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
-		MultiFluidTank tank = getTank();
+		IFluidHandler tank = getTank();
 
 		return tank == null ? null : tank.drain(from, resource, doDrain);
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		MultiFluidTank tank = getTank();
+		IFluidHandler tank = getTank();
 
 		return tank == null ? null : tank.drain(from, maxDrain, doDrain);
 	}
@@ -69,14 +74,14 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		MultiFluidTank tank = getTank();
+		IFluidHandler tank = getTank();
 
 		return tank == null ? 0 : tank.fill(from, resource, doFill);
 	}
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		MultiFluidTank tank = getTank();
+		IFluidHandler tank = getTank();
 
 		return tank == null ? new FluidTankInfo[0] : tank.getTankInfo(from);
 	}
