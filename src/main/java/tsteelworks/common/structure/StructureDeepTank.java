@@ -141,7 +141,7 @@ public class StructureDeepTank implements IStructure {
 	 */
 	private boolean scanPlainLayer(int y) {
 		for (int x = 0; x < xWidth; x++) {
-			for (int z = 0; z < xWidth; z++) {
+			for (int z = 0; z < zWidth; z++) {
 				if (!isValidBlock(borderPos.x + x, y, borderPos.z + z)) {
 					return false;
 				}

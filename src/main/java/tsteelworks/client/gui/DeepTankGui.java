@@ -27,12 +27,19 @@ public class DeepTankGui extends GuiContainer {
 		super(new DeepTankContainer(inventoryplayer, tank));
 
 		xSize = 248;
+		ySize = 136;
 	}
 
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		final String title = StatCollector.translateToLocal("tank.DeepTank");
 
-		fontRendererObj.drawString(title, ((xSize / 2) - (fontRendererObj.getStringWidth(title) / 2)), 17, 0x404040);
+		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 17, 0x404040);
+
+		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getTank();
+
+		final String capacity = String.format(StatCollector.translateToLocal("tank.capacity"), fluidTank.getFluidAmount(), fluidTank.getCapacity());
+
+		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 1, 0x404040);
 
 		FluidStack hoveredStack = getFluidAtPos(mouseX, mouseY);
 
