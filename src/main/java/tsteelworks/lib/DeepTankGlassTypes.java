@@ -4,9 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class DeepTankGlassTypes {
 	private static HashMap<GlassType, Integer> glassTypes = new HashMap<>();
@@ -15,8 +13,10 @@ public class DeepTankGlassTypes {
 		return glassTypes.get(new GlassType(block, metadata));
 	}
 
-	public static void addGlassType(ItemStack stack, int value) {
+	public static void addGlassType(ItemStack stack, int capacity) {
+		glassTypes.put(new GlassType(stack), capacity);
 
+		TSLogger.info("Registered deep tank glass type " + stack.getDisplayName() + " with capacity of " + capacity + "mB");
 	}
 
 	/**
@@ -51,9 +51,7 @@ public class DeepTankGlassTypes {
 			return;
 		}
 
-		glassTypes.put(new GlassType(stack), capacity);
-
-		TSLogger.info("Registered deep tank glass type " + stack.getDisplayName() + " with capacity of " + capacity + "mB");
+		addGlassType(stack, capacity);
 	}
 
 	public static class GlassType {

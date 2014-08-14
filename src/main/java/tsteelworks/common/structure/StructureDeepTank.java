@@ -13,6 +13,7 @@ import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.ConfigCore;
+import tsteelworks.lib.DeepTankGlassTypes;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,37 +40,10 @@ public class StructureDeepTank implements IStructure {
 
 	private ItemStack glassType = null;
 
-	/**
-	 * The valid glass blocks permitted in the structure.
-	 */
-	private static List<ItemStack> glassBlocks = getRegisteredGlassIDs();
-
 	private DeepTankLogic logic;
 
 	public StructureDeepTank(DeepTankLogic tile) {
 		this.logic = tile;
-	}
-
-	/**
-	 * Gets the registered glass i ds.
-	 *
-	 * @return the registered glass i ds
-	 */
-	public static List<ItemStack> getRegisteredGlassIDs() {
-		List<ItemStack> glasses = new ArrayList<>();
-
-		// todo: add seared glass
-		glasses.add(new ItemStack(TinkerSmeltery.clearGlass));
-		glasses.add(new ItemStack(TinkerSmeltery.stainedGlassClear));
-		glasses.add(new ItemStack(Blocks.glass));
-		glasses.add(new ItemStack(Blocks.stained_glass));
-
-		Collections.addAll(glasses, ConfigCore.modTankGlassBlocks);
-
-		ArrayList<ItemStack> oreDict = OreDictionary.getOres("glass");
-		glasses.addAll(oreDict);
-
-		return glasses;
 	}
 
 	@Override
@@ -187,13 +161,7 @@ public class StructureDeepTank implements IStructure {
 	}
 
 	private boolean isValidGlass(Block block, int meta) {
-		for (ItemStack glass : glassBlocks) {
-			if (glass.getItemDamage() == meta && block.equals(Block.getBlockFromItem(glass.getItem()))) {
-				return true;
-			}
-		}
-
-		return false;
+		return DeepTankGlassTypes.getBlockCapacity(block, meta) != null;
 	}
 
 	/**
