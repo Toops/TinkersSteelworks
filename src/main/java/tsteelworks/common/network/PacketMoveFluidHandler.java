@@ -5,9 +5,14 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.TSteelworks;
+import tsteelworks.lib.IFluidTankHolder;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
 	public static final int DISCRIMINER = 0;
@@ -26,7 +31,19 @@ public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHa
 
 	@Override
 	public IMessage onMessage(PacketMoveFluid packet, MessageContext messageContext) {
-		// todo: move fluid down
+		World world = MinecraftServer.getServer().worldServerForDimension(packet.worldId);
+
+		TileEntity te = world.getTileEntity(packet.x, packet.y, packet.z);
+
+		if (te instanceof IFluidTankHolder) {
+			MultiFluidTank tank = ((IFluidTankHolder) te).getFluidTank();
+			int pos = packet.isShiftKeyDown ? tank.getNbFluids() : 0;
+
+			tank.setStackPos(FluidRegistry.getFluid(packet.fluidID), pos);
+
+			te.markDirty();
+		}
+
 		return null;
 	}
 

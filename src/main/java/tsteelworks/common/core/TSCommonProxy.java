@@ -15,7 +15,7 @@ public class TSCommonProxy {
 	public void postInit() {}
 
 	public void registerPacket() {
-		TSteelworks.getNetHandler().registerMessage(PacketMoveFluidHandler.class, PacketMoveFluidHandler.PacketMoveFluid.class, PacketMoveFluidHandler.DISCRIMINER, Side.CLIENT);
-		TSteelworks.getNetHandler().registerMessage(PacketSetDuctModeHandler.class, PacketSetDuctModeHandler.PacketSetDuctMode.class, PacketSetDuctModeHandler.DISCRIMINER, Side.CLIENT);
+		TSteelworks.getNetHandler().registerMessage(PacketMoveFluidHandler.class, PacketMoveFluidHandler.PacketMoveFluid.class, PacketMoveFluidHandler.DISCRIMINER, Side.SERVER);
+		TSteelworks.getNetHandler().registerMessage(PacketSetDuctModeHandler.class, PacketSetDuctModeHandler.PacketSetDuctMode.class, PacketSetDuctModeHandler.DISCRIMINER, Side.SERVER);
 	}
 }

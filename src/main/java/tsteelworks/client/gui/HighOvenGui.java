@@ -55,16 +55,17 @@ public class HighOvenGui extends GuiContainer {
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-			int yBottom = guiTop + TANK_HEIGHT;
+			float yBottom = guiTop + TANK_HEIGHT;
 			for (int i = 0; i < tank.getNbFluids(); i++) {
 				FluidStack liquid = tank.getFluid(i);
 				IIcon icon = liquid.getFluid().getStillIcon();
 
 				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, (int) Math.ceil(liquidSize), zLevel);
+				// todo: fix fluid position
+				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
 
-				yBottom -= Math.floor(liquidSize);
+				yBottom -= Math.round(liquidSize);
 			}
 		}
 
@@ -195,7 +196,7 @@ public class HighOvenGui extends GuiContainer {
 				int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
 
 				if (nuggets > 0)
-					list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.nugger") + ": " + nuggets);
+					list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.nugget") + ": " + nuggets);
 
 				if (junk > 0)
 					list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.mb") + ": " + junk);
