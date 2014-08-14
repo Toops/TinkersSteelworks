@@ -7,14 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import nf.fr.ephys.cookiecore.helpers.FluidHelper;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import tconstruct.client.BlockSkinRenderHelper;
 import tconstruct.util.ItemHelper;
-import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 
 public class DeepTankRender implements ISimpleBlockRenderingHandler {
@@ -55,7 +51,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 			float height = (float) fluid.amount / tank.getCapacity() * logic.getStructure().getNbLayers();
 
-			renderFluidLayer(fluid.getFluid(), world, corner.x + 1, corner.y + yOffset + 1, corner.z + 1, logic.getStructure().getXWidth() - 2, height, logic.getStructure().getZWidth() - 2, renderer);
+			renderFluidLayer(RenderHelper.getFluidTexture(fluid), corner.x + 1, corner.y + yOffset + 1, corner.z + 1, logic.getStructure().getXWidth() - 2, height, logic.getStructure().getZWidth() - 2, renderer);
 
 			yOffset += height;
 		}
@@ -63,10 +59,23 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 		return true;
 	}
 
-	// todo: move to lib
-	public static void renderFluidLayer(Fluid fluid, IBlockAccess world, int x, float y, int z, int width, double height, int length, RenderBlocks renderer) {
-		IIcon icon = RenderHelper.getFluidTexture(fluid);
-
+	/**
+	 *  Renders an icon as a cuboid
+	 *
+	 * I wrote this, every part of it, I made it work by writing down schematics and math stuff
+	 * And now I don't even understand how it works anymore
+	 * And it was 5 minutes ago.
+	 *
+	 * @param icon      The icon to render
+	 * @param x         The x coord of the fluid
+	 * @param y         The y coord of the fluid
+	 * @param z         The z coord of the fluid
+	 * @param width     The x length of the fluid
+	 * @param height    The y length of the fluid
+	 * @param length    The z length of the fluid
+	 * @param renderer  RenderBlocks instance
+	 */
+	public static void renderFluidLayer(IIcon icon, int x, float y, int z, int width, double height, int length, RenderBlocks renderer) {
 		final boolean aoEnabled = renderer.enableAO;
 		renderer.enableAO = false;
 
@@ -75,6 +84,14 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 		// the offset in the block at which the fluid is (from the bottom)
 		double blockYPos = y - yCoord;
+
+		renderer.setRenderBounds(0, blockYPos, 0, 1, height, 1);
+		for (int xPos = 0; xPos < width; xPos++) {
+			for (int zPos = 0; zPos < length; zPos++) {
+				renderer.renderFaceYNeg(null, x + xPos, yCoord, z + zPos, icon);
+				renderer.renderFaceYPos(null, x + xPos, y, z + zPos, icon);
+			}
+		}
 
 		double liquidSize = 0;
 		while (liquidSize < height) {
