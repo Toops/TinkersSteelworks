@@ -340,11 +340,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			FluidStack steam = new FluidStack(TSContent.steamFluid.getID(), amount);
 			FluidStack water = new FluidStack(FluidRegistry.WATER, amount);
 
-			if (this.addFluidToTank(steam)) {
-				tank.drain(ForgeDirection.UNKNOWN, water, true);
+			// drain before fill to avoid clogging
+			tank.drain(ForgeDirection.UNKNOWN, water, true);
+			tank.fill(ForgeDirection.UNKNOWN, steam, true);
 
-				markDirty();
-			}
+			markDirty();
 		}
 	}
 
