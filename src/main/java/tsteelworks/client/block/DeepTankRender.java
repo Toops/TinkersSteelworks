@@ -5,12 +5,16 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.helpers.FluidHelper;
+import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tconstruct.client.BlockSkinRenderHelper;
 import tconstruct.util.ItemHelper;
+import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 
 public class DeepTankRender implements ISimpleBlockRenderingHandler {
@@ -26,18 +30,17 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelID, RenderBlocks renderer) {
 		if (modelID == DEEPTANK_MODEL) {
-			if (world.getBlockMetadata(x, y, z) == 13)
-				return renderDeepTank(world, x, y, z, block, renderer);
-
 			renderer.renderStandardBlock(block, x, y, z);
+
+			if (world.getBlockMetadata(x, y, z) == 13)
+				return renderDeepTank(world, x, y, z, renderer);
 		}
 
 		return true;
 	}
 
-	public boolean renderDeepTank(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer) {
+	public boolean renderDeepTank(IBlockAccess world, int x, int y, int z, RenderBlocks renderer) {
 		DeepTankLogic logic = (DeepTankLogic) world.getTileEntity(x, y, z);
-		renderer.renderStandardBlock(block, x, y, z);
 
 		if (!logic.isValid()) return true;
 
@@ -50,9 +53,9 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack fluid = tank.getFluid(i);
 
-			float height = fluid.amount / tank.getCapacity() * logic.getStructure().getNbLayers();
+			float height = (float) fluid.amount / tank.getCapacity() * logic.getStructure().getNbLayers();
 
-			renderFluidLayer(fluid.getFluid(), world, corner.x, corner.y + yOffset, corner.z, logic.getStructure().getXWidth(), height, logic.getStructure().getZWidth(), renderer);
+			renderFluidLayer(fluid.getFluid(), world, corner.x + 1, corner.y + yOffset + 1, corner.z + 1, logic.getStructure().getXWidth() - 2, height, logic.getStructure().getZWidth() - 2, renderer);
 
 			yOffset += height;
 		}
@@ -62,32 +65,11 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 	// todo: move to lib
 	public static void renderFluidLayer(Fluid fluid, IBlockAccess world, int x, float y, int z, int width, double height, int length, RenderBlocks renderer) {
-		/*
-		 * concept (please don't delete this, this code is hard to understand.):
-		 * We cannot render more than a block at a time, for the x & z axis that's easy: just draw the whole block multiple times
-		 *
-		 * For the y axis however, things are a bit more complex as the cube is now always plain
-		 * - it can be less than a cube in height
-		 * - it can start higher than the bottom
-		 *
-		 * So we need to calculate the bottom offset, the coordinate at which to render the block and the block height (max 1)
-		 * And repeat for each block until we reached "height"
-		 *
-		 * the y coord is easy, just clip the y parameter to the grid (and as the grid is just integers, just round down)
-		 * the offset is also easy, that's what's been thrown away when we clipped
-		 *
-		 *       vvvvv offset
-		 * y = 3.45...
-		 *     ^ y coord
-		 *
-		 * As for the height of the fluid:
-		 * - for the bottom block, it's 1 - offset
-		 * - for the others it's 1
-		 * then we check if the height is above the "liquid height" left, if it is, just use that liquid height and we'll be fine
-		 * (obviously the liquid height left is the received height param minus every height we already rendered)
-		 *
-		 * I'm saying it's easy but it took me like 20 minutes of hitting my head against the wall (and drawing schematics) to figure this out >_>
-		 */
+		IIcon icon = RenderHelper.getFluidTexture(fluid);
+
+		final boolean aoEnabled = renderer.enableAO;
+		renderer.enableAO = false;
+
 		// the Y position of the block to draw
 		int yCoord = (int) Math.floor(y);
 
@@ -101,14 +83,14 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 			renderer.setRenderBounds(0, blockYPos, 0, 1, blockYPos + renderHeight, 1);
 
-			for (int xOffset = 0; xOffset < width; x++) {
-				for (int zOffset = 0; zOffset < length; z++) {
-					if(fluid.canBePlacedInWorld()) {
-						BlockSkinRenderHelper.renderMetadataBlock(fluid.getBlock(), 0, x + xOffset, yCoord, z + zOffset, renderer, world);
-					} else {
-						BlockSkinRenderHelper.renderLiquidBlock(fluid.getStillIcon(), fluid.getFlowingIcon(), x + xOffset, yCoord, z + zOffset, renderer, world);
-					}
-				}
+			for (int xPos = 0; xPos < width; xPos++) {
+				renderer.renderFaceZNeg(null, x + xPos, yCoord, z, icon);
+				renderer.renderFaceZPos(null, x + xPos, yCoord, z + length - 1, icon);
+			}
+
+			for (int zPos = 0; zPos < length; zPos++) {
+				renderer.renderFaceXNeg(null, x , yCoord, z + zPos, icon);
+				renderer.renderFaceXPos(null, x + width - 1, yCoord, z + zPos, icon);
 			}
 
 			liquidSize += renderHeight;
@@ -117,6 +99,8 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 			blockYPos = 0.0F;
 			yCoord++;
 		}
+
+		renderer.enableAO = aoEnabled;
 	}
 
 	@Override

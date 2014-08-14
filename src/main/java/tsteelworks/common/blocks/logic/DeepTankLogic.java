@@ -90,6 +90,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		super.markDirty();
 
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
     /* Multiblock */
@@ -180,6 +181,8 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	@Override
 	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity packet) {
 		this.readFromNBT(packet.func_148857_g());
+
+		worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
     /* =============== IMaster =============== */

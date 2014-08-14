@@ -57,9 +57,9 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		if (insertToHighOven() | suckItemsIntoDuct()) {
 			setTransferCooldown(0);
 			markDirty();
+		} else {
+			setTransferCooldown(20);
 		}
-
-		setTransferCooldown(20);
 	}
 
 	/* ==================== Redstone Logic ==================== */
@@ -141,6 +141,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 					masterInventory.markDirty();
 
 					decrStackSize(slot, 1);
+					return true;
 				}
 			} else {
 				if (InventoryHelper.insertItem(masterInventory, new int[] { mode }, copy)) {
@@ -148,8 +149,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 					return true;
 				}
 			}
-
-
 		}
 
 		return false;
