@@ -29,6 +29,8 @@ repositories {
 
 apply plugin: 'forge'
 
+sourceCompatibility = 7
+targetCompatibility = 7
 version = "1.7.10-1.0.0" // http://semver.org/
 group= "tsteelworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "TSteelworks"
