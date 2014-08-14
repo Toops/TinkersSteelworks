@@ -22,26 +22,26 @@ public class DeepTankGui extends GuiContainer {
 
 	private static final int TANK_WIDTH = 104;
 	private static final int TANK_HEIGHT = 104;
-	private static final int TANK_YPOS = 120;
-	private static final int TANK_XPOS = 54;
+	private static final int TANK_YPOS = 16;
+	private static final int TANK_XPOS = 8;
 
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
 		super(new DeepTankContainer(inventoryplayer, tank));
 
-		xSize = 248;
-		ySize = 136;
+		xSize = 120;
+		ySize = 137;
 	}
 
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		final String title = StatCollector.translateToLocal("tank.DeepTank");
 
-		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 17, 0x404040);
+		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 1, 0x404040);
 
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
 		final String capacity = String.format(StatCollector.translateToLocal("tank.capacity"), fluidTank.getFluidAmount(), fluidTank.getCapacity());
 
-		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 1, 0x404040);
+		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 15, 0x404040);
 
 		FluidStack hoveredStack = getFluidAtPos(mouseX, mouseY);
 
@@ -54,14 +54,14 @@ public class DeepTankGui extends GuiContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(BACKGROUND);
 
-		drawTexturedModalRect(guiLeft + 46, guiTop, 0, 0, 120, ySize);
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 120, ySize);
 
 		//Liquids
 		RenderHelper.loadBlockMap();
 
 		MultiFluidTank tank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
-		float yBottom = guiTop + TANK_HEIGHT;
+		float yBottom = guiTop + TANK_HEIGHT + TANK_YPOS - 16;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack liquid = tank.getFluid(i);
 			IIcon icon = liquid.getFluid().getStillIcon();
@@ -78,7 +78,7 @@ public class DeepTankGui extends GuiContainer {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		this.mc.getTextureManager().bindTexture(BACKGROUND);
-		drawTexturedModalRect(guiLeft + 54, guiTop + 16, 120, 0, 104, 104);
+		drawTexturedModalRect(guiLeft + TANK_XPOS, guiTop + TANK_YPOS + 1, 120, 0, 104, 104);
 	}
 
 	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {

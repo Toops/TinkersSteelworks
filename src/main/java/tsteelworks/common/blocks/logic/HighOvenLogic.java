@@ -19,8 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistryDefaulted;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
@@ -39,7 +38,7 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import java.util.Arrays;
 import java.util.List;
 
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder, IFluidHandler {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -907,5 +906,50 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	public void removeOutputDuct(HighOvenDuctLogic duct) {
 		structure.removeOutputDuct(duct);
+	}
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		int filled = tank.fill(from, resource, doFill);
+
+		if (doFill && filled != 0)
+			markDirty();
+
+		return filled;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		FluidStack drained = tank.drain(from, resource, doDrain);
+
+		if (doDrain && drained != null)
+			markDirty();
+
+		return drained;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		FluidStack drained = tank.drain(from, maxDrain, doDrain);
+
+		if (doDrain && drained != null)
+			markDirty();
+
+		return drained;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		return true;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		return true;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		return tank.getTankInfo(from);
 	}
 }

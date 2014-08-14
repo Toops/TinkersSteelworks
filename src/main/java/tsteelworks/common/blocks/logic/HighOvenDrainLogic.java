@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
-import tsteelworks.lib.IFluidTankHolder;
 import tsteelworks.lib.IMasterLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic {
@@ -16,9 +15,6 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	public IFluidHandler getTank() {
 		IMasterLogic master = getMaster();
-
-		if (master instanceof IFluidTankHolder)
-			return ((IFluidTankHolder) getMaster()).getFluidTank();
 
 		if (master instanceof IFluidHandler)
 			return (IFluidHandler) master;

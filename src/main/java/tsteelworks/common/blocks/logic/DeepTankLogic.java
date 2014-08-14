@@ -118,7 +118,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public FluidStack drain(final int maxDrain, final boolean doDrain) {
 		FluidStack stack = fluidTank.drain(maxDrain, doDrain);
 
-		if (stack != null)
+		if (doDrain && stack != null)
 			markDirty();
 
 		return stack;
@@ -128,7 +128,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public int fill(final FluidStack resource, final boolean doFill) {
 		int amount = fluidTank.fill(resource, doFill);
 
-		if (amount != 0)
+		if (doFill && amount != 0)
 			markDirty();
 
 		return amount;
@@ -203,7 +203,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
 		int filled = fluidTank.fill(from, resource, doFill);
 
-		if (filled != 0)
+		if (doFill && filled != 0)
 			markDirty();
 
 		return filled;
@@ -213,7 +213,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
 		FluidStack drained = fluidTank.drain(from, resource, doDrain);
 
-		if (drained != null)
+		if (doDrain && drained != null)
 			markDirty();
 
 		return drained;
@@ -223,7 +223,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
 		FluidStack drained = fluidTank.drain(from, maxDrain, doDrain);
 
-		if (drained != null)
+		if (doDrain && drained != null)
 			markDirty();
 
 		return drained;
