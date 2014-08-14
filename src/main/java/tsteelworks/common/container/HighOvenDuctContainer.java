@@ -16,7 +16,7 @@ public class HighOvenDuctContainer extends Container {
 		for (int column = 0; column < 9; column++)
 			addSlotToContainer(new Slot(logic, column, 54 + (column * 18), 16));
 
-	     /* Player inventory */
+		 /* Player inventory */
 		for (int column = 0; column < 3; column++)
 			for (int row = 0; row < 9; row++)
 				addSlotToContainer(new Slot(inventoryplayer, row + (column * 9) + 9, 54 + (row * 18), 84 + (column * 18)));

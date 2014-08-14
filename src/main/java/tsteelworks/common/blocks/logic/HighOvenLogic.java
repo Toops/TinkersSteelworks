@@ -83,6 +83,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public static final int ROOM_TEMP = 20;
 
+	/**
+	 * Temperature decrease rate when the High Oven is not burning fuel.
+	 */
 	public static final int INTERNAL_COOLDOWN_RATE = 10;
 
 	/**
@@ -180,7 +183,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return true;
 	}
 
-    /* ==================== Facing Logic ==================== */
+	/* ==================== Facing Logic ==================== */
 
 	@Override
 	public byte getRenderDirection() {
@@ -200,7 +203,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.direction = (byte) BlockHelper.orientationToMetadataXZ(player.rotationYaw);
 	}
 
-    /* ==================== Active Logic ==================== */
+	/* ==================== Active Logic ==================== */
 
 	@Override
 	public boolean getActive() {
@@ -210,7 +213,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void setActive(final boolean flag) {}
 
-    /* ==================== IRedstonePowered ==================== */
+	/* ==================== IRedstonePowered ==================== */
 
 	/**
 	 * Get the current state of redstone-connected power.
@@ -234,7 +237,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.setActive(true);
 	}
 
-    /* ==================== Smelting Logic ==================== */
+	/* ==================== Smelting Logic ==================== */
 
 	@Override
 	public void updateEntity() {
@@ -459,7 +462,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== Temperatures ==================== */
+	/* ==================== Temperatures ==================== */
 
 	/**
 	 * Get internal temperature for smelting.
@@ -511,7 +514,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== Fuel Handling ==================== */
+	/* ==================== Fuel Handling ==================== */
 
 	/**
 	 * Checks if controller is burning fuel.
@@ -594,7 +597,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return TSFuelHandler.getHighOvenFuelHeatRate(itemstack);
 	}
 
-    /* ==================== Inventory ==================== */
+	/* ==================== Inventory ==================== */
 
 	/**
 	 * Determine is slot is valid for 'ore' processing.
@@ -699,7 +702,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void closeInventory() {}
 
-    /* ==================== Multiblock ==================== */
+	/* ==================== Multiblock ==================== */
 
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
@@ -716,7 +719,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		structure.validateStructure(centerBlock[0], centerBlock[1], centerBlock[2]);
 	}
 
-    /* ==================== Fluid Handling ==================== */
+	/* ==================== Fluid Handling ==================== */
 
 	/**
 	 * Add molen metal fluidstack.
@@ -766,7 +769,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== NBT ==================== */
+	/* ==================== NBT ==================== */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -830,7 +833,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.markDirty();
 	}
 
-    /* =============== IMaster =============== */
+	/* =============== IMaster =============== */
 	@Override
 	public CoordTuple getCoord() {
 		return new CoordTuple(this.xCoord, this.yCoord, this.zCoord);

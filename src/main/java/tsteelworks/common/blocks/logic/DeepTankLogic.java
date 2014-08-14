@@ -93,7 +93,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
-    /* Multiblock */
+	/* Multiblock */
 
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
@@ -168,7 +168,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		NBTHelper.setWritable(tags, "Tank", fluidTank);
 	}
 
-    /* Packets */
+	/* Packets */
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -185,7 +185,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
-    /* =============== IMaster =============== */
+	/* =============== IMaster =============== */
 
 	@Override
 	public CoordTuple getCoord() {
