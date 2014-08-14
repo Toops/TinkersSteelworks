@@ -99,20 +99,20 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * @param newMode the new mode to use
 	 */
 	public void setMode(int newMode) {
-		mode = newMode % MODE_OUTPUT;
+		mode = newMode % (MODE_OUTPUT + 1);
 
-		if (mode == MODE_OUTPUT && !isOutputDuct())
-			getHighOvenController().setOutputDuct(this);
-		else if (mode != MODE_OUTPUT && isOutputDuct())
-			getHighOvenController().setOutputDuct(null);
+		HighOvenLogic highOven = getHighOvenController();
+
+		if (highOven == null) return;
+
+		if (mode == MODE_OUTPUT)
+			highOven.addOutputDuct(this);
+		else
+			highOven.removeOutputDuct(this);
 	}
 
 	public HighOvenLogic getHighOvenController() {
 		return (HighOvenLogic) getMaster();
-	}
-
-	public boolean isOutputDuct() {
-		return getHighOvenController() != null && getHighOvenController().getOutputDuct() == this;
 	}
 
 	/**
@@ -324,5 +324,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		tags.setByte("Direction", this.getRenderDirection());
 		tags.setBoolean("RedstoneActivated", this.getRSmode());
 		tags.setInteger("Mode", mode);
+	}
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 	}
 }

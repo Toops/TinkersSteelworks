@@ -37,8 +37,8 @@ import tsteelworks.lib.*;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
 import java.util.Arrays;
+import java.util.List;
 
-// todo: don't store the output drain in NBT, find it when rebuilding
 public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder {
 	/**
 	 * Oxidizer Slot - Redox agent.
@@ -109,7 +109,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	/**
 	 * Handles the multiblock structure
 	 */
-	private IStructure structure = new StructureHighOven(this);
+	private StructureHighOven structure = new StructureHighOven(this);
 
 	/**
 	 * Used to determine if the controller is being supplied with a redstone
@@ -166,11 +166,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Used to randomize things.
 	 */
 	private String invName;
-
-	/**
-	 * The structure's output duct instance.
-	 */
-	private HighOvenDuctLogic outputDuct;
 
 	/**
 	 * Max temp by layer.
@@ -748,11 +743,14 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @param itemstack the ItemStack
 	 */
 	public void addItem(final ItemStack itemstack) {
-		if (outputDuct != null) {
-			nf.fr.ephys.cookiecore.helpers.InventoryHelper.insertItem(outputDuct, itemstack);
-		} else {
-			dispenseItem(itemstack);
+		List<HighOvenDuctLogic> ducts = structure.getOutputDucts();
+
+		for (HighOvenDuctLogic duct : ducts) {
+			if (InventoryHelper.insertItem(duct, itemstack))
+				return;
 		}
+
+		dispenseItem(itemstack);
 	}
 
 	/**
@@ -903,11 +901,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return tank;
 	}
 
-	public HighOvenDuctLogic getOutputDuct() {
-		return outputDuct;
+	public void addOutputDuct(HighOvenDuctLogic duct) {
+		structure.addOutputDuct(duct);
 	}
 
-	public void setOutputDuct(HighOvenDuctLogic outputDuct) {
-		this.outputDuct = outputDuct;
+	public void removeOutputDuct(HighOvenDuctLogic duct) {
+		structure.removeOutputDuct(duct);
 	}
 }

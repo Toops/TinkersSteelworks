@@ -2,9 +2,13 @@ package tsteelworks.common.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.IServantLogic;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StructureHighOven implements IStructure {
 	/**
@@ -29,6 +33,11 @@ public class StructureHighOven implements IStructure {
 
 	private HighOvenLogic controller;
 
+	/**
+	 * The structure's output duct instance.
+	 */
+	private List<HighOvenDuctLogic> outputDucts = new ArrayList<>();
+
 	public StructureHighOven(HighOvenLogic tile) {
 		this.controller = tile;
 	}
@@ -48,6 +57,7 @@ public class StructureHighOven implements IStructure {
 		final int oldNbLayers = nbLayers;
 
 		nbLayers = 0;
+		outputDucts.clear();
 		if (checkHollowLayer(x, y, z)) {
 			nbLayers++;
 
@@ -173,6 +183,10 @@ public class StructureHighOven implements IStructure {
 			final IServantLogic servant = (IServantLogic) te;
 
 			if (servant.verifyMaster(controller, controller.getWorldObj()) || servant.setPotentialMaster(controller, controller.getWorldObj())) {
+				if (servant instanceof HighOvenDuctLogic && ((HighOvenDuctLogic) servant).getMode() == HighOvenDuctLogic.MODE_OUTPUT) {
+					addOutputDuct((HighOvenDuctLogic) servant);
+				}
+
 				return true;
 			}
 		}
@@ -198,5 +212,19 @@ public class StructureHighOven implements IStructure {
 	@Override
 	public boolean isValid() {
 		return validStructure;
+	}
+
+	public void addOutputDuct(HighOvenDuctLogic duct) {
+		if (outputDucts.contains(duct)) return;
+
+		outputDucts.add(duct);
+	}
+
+	public void removeOutputDuct(HighOvenDuctLogic duct) {
+		outputDucts.remove(duct);
+	}
+
+	public List<HighOvenDuctLogic> getOutputDucts() {
+		return outputDucts;
 	}
 }
