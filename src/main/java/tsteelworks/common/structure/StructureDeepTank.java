@@ -5,13 +5,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.smeltery.TinkerSmeltery;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.ConfigCore;
+import tsteelworks.common.core.ConfigCore;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,6 +79,10 @@ public class StructureDeepTank implements IStructure {
 		scanControllerLayer(x, y, z);
 
 		validStructure = borderPos != null && areLayersValid();
+
+		if (!validStructure) {
+			nbLayers = 0;
+		}
 
 		// don't update if the structure wasn't valid and still is not
 		if (wasValid || validStructure)
@@ -268,5 +273,35 @@ public class StructureDeepTank implements IStructure {
 
 	public CoordTuple getBorderPos() {
 		return borderPos;
+	}
+
+	/**
+	 * Used to sync with clients
+	 */
+	public void writeToNBT(NBTTagCompound nbt) {
+		nbt.setInteger("layers", nbLayers);
+
+		if (!validStructure) return;
+		nbt.setInteger("xSize", xWidth);
+		nbt.setInteger("zSize", zWidth);
+
+		nbt.setInteger("borderX", borderPos.x);
+		nbt.setInteger("borderY", borderPos.y);
+		nbt.setInteger("borderZ", borderPos.z);
+	}
+
+	/**
+	 * Used to sync with clients
+	 */
+	public void readFromNBT(NBTTagCompound nbt) {
+		nbLayers = nbt.getInteger("layers");
+		xWidth = nbt.getInteger("xSize");
+		zWidth = nbt.getInteger("zSize");
+
+		int borderX = nbt.getInteger("borderX");
+		int borderY = nbt.getInteger("borderY");
+		int borderZ = nbt.getInteger("borderZ");
+
+		borderPos = new CoordTuple(borderX, borderY, borderZ);
 	}
 }

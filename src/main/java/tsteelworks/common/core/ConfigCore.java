@@ -1,12 +1,9 @@
-package tsteelworks.lib;
+package tsteelworks.common.core;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
-import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
+import tsteelworks.lib.DeepTankGlassTypes;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConfigCore {
 	// --- Items
@@ -20,7 +17,34 @@ public class ConfigCore {
 	public static int deeptankCapacityMultiplier;
 	public static boolean enableDuctVacuum;
 	public static boolean enableTE3SlagOutput;
-	public static ItemStack[] modTankGlassBlocks;
+
+	/**
+	 * valid tank glass types with their capacity in mB
+	 *
+	 * modName:blockName@metadata|capacity
+	 */
+	private static String[] defaultGlass = {
+			"minecraft:glass|20000",
+			"minecraft:stained_glass@*|20000",
+
+			"ExtraUtilities:decorativeBlock2@0|25000", // thickened glass
+			"ExtraUtilities:decorativeBlock2@1|25000",
+			"ExtraUtilities:decorativeBlock2@2|25000",
+			"ExtraUtilities:decorativeBlock2@3|35000", // creeper glass
+			"ExtraUtilities:decorativeBlock2@4|60000", // golden edged glass
+			"ExtraUtilities:decorativeBlock2@5|50000", // obsidian glass
+			"ExtraUtilities:decorativeBlock2@6|25000",
+			"ExtraUtilities:decorativeBlock2@7|60000", // glowstone glass
+			"ExtraUtilities:decorativeBlock2@8|30000", // heart glass
+			"ExtraUtilities:decorativeBlock2@9|25000",
+			"ExtraUtilities:decorativeBlock2@10|50000", // dark glass
+
+			"TConstruct:LavaTank@1|35000", // seared glass
+			"TConstruct:LavaTankNether@1|35000",
+
+			"TConstruct:GlassBlock|25000", // clear glass
+			"TConstruct:GlassBlock.StainedClear@*|25000",
+	};
 
 	// --- Worldgen
 	public static boolean enableLimestoneWorldgen;
@@ -39,19 +63,13 @@ public class ConfigCore {
 
 		deeptankCapacityMultiplier = config.get("Deep Tank", "Fluid Capacity Multiplier", 4, "Determines how many buckets of fluid per internal block space").getInt(4);
 
-		String[] items = config.get("Deep Tank", "Additional Glass Blocks", new int[] {}, "Specify blocks for additional Deep Tank walls in modname:blockname@metadata (the @metadata is optionnal, defautls to 0) format. ex: minecraft:glass (Note: Each entry must be on a seperate line)").getStringList();
+		String[] items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
+				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +
+				"\nex: minecraft:glass@*|2000 (Note: Each entry must be on a seperate line)").getStringList();
 
-		List<ItemStack> glassBlocks = new ArrayList<>();
 		for (String item : items) {
-			ItemStack stack = RegistryHelper.getItemStack(item);
-
-			if (stack == null)
-				TSLogger.warning(item + " is not a valid itemstack.");
-			else
-				glassBlocks.add(stack);
+			DeepTankGlassTypes.parseGlassType(item);
 		}
-
-		modTankGlassBlocks = glassBlocks.toArray(new ItemStack[glassBlocks.size()]);
 
 		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod").getBoolean(false);
 		hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);

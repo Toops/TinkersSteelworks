@@ -13,7 +13,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import tsteelworks.common.core.*;
-import tsteelworks.lib.ConfigCore;
+import tsteelworks.common.core.ConfigCore;
 import tsteelworks.lib.TSLogger;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;

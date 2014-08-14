@@ -19,7 +19,6 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
-import tsteelworks.lib.ConfigCore;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
 import java.util.Arrays;

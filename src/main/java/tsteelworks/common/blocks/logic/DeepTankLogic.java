@@ -15,7 +15,7 @@ import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.common.core.TSRepo;
-import tsteelworks.lib.ConfigCore;
+import tsteelworks.common.core.ConfigCore;
 import tsteelworks.lib.IFluidTankHolder;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
@@ -175,12 +175,16 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 		final NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
 
+		structure.writeToNBT(tag);
+
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
 	}
 
 	@Override
 	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity packet) {
 		this.readFromNBT(packet.func_148857_g());
+
+		structure.readFromNBT(packet.func_148857_g());
 
 		worldObj.markBlockRangeForRenderUpdate(xCoord - 1, yCoord - 1, zCoord - 1, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
