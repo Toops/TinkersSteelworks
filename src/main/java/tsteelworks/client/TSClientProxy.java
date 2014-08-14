@@ -35,6 +35,24 @@ import tsteelworks.lib.client.TSClientRegistry;
 public class TSClientProxy extends TSCommonProxy {
 	public static BookData highOvenBook;
 
+	@Override
+	public void preInit() {
+		super.preInit();
+
+		registerRenderer();
+		readManuals();
+	}
+
+	@Override
+	public void init() {
+		super.init();
+	}
+
+	@Override
+	public void postInit() {
+		super.postInit();
+	}
+
 	public static BookData getManualFromStack(ItemStack stack) {
 		switch (stack.getItemDamage()) {
 			case 0:
@@ -44,7 +62,7 @@ public class TSClientProxy extends TSCommonProxy {
 		return null;
 	}
 
-	public void initManualIcons() {
+	private void initManualIcons() {
 		// Blocks
 		MantleClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
 		MantleClientRegistry.registerManualIcon("highoven", new ItemStack(TSContent.highoven));
@@ -82,7 +100,7 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
 	}
 
-	public void initManualRecipes() {
+	private void initManualRecipes() {
 		// todo: store names in the AdvancedSmelting registry and fetch from here
 
 		final ItemStack ingotIron = new ItemStack(Items.iron_ingot, 1);
@@ -144,7 +162,7 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualLargeRecipe("sugarcube", sugarBlock, dustSugar, dustSugar, dustSugar, dustSugar, dustSugar, dustSugar, dustSugar, dustSugar, dustSugar);
 	}
 
-	void addRenderMappings() {
+	private void addRenderMappings() {
 		String[] effectTypes = { "hopper" };
 
 		for (ToolCore tool : TConstructRegistry.getToolMapping()) {
@@ -154,8 +172,7 @@ public class TSClientProxy extends TSCommonProxy {
 		}
 	}
 
-	@Override
-	public void readManuals() {
+	private void readManuals() {
 		highOvenBook = new tsteelworks.lib.BookData("/assets/tsteelworks/manuals/highoven.xml");
 		highOvenBook.unlocalizedName = "high_oven_manual";
 		highOvenBook.font = TProxyClient.smallFontRenderer;
@@ -166,8 +183,7 @@ public class TSClientProxy extends TSCommonProxy {
 		initManualPages();
 	}
 
-	@Override
-	public void registerRenderer() {
+	private void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(HighGolem.class, new RenderHighGolem());
 		RenderingRegistry.registerEntityRenderingHandler(SteelGolem.class, new RenderSteelGolem());
 		RenderingRegistry.registerEntityRenderingHandler(EntityScorchedBrick.class, new RenderSnowball(TSContent.materialsTS));
@@ -222,6 +238,8 @@ public class TSClientProxy extends TSCommonProxy {
 
 		return null;
 	}
+
+
 
 	private void initManualPages() {
 		MProxyClient.registerManualPage("highoven", TSHighOvenPage.class);

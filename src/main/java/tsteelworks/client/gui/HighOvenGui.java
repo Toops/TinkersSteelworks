@@ -8,6 +8,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
@@ -54,16 +55,16 @@ public class HighOvenGui extends GuiContainer {
 		if (tank.getCapacity() != 0) {
 			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-			float yBottom = guiTop + TANK_HEIGHT;
+			int yBottom = guiTop + TANK_HEIGHT;
 			for (int i = 0; i < tank.getNbFluids(); i++) {
 				FluidStack liquid = tank.getFluid(i);
 				IIcon icon = liquid.getFluid().getStillIcon();
 
 				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				DeepTankGui.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) liquidSize, zLevel);
+				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, (int) Math.ceil(liquidSize), zLevel);
 
-				yBottom -= liquidSize;
+				yBottom -= Math.floor(liquidSize);
 			}
 		}
 
@@ -170,23 +171,23 @@ public class HighOvenGui extends GuiContainer {
 		String name = liquid.getFluid().getName();
 
 		if (name.contains("emerald")) {
-			list.add(EnumChatFormatting.GRAY + "Emeralds: " + (liquid.amount / 640f));
+			list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.emerald") + ": " + (liquid.amount / 640f));
 		} else if (name.contains("glass")) {
 			int blocks = liquid.amount / 1000;
 			if (blocks > 0)
-				list.add(EnumChatFormatting.GRAY + "Blocks: " + blocks);
+				list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.block") + ": " + blocks);
 
 			int panels = (liquid.amount % 1000) / 250;
 			if (panels > 0)
-				list.add(EnumChatFormatting.GRAY + "Panels: " + panels);
+				list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.panel") + ": " + panels);
 
 			int mB = (liquid.amount % 1000) % 250;
 			if (mB > 0)
-				list.add(EnumChatFormatting.GRAY + "mB: " + mB);
+				list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.mb") + ": " + mB);
 		} else if (name.contains("molten")) {
 			int ingots = liquid.amount / TSRecipes.INGOT_LIQUID_VALUE;
 			if (ingots > 0)
-				list.add(EnumChatFormatting.GRAY + "Ingots: " + ingots);
+				list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.ingot") + ": " + ingots);
 
 			int mB = liquid.amount % TSRecipes.INGOT_LIQUID_VALUE;
 			if (mB > 0) {
@@ -194,13 +195,13 @@ public class HighOvenGui extends GuiContainer {
 				int junk = (mB % TSRecipes.NUGGET_LIQUID_VALUE);
 
 				if (nuggets > 0)
-					list.add(EnumChatFormatting.GRAY + "Nuggets: " + nuggets);
+					list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.nugger") + ": " + nuggets);
 
 				if (junk > 0)
-					list.add(EnumChatFormatting.GRAY + "mB: " + junk);
+					list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.mb") + ": " + junk);
 			}
 		} else {
-			list.add(EnumChatFormatting.GRAY + "mB: " + liquid.amount);
+			list.add(EnumChatFormatting.GRAY + StatCollector.translateToLocal("quantity.mb") + ": " + liquid.amount);
 		}
 
 		return list;

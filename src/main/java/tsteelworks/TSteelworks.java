@@ -62,15 +62,14 @@ public class TSteelworks {
 
 		ConfigCore.initProps(event.getSuggestedConfigurationFile());
 
+		proxy.preInit();
+
 		content = new TSContent();
 
 		events = new TSEventHandler();
 		MinecraftForge.EVENT_BUS.register(events);
 
 		content.oreRegistry();
-		proxy.registerRenderer();
-		proxy.readManuals();
-		proxy.registerSounds();
 
 		GameRegistry.registerWorldGenerator(new TSBaseWorldGenerator(), 8);
 
@@ -82,6 +81,7 @@ public class TSteelworks {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		pluginController.init();
+		proxy.init();
 	}
 
 	@EventHandler
@@ -95,6 +95,8 @@ public class TSteelworks {
 		content.registerMixerMaterials();
 
 		pluginController.postInit();
+
+		proxy.postInit();
 	}
 
 	public static SimpleNetworkWrapper getNetHandler() {

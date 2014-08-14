@@ -127,6 +127,17 @@ manual.steelworks.tooltip1=By: The Tinkers' Society
 
 modifier.tool.vacuous=Vacuous
 
+tconstruct.waila.invalidstructure=Invalid Structure
+tconstruct.waila.empty=Empty
+tconstruct.waila.total=Total
+
+quantity.emerald=Emeralds
+quantity.block=Blocks
+quantity.panel=Panels
+quantity.mb=mB
+quantity.ingot=Ingots
+quantity.nugget=Nuggets
+
 fluid.water=Water
 iron.molten=Molten Iron
 gold.molten=Molten Gold
@@ -142,9 +153,9 @@ alumite.molten=Molten Alumite
 obsidian.molten=Molten Obsidian
 steel.molten=Molten Steel
 glass.molten=Molten Glass
-stone.seared=Seared Stone 
+stone.seared=Seared Stone
 emerald.liquid=Liquified Emerald
-blood=Blood 
+blood=Blood
 nickel.molten=Molten Nickel
 silver.molten=Molten Silver
 lead.molten=Molten Lead
@@ -152,6 +163,6 @@ shiny.molten=Molten Shiny
 invar.molten=Molten Invar
 electrum.molten=Molten Electrum
 ender=Liquified Ender
-slime.blue=Liquified Slime 
-glue=Glue 
+slime.blue=Liquified Slime
+glue=Glue
 pigiron.molten=Molten Pig Iron

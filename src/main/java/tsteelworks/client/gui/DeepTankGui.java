@@ -1,7 +1,6 @@
 package tsteelworks.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -63,7 +62,7 @@ public class DeepTankGui extends GuiContainer {
 
 			int liquidSize = stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
 
-			drawTexturedRect(icon, leftX, TANK_WIDTH, cornerY + 120 + liquidOffset, liquidSize, 1);
+			RenderHelper.drawTexturedRect(icon, leftX, TANK_WIDTH, cornerY + 120 + liquidOffset, liquidSize, 1);
 
 			liquidOffset += liquidSize;
 		}
@@ -82,61 +81,6 @@ public class DeepTankGui extends GuiContainer {
 		tooltips.add(EnumChatFormatting.LIGHT_PURPLE + "mB: " + liquid.amount);
 
 		drawHoveringText(tooltips, x, z, fontRendererObj);
-	}
-
-	// TODO: move this to RenderHelper
-	public static void drawTexturedRect(IIcon icon, int x, int width, int y, int height, float zIndex) {
-		int nbChunksX = width / 16;
-		int nbChunksY = height / 16;
-
-		int xRemainer = width % 16;
-		int yRemainer = height % 16;
-
-		for (int i = 0; i < nbChunksX; i++) {
-			int xStart = x + 16 * i;
-			for (int j = 0; j < nbChunksY; j++) {
-				int yStart = y - 16 * j;
-
-				drawTexturedRectStretch(icon, xStart, 16, yStart, 16, zIndex);
-			}
-
-			// draw Y remainder (horizontal line)
-			int yStart = y - 16 * nbChunksY;
-
-			drawTexturedRectStretch(icon, xStart, 16, yStart + (16 - yRemainer), yRemainer, zIndex);
-		}
-
-		// draw X remainder (vertical line)
-		int xStart = x + 16 * nbChunksX;
-		for (int i = 0; i < nbChunksY; i++) {
-			int yStart = y - 16 * i;
-
-			drawTexturedRectStretch(icon, xStart, xRemainer, yStart, 16, zIndex);
-		}
-
-		// draw the corner
-		int yStart = y - 16 * nbChunksY;
-
-		drawTexturedRectStretch(icon, xStart, xRemainer, yStart + (16 - yRemainer), yRemainer, zIndex);
-	}
-
-	/**
-	 * Draw a textured rectangle with a stretched texture to fit the cube
-	 */
-	// TODO: move this to RenderHelper
-	public static void drawTexturedRectStretch(IIcon icon, int x, int width, int y, int height, float zIndex) {
-		float iconMinU = icon.getMinU();
-		float iconMaxU = icon.getInterpolatedU(width);
-		float iconMinV = icon.getInterpolatedV(16 - height);
-		float iconMaxV = icon.getMaxV();
-
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(x, y + height, zIndex, iconMinU, iconMaxV);
-		tessellator.addVertexWithUV(x + width, y + height, zIndex, iconMaxU, iconMaxV);
-		tessellator.addVertexWithUV(x + width, y, zIndex, iconMaxU, iconMinV);
-		tessellator.addVertexWithUV(x, y, zIndex, iconMinU, iconMinV);
-		tessellator.draw();
 	}
 
 	private FluidStack getFluidAtPos(int posX, int posY) {

@@ -10,6 +10,8 @@ import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.TSteelworks;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
+	public static final int DISCRIMINER = 0;
+
 	public static void moveFluidGUI(TileEntity tank, FluidStack fluid) {
 		PacketMoveFluid packet = new PacketMoveFluid(
 				tank.xCoord,

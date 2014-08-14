@@ -11,6 +11,8 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 
 public class PacketSetDuctModeHandler implements IMessageHandler<PacketSetDuctModeHandler.PacketSetDuctMode, IMessage> {
+	public static final int DISCRIMINER = 1;
+
 	public static void changeDuctMode(HighOvenDuctLogic duct, byte mode) {
 		PacketSetDuctMode packet = new PacketSetDuctMode(
 				duct.xCoord,
