@@ -58,8 +58,6 @@ public class StructureDeepTank implements IStructure {
 		List<ItemStack> glasses = new ArrayList<>();
 
 		// todo: add seared glass
-		glasses.add(new ItemStack(TinkerSmeltery.lavaTank));
-		glasses.add(new ItemStack(TinkerSmeltery.lavaTankNether));
 		glasses.add(new ItemStack(TinkerSmeltery.clearGlass));
 		glasses.add(new ItemStack(TinkerSmeltery.stainedGlassClear));
 		glasses.add(new ItemStack(Blocks.glass));
@@ -75,12 +73,13 @@ public class StructureDeepTank implements IStructure {
 
 	@Override
 	public void validateStructure(int x, int y, int z) {
+		final boolean wasValid = validStructure;
+
 		scanControllerLayer(x, y, z);
 
-		boolean wasValid = validStructure;
 		validStructure = borderPos != null && areLayersValid();
 
-		// don't update if the structure wasn't valid and is still not
+		// don't update if the structure wasn't valid and still is not
 		if (wasValid || validStructure)
 			logic.onStructureChange(this);
 	}
@@ -143,8 +142,9 @@ public class StructureDeepTank implements IStructure {
 	private boolean scanPlainLayer(int y) {
 		for (int x = 0; x < xWidth; x++) {
 			for (int z = 0; z < xWidth; z++) {
-				if (!isValidBlock(borderPos.x + x, y, borderPos.z + z))
+				if (!isValidBlock(borderPos.x + x, y, borderPos.z + z)) {
 					return false;
+				}
 			}
 		}
 
@@ -164,12 +164,17 @@ public class StructureDeepTank implements IStructure {
 			return true;
 		}
 
-		TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
-		if (te instanceof TSMultiServantLogic) {
-			TSMultiServantLogic servant = (TSMultiServantLogic) te;
+		if (block.equals(TSContent.highoven)) {
+			TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
 
-			if (servant.verifyMaster(logic, logic.getWorldObj()) || servant.setPotentialMaster(logic, logic.getWorldObj())) {
-				return true;
+			if (te == logic) return true;
+
+			if (te instanceof TSMultiServantLogic) {
+				TSMultiServantLogic servant = (TSMultiServantLogic) te;
+
+				if (servant.verifyMaster(logic, logic.getWorldObj()) || servant.setPotentialMaster(logic, logic.getWorldObj())) {
+					return true;
+				}
 			}
 		}
 
@@ -202,7 +207,7 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			x2++;
-		} while(isBlockValid(logic.getWorldObj().getBlock(x2, y, z1)));
+		} while(isValidBlock(x2, y, z1));
 		x2--; // this block is invalid, rollback
 
 		xWidth += x2 - x1;
@@ -210,12 +215,12 @@ public class StructureDeepTank implements IStructure {
 		x2 = x1;
 		do {
 			x2--;
-		} while(isBlockValid(logic.getWorldObj().getBlock(x2, y, z1)));
+		} while(isValidBlock(x2, y, z1));
 		x2++; // this block is invalid, rollback
 
 		xWidth += x1 - x2;
 
-		if (xWidth == 1)
+		if (xWidth < 3)
 			return;
 
 		// get the z width
@@ -224,7 +229,7 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			z2++;
-		} while(isBlockValid(logic.getWorldObj().getBlock(x1, y, z2)));
+		} while(isValidBlock(x1, y, z2));
 		z2--;
 
 		zWidth += z2 - z1;
@@ -232,19 +237,15 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			z2--;
-		} while(isBlockValid(logic.getWorldObj().getBlock(x1, y, z2)));
+		} while(isValidBlock(x1, y, z2));
 		z2++;
 
 		zWidth += z1 - z2;
 
-		borderPos = new CoordTuple(x2, y, z2);
-	}
+		if (zWidth < 3)
+			return;
 
-	/**
-	 * @return the block is valid for this build
-	 */
-	private boolean isBlockValid(Block block) {
-		return block.equals(TSContent.highoven);
+		borderPos = new CoordTuple(x2, y, z2);
 	}
 
 	@Override
