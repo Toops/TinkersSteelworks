@@ -850,7 +850,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void onStructureChange(IStructure structure) {
 		if (!structure.isValid()) {
-			internalTemp /= 2;
+			// cut temperature in half to discourage frequenet changes
+			internalTemp = Math.max(internalTemp / 2, ROOM_TEMP);
 		} else {
 			final int oldNbLayers = activeTemps.length;
 			final int nbLayers = structure.getNbLayers();
