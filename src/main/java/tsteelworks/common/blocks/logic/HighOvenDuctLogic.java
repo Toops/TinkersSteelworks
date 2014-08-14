@@ -123,7 +123,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	private boolean insertToHighOven() {
 		if (mode == MODE_OUTPUT) return false;
 
-		final IInventory masterInventory = getHighOvenController();
+		final HighOvenLogic masterInventory = getHighOvenController();
 
 		if (masterInventory == null)
 			return false;
@@ -136,10 +136,20 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			ItemStack copy = stack.copy();
 			copy.stackSize = 1;
 
-			if (InventoryHelper.insertItem(masterInventory, new int[] { mode }, copy)) {
-				decrStackSize(slot, 1);
-				return true;
+			if (mode == MODE_MELTABLE) {
+				if (InventoryHelper.insertItem(masterInventory.getSmeltableInventory(), copy)) {
+					masterInventory.markDirty();
+
+					decrStackSize(slot, 1);
+				}
+			} else {
+				if (InventoryHelper.insertItem(masterInventory, new int[] { mode }, copy)) {
+					decrStackSize(slot, 1);
+					return true;
+				}
 			}
+
+
 		}
 
 		return false;
