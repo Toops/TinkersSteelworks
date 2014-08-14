@@ -1,3 +1,18 @@
+
+// properties are namespaced with _ts_ for (t)inkers(s)teelworks
+ext {
+    _ts_minecraft_version = "1.7.10"
+    _ts_forge_version = "10.13.0.1187"
+
+    _ts_mantle_version = "0.3.1.jenkins169"
+    _ts_tcon_version = "1.6.0"
+    _ts_steelworks_version = "1.0.0"
+
+    _ts_waila_version = "1.5.3_1.7.10"
+    _ts_ccc_version = "1.0.2.9" // CodeChickenCore
+    _ts_cookie_version = "1.2.0"
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -25,23 +40,33 @@ repositories {
         name = 'CB Repo'
         url = "http://chickenbones.net/maven/"
     }
+    maven { // repo for TConstruct and Mantle
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
+    }
+    mavenLocal() // TODO CookieCore does not appear to have a repo
 }
 
 apply plugin: 'forge'
 
-sourceCompatibility = 7
-targetCompatibility = 7
-version = "1.7.10-1.0.0" // http://semver.org/
-group= "tsteelworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "tsteelworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "${_ts_minecraft_version}-${_ts_steelworks_version}" // http://semver.org/
 archivesBaseName = "TSteelworks"
 
+sourceCompatibility = 7
+targetCompatibility = 7
+
 minecraft {
-    version = "1.7.10-10.13.0.1199"
+    version = "${_ts_minecraft_version}-${_ts_forge_version}"
     assetDir = "eclipse/assets"
 }
 
 dependencies {
-    compile "mcp.mobius.waila:Waila:1.5.3_1.7.10"
+    compile "tconstruct:TConstruct:${_ts_minecraft_version}-${_ts_tcon_version}.+"
+
+    compile "mcp.mobius.waila:Waila:${_ts_waila_version}"
+    compile "codechicken:CodeChickenCore:${_ts_minecraft_version}-${_ts_ccc_version}:dev"
+    compile "nf.fr.ephys.cookiecore:cookiecore:${_ts_cookie_version}"
 }
 
 processResources
