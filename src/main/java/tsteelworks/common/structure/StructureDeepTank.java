@@ -10,6 +10,12 @@ import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.DeepTankGlassTypes;
 
+/*
+ * TODO: structure check. Glass are not servants, which means that we don't know if they are broken
+ * Two possible solutions:
+ * - inject a servant tile entity in the glass
+ * - check the integrity of the structure from time to time
+ */
 public class StructureDeepTank implements IStructure {
 	/**
 	 * The structure is valid.

@@ -50,7 +50,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public void onStructureChange(IStructure str) {
 		StructureDeepTank structure = (StructureDeepTank) str;
 
-		this.fluidTank.setCapacity(calcFluidCapacity(structure.getNbLayers() * (structure.getXWidth() - 1) * (structure.getZWidth() - 1)));
+		this.fluidTank.setCapacity(calcFluidCapacity(structure.getNbLayers() * (structure.getXWidth() - 2) * (structure.getZWidth() - 2)));
 
 		this.markDirty();
 	}
