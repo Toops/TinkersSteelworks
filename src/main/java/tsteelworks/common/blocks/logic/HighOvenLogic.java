@@ -255,8 +255,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (this.isBurning()) {
 				this.fuelBurnTime -= 3;
 				this.internalTemp = Math.min(this.internalTemp + this.fuelHeatRate, maxTemp);
-			} else {
+			} else if (structure.isValid()) {
 				this.internalTemp = Math.max(this.internalTemp - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
+			} else {
+				// If structure is broken, lose half the heat every second
+				this.internalTemp = Math.max(this.internalTemp / 2 - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
 			}
 
 			if (structure.isValid() && this.fuelBurnTime <= 0) {
@@ -276,7 +279,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Process item heating and liquifying.
 	 */
 	private void heatItems() {
-		if (this.internalTemp <= ROOM_TEMP)
+		if (this.internalTemp <= ROOM_TEMP || !structure.isValid())
 			return;
 
 		boolean hasSmeltable = false;
@@ -322,7 +325,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Heat fluids. (like steam)
 	 */
 	private void heatFluids() {
-		if (internalTemp < 1300 || tank.getNbFluids() == 0) return;
+		if (!structure.isValid() || internalTemp < 1300 || tank.getNbFluids() == 0) return;
 
 		// Let's make steam!
 		if (tank.getFluid(0).getFluid() != FluidRegistry.WATER && tank.getFluid(0).getFluid() != FluidRegistry.getFluid("Steam"))
@@ -847,7 +850,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void onStructureChange(IStructure structure) {
 		if (!structure.isValid()) {
-			internalTemp = ROOM_TEMP;
+			internalTemp /= 2;
 		} else {
 			final int oldNbLayers = activeTemps.length;
 			final int nbLayers = structure.getNbLayers();
