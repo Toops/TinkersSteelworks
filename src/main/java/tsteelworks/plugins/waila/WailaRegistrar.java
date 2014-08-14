@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
-import tsteelworks.lib.TSLogger;
+import tsteelworks.common.core.TSLogger;
 
 public class WailaRegistrar {
 	public static void wailaCallback(IWailaRegistrar registrar) {

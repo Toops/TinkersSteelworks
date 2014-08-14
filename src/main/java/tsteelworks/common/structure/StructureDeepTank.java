@@ -134,21 +134,20 @@ public class StructureDeepTank implements IStructure {
 		glassChecker.setBlock(block);
 		glassChecker.setMetadata(metadata);
 
-		if (glassType != null) {
-			if (glassType.equals(glassChecker))
-				return true;
+		if (glassType != null && glassType.equals(glassChecker)) {
+			return true;
 		} else {
 			Integer capacity = DeepTankGlassTypes.getBlockCapacity(glassChecker);
 
-			if (capacity == null) return false;
+			if (capacity != null) {
+				// the capacity is always equal to the capacity of the weakest glass
+				if (glassType == null || capacity < glassCapacity) {
+					glassType = new DeepTankGlassTypes.GlassType(glassChecker);
+					glassCapacity = capacity;
+				}
 
-			// the capacity is always equal to the capacity of the weakest glass
-			if (glassType == null || capacity < glassCapacity) {
-				glassType = new DeepTankGlassTypes.GlassType(glassChecker);
-				glassCapacity = capacity;
+				return true;
 			}
-
-			return true;
 		}
 
 		if (block.equals(TSContent.highoven)) {

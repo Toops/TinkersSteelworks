@@ -39,7 +39,6 @@ import tsteelworks.common.items.TSManual;
 import tsteelworks.common.items.TSMaterialItem;
 import tsteelworks.common.items.blocks.*;
 import tsteelworks.common.modifier.TSActiveOmniMod;
-import tsteelworks.lib.TSLogger;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 

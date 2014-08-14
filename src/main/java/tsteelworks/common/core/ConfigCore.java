@@ -47,8 +47,9 @@ public class ConfigCore {
 
 	// --- Worldgen
 	public static boolean enableLimestoneWorldgen;
+	private static String[] items;
 
-	public static void initProps(File configFile) {
+	public static void preInit(File configFile) {
 		final Configuration config = new Configuration(configFile);
 
 		config.load();
@@ -60,13 +61,9 @@ public class ConfigCore {
 
 		enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present").getBoolean(true);
 
-		String[] items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
+		items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
 				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +
 				"\nex: minecraft:glass@*|2000 (Note: Each entry must be on a seperate line)").getStringList();
-
-		for (String item : items) {
-			DeepTankGlassTypes.parseGlassType(item);
-		}
 
 		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod").getBoolean(false);
 		hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);
@@ -76,5 +73,11 @@ public class ConfigCore {
 
 		if (config.hasChanged())
 			config.save();
+	}
+
+	public static void postInit() {
+		for (String item : items) {
+			DeepTankGlassTypes.parseGlassType(item);
+		}
 	}
 }

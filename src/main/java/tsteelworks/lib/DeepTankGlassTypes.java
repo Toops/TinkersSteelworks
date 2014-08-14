@@ -3,6 +3,7 @@ package tsteelworks.lib;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
+import tsteelworks.common.core.TSLogger;
 
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ public class DeepTankGlassTypes {
 	 */
 	public static void parseGlassType(String data) {
 		// you know what would be great java ? lua-like assignation. like: blockName, capacity = data.split("|");
-		String[] splitData = data.split("|");
+		String[] splitData = data.split("\\|");
 
 		if (splitData.length != 2) {
 			TSLogger.warning("Parsing deep tank glass " + data + ". INVALID FORMAT");

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import tsteelworks.common.core.*;
 import tsteelworks.common.core.ConfigCore;
-import tsteelworks.lib.TSLogger;
+import tsteelworks.common.core.TSLogger;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;
 import tsteelworks.plugins.waila.Waila;
@@ -57,10 +57,9 @@ public class TSteelworks {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		logger = new TSLogger(event.getModLog(), DEBUG_MODE);
-		logger.introMessage();
+		TSLogger.introMessage();
 
-		ConfigCore.initProps(event.getSuggestedConfigurationFile());
+		ConfigCore.preInit(event.getSuggestedConfigurationFile());
 
 		proxy.preInit();
 
@@ -97,6 +96,8 @@ public class TSteelworks {
 		pluginController.postInit();
 
 		proxy.postInit();
+
+		ConfigCore.postInit();
 	}
 
 	public static SimpleNetworkWrapper getNetHandler() {

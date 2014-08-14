@@ -1,7 +1,7 @@
 package tsteelworks.plugins.waila;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
-import tsteelworks.lib.TSLogger;
+import tsteelworks.common.core.TSLogger;
 import tsteelworks.plugins.ICompatPlugin;
 
 public class Waila implements ICompatPlugin {

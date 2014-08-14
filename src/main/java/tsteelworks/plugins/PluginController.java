@@ -1,7 +1,7 @@
 package tsteelworks.plugins;
 
 import cpw.mods.fml.common.Loader;
-import tsteelworks.lib.TSLogger;
+import tsteelworks.common.core.TSLogger;
 
 import java.util.ArrayList;
 import java.util.List;
