@@ -20,5 +20,6 @@ public class TSRepo {
 		public static final String FUEL_HEAT_RATE = "FuelHeatRate";
 		public static final String MELTING_TEMPS = "MeltingTemps";
 		public static final String ACTIVE_TEMPS = "ActiveTemps";
+		public static final String REDSTONE = "Redstone";
 	}
 }

@@ -62,7 +62,7 @@ public class HighOvenGui extends GuiContainer {
 
 				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				// todo: fix fluid position
+				// the render is still broken because we're clipping float to ints and it causes imprecision
 				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
 
 				yBottom -= Math.round(liquidSize);
@@ -163,7 +163,6 @@ public class HighOvenGui extends GuiContainer {
 			return 0xFF0000;
 	}
 
-	// todo: localize
 	public static List<String> getLiquidTooltip(FluidStack liquid) {
 		List<String> list = new ArrayList<>();
 

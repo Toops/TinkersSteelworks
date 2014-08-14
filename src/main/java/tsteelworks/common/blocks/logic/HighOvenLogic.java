@@ -792,6 +792,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		meltingTemps = nbt.getIntArray(TSRepo.NBTNames.MELTING_TEMPS);
 		activeTemps = nbt.getIntArray(TSRepo.NBTNames.ACTIVE_TEMPS);
+
+		redstoneActivated = nbt.getBoolean(TSRepo.NBTNames.REDSTONE);
 	}
 
 	@Override
@@ -812,6 +814,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		nbt.setIntArray(TSRepo.NBTNames.MELTING_TEMPS, this.meltingTemps);
 		nbt.setIntArray(TSRepo.NBTNames.ACTIVE_TEMPS, this.activeTemps);
+
+		nbt.setBoolean(TSRepo.NBTNames.REDSTONE, redstoneActivated);
 	}
 
 	@Override
