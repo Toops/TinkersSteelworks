@@ -32,9 +32,6 @@ import tsteelworks.common.worldgen.TSBaseWorldGenerator;
 public class TSteelworks {
 	public static final boolean DEBUG_MODE = false;
 
-	// todo: add getters
-	public static TSLogger logger;
-
 	@Instance(TSRepo.MOD_ID)
 	public static TSteelworks instance;
 

@@ -10,10 +10,6 @@ import java.util.HashMap;
 public class DeepTankGlassTypes {
 	private static HashMap<GlassType, Integer> glassTypes = new HashMap<>();
 
-	public static Integer getBlockCapacity(Block block, int metadata) {
-		return glassTypes.get(new GlassType(block, metadata));
-	}
-
 	public static Integer getBlockCapacity(GlassType glass) {
 		return glassTypes.get(glass);
 	}
@@ -81,6 +77,11 @@ public class DeepTankGlassTypes {
 		}
 
 		@Override
+		public String toString() {
+			return block.getLocalizedName() + '#' + (metadata == null ? '*' : metadata);
+		}
+
+		@Override
 		public boolean equals(Object o) {
 			if (this == o)
 				return true;
@@ -92,9 +93,8 @@ public class DeepTankGlassTypes {
 			if (!block.equals(glassType.block))
 				return false;
 
-			if (metadata != null) {
-				if (!metadata.equals(glassType.metadata))
-					return false;
+			if (metadata != null && !metadata.equals(glassType.metadata)) {
+				return false;
 			}
 
 			return true;
@@ -102,10 +102,7 @@ public class DeepTankGlassTypes {
 
 		@Override
 		public int hashCode() {
-			int result = metadata != null ? metadata.hashCode() : 0;
-			result = 31 * result + block.hashCode();
-
-			return result;
+			return block.hashCode();
 		}
 
 		public void setMetadata(Integer metadata) {
@@ -115,6 +112,5 @@ public class DeepTankGlassTypes {
 		public void setBlock(Block block) {
 			this.block = block;
 		}
-
 	}
 }

@@ -145,6 +145,8 @@ public class StructureDeepTank implements IStructure {
 		} else {
 			Integer capacity = DeepTankGlassTypes.getBlockCapacity(glassChecker);
 
+			System.out.println(glassChecker + ", " + capacity);
+
 			if (capacity != null) {
 				// the capacity is always equal to the capacity of the weakest glass
 				if (glassType == null || capacity < glassCapacity) {
