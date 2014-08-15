@@ -708,7 +708,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
-		System.out.println("servant has changed");
 		forceCheck = true;
 	}
 
