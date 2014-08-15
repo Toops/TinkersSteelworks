@@ -5,14 +5,17 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import org.lwjgl.opengl.GL11;
 import tconstruct.util.ItemHelper;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 
+// TODO: transparent fluids should be transparent in the tank too
 public class DeepTankRender implements ISimpleBlockRenderingHandler {
 	public static final int DEEPTANK_MODEL = RenderingRegistry.getNextAvailableRenderId();
 
@@ -29,13 +32,13 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 			renderer.renderStandardBlock(block, x, y, z);
 
 			if (world.getBlockMetadata(x, y, z) == 13)
-				return renderDeepTank(world, x, y, z, renderer);
+				return renderDeepTank(world, x, y, z, renderer, block);
 		}
 
 		return true;
 	}
 
-	public boolean renderDeepTank(IBlockAccess world, int x, int y, int z, RenderBlocks renderer) {
+	public boolean renderDeepTank(IBlockAccess world, int x, int y, int z, RenderBlocks renderer, Block block) {
 		DeepTankLogic logic = (DeepTankLogic) world.getTileEntity(x, y, z);
 
 		if (!logic.isValid()) return true;
@@ -45,6 +48,15 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 		if (tank.getCapacity() == 0) return true;
 
 		CoordTuple corner = logic.getStructure().getBorderPos();
+
+		// get the luminosity of the inside of the tank
+		int luminosity = block.getMixedBrightnessForBlock(world, corner.x + 1, corner.y + 1, corner.z + 1);
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.setBrightness(luminosity);
+		tessellator.setColorOpaque_F(0.5F, 0.5F, 0.5F);
+
+		renderer.enableAO = false;
+
 		float yOffset = 0;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack fluid = tank.getFluid(i);
@@ -76,9 +88,6 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 	 * @param renderer  RenderBlocks instance
 	 */
 	public static void renderFluidLayer(IIcon icon, int x, float y, int z, int width, double height, int length, RenderBlocks renderer) {
-		final boolean aoEnabled = renderer.enableAO;
-		renderer.enableAO = false;
-
 		// the Y position of the block to draw
 		int yCoord = (int) Math.floor(y);
 
@@ -116,8 +125,6 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 			blockYPos = 0.0F;
 			yCoord++;
 		}
-
-		renderer.enableAO = aoEnabled;
 	}
 
 	@Override
