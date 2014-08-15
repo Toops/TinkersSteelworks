@@ -13,12 +13,10 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import tsteelworks.common.core.*;
-import tsteelworks.common.core.ConfigCore;
-import tsteelworks.common.core.TSLogger;
+import tsteelworks.common.worldgen.TSBaseWorldGenerator;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;
 import tsteelworks.plugins.waila.Waila;
-import tsteelworks.common.worldgen.TSBaseWorldGenerator;
 
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks

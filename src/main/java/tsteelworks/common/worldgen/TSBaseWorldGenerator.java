@@ -5,8 +5,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 import tconstruct.util.config.PHConstruct;
-import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.ConfigCore;
+import tsteelworks.common.core.TSContent;
 
 import java.util.Random;
 

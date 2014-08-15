@@ -11,7 +11,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import org.lwjgl.opengl.GL11;
 import tconstruct.util.ItemHelper;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 
