@@ -10,7 +10,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
@@ -77,8 +76,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public void updateEntity() {
 		tick++;
 
-		if (tick % 4 == 0)
-			structure.checkBlock();
+		structure.checkBlock();
 
 		if (tick == 20) {
 			if (!structure.isValid())
