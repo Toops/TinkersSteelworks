@@ -300,12 +300,14 @@ public class StructureDeepTank implements IStructure {
 	int blockPos = 0;
 
 	public void checkBlock() {
-		if (!validStructure) return;
+		if (!validStructure || logic.getWorldObj().isRemote) return;
 
 		int nbBlocksPerXYSlice = (nbLayers + 2) * xWidth;
+
 		int zOffset = blockPos / nbBlocksPerXYSlice;
 
 		int xySlice = blockPos % nbBlocksPerXYSlice;
+
 		int yOffset = xySlice / xWidth;
 
 		int xOffset = xySlice % xWidth;
@@ -314,8 +316,6 @@ public class StructureDeepTank implements IStructure {
 		if (blockPos > xWidth * zWidth * (nbLayers + 2))
 			blockPos = 0;
 
-		System.out.println("checking block " + xOffset + ", " + yOffset + ", " + zOffset);
-
 		boolean shouldBeFilled =
 				xOffset == 0 || xOffset == (xWidth - 1) ||
 				yOffset == 0 || yOffset == nbLayers + 1 ||
@@ -323,11 +323,17 @@ public class StructureDeepTank implements IStructure {
 
 		if ((shouldBeFilled && !isValidBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))
 				|| (!shouldBeFilled && !logic.getWorldObj().isAirBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))) {
-			validStructure = false;
-			nbLayers = 0;
-			glassCapacity = 0;
-
-			logic.onStructureChange(this);
+			invalidate();
 		}
+	}
+
+	public void invalidate() {
+		if (!validStructure) return;
+
+		validStructure = false;
+		nbLayers = 0;
+		glassCapacity = 0;
+
+		logic.onStructureChange(this);
 	}
 }
