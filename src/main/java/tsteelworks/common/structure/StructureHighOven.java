@@ -182,11 +182,10 @@ public class StructureHighOven implements IStructure {
 		}
 
 		if (te == null && block.equals(TSContent.highoven) && ((HighOvenBlock) block).isServant(controller.getWorldObj().getBlockMetadata(x, y, z))) {
-			te = new TSMultiServantLogic();
-			controller.getWorldObj().setTileEntity(x, y, z, te);
+			te = TSMultiServantLogic.newInstance(controller.getWorldObj(), x, y, z);
 		}
 
-		if (te instanceof IServantLogic) {
+		if (te instanceof TSMultiServantLogic) {
 			final IServantLogic servant = (IServantLogic) te;
 
 			if (servant.verifyMaster(controller, controller.getWorldObj()) || servant.setPotentialMaster(controller, controller.getWorldObj())) {

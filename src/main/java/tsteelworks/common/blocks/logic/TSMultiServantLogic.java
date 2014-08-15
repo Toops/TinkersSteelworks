@@ -1,7 +1,6 @@
 package tsteelworks.common.blocks.logic;
 
 import mantle.blocks.iface.IFacingLogic;
-import mantle.world.CoordTuple;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -10,16 +9,12 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 
-public class TSMultiServantLogic extends TileEntity implements IServantLogic, IChunkNotify, IFacingLogic {
+public class TSMultiServantLogic extends TileEntity implements IServantLogic, IFacingLogic {
 	private IMasterLogic master;
-	/** Used to get the master on chunk load */
-	private CoordTuple masterPos;
-
 	private byte direction;
 
 	@Override
@@ -70,37 +65,11 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 	}
 
 	public void readCustomNBT(NBTTagCompound tags) {
-		if (tags.getBoolean("TiedToMaster")) {
-			int xCenter = tags.getInteger("xCenter");
-			int yCenter = tags.getInteger("yCenter");
-			int zCenter = tags.getInteger("zCenter");
-
-			masterPos = new CoordTuple(xCenter, yCenter, zCenter);
-		}
-
 		direction = tags.getByte("direction");
 	}
 
 	public void writeCustomNBT(NBTTagCompound tags) {
-		tags.setBoolean("TiedToMaster", hasMaster());
-
-		if (hasMaster()) {
-			CoordTuple coords = master.getCoord();
-
-			tags.setInteger("xCenter", coords.x);
-			tags.setInteger("yCenter", coords.y);
-			tags.setInteger("zCenter", coords.z);
-		}
-
 		tags.setByte("direction", direction);
-	}
-
-	@Override
-	public void onChunkLoaded() {
-		if (masterPos != null) {
-			master = (IMasterLogic) worldObj.getTileEntity(masterPos.x, masterPos.y, masterPos.z);
-			masterPos = null;
-		}
 	}
 
 	/* Packets */

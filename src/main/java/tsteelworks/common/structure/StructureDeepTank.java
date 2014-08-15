@@ -10,12 +10,6 @@ import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.DeepTankGlassTypes;
 
-/*
- * TODO: structure check. Glass are not servants, which means that we don't know if they are broken
- * Two possible solutions:
- * - inject a servant tile entity in the glass
- * - check the integrity of the structure from time to time
- */
 public class StructureDeepTank implements IStructure {
 	/**
 	 * The structure is valid.
@@ -141,7 +135,7 @@ public class StructureDeepTank implements IStructure {
 		glassChecker.setMetadata(metadata);
 
 		if (block.equals(TSContent.highoven)) {
-			verifyTile(x, y, z);
+			return verifyTile(x, y, z);
 		}
 
 		if (glassType != null && glassType.equals(glassChecker)) {
@@ -166,10 +160,12 @@ public class StructureDeepTank implements IStructure {
 	private boolean verifyTile(int x, int y, int z) {
 		TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
 
+		if (te == logic)
+			return true;
+
 		if (te == null) {
 			te = TSMultiServantLogic.newInstance(logic.getWorldObj(), x, y, z);
-		} else if (te == logic)
-			return true;
+		}
 
 		if (te instanceof TSMultiServantLogic) {
 			TSMultiServantLogic servant = (TSMultiServantLogic) te;
@@ -297,5 +293,41 @@ public class StructureDeepTank implements IStructure {
 
 	public int getGlassCapacity() {
 		return glassCapacity;
+	}
+
+	/* ============== Structure check ============== */
+
+	int blockPos = 0;
+
+	public void checkBlock() {
+		if (!validStructure) return;
+
+		int nbBlocksPerXYSlice = (nbLayers + 2) * xWidth;
+		int zOffset = blockPos / nbBlocksPerXYSlice;
+
+		int xySlice = blockPos % nbBlocksPerXYSlice;
+		int yOffset = xySlice / xWidth;
+
+		int xOffset = xySlice % xWidth;
+
+		blockPos++;
+		if (blockPos > xWidth * zWidth * (nbLayers + 2))
+			blockPos = 0;
+
+		System.out.println("checking block " + xOffset + ", " + yOffset + ", " + zOffset);
+
+		boolean shouldBeFilled =
+				xOffset == 0 || xOffset == (xWidth - 1) ||
+				yOffset == 0 || yOffset == nbLayers + 1 ||
+				zOffset == 0 || zOffset == (zWidth - 1);
+
+		if ((shouldBeFilled && !isValidBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))
+				|| (!shouldBeFilled && !logic.getWorldObj().isAirBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))) {
+			validStructure = false;
+			nbLayers = 0;
+			glassCapacity = 0;
+
+			logic.onStructureChange(this);
+		}
 	}
 }

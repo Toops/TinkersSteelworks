@@ -39,7 +39,7 @@ import tsteelworks.lib.crafting.AdvancedSmelting;
 import java.util.Arrays;
 import java.util.List;
 
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, IChunkNotify, INamable, IFluidTankHolder, IFluidHandler {
+public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -253,7 +253,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
 			if (!structure.isValid() || forceCheck) {
-				System.out.println("checking structure " + forceCheck);
 				forceCheck = false;
 				this.checkValidPlacement();
 			}
@@ -884,11 +883,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 
 		markDirty();
-	}
-
-	@Override
-	public void onChunkLoaded() {
-		checkValidPlacement();
 	}
 
 	@Override

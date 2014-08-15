@@ -22,7 +22,7 @@ import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 
 // todo: reimplement the steam turbine, I'm stupid
-public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IChunkNotify, IFluidTankHolder {
+public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.
 	 */
@@ -75,11 +75,16 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 
 	@Override
 	public void updateEntity() {
-		if (++this.tick == 20) {
-			if (!structure.isValid())
-				this.checkValidPlacement();
+		tick++;
 
-			this.tick = 0;
+		if (tick % 4 == 0)
+			structure.checkBlock();
+
+		if (tick == 20) {
+			if (!structure.isValid())
+				checkValidPlacement();
+
+			tick = 0;
 		}
 	}
 
@@ -197,11 +202,6 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	@Override
 	public boolean isValid() {
 		return !tileEntityInvalid && structure.isValid();
-	}
-
-	@Override
-	public void onChunkLoaded() {
-		checkValidPlacement();
 	}
 
 	@Override
