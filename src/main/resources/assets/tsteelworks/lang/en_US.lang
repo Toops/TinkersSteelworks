@@ -3,7 +3,6 @@ itemGroup.TSteelworks=TSteelworks
 crafters.HighOven=High Oven
 container.HighOvenDuct=High Oven Duct
 tank.DeepTank=Deep Tank
-tank.capacity=%s / %s mB
 gui.button.next=>
 gui.button.prev=<
 

@@ -66,6 +66,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		}
 	}
 
+	// todo: move this to lib
 	public static String formatFluidValue(boolean autoUnit, int amount) {
 		String textValue = "";
 		if (!autoUnit || amount < 1000) {

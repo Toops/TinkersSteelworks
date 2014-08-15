@@ -13,6 +13,7 @@ import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tconstruct.util.ItemHelper;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
+import tsteelworks.common.structure.StructureDeepTank;
 
 // TODO: transparent fluids should be transparent in the tank too
 public class DeepTankRender implements ISimpleBlockRenderingHandler {
@@ -46,9 +47,17 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 		if (tank.getCapacity() == 0) return true;
 
+		StructureDeepTank structure = logic.getStructure();
 		CoordTuple corner = logic.getStructure().getBorderPos();
 
-		// get the luminosity of the inside of the tank
+		// get the luminosity of the inside of the tank. Edit: in a loaded chunk. Thus making the code overcomplicated
+	/*	int lightX, lightZ;
+		if (x == corner.x)
+			lightZ = corner.z + 1;
+		else if (x == corner.x + structure.getXWidth() - 1)
+			lightZ = corner.z - 1;
+		else if*/
+
 		int luminosity = block.getMixedBrightnessForBlock(world, corner.x + 1, corner.y + 1, corner.z + 1);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.setBrightness(luminosity);
@@ -56,7 +65,7 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 		renderer.enableAO = false;
 
-		int maxHeight = logic.getStructure().getNbLayers();
+		int maxHeight = structure.getNbLayers();
 
 		float yOffset = 0;
 		for (int i = 0; i < tank.getNbFluids() && yOffset <= maxHeight; i++) {

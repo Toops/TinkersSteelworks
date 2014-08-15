@@ -268,6 +268,7 @@ public class StructureDeepTank implements IStructure {
 	 */
 	public void writeToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("layers", nbLayers);
+		nbt.setBoolean("isValid", validStructure);
 
 		if (!validStructure) return;
 		nbt.setInteger("xSize", xWidth);
@@ -285,6 +286,8 @@ public class StructureDeepTank implements IStructure {
 	 */
 	public void readFromNBT(NBTTagCompound nbt) {
 		nbLayers = nbt.getInteger("layers");
+		validStructure = nbt.getBoolean("isValid");
+
 		xWidth = nbt.getInteger("xSize");
 		zWidth = nbt.getInteger("zSize");
 

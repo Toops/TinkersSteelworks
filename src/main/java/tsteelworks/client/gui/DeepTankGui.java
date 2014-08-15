@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.network.PacketMoveFluidHandler;
+import tsteelworks.plugins.waila.HighOvenTankDataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class DeepTankGui extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
-		final String capacity = String.format(StatCollector.translateToLocal("tank.capacity"), fluidTank.getFluidAmount(), fluidTank.getCapacity());
+		final String capacity = HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getFluidAmount()) + "/" + HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getCapacity());
 
 		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 14, 0x404040);
 
