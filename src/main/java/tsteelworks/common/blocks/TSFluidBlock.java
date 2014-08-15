@@ -7,24 +7,24 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import tsteelworks.common.core.TSRepo;
 
-public class TSBaseFluid extends BlockFluidClassic {
+public class TSFluidBlock extends BlockFluidClassic {
 	private String texture;
 	private boolean alpha = false;
 	private IIcon stillIcon;
 	private IIcon flowIcon;
 
-	public TSBaseFluid(Fluid fluid, Material material, String texture) {
+	public TSFluidBlock(Fluid fluid, Material material, String texture) {
 		super(fluid, material);
 
 		this.texture = texture;
 	}
 
-	public TSBaseFluid(Fluid fluid, Material material, String texture, boolean alpha) {
+	public TSFluidBlock(Fluid fluid, Material material, String texture, boolean alpha) {
 		this(fluid, material, texture);
 		this.alpha = alpha;
 	}
 
-	public TSBaseFluid setAlpha(boolean alpha) {
+	public TSFluidBlock setAlpha(boolean alpha) {
 		this.alpha = alpha;
 
 		return this;

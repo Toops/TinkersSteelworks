@@ -1,4 +1,4 @@
-package tsteelworks.client;
+package tsteelworks.client.core;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import mantle.books.BookData;
@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import tconstruct.client.TProxyClient;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.client.TConstructClientRegistry;
@@ -52,6 +53,8 @@ public class TSClientProxy extends TSCommonProxy {
 	@Override
 	public void postInit() {
 		super.postInit();
+
+		MinecraftForge.EVENT_BUS.register(new TSEventHandler());
 	}
 
 	public static BookData getManualFromStack(ItemStack stack) {

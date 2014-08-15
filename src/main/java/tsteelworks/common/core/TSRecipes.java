@@ -184,13 +184,15 @@ public class TSRecipes {
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), patSmallBlock, '#', new ItemStack(TSContent.materialsTS, 1, 1));
 
 		// add to smelt
-		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 1), new ItemStack(TSContent.limestoneBlock, 0, 1), 2f);
-		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0), new ItemStack(TSContent.materialsTS, 1, 1), 2f);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 0), new ItemStack(TSContent.materialsTS, 4, 1), 2f);
 
-		Smeltery.addMelting(TSContent.limestoneBlock, 0, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
-		Smeltery.addMelting(TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
-		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
-		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
+		Smeltery.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
+		Smeltery.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
+
+		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
+		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
+
 		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
 		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), 825, new FluidStack(fluid, INGOT_LIQUID_VALUE));
 

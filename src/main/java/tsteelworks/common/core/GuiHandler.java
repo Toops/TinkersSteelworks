@@ -5,7 +5,7 @@ import mantle.client.gui.GuiManual;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import tsteelworks.client.TSClientProxy;
+import tsteelworks.client.core.TSClientProxy;
 import tsteelworks.client.gui.DeepTankGui;
 import tsteelworks.client.gui.HighOvenDuctGui;
 import tsteelworks.client.gui.HighOvenGui;

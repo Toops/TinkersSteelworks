@@ -12,7 +12,7 @@ import tsteelworks.common.core.TSContent;
  *
  * If I get the idea, which might be wrong, this fluid is supposed to harden when it's in contact with air ?
  */
-public class CementFluidBlock extends TSBaseFluid {
+public class CementFluidBlock extends TSFluidBlock {
 	public CoordTuple origin;
 
 	public CementFluidBlock(Fluid fluid, Material material, String texture) {

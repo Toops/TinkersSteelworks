@@ -29,6 +29,7 @@ import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.*;
+import tsteelworks.common.blocks.TSFluidBlock;
 import tsteelworks.common.blocks.logic.*;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
@@ -71,6 +72,9 @@ public class TSContent {
 	public static Fluid steamFluid;
 	public static Fluid moltenLimestoneFluid;
 	public static Fluid liquidCementFluid;
+	public static boolean steamIsOurs = false;
+	public static boolean limestoneIsOurs = false;
+	public static boolean cementIsOurs = false;
 
 	public static ItemStack charcoalBlock;
 	public static ItemStack thaumcraftAlumentum;
@@ -174,10 +178,12 @@ public class TSContent {
 			steamFluid.setDensity(-1).setViscosity(5).setTemperature(1300).setGaseous(true);
 
 			FluidRegistry.registerFluid(steamFluid);
+
+			steamIsOurs = true;
 		}
 
 		if (!steamFluid.canBePlacedInWorld()) {
-			steamBlock = new TSBaseFluid(steamFluid, Material.air, "liquid_steam").setBlockName("steam").setLightOpacity(0);
+			steamBlock = new TSFluidBlock(steamFluid, Material.air, "liquid_steam").setBlockName("steam").setLightOpacity(0);
 			GameRegistry.registerBlock(steamBlock, "steam");
 		} else {
 			steamBlock = steamFluid.getBlock();
@@ -185,7 +191,7 @@ public class TSContent {
 
 		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("item.tsteelworks.bucket.Steam.name");
+			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam");
 			GameRegistry.registerItem(bucketSteam, "steamBucket");
 
 			filledBucket = new ItemStack(bucketSteam, 1, 0);
@@ -202,10 +208,12 @@ public class TSContent {
 			moltenLimestoneFluid = new Fluid("limestone.molten").setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
 
 			FluidRegistry.registerFluid(moltenLimestoneFluid);
+
+			limestoneIsOurs = true;
 		}
 
 		if (!moltenLimestoneFluid.canBePlacedInWorld()) {
-			moltenLimestone = new TSBaseFluid(moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
+			moltenLimestone = new TSFluidBlock(moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
 			GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
 		} else {
 			moltenLimestone = moltenLimestoneFluid.getBlock();
@@ -213,7 +221,7 @@ public class TSContent {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(moltenLimestoneFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketLimestone = new ItemBucket(moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("item.tsteelworks.bucket.Limestone.name").setCreativeTab(creativeTab);
+			Item bucketLimestone = new ItemBucket(moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("tsteelworks.bucket.Limestone").setCreativeTab(creativeTab);
 			GameRegistry.registerItem(bucketLimestone, "limestoneBucket");
 
 			filledBucket = new ItemStack(bucketLimestone, 1, 1);
@@ -230,6 +238,8 @@ public class TSContent {
 			liquidCementFluid = new Fluid("cement.liquid").setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
 
 			FluidRegistry.registerFluid(liquidCementFluid);
+
+			cementIsOurs = true;
 		}
 
 		if (!liquidCementFluid.canBePlacedInWorld()) {
@@ -241,7 +251,7 @@ public class TSContent {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(liquidCementFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketCement = new ItemBucket(liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("item.tsteelworks.bucket.Cement.name").setCreativeTab(creativeTab);
+			Item bucketCement = new ItemBucket(liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("tsteelworks.bucket.Cement").setCreativeTab(creativeTab);
 			GameRegistry.registerItem(bucketCement, "cementBucket");
 
 			filledBucket = new ItemStack(bucketCement, 1, 2);
