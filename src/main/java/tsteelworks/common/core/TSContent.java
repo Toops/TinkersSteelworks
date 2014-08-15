@@ -185,7 +185,7 @@ public class TSContent {
 
 		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketSteam = new ItemBucket(steamBlock);
+			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("item.tsteelworks.bucket.Steam.name");
 			GameRegistry.registerItem(bucketSteam, "steamBucket");
 
 			filledBucket = new ItemStack(bucketSteam, 1, 0);
@@ -213,7 +213,7 @@ public class TSContent {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(moltenLimestoneFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketLimestone = new ItemBucket(moltenLimestone);
+			Item bucketLimestone = new ItemBucket(moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("item.tsteelworks.bucket.Limestone.name").setCreativeTab(creativeTab);
 			GameRegistry.registerItem(bucketLimestone, "limestoneBucket");
 
 			filledBucket = new ItemStack(bucketLimestone, 1, 1);
@@ -233,7 +233,7 @@ public class TSContent {
 		}
 
 		if (!liquidCementFluid.canBePlacedInWorld()) {
-			liquidCement = new CementFluidBlock(liquidCementFluid, Material.air, "liquid_cement").setBlockName("liquid.cement");
+			liquidCement = new CementFluidBlock(liquidCementFluid, Material.air, "liquid_cement").setBlockName("liquid.cement").setCreativeTab(creativeTab);
 			GameRegistry.registerBlock(liquidCement, "liquid.cement");
 		} else {
 			liquidCement = liquidCementFluid.getBlock();
@@ -241,7 +241,7 @@ public class TSContent {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(liquidCementFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketCement = new ItemBucket(liquidCement);
+			Item bucketCement = new ItemBucket(liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("item.tsteelworks.bucket.Cement.name").setCreativeTab(creativeTab);
 			GameRegistry.registerItem(bucketCement, "cementBucket");
 
 			filledBucket = new ItemStack(bucketCement, 1, 2);

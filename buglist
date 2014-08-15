@@ -3,9 +3,6 @@
 Deep tank:
 Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
 
-ItemBuckets don't have a texture nor a name
-also add to creative tab
-
 Cookiecore:
 RenderHelper#DrawTextureRect should use floats instead of ints
 Remove IChunkNotify
@@ -18,13 +15,14 @@ Bricks don't break glass
 ============ TSteelworks todolist ============
 
 Deep tank:
-Then move the fluid renderer to lib
-Reimplement the steam turbine
+Move the fluid renderer to lib
+Reimplement the steam turbine, need to look at the history I deleted it thinking it was just some rf generator T_T
+- Should be placed next to any IFluidHandler, then pull a fluid (only fluids listed as alloy and not blacklisted) and push the results
+-- store the overflow in an internal buffer, stop working until the buffer is empty
 - Dealloy should have blacklists
+- Consumes steam
 
 Vacuous modifier: only work if the item is held
-
-Check if throwing bricks at windows works
 
 High oven:
 NEI plugin for recipes
