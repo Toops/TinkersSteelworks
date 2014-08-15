@@ -170,6 +170,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	private String invName;
 
+	private boolean forceCheck = true;
+
 	/**
 	 * Max temp by layer.
 	 *
@@ -250,8 +252,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
-			if (!structure.isValid())
+			if (!structure.isValid() || forceCheck) {
+				System.out.println("checking structure " + forceCheck);
+				forceCheck = false;
 				this.checkValidPlacement();
+			}
 
 			if (this.isBurning()) {
 				this.fuelBurnTime -= 3;
@@ -710,7 +715,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
-		checkValidPlacement();
+		System.out.println("servant has changed");
+		forceCheck = true;
 	}
 
 	/**

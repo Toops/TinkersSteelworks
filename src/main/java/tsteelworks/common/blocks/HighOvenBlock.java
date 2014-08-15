@@ -61,11 +61,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
-	public boolean hasTileEntity(int metadata) {
-		return metadata == META_HIGHOVEN || metadata == META_DRAIN || metadata == META_DUCT || metadata == META_TANK;
-	}
-
-	@Override
 	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
 		return false;
 	}

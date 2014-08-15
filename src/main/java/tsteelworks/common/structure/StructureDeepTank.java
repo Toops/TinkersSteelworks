@@ -140,8 +140,12 @@ public class StructureDeepTank implements IStructure {
 		glassChecker.setBlock(block);
 		glassChecker.setMetadata(metadata);
 
-		if (block.equals(TSContent.highoven) || glassType != null && glassType.equals(glassChecker)) {
-			return verifyTile(x, y, z);
+		if (block.equals(TSContent.highoven)) {
+			verifyTile(x, y, z);
+		}
+
+		if (glassType != null && glassType.equals(glassChecker)) {
+			return true;
 		} else {
 			Integer capacity = DeepTankGlassTypes.getBlockCapacity(glassChecker);
 
@@ -152,7 +156,7 @@ public class StructureDeepTank implements IStructure {
 					glassCapacity = capacity;
 				}
 
-				return verifyTile(x, y, z);
+				return true;
 			}
 		}
 
@@ -163,8 +167,7 @@ public class StructureDeepTank implements IStructure {
 		TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
 
 		if (te == null) {
-			te = new TSMultiServantLogic();
-			logic.getWorldObj().setTileEntity(x, y, z, te);
+			te = TSMultiServantLogic.newInstance(logic.getWorldObj(), x, y, z);
 		} else if (te == logic)
 			return true;
 

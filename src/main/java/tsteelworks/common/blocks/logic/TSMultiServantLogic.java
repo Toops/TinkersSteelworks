@@ -138,4 +138,19 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IC
 	public void setDirection(float v, float v1, EntityLivingBase entityLivingBase) {
 		direction = (byte) BlockHelper.orientationToMetadataXZ(entityLivingBase.rotationYaw);
 	}
+
+	public static TSMultiServantLogic newInstance(World world, int x, int y, int z) {
+		TSMultiServantLogic tile = new TSMultiServantLogic();
+
+		tile.worldObj = world;
+		tile.xCoord = x;
+		tile.yCoord = y;
+		tile.zCoord = z;
+
+		tile.validate();
+
+		world.setTileEntity(x, y, z, tile);
+
+		return tile;
+	}
 }
