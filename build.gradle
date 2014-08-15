@@ -41,8 +41,8 @@ repositories {
         url = "http://chickenbones.net/maven/"
     }
     maven { // repo for TConstruct and Mantle
-        name 'DVS1 Maven FS'
-        url 'http://dvs1.progwml6.com/files/maven'
+        name = 'DVS1 Maven FS'
+        url = 'http://dvs1.progwml6.com/files/maven'
     }
     mavenLocal() // TODO CookieCore does not appear to have a repo
 }

@@ -21,7 +21,7 @@ import tsteelworks.lib.IFluidTankHolder;
 import tsteelworks.lib.IMasterLogic;
 import tsteelworks.lib.IServantLogic;
 
-// todo: make the dealloyer a part of the deep tank: any fluid piped in will be dealloyed
+// todo: reimplement the steam turbine, I'm stupid
 public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IChunkNotify, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.
