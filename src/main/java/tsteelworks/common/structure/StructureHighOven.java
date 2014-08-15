@@ -2,8 +2,10 @@ package tsteelworks.common.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
+import tsteelworks.common.blocks.HighOvenBlock;
 import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
+import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.IServantLogic;
 
@@ -177,6 +179,10 @@ public class StructureHighOven implements IStructure {
 
 		if (te == controller) {
 			return true;
+		}
+
+		if (te == null && block.equals(TSContent.highoven) && ((HighOvenBlock) block).isServant(controller.getWorldObj().getBlockMetadata(x, y, z))) {
+			controller.getWorldObj().setTileEntity(x, y, z, new TSMultiServantLogic());
 		}
 
 		if (te instanceof IServantLogic) {

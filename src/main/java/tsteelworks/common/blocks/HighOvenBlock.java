@@ -75,7 +75,11 @@ public class HighOvenBlock extends TSInventoryBlock {
 				return new DeepTankLogic();
 		}
 
-		return new TSMultiServantLogic();
+		return null;
+	}
+
+	public boolean isServant(int meta) {
+		return meta != META_HIGHOVEN && meta != META_TANK;
 	}
 
 	@Override
