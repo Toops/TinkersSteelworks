@@ -20,7 +20,6 @@ import net.minecraft.util.IRegistry;
 import net.minecraft.util.RegistryDefaulted;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import nf.fr.ephys.cookiecore.common.tileentity.IChunkNotify;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import nf.fr.ephys.cookiecore.helpers.MathHelper;
@@ -330,29 +329,24 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Heat fluids. (like steam)
 	 */
 	private void heatFluids() {
-		if (!structure.isValid() || internalTemp < 1300 || tank.getNbFluids() == 0) return;
+		if (!structure.isValid() || internalTemp < 1300 || ConfigCore.steamProductionRate <= 0) return;
 
-		// Let's make steam!
-		if (tank.getFluid(0).getFluid() != FluidRegistry.WATER && tank.getFluid(0).getFluid() != FluidRegistry.getFluid("Steam"))
-			return;
-
-		int amount = 0;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack fluid = tank.getFluid(i);
 
-			if (fluid.getFluid() == FluidRegistry.WATER)
-				amount += fluid.amount;
-		}
+			if (fluid.getFluid() != FluidRegistry.WATER) continue;
 
-		if (amount > 0) {
-			FluidStack steam = new FluidStack(TSContent.steamFluid.getID(), amount);
-			FluidStack water = new FluidStack(FluidRegistry.WATER, amount);
+			int production = Math.min(ConfigCore.steamProductionRate * 40 * structure.getNbLayers(), fluid.amount);
 
-			// drain before fill to avoid clogging
-			tank.drain(ForgeDirection.UNKNOWN, water, true);
-			tank.fill(ForgeDirection.UNKNOWN, steam, true);
+			tank.drain(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, production), true);
+			tank.fill(new FluidStack(TSContent.steamFluid.getID(), production), true);
+
+			// move steam at the bottom of the tank so we don't get complains \o
+			tank.setStackPos(TSContent.steamFluid, 0);
 
 			markDirty();
+
+			break;
 		}
 	}
 

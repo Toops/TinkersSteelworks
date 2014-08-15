@@ -17,6 +17,8 @@ public class ConfigCore {
 	public static boolean enableDuctVacuum;
 	public static boolean enableTE3SlagOutput;
 
+	public static int steamProductionRate;
+
 	/**
 	 * valid tank glass types with their capacity in mB
 	 *
@@ -58,8 +60,8 @@ public class ConfigCore {
 
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
 		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
-
 		enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present").getBoolean(true);
+		steamProductionRate = config.get("High Oven", "Steam rate", 1, "Steam maximum production rate per tick per layer (in mB). Let's not render railcraft's boilers useless, set to 0 to disable steam production").getInt(1);
 
 		items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
 				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +
