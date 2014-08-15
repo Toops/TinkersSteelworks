@@ -1,6 +1,7 @@
 package tsteelworks.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
@@ -33,10 +34,6 @@ public class DeepTankGui extends GuiContainer {
 	}
 
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		final String title = StatCollector.translateToLocal("tank.DeepTank");
-
-		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 5, 0x404040);
-
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
 		final String capacity = String.format(StatCollector.translateToLocal("tank.capacity"), fluidTank.getFluidAmount(), fluidTank.getCapacity());
@@ -56,6 +53,11 @@ public class DeepTankGui extends GuiContainer {
 
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 120, ySize);
 
+		// title
+		final String title = StatCollector.translateToLocal("tank.DeepTank");
+
+		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 5, 0x404040);
+
 		//Liquids
 		RenderHelper.loadBlockMap();
 
@@ -68,7 +70,9 @@ public class DeepTankGui extends GuiContainer {
 
 			float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-			// the render is still broken because we're clipping float to ints and it causes imprecision
+			// TODO the render is still broken because we're clipping float to ints and it causes imprecision
+			// ceil and round is obviously not working, we're still overflowing sometimes
+			// need to fix drawTexturedRect, it should use floats as the tessellator allows floats
 			RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
 
 			yBottom -= Math.round(liquidSize);
