@@ -312,8 +312,7 @@ public class StructureDeepTank implements IStructure {
 
 		int xOffset = xySlice % xWidth;
 
-		blockPos++;
-		if (blockPos > xWidth * zWidth * (nbLayers + 2))
+		if (++blockPos >= xWidth * zWidth * (nbLayers + 2))
 			blockPos = 0;
 
 		boolean shouldBeFilled =
