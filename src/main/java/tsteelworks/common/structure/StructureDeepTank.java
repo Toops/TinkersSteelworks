@@ -140,8 +140,8 @@ public class StructureDeepTank implements IStructure {
 		glassChecker.setBlock(block);
 		glassChecker.setMetadata(metadata);
 
-		if (glassType != null && glassType.equals(glassChecker)) {
-			return true;
+		if (block.equals(TSContent.highoven) || glassType != null && glassType.equals(glassChecker)) {
+			return verifyTile(x, y, z);
 		} else {
 			Integer capacity = DeepTankGlassTypes.getBlockCapacity(glassChecker);
 
@@ -152,21 +152,27 @@ public class StructureDeepTank implements IStructure {
 					glassCapacity = capacity;
 				}
 
-				return true;
+				return verifyTile(x, y, z);
 			}
 		}
 
-		if (block.equals(TSContent.highoven)) {
-			TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
+		return false;
+	}
 
-			if (te == logic) return true;
+	private boolean verifyTile(int x, int y, int z) {
+		TileEntity te = logic.getWorldObj().getTileEntity(x, y, z);
 
-			if (te instanceof TSMultiServantLogic) {
-				TSMultiServantLogic servant = (TSMultiServantLogic) te;
+		if (te == null) {
+			te = new TSMultiServantLogic();
+			logic.getWorldObj().setTileEntity(x, y, z, te);
+		} else if (te == logic)
+			return true;
 
-				if (servant.verifyMaster(logic, logic.getWorldObj()) || servant.setPotentialMaster(logic, logic.getWorldObj())) {
-					return true;
-				}
+		if (te instanceof TSMultiServantLogic) {
+			TSMultiServantLogic servant = (TSMultiServantLogic) te;
+
+			if (servant.verifyMaster(logic, logic.getWorldObj()) || servant.setPotentialMaster(logic, logic.getWorldObj())) {
+				return true;
 			}
 		}
 

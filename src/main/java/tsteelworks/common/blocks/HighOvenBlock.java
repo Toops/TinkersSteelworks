@@ -66,13 +66,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ) {
-		ChatHelper.sendChatMessage(player, "Has tile entity: " + (world.getTileEntity(x, y, z) != null));
-
-		return super.onBlockActivated(world, x, y, z, player, side, clickX, clickY, clickZ);
-	}
-
-	@Override
 	public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z) {
 		return false;
 	}

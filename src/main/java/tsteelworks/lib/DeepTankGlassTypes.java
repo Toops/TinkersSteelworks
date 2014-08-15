@@ -7,6 +7,7 @@ import tsteelworks.common.core.TSLogger;
 
 import java.util.HashMap;
 
+// the item metadata ignore code isn't really working well looking at all the special cases. But it's reducing the hashmap size so much :(
 public class DeepTankGlassTypes {
 	private static HashMap<GlassType, Integer> glassTypes = new HashMap<>();
 
@@ -15,14 +16,31 @@ public class DeepTankGlassTypes {
 	}
 
 	public static void addGlassType(ItemStack stack, int capacity) {
-		GlassType glass = new GlassType(stack);
-		glassTypes.put(new GlassType(stack), capacity);
+		Block block = Block.getBlockFromItem(stack.getItem());
 
-		// this should prevent out of bounds exceptions when getting the display name
+		boolean hasTile = false;
+		if (stack.getItemDamage() == 16) {
+			for (int i = 0; i < 16; i++) {
+				if (block.hasTileEntity(i)) {
+					hasTile = true;
+					break;
+				}
+			}
+		} else {
+			hasTile = block.hasTileEntity(stack.getItemDamage());
+		}
+
+		GlassType glass = new GlassType(stack);
 		if (glass.metadata == null) {
 			stack.setItemDamage(0);
 		}
 
+		if (hasTile) {
+			TSLogger.warning("Failled to register deep tank glass type " + stack.getDisplayName() + ": Block has a tile entity");
+			return;
+		}
+
+		glassTypes.put(new GlassType(stack), capacity);
 		TSLogger.info("Registered deep tank glass type " + stack.getDisplayName() + " with capacity of " + capacity + "mB");
 	}
 
