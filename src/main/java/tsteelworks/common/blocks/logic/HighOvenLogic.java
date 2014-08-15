@@ -84,6 +84,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 */
 	public static final int ROOM_TEMP = 20;
 
+	/**
+	 * Temperature decrease rate when the High Oven is not burning fuel.
+	 */
 	public static final int INTERNAL_COOLDOWN_RATE = 10;
 
 	/**
@@ -181,7 +184,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return true;
 	}
 
-    /* ==================== Facing Logic ==================== */
+	/* ==================== Facing Logic ==================== */
 
 	@Override
 	public byte getRenderDirection() {
@@ -201,7 +204,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.direction = (byte) BlockHelper.orientationToMetadataXZ(player.rotationYaw);
 	}
 
-    /* ==================== Active Logic ==================== */
+	/* ==================== Active Logic ==================== */
 
 	@Override
 	public boolean getActive() {
@@ -211,7 +214,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void setActive(final boolean flag) {}
 
-    /* ==================== IRedstonePowered ==================== */
+	/* ==================== IRedstonePowered ==================== */
 
 	/**
 	 * Get the current state of redstone-connected power.
@@ -235,7 +238,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.setActive(true);
 	}
 
-    /* ==================== Smelting Logic ==================== */
+	/* ==================== Smelting Logic ==================== */
 
 	@Override
 	public void updateEntity() {
@@ -253,8 +256,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (this.isBurning()) {
 				this.fuelBurnTime -= 3;
 				this.internalTemp = Math.min(this.internalTemp + this.fuelHeatRate, maxTemp);
-			} else {
+			} else if (structure.isValid()) {
 				this.internalTemp = Math.max(this.internalTemp - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
+			} else {
+				// If structure is broken, lose half the heat every second
+				this.internalTemp = Math.max(this.internalTemp / 2 - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
 			}
 
 			if (structure.isValid() && this.fuelBurnTime <= 0) {
@@ -274,7 +280,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Process item heating and liquifying.
 	 */
 	private void heatItems() {
-		if (this.internalTemp <= ROOM_TEMP)
+		if (this.internalTemp <= ROOM_TEMP || !structure.isValid())
 			return;
 
 		boolean hasSmeltable = false;
@@ -320,7 +326,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Heat fluids. (like steam)
 	 */
 	private void heatFluids() {
-		if (internalTemp < 1300 || tank.getNbFluids() == 0) return;
+		if (!structure.isValid() || internalTemp < 1300 || tank.getNbFluids() == 0) return;
 
 		// Let's make steam!
 		if (tank.getFluid(0).getFluid() != FluidRegistry.WATER && tank.getFluid(0).getFluid() != FluidRegistry.getFluid("Steam"))
@@ -338,11 +344,11 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			FluidStack steam = new FluidStack(TSContent.steamFluid.getID(), amount);
 			FluidStack water = new FluidStack(FluidRegistry.WATER, amount);
 
-			if (this.addFluidToTank(steam)) {
-				tank.drain(ForgeDirection.UNKNOWN, water, true);
+			// drain before fill to avoid clogging
+			tank.drain(ForgeDirection.UNKNOWN, water, true);
+			tank.fill(ForgeDirection.UNKNOWN, steam, true);
 
-				markDirty();
-			}
+			markDirty();
 		}
 	}
 
@@ -460,7 +466,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== Temperatures ==================== */
+	/* ==================== Temperatures ==================== */
 
 	/**
 	 * Get internal temperature for smelting.
@@ -512,7 +518,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== Fuel Handling ==================== */
+	/* ==================== Fuel Handling ==================== */
 
 	/**
 	 * Checks if controller is burning fuel.
@@ -595,7 +601,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		return TSFuelHandler.getHighOvenFuelHeatRate(itemstack);
 	}
 
-    /* ==================== Inventory ==================== */
+	/* ==================== Inventory ==================== */
 
 	/**
 	 * Determine is slot is valid for 'ore' processing.
@@ -700,7 +706,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void closeInventory() {}
 
-    /* ==================== Multiblock ==================== */
+	/* ==================== Multiblock ==================== */
 
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
@@ -717,7 +723,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		structure.validateStructure(centerBlock[0], centerBlock[1], centerBlock[2]);
 	}
 
-    /* ==================== Fluid Handling ==================== */
+	/* ==================== Fluid Handling ==================== */
 
 	/**
 	 * Add molen metal fluidstack.
@@ -767,7 +773,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		}
 	}
 
-    /* ==================== NBT ==================== */
+	/* ==================== NBT ==================== */
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -831,7 +837,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		this.markDirty();
 	}
 
-    /* =============== IMaster =============== */
+	/* =============== IMaster =============== */
 	@Override
 	public CoordTuple getCoord() {
 		return new CoordTuple(this.xCoord, this.yCoord, this.zCoord);
@@ -845,7 +851,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	@Override
 	public void onStructureChange(IStructure structure) {
 		if (!structure.isValid()) {
-			internalTemp = ROOM_TEMP;
+			// cut temperature in half to discourage frequenet changes
+			internalTemp = Math.max(internalTemp / 2, ROOM_TEMP);
 		} else {
 			final int oldNbLayers = activeTemps.length;
 			final int nbLayers = structure.getNbLayers();

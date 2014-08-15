@@ -13,17 +13,17 @@ public class HighOvenContainer extends Container {
 	public HighOvenContainer(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
 		logic = highoven;
 
-        /* HighOven Misc inventory */
+		/* HighOven Misc inventory */
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_OXIDIZER, 55, 16)); // oxidizer
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_REDUCER, 55, 34)); // reducer
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_PURIFIER, 55, 52)); // purifier
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_FUEL, 126, 52)); // fuel
 
-	    /* HighOven Ore inventory */
+		/* HighOven Ore inventory */
 		for (int y = 0; y < highoven.getSmeltableInventory().getSizeInventory(); y++)
 			addSlotToContainer(new TSActiveSlot(highoven, HighOvenLogic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
 
-        /* Player inventory */
+		/* Player inventory */
 		for (int column = 0; column < 3; column++)
 			for (int row = 0; row < 9; row++)
 				addSlotToContainer(new Slot(inventoryplayer, row + (column * 9) + 9, 54 + (row * 18), 84 + (column * 18)));
