@@ -57,11 +57,17 @@ public class DeepTankRender implements ISimpleBlockRenderingHandler {
 
 		renderer.enableAO = false;
 
+		int maxHeight = logic.getStructure().getNbLayers();
+
 		float yOffset = 0;
-		for (int i = 0; i < tank.getNbFluids(); i++) {
+		for (int i = 0; i < tank.getNbFluids() && yOffset <= maxHeight; i++) {
 			FluidStack fluid = tank.getFluid(i);
 
 			float height = (float) fluid.amount / tank.getCapacity() * logic.getStructure().getNbLayers();
+
+			if (height + yOffset > maxHeight) {
+				height = maxHeight - yOffset;
+			}
 
 			renderFluidLayer(RenderHelper.getFluidTexture(fluid), corner.x + 1, corner.y + yOffset + 1, corner.z + 1, logic.getStructure().getXWidth() - 2, height, logic.getStructure().getZWidth() - 2, renderer);
 
