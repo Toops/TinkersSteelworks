@@ -175,14 +175,15 @@ public class StructureHighOven implements IStructure {
 			return false;
 		}
 
-		final TileEntity te = controller.getWorldObj().getTileEntity(x, y, z);
+		TileEntity te = controller.getWorldObj().getTileEntity(x, y, z);
 
 		if (te == controller) {
 			return true;
 		}
 
 		if (te == null && block.equals(TSContent.highoven) && ((HighOvenBlock) block).isServant(controller.getWorldObj().getBlockMetadata(x, y, z))) {
-			controller.getWorldObj().setTileEntity(x, y, z, new TSMultiServantLogic());
+			te = new TSMultiServantLogic();
+			controller.getWorldObj().setTileEntity(x, y, z, te);
 		}
 
 		if (te instanceof IServantLogic) {
