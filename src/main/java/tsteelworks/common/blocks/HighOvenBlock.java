@@ -2,6 +2,7 @@ package tsteelworks.common.blocks;
 
 import mantle.blocks.iface.IFacingLogic;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,9 +12,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityPiston;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.world.TinkerWorld;
@@ -55,6 +58,18 @@ public class HighOvenBlock extends TSInventoryBlock {
 		this();
 
 		texturePrefix = prefix;
+	}
+
+	@Override
+	public boolean hasTileEntity(int metadata) {
+		return metadata == META_HIGHOVEN || metadata == META_DRAIN || metadata == META_DUCT || metadata == META_TANK;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float clickX, float clickY, float clickZ) {
+		ChatHelper.sendChatMessage(player, "Has tile entity: " + (world.getTileEntity(x, y, z) != null));
+
+		return super.onBlockActivated(world, x, y, z, player, side, clickX, clickY, clickZ);
 	}
 
 	@Override
