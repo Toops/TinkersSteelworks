@@ -73,7 +73,13 @@ public class StructureDeepTank implements IStructure {
 			return recursiveScanDown(y - 1);
 		}
 
-		return scanPlainLayer(y);
+		boolean valid = scanPlainLayer(y);
+
+		// replace the corner at the bottom of the structure
+		if (valid)
+			borderPos = new CoordTuple(borderPos.x, y, borderPos.z);
+
+		return valid;
 	}
 
 	private boolean recursiveScanUp(int y) {
