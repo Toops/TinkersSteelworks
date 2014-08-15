@@ -8,7 +8,7 @@ import tsteelworks.plugins.ICompatPlugin;
 public class CompatFMP implements ICompatPlugin {
 	@Override
 	public String getModId() {
-		return "Microblocks";
+		return "ForgeMicroblock";
 	}
 
 	@Override
