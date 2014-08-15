@@ -1,19 +1,11 @@
 package tsteelworks.plugins.fmp;
 
+import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraft.item.ItemStack;
+import tsteelworks.common.core.TSContent;
 import tsteelworks.plugins.ICompatPlugin;
 
 public class CompatFMP implements ICompatPlugin {
-	// todo: Intermodcoms for ForgeMicroblocks (instead of FMP, caus it's microblocks that handles the microblocks)
-	/*
-	TSteelworks.logger.info("ForgeMultipart detected. Registering TSteelworks decorative blocks with FMP.");
-	RegisterWithFMP.registerBlock(TSContent.charcoalBlock);
-	RegisterWithFMP.registerBlock(TSContent.dustStorageBlock, 0, 1);
-	RegisterWithFMP.registerBlock(TSContent.highoven, 2, 2);
-	RegisterWithFMP.registerBlock(TSContent.highoven, 4, 11);
-	RegisterWithFMP.registerBlock(TSContent.limestoneBlock, 0, 8);
-	RegisterWithFMP.registerBlock(TSContent.cementBlock, 0, 15);
-	 */
-
 	@Override
 	public String getModId() {
 		return "Microblocks";
@@ -21,7 +13,25 @@ public class CompatFMP implements ICompatPlugin {
 
 	@Override
 	public void init() {
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", TSContent.charcoalBlock);
 
+		for (int i = 0; i <= 1; i++) {
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.dustStorageBlock, 0, i));
+		}
+
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.highoven, 0, 2));
+
+		for (int i = 4; i <= 11; i++) {
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.highoven, 0, i));
+		}
+
+		for (int i = 0; i <= 8; i++) {
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.limestoneBlock, 0, i));
+		}
+
+		for (int i = 0; i <= 15; i++) {
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.cementBlock, 0, i));
+		}
 	}
 
 	@Override
