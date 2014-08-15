@@ -23,7 +23,7 @@ public class AdvancedSmelting {
 	private static final HashMap<MixCombo, FluidStack> fluidComboList = new HashMap<>();
 	private static final HashMap<MixCombo, ItemStack> itemComboList = new HashMap<>();
 
-    /* ========== Normal Smelting  ========== */
+	/* ========== Normal Smelting  ========== */
 
 	/**
 	 * Adds mappings between a block and its liquid.
@@ -97,7 +97,7 @@ public class AdvancedSmelting {
 		return meltingList.get(new Meltable(stack));
 	}
 
-    /* ========== Combinitorial Smelting ========== */
+	/* ========== Combinitorial Smelting ========== */
 
 	/**
 	 * Adds a mapping between an item and its mix type and consume chance

@@ -120,7 +120,7 @@ public class TSContent {
 	 * Register Blocks and TileEntities (Logic)
 	 */
 	public void registerBlocks() {
-	    /* High Oven */
+		/* High Oven */
 		highoven = new HighOvenBlock().setBlockName("HighOven");
 		GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
 		GameRegistry.registerTileEntity(HighOvenLogic.class, "TSteelworks.HighOven");
@@ -134,7 +134,7 @@ public class TSContent {
 		scorchedSlab.stepSound = Block.soundTypeStone;
 		GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
 
-        /* Raw Vanilla Materials */
+		/* Raw Vanilla Materials */
 		List<ItemStack> charcoalBlocks = OreDictionary.getOres("blockCharcoal");
 
 		if (charcoalBlocks.isEmpty()) {
