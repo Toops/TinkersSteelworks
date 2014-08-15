@@ -36,7 +36,7 @@ public class DeepTankGui extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
-		final String capacity = HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getFluidAmount()) + "/" + HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getCapacity());
+		final String capacity = HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getFluidAmount()) + " / " + HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getCapacity());
 
 		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 14, 0x404040);
 

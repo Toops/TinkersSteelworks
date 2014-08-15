@@ -66,7 +66,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		}
 	}
 
-	// todo: move this to lib
+	// todo: move this to ChatHelper in lib
 	public static String formatFluidValue(boolean autoUnit, int amount) {
 		String textValue = "";
 		if (!autoUnit || amount < 1000) {
@@ -75,13 +75,20 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 			double converted = amount;
 			converted = converted / 1000;
 			if (converted < 1000) {
-				textValue += converted + "B";
+				textValue += round(converted, 3) + "B";
 			} else {
 				converted = converted / 1000;
-				textValue += converted + "kB";
+				textValue += round(converted, 3) + "kB";
 			}
 
 		}
 		return textValue;
+	}
+
+	// todo: move to mathHelper in lib
+	public static double round(double value, int digits) {
+		double mult = Math.pow(10, digits);
+
+		return Math.round(value * mult) / mult;
 	}
 }
