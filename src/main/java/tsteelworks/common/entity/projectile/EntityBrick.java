@@ -88,7 +88,7 @@ public class EntityBrick extends EntityThrowable {
 		doBreakParticleFX();
 
 		if (canBreakBlock(worldObj.getBlock(targetentity.blockX, targetentity.blockY, targetentity.blockZ)))
-			worldObj.destroyBlockInWorldPartially(getEntityId(), targetentity.blockX, targetentity.blockY, targetentity.blockZ, 10); // todo: check this method
+			worldObj.destroyBlockInWorldPartially(getEntityId(), targetentity.blockX, targetentity.blockY, targetentity.blockZ, 100); // todo: check this method
 
 		if (!worldObj.isRemote)
 			AbilityHelper.spawnItemAtEntity(this, new ItemStack(TSContent.materialsTS, 1, 2), 0);
