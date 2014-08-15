@@ -39,13 +39,14 @@ public class TSClientProxy extends TSCommonProxy {
 	public void preInit() {
 		super.preInit();
 
-		registerRenderer();
 		readManuals();
 	}
 
 	@Override
 	public void init() {
 		super.init();
+
+		registerRenderer();
 	}
 
 	@Override
