@@ -15,7 +15,13 @@ public class DeepTankGlassTypes {
 	}
 
 	public static void addGlassType(ItemStack stack, int capacity) {
+		GlassType glass = new GlassType(stack);
 		glassTypes.put(new GlassType(stack), capacity);
+
+		// this should prevent out of bounds exceptions when getting the display name
+		if (glass.metadata == null) {
+			stack.setItemDamage(0);
+		}
 
 		TSLogger.info("Registered deep tank glass type " + stack.getDisplayName() + " with capacity of " + capacity + "mB");
 	}
@@ -93,7 +99,7 @@ public class DeepTankGlassTypes {
 			if (!block.equals(glassType.block))
 				return false;
 
-			if (metadata != null && !metadata.equals(glassType.metadata)) {
+			if (metadata != null && glassType.metadata != null && !metadata.equals(glassType.metadata)) {
 				return false;
 			}
 
