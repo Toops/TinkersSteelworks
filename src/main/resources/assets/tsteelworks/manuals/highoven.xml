@@ -111,17 +111,17 @@ Place the Controller in the middle of any layer you desire. You may place drains
 
 The controller must have an active redstone signal to burn fuel. Simply placing a lever anywhere next to or on the controller will do the trick.</text>
     </page>
-    <page type="picture">
+    <page type="picture2">
         <text>A Working High Oven</text>
         <location>tsteelworks:manuals/highovensmall.png</location>
     </page>
-    <page type="picture">
+    <page type="picture2">
         <text>The High Oven should only be fuelled with charcoal or other specialized purified fuels which do not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.
 
 The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.</text>
         <location>tsteelworks:manuals/highovenbackground.png</location>
     </page>
-    <page type="picture">
+    <page type="picture2">
         <text>Crystalline structures may be formed within your metals when compound agents are mixed into the metal, causing fascinating chemical reactions! These raw materials may or may not be entirely consumed on a basis of their dissipation property. In the coming pages, we will cover a few of these compound agents known as oxidizers, reducers, and purifiers.
 
 Oxidizers provide oxidation to the chemical compound.
@@ -345,7 +345,7 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
         </text>
     </page>
 
-    <page type="picture">
+    <page type="picture2">
         <text>The First Layer</text>
         <location>tsteelworks:manuals/deeptankbuild1.png</location>
     </page>
@@ -355,7 +355,7 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
         </text>
     </page>
 
-    <page type="picture">
+    <page type="picture2">
         <text>Glass Walls</text>
         <location>tsteelworks:manuals/deeptankbuild2.png</location>
     </page>
@@ -365,7 +365,7 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
         </text>
     </page>
 
-    <page type="picture">
+    <page type="picture2">
         <text>Cap it off!</text>
         <location>tsteelworks:manuals/deeptankbuild3.png</location>
     </page>
@@ -375,7 +375,7 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
         </text>
     </page>
 
-    <page type="picture">
+    <page type="picture2">
         <text>High Oven, meet Deep Tank</text>
         <location>tsteelworks:manuals/deeptankbuild4.png</location>
     </page>
@@ -396,7 +396,7 @@ Stackable: Yes</text>
         <recipe>vacuousmod</recipe>
     </page>
 
-    <page type="picture">
+    <page type="picture2">
         <text>...</text>
         <location>tsteelworks:manuals/highgolembackground.png</location>
     </page>

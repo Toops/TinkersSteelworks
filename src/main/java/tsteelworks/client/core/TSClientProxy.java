@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import tconstruct.client.TProxyClient;
 import tconstruct.library.TConstructRegistry;
@@ -23,6 +24,7 @@ import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
+import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSRepo;
@@ -32,7 +34,6 @@ import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.client.TSClientRegistry;
 
-// todo: reformat XML to match mantle & TiC pages
 public class TSClientProxy extends TSCommonProxy {
 	public static BookData highOvenBook;
 
@@ -71,6 +72,10 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	private void initManualIcons() {
+		ResourceLocation res = new ResourceLocation("tsteelworks:manuals/deeptankbuild1.png");
+
+		System.out.println(res);
+
 		// Blocks
 		MantleClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
 		MantleClientRegistry.registerManualIcon("highoven", new ItemStack(TSContent.highoven));
@@ -245,5 +250,8 @@ public class TSClientProxy extends TSCommonProxy {
 
 	private void initManualPages() {
 		MProxyClient.registerManualPage("highoven", TSHighOvenPage.class);
+
+		// for some weird reason, it doesn't work with PiturePage. I don't understand, it's the same class.
+		MProxyClient.registerManualPage("picture2", TSPicturePage.class);
 	}
 }
