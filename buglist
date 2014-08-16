@@ -15,8 +15,4 @@ Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 
 Make the turbine auto-pull&push
 Make the turbine a servant & valid as a deep tank block
 
-Lib:
-Particle handler
-- once done, fix the particles for the EntityBrick
-
 Implement cement

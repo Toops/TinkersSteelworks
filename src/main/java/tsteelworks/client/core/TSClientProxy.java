@@ -25,6 +25,7 @@ import tsteelworks.client.entity.RenderHighGolem;
 import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
+import tsteelworks.client.particle.TSParticle;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.TSRepo;
@@ -36,6 +37,7 @@ import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSClientProxy extends TSCommonProxy {
 	public static BookData highOvenBook;
+	public static final TSParticle PARTICLE_HANDLER = new TSParticle();
 
 	@Override
 	public void preInit() {
@@ -200,52 +202,6 @@ public class TSClientProxy extends TSCommonProxy {
 		RenderingRegistry.registerBlockHandler(new DeepTankRender());
 
 		addRenderMappings();
-	}
-
-	public void spawnParticle(String particle, double xPos, double yPos, double zPos, double velX, double velY, double velZ) {
-		// todo: rollback changes but move this to a particle handler thing
-		if ("scorchedbrick".equals(particle) || "limestonebrick".equals(particle))
-			doSpawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-		else
-			TinkerWorld.proxy.spawnParticle(particle, xPos, yPos, zPos, velX, velY, velZ);
-
-	}
-
-	// todo: move this to lib & add a particle registry
-	public EntityFX doSpawnParticle(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
-		Minecraft mc = Minecraft.getMinecraft();
-
-		if ((mc.renderViewEntity != null) && (mc.effectRenderer != null)) {
-			int i = mc.gameSettings.particleSetting;
-
-			if ((i == 1) && (mc.theWorld.rand.nextInt(3) == 0))
-				i = 2;
-
-			final double d6 = mc.renderViewEntity.posX - par2;
-			final double d7 = mc.renderViewEntity.posY - par4;
-			final double d8 = mc.renderViewEntity.posZ - par6;
-			EntityFX entityfx = null;
-
-			final double d9 = 16.0D;
-
-			if (((d6 * d6) + (d7 * d7) + (d8 * d8)) > (d9 * d9))
-				return null;
-			else if (i > 1)
-				return null;
-			else {
-				if (par1Str.equals("scorchedbrick"))
-					entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS);
-				if (par1Str.equals("limestonebrick"))
-					entityfx = new EntityBreakingFX(mc.theWorld, par2, par4, par6, TSContent.materialsTS, 1);
-
-				if (entityfx != null)
-					mc.effectRenderer.addEffect(entityfx);
-
-				return entityfx;
-			}
-		}
-
-		return null;
 	}
 
 	private void initManualPages() {

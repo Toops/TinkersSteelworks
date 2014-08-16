@@ -5,14 +5,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import tconstruct.library.tools.AbilityHelper;
+import nf.fr.ephys.cookiecore.client.ParticleRegistry;
 import tconstruct.smeltery.TinkerSmeltery;
-import tsteelworks.common.core.TSContent;
+import tsteelworks.client.core.TSClientProxy;
 
 public class EntityBrick extends EntityThrowable {
 	public static final Block[] BREAKABLE_DEFAULT = new Block[] {
@@ -21,7 +20,7 @@ public class EntityBrick extends EntityThrowable {
 	};
 
 	private int knockbackStrength = 1;
-	private String particleEffect = null;
+	private int particleEffect = -1;
 	private Block[] breakables = BREAKABLE_DEFAULT;
 
 	public EntityBrick(World world) {
@@ -40,7 +39,7 @@ public class EntityBrick extends EntityThrowable {
 		this.knockbackStrength = strength;
 	}
 
-	public void setParticleEffect(String effect) {
+	public void setParticleEffect(int effect) {
 		this.particleEffect = effect;
 	}
 
@@ -59,7 +58,7 @@ public class EntityBrick extends EntityThrowable {
 	}
 
 	public void doBreakParticleFX() {
-		if (!worldObj.isRemote || particleEffect == null) return;
+		if (!worldObj.isRemote || particleEffect == -1) return;
 
 		final int i = 2;
 		for (int j = 0; j < (i * 4); ++j) {
@@ -68,7 +67,7 @@ public class EntityBrick extends EntityThrowable {
 			final float xPos = MathHelper.sin(f) * i * 0.5F * offset;
 			final float zPos = MathHelper.cos(f) * i * 0.5F * offset;
 
-			worldObj.spawnParticle(particleEffect, posX + xPos, boundingBox.minY, posZ + zPos, 0.0D, 0.0D, 0.0D);
+			ParticleRegistry.spawnParticle(TSClientProxy.PARTICLE_HANDLER.SCORCHED_BRICK_ID, posX + xPos, boundingBox.minY, posZ + zPos, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
