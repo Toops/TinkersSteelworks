@@ -29,7 +29,7 @@ import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.core.ConfigCore;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureHighOven;
 import tsteelworks.lib.*;

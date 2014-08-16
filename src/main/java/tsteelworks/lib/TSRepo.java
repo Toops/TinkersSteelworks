@@ -1,4 +1,4 @@
-package tsteelworks.common.core;
+package tsteelworks.lib;
 
 public class TSRepo {
 	public static final String MOD_ID = "TSteelworks";

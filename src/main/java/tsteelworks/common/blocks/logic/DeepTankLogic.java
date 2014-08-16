@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureDeepTank;
 import tsteelworks.lib.IFluidTankHolder;

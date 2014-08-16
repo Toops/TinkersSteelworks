@@ -13,7 +13,7 @@ import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.common.core.ConfigCore;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.IRedstonePowered;
 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, IRedstonePowered, IHopper {

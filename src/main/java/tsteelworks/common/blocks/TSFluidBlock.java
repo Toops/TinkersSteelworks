@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 
 public class TSFluidBlock extends BlockFluidClassic {
 	private String texture;

@@ -13,10 +13,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.Detailing;
-import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.library.crafting.Smeltery;
+import tconstruct.library.crafting.*;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -50,6 +47,7 @@ public class TSRecipes {
 		createAlloys();
 
 		createRecipes();
+		craftGlass();
 	}
 
 	public static void addHighOvenSmelts() {
@@ -178,7 +176,6 @@ public class TSRecipes {
 	}
 
 	public static void craftLimestone() {
-		final Detailing chiseling = TConstructRegistry.getChiselDetailing();
 		final Fluid fluid = TSContent.moltenLimestoneFluid;
 
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), patSmallBlock, '#', new ItemStack(TSContent.materialsTS, 1, 1));
@@ -207,6 +204,10 @@ public class TSRecipes {
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 7));
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 8));
 
+		TConstructRegistry.getTableCasting().addCastingRecipe(new ItemStack(TSContent.materialsTS, 1, 1), new FluidStack(fluid, INGOT_LIQUID_VALUE), new ItemStack(TinkerSmeltery.metalPattern), false, 25);
+		TConstructRegistry.getBasinCasting().addCastingRecipe(new ItemStack(TSContent.limestoneBlock), new FluidStack(fluid, INGOT_LIQUID_VALUE * 4), 100);
+
+		final Detailing chiseling = TConstructRegistry.getChiselDetailing();
 		chiseling.addDetailing(TSContent.limestoneBlock, 2, TSContent.limestoneBlock, 3, TinkerTools.chisel);
 		chiseling.addDetailing(TSContent.limestoneBlock, 3, TSContent.limestoneBlock, 4, TinkerTools.chisel);
 		chiseling.addDetailing(TSContent.limestoneBlock, 4, TSContent.limestoneBlock, 5, TinkerTools.chisel);

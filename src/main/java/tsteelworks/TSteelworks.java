@@ -14,6 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import tsteelworks.common.core.*;
 import tsteelworks.common.worldgen.TSBaseWorldGenerator;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;
 import tsteelworks.plugins.waila.Waila;

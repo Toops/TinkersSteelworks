@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 
 import java.util.List;
 

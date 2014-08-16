@@ -15,7 +15,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.INamable;
 import tsteelworks.lib.IRedstonePowered;
 import tsteelworks.lib.IServantLogic;

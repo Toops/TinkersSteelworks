@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 
 public class TSArmorBasic extends ItemArmor {
 	public String textureName;

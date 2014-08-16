@@ -11,7 +11,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 
 import java.util.List;
 

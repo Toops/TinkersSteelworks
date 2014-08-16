@@ -25,7 +25,7 @@ import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.GuiHandler;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.lib.IMasterLogic;

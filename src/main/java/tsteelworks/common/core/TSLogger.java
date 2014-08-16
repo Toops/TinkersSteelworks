@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tsteelworks.TSteelworks;
+import tsteelworks.lib.TSRepo;
 
 public class TSLogger {
 	public static Logger logger = LogManager.getLogger(TSRepo.MOD_ID);

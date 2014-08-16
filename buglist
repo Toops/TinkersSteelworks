@@ -7,13 +7,10 @@ Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- cou
 
 Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
 
-Add casting recipes for limestone
-
 High oven:
 NEI plugin for recipes
 FMLIntermodComs to add recipes
 Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
-Make limestone fluid by smelting stone with sand and clay as oxidizer/reducer/purifier
 
 Add crafting recipe for the steam turbine
 Make the turbine auto-pull&push

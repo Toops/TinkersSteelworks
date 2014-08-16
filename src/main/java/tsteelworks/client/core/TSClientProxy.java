@@ -27,7 +27,7 @@ import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.core.TSRepo;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
