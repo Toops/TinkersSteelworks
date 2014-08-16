@@ -3,10 +3,6 @@
 Deep tank:
 Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
 
-CookieCore:
-RenderHelper#DrawTextureRect should use floats instead of ints
-Remove IChunkNotify
-
 ============ TSteelworks todolist ============
 
 Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
@@ -23,8 +19,7 @@ Add casting recipes for limestone
 
 High oven:
 NEI plugin for recipes
-
-High Oven GUI:
+FMLIntermodComs to add recipes
 Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
 Make limestone fluid by smelting stone with sand and clay as oxidizer/reducer/purifier
 

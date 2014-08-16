@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.lib.IFluidTankHolder;
 import tsteelworks.lib.IMasterLogic;
@@ -56,39 +57,13 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack stack = tank.getFluid(i);
 
-			String textValue = formatFluidValue(autoUnit, stack.amount);
+			String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
 			currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + textValue + ")");
 		}
 
 		if (showTotal) {
 			currenttip.add("-----");
-			currenttip.add(formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
+			currenttip.add(ChatHelper.formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
 		}
-	}
-
-	// todo: move this to ChatHelper in lib
-	public static String formatFluidValue(boolean autoUnit, int amount) {
-		String textValue = "";
-		if (!autoUnit || amount < 1000) {
-			textValue += amount + "mB";
-		} else {
-			double converted = amount;
-			converted = converted / 1000;
-			if (converted < 1000) {
-				textValue += round(converted, 3) + "B";
-			} else {
-				converted = converted / 1000;
-				textValue += round(converted, 3) + "kB";
-			}
-
-		}
-		return textValue;
-	}
-
-	// todo: move to mathHelper in lib
-	public static double round(double value, int digits) {
-		double mult = Math.pow(10, digits);
-
-		return Math.round(value * mult) / mult;
 	}
 }

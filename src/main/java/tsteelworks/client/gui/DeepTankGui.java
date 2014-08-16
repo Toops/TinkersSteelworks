@@ -7,13 +7,13 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
+import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.container.DeepTankContainer;
 import tsteelworks.common.network.PacketMoveFluidHandler;
-import tsteelworks.plugins.waila.HighOvenTankDataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DeepTankGui extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
-		final String capacity = HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getFluidAmount()) + " / " + HighOvenTankDataProvider.formatFluidValue(true, fluidTank.getCapacity());
+		final String capacity = ChatHelper.formatFluidValue(true, fluidTank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(true, fluidTank.getCapacity());
 
 		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 14, 0x404040);
 
@@ -70,12 +70,9 @@ public class DeepTankGui extends GuiContainer {
 
 			float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-			// TODO the render is still broken because we're clipping float to ints and it causes imprecision
-			// ceil and round is obviously not working, we're still overflowing sometimes
-			// need to fix drawTexturedRect, it should use floats as the tessellator allows floats
-			RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
+			RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
 
-			yBottom -= Math.round(liquidSize);
+			yBottom -= liquidSize;
 		}
 
 		//Liquid gauge

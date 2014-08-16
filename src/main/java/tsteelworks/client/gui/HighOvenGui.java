@@ -62,10 +62,9 @@ public class HighOvenGui extends GuiContainer {
 
 				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
 
-				// the render is still broken because we're clipping float to ints and it causes imprecision
-				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, (int) yBottom, (int) Math.ceil(liquidSize), zLevel);
+				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
 
-				yBottom -= Math.round(liquidSize);
+				yBottom -= liquidSize;
 			}
 		}
 
