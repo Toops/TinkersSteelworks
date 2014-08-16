@@ -49,8 +49,7 @@ public class GuiHandler implements IGuiHandler {
 			case DEEPTANK_GUI_ID:
 				return new DeepTankContainer(player.inventory, (DeepTankLogic) world.getTileEntity(x, y, z));
 			case MANUAL_GUI_ID:
-				final ItemStack stack = player.getCurrentEquippedItem();
-				return new GuiManual(stack, TSClientProxy.getManualFromStack(stack));
+				return null;
 		}
 
 		return null;

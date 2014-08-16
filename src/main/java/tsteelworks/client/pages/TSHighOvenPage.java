@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSHighOvenPage extends BookPage {
 	private static final int[] ICONS_OFFSET_X = new int[] { 120, 52, 6, 6, 6 };
@@ -26,8 +27,9 @@ public class TSHighOvenPage extends BookPage {
 			text = nodes.item(0).getTextContent();
 
 		nodes = element.getElementsByTagName("recipe");
+
 		if (nodes != null)
-			icons = MantleClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
+			icons = TSClientRegistry.getRecipeIcons(nodes.item(0).getTextContent());
 	}
 
 	@Override
@@ -47,13 +49,16 @@ public class TSHighOvenPage extends BookPage {
 		manual.renderitem.zLevel = 100;
 		manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, MantleClientRegistry.getManualIcon("charcoal"), (localWidth + 50) / 2, (localHeight + 110) / 2);
 
-		for (int i = 0; i < icons.length; i++) {
-			if (icons[i] == null) continue;
+		if (icons != null) {
+			for (int i = 0; i < icons.length; i++) {
+				if (icons[i] == null)
+					continue;
 
-			manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], (localWidth + ICONS_OFFSET_X[i]) / 2, (localHeight + ICONS_OFFSET_Y[i]) / 2);
+				manual.renderitem.renderItemAndEffectIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], (localWidth + ICONS_OFFSET_X[i]) / 2, (localHeight + ICONS_OFFSET_Y[i]) / 2);
 
-			if (icons[i].stackSize > 1)
-				manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], (localWidth + ICONS_OFFSET_X[i]) / 2, (localHeight + ICONS_OFFSET_Y[i]) / 2, String.valueOf(icons[i].stackSize));
+				if (icons[i].stackSize > 1)
+					manual.renderitem.renderItemOverlayIntoGUI(manual.fonts, manual.getMC().renderEngine, icons[i], (localWidth + ICONS_OFFSET_X[i]) / 2, (localHeight + ICONS_OFFSET_Y[i]) / 2, String.valueOf(icons[i].stackSize));
+			}
 		}
 
 		manual.renderitem.zLevel = 0;

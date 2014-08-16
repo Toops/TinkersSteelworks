@@ -54,6 +54,10 @@ public class TSClientProxy extends TSCommonProxy {
 	public void postInit() {
 		super.postInit();
 
+		initManualIcons();
+		initManualRecipes();
+		initManualPages();
+
 		MinecraftForge.EVENT_BUS.register(new TSEventHandler());
 	}
 
@@ -181,10 +185,6 @@ public class TSClientProxy extends TSCommonProxy {
 		highOvenBook.unlocalizedName = "high_oven_manual";
 		highOvenBook.font = TProxyClient.smallFontRenderer;
 		highOvenBook.modID = TSRepo.MOD_ID;
-
-		initManualIcons();
-		initManualRecipes();
-		initManualPages();
 	}
 
 	private void registerRenderer() {
@@ -242,8 +242,6 @@ public class TSClientProxy extends TSCommonProxy {
 
 		return null;
 	}
-
-
 
 	private void initManualPages() {
 		MProxyClient.registerManualPage("highoven", TSHighOvenPage.class);
