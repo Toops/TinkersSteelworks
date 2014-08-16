@@ -21,12 +21,8 @@ Reimplement the steam turbine, need to look at the history, I deleted it thinkin
 
 Add casting recipes for limestone
 
-Vacuous modifier: only work if the item is held
-
 High oven:
 NEI plugin for recipes
-
-Entities: test them
 
 High Oven GUI:
 Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
@@ -37,7 +33,3 @@ Particle handler
 - once done, fix the particles for the EntityBrick
 
 Implement cement
-
-Ideas:
-Place a sign on the hambone before spawning the steel golem to make him defend only the ppl named
-and attack everything/one else
