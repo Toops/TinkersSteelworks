@@ -12,7 +12,6 @@ NEI plugin for recipes
 FMLIntermodComs to add recipes
 Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
 
-Add crafting recipe for the steam turbine
 Make the turbine auto-pull&push
 Make the turbine a servant & valid as a deep tank block
 

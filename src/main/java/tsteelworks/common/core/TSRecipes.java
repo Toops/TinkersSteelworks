@@ -47,7 +47,6 @@ public class TSRecipes {
 		createAlloys();
 
 		createRecipes();
-		craftGlass();
 	}
 
 	public static void addHighOvenSmelts() {
@@ -101,8 +100,9 @@ public class TSRecipes {
 		craftSteel();
 		craftPigIron();
 		//craftObsidian();
-		//craftGlass();
+		craftGlass();
 		craftWater();
+		craftMachines();
 
 		if (ConfigCore.hardcorePiston)
 			TSRecipes.changePiston();
@@ -116,6 +116,10 @@ public class TSRecipes {
 
 		final ItemStack netherQuartz = new ItemStack(Items.quartz, 2);
 		AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, TinkerSmeltery.moltenGlassFluid, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
+	}
+
+	public static void craftMachines() {
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.steamTurbine), "aca", "#d#", "#r#", '#', "ingotBronze", 'a', "ingotAluminumBrass", 'c', "ingotSteel", 'r', new ItemStack(Items.redstone), 'd', new ItemStack(Blocks.piston)));
 	}
 
 	public static void craftManual() {
