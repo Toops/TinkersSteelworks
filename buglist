@@ -3,11 +3,9 @@
 Deep tank:
 Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
 
-Cookiecore:
+CookieCore:
 RenderHelper#DrawTextureRect should use floats instead of ints
 Remove IChunkNotify
-
-Molten cement refuses to load its texture
 
 ============ TSteelworks todolist ============
 
@@ -38,3 +36,6 @@ Book: reformat to match TConstruct book format
 
 Lib:
 Particle handler
+- once done, fix the particles for the EntityBrick
+
+Implement cement

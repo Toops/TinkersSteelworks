@@ -243,7 +243,7 @@ public class TSContent {
 		}
 
 		if (!liquidCementFluid.canBePlacedInWorld()) {
-			liquidCement = new CementFluidBlock(liquidCementFluid, Material.air, "liquid_cement").setBlockName("liquid.cement").setCreativeTab(creativeTab);
+			liquidCement = new CementFluidBlock(liquidCementFluid, Material.water, "liquid_cement").setBlockName("liquid.cement").setCreativeTab(creativeTab);
 			GameRegistry.registerBlock(liquidCement, "liquid.cement");
 		} else {
 			liquidCement = liquidCementFluid.getBlock();

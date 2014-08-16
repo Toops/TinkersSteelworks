@@ -1,6 +1,5 @@
 package tsteelworks.common.blocks;
 
-import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
@@ -13,8 +12,6 @@ import tsteelworks.common.core.TSContent;
  * If I get the idea, which might be wrong, this fluid is supposed to harden when it's in contact with air ?
  */
 public class CementFluidBlock extends TSFluidBlock {
-	public CoordTuple origin;
-
 	public CementFluidBlock(Fluid fluid, Material material, String texture) {
 		super(fluid, material, texture);
 	}
@@ -22,7 +19,6 @@ public class CementFluidBlock extends TSFluidBlock {
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
-		origin = new CoordTuple(x, y, z);
 	}
 
 	public boolean validHardenCoords(World world, int x, int y, int z) {
