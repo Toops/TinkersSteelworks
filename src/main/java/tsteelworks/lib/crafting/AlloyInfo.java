@@ -1,12 +1,16 @@
 package tsteelworks.lib.crafting;
 
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.library.crafting.AlloyMix;
 import tconstruct.library.crafting.Smeltery;
+import tsteelworks.common.core.ConfigCore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class AlloyInfo {
+	private static List<FluidStack> whitelistedFluids = new ArrayList<>();
 	/**
 	 * Takes a FluidStack alloy, returns it's components. Should equal the reagents required to produce this
 	 * function's input in a Tinker's Construct smeltery.
@@ -22,13 +26,12 @@ public final class AlloyInfo {
 			if (alloy.result.isFluidEqual(input)) {
 				List<FluidStack> components = alloy.mixers;
 
-				float ratio = alloy.result.amount / (float) input.amount;
-
 				FluidStack[] output = new FluidStack[components.size()];
 
 				for (int i = 0; i < output.length; i++) {
-					output[i] = components.get(i).copy();
-					output[i].amount *= ratio;
+					float ratio = (float)  components.get(i).amount / alloy.result.amount;
+
+					output[i] = new FluidStack(components.get(i), (int) (input.amount * ratio));
 				}
 
 				return output;
@@ -36,5 +39,26 @@ public final class AlloyInfo {
 		}
 
 		return null;
+	}
+
+	public static void generateDealloyList() {
+		List<AlloyMix> alloys = Smeltery.getAlloyList();
+
+		for (AlloyMix alloy : alloys) {
+			if (!isBlackListed(alloy.result.getFluid()))
+				whitelistedFluids.add(alloy.result);
+		}
+	}
+
+	public static boolean isAlloy(FluidStack fluid) {
+		return whitelistedFluids.contains(fluid);
+	}
+
+	private static boolean isBlackListed(Fluid fluid) {
+		for (String name : ConfigCore.blacklistedAlloys) {
+			if (name.equals(fluid.getName())) return true;
+		}
+
+		return false;
 	}
 }

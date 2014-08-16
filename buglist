@@ -8,7 +8,6 @@ Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- cou
 Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
 
 Deep tank:
-Move the fluid renderer to lib
 Reimplement the steam turbine, need to look at the history, I deleted it thinking it was just some rf generator T_T
 - Should be placed next to any IFluidHandler, then pull a fluid (only fluids listed as alloy and not blacklisted) and push the results
 -- store the overflow in an internal buffer, stop working until the buffer is empty

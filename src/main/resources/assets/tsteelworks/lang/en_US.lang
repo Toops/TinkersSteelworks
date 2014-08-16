@@ -70,7 +70,7 @@ HighOven.Brick.Fancy.name=Fancy Scorched Bricks
 HighOven.Brick.Square.name=Chiseled Scorched Bricks
 HighOven.Brick.Creeper.name=Creepy Scorched Bricks
 
-Machine.Turbine.name=Steam Turbine
+tile.Machine.Turbine.name=Steam Turbine
 
 Limestone.Stone.name=Limestone
 Limestone.Cobblestone.name=Limestone Cobble

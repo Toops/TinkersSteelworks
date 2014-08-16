@@ -68,6 +68,7 @@ public class TSContent {
 	public static Block steamBlock;
 	public static Block moltenLimestone;
 	public static Block liquidCement;
+	public static Block steamTurbine;
 
 	public static Fluid steamFluid;
 	public static Fluid moltenLimestoneFluid;
@@ -165,6 +166,10 @@ public class TSContent {
 
 		cementBlock = new CementBlock().setBlockName("tsteelworks.cement").setStepSound(Block.soundTypeStone);
 		GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");
+
+		steamTurbine = new SteamTurbineBlock().setBlockName("Machine.Turbine").setStepSound(Block.soundTypeMetal);
+		GameRegistry.registerBlock(steamTurbine, steamTurbine.getUnlocalizedName());
+		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
 	}
 
 	public void registerFluids() {

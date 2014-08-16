@@ -18,6 +18,7 @@ public class ConfigCore {
 	public static boolean enableTE3SlagOutput;
 
 	public static int steamProductionRate;
+	public static String[] blacklistedAlloys;
 
 	/**
 	 * valid tank glass types with their capacity in mB
@@ -73,6 +74,8 @@ public class ConfigCore {
 		hardcoreAnvil = config.get("TSteelification", "Hardcore Anvil", false, "Anvil requires steel materials").getBoolean(false);
 
 		enableLimestoneWorldgen = config.get("World Generation", "Limestone", true, "Allow limestone to generate (usually under rivers and oceans)").getBoolean(true);
+
+		blacklistedAlloys = config.get("Machines", "Blacklisted dealloys", new String[0], "List of alloy which may not be dealloyed by the steam turbine. List the fluid unlocalized names. One entry per line").getStringList();
 
 		if (config.hasChanged())
 			config.save();
