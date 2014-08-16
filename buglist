@@ -32,8 +32,6 @@ High Oven GUI:
 Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
 Make limestone fluid by smelting stone with sand and clay as oxidizer/reducer/purifier
 
-Book: reformat to match TConstruct book format
-
 Lib:
 Particle handler
 - once done, fix the particles for the EntityBrick

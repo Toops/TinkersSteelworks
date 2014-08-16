@@ -9,7 +9,7 @@ public class TSClientRegistry {
 	public static Map<String, ItemStack[]> recipeIcons = new HashMap<>();
 
 	public static ItemStack[] getRecipeIcons(String name) {
-		return recipeIcons.get("name");
+		return recipeIcons.get(name);
 	}
 
 	public static void registerManualHighOvenRecipe(String name, ItemStack output, ItemStack input, ItemStack oxyder, ItemStack reducer, ItemStack purifier) {

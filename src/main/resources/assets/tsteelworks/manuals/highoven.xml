@@ -132,7 +132,7 @@ Purifiers filter unwanted leftover materials.
         </text>
         <location>tsteelworks:manuals/compound.png</location>
     </page>
-    <page type="compound">
+    <page type="sidebar">
         <text>Known Oxidizers include:</text>
         <item>
             <text>Gunpowder - 33% Dissipation </text>
@@ -148,7 +148,7 @@ Purifiers filter unwanted leftover materials.
         </item>
     </page>
 
-    <page type="compound">
+    <page type="sidebar">
         <text>Known Reducers include:</text>
         <item>
             <text>Redstone Dust - 65% Dissipation</text>
@@ -168,7 +168,7 @@ Purifiers filter unwanted leftover materials.
         </item>
     </page>
 
-    <page type="compound">
+    <page type="sidebar">
         <text>Known Purifiers include:</text>
         <item>
             <text>Sand - 100% Dissipation</text>
