@@ -1,7 +1,10 @@
 package tsteelworks.common.entity.projectile;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import tconstruct.library.tools.AbilityHelper;
+import tsteelworks.common.core.TSContent;
 
 public class EntityLimestoneBrick extends EntityBrick {
 	public EntityLimestoneBrick(World world) {
@@ -23,5 +26,10 @@ public class EntityLimestoneBrick extends EntityBrick {
 
 		setKnockbackStrength(1);
 		setParticleEffect("limestonebrick");
+	}
+
+	@Override
+	protected void dropOnImpact() {
+		AbilityHelper.spawnItemAtEntity(this, new ItemStack(TSContent.materialsTS, 1, 2), 0);
 	}
 }

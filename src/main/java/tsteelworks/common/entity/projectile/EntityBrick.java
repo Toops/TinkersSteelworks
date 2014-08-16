@@ -91,8 +91,12 @@ public class EntityBrick extends EntityThrowable {
 			worldObj.destroyBlockInWorldPartially(getEntityId(), targetentity.blockX, targetentity.blockY, targetentity.blockZ, 100); // todo: check this method
 
 		if (!worldObj.isRemote)
-			AbilityHelper.spawnItemAtEntity(this, new ItemStack(TSContent.materialsTS, 1, 2), 0);
+			dropOnImpact();
 
 		setDead();
+	}
+
+	protected void dropOnImpact() {
+
 	}
 }
