@@ -37,3 +37,7 @@ Particle handler
 - once done, fix the particles for the EntityBrick
 
 Implement cement
+
+Ideas:
+Place a sign on the hambone before spawning the steel golem to make him defend only the ppl named
+and attack everything/one else

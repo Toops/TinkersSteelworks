@@ -13,14 +13,15 @@ import net.minecraft.entity.monster.EntityGolem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import tconstruct.tools.TinkerTools;
 
 public class SteelGolem extends EntityGolem {
 	/**
@@ -234,10 +235,15 @@ public class SteelGolem extends EntityGolem {
 		}
 
 		k = 3 + this.rand.nextInt(3);
-
 		for (int l = 0; l < k; ++l) {
-			this.dropItem(Items.iron_ingot, 1);
+			// drop steel
+			this.entityDropItem(new ItemStack(TinkerTools.materials, 1, 16), 0);
 		}
+
+		// drop ardite
+
+		if (rand.nextFloat() > 0.75F)
+			this.entityDropItem(new ItemStack(TinkerTools.materials, 1, 4), 0);
 	}
 
 	public int getHoldRoseTick() {
@@ -245,11 +251,11 @@ public class SteelGolem extends EntityGolem {
 	}
 
 	public boolean isPlayerCreated() {
-		return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
+		return (this.dataWatcher.getWatchableObjectInt(16) & 1) != 0;
 	}
 
 	public void setPlayerCreated(boolean par1) {
-		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
+		int b0 = this.dataWatcher.getWatchableObjectInt(16);
 
 		if (par1) {
 			this.dataWatcher.updateObject(16, b0 | 1);
