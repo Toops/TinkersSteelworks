@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 
 import java.util.List;
@@ -57,8 +58,12 @@ public class TSMaterialItem extends TSCraftingItem {
 				--itemstack.stackSize;
 
 			world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-			if (!world.isRemote)
-				world.spawnEntityInWorld(new EntityScorchedBrick(world, player));
+			if (!world.isRemote) {
+				if (itemstack.getItemDamage() == 0)
+					world.spawnEntityInWorld(new EntityScorchedBrick(world, player));
+				else
+					world.spawnEntityInWorld(new EntityLimestoneBrick(world, player));
+			}
 
 			return itemstack;
 		}

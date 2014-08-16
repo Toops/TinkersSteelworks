@@ -9,9 +9,6 @@ Remove IChunkNotify
 
 Molten cement refuses to load its texture
 
-Bricks drop limestone dust, should drop themselves
-Bricks don't break glass
-
 ============ TSteelworks todolist ============
 
 Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
