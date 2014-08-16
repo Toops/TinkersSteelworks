@@ -33,20 +33,13 @@ public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 		if (steam.amount < 100) return;
 		steam.amount -= 100;
 
-		System.out.println(input.amount + " of " + input.getFluid().getLocalizedName(input) + " left to process");
-
 		int toProcess = Math.min(input.amount, 100);
-
-		System.out.println("processing " + toProcess + " mB");
 
 		FluidStack[] stacks = AlloyInfo.deAlloy(new FluidStack(input, toProcess));
 
-		System.out.println("Got: ");
 		int requiredSpace = 0;
 		for (FluidStack stack : stacks) {
 			requiredSpace += stack.amount;
-
-			System.out.println(stack.amount + " of " + stack.getFluid().getLocalizedName(stack));
 		}
 
 		if (output.getCapacity() - output.getFluidAmount() >= requiredSpace) {
@@ -123,7 +116,6 @@ public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		System.out.println(from.ordinal() == BlockHelper.getOppositeSide(getBlockMetadata()));
 		return from == ForgeDirection.DOWN || from.ordinal() == BlockHelper.getOppositeSide(getBlockMetadata());
 	}
 
