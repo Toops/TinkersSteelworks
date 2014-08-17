@@ -196,6 +196,8 @@ public class TSRecipes {
 
 		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
 		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), 825, new FluidStack(fluid, INGOT_LIQUID_VALUE));
+		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
+		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), 825, new FluidStack(fluid, INGOT_LIQUID_VALUE));
 
 		AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
 

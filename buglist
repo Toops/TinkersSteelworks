@@ -15,3 +15,5 @@ High oven:
 Important:
     Make the turbine auto-pull&push
     Make the turbine a servant & valid as a deep tank block
+
+The high oven should lookup the smeltery recipes if the item is not smeltable (and remove every copied recipe from the high oven)

@@ -26,7 +26,6 @@ public class CementFluidBlock extends TSFluidBlock {
 	}
 
 	public void checkForHarden(World world, int x, int y, int z) {
-		System.out.println(world.getBlockMetadata(x, y, z) + ", " + quantaPerBlock);
 		if (world.getBlockMetadata(x, y, z) == quantaPerBlock -1 ||
 				validHardenCoords(world, x, y, z - 1) ||
 				validHardenCoords(world, x, y, z + 1) ||
