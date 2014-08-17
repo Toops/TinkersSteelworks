@@ -1,18 +1,17 @@
 ============ TSteelworks buglist ============
 
 Deep tank:
-Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
+    Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
 
 ============ TSteelworks todolist ============
 
 Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
 
 High oven:
-NEI plugin for recipes
-FMLIntermodComs to add recipes
-Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
+    NEI plugin for recipes
+    FMLIntermodComs to add recipes
+    Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
 
-Make the turbine auto-pull&push
-Make the turbine a servant & valid as a deep tank block
-
-Implement cement
+Important:
+    Make the turbine auto-pull&push
+    Make the turbine a servant & valid as a deep tank block
