@@ -234,6 +234,18 @@ public class TSRecipes {
 		Smeltery.addMelting(FluidType.getFluidType(fluidName), new ItemStack(TinkerTools.materials, 1, 2), 0, INGOT_LIQUID_VALUE);
 		AdvancedSmelting.addMelting(new ItemStack(TinkerTools.materials, 1, 2), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
 
+		final String[] dyes = new String[] { "dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack" };
+
+		for (int i = 0; i < dyes.length; i++) {
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.cementBlock, 8, i),
+					"ccc",
+					"cdc",
+					"ccc",
+					'c', TSContent.cementBlock,
+					'd', dyes[i]
+			));
+		}
+
 		for (int meta = 2; meta < 11; meta ++) {
 			if (meta == 3)
 				continue;

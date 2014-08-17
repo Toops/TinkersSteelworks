@@ -168,7 +168,7 @@ public class TSContent {
 		cementBlock = new CementBlock().setBlockName("tsteelworks.cement").setStepSound(Block.soundTypeStone);
 		GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");
 
-		steamTurbine = new SteamTurbineBlock().setBlockName("Machine.Turbine").setStepSound(Block.soundTypeMetal);
+		steamTurbine = new SteamTurbineBlock().setBlockName("Machine.Turbine").setStepSound(Block.soundTypeMetal).setCreativeTab(creativeTab);
 		GameRegistry.registerBlock(steamTurbine, steamTurbine.getUnlocalizedName());
 		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
 	}
@@ -197,7 +197,7 @@ public class TSContent {
 
 		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam");
+			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam").setCreativeTab(creativeTab);
 			GameRegistry.registerItem(bucketSteam, "steamBucket");
 
 			filledBucket = new ItemStack(bucketSteam, 1, 0);
@@ -249,7 +249,7 @@ public class TSContent {
 		}
 
 		if (!liquidCementFluid.canBePlacedInWorld()) {
-			liquidCement = new CementFluidBlock(liquidCementFluid, Material.water, "liquid_cement").setBlockName("liquid.cement").setCreativeTab(creativeTab);
+			liquidCement = new CementFluidBlock(liquidCementFluid, Material.water, "liquid_cement").setBlockName("liquid.cement");
 			GameRegistry.registerBlock(liquidCement, "liquid.cement");
 		} else {
 			liquidCement = liquidCementFluid.getBlock();
