@@ -1,7 +1,10 @@
 package tsteelworks.common.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import tsteelworks.common.core.TSContent;
@@ -19,6 +22,14 @@ public class CementFluidBlock extends TSFluidBlock {
 	}
 
 	@Override
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+		if (entity instanceof EntityLivingBase) {
+			entity.setVelocity(0, 0, 0);
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 30, 3, true));
+		}
+	}
+
+	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
 		super.updateTick(world, x, y, z, rand);
 
@@ -27,6 +38,8 @@ public class CementFluidBlock extends TSFluidBlock {
 
 	public void checkForHarden(World world, int x, int y, int z) {
 		if (world.getBlockMetadata(x, y, z) == quantaPerBlock -1 ||
+				world.getBlock(x, y + 1, z) == TSContent.cementBlock ||
+				world.getBlock(x, y - 1, z) == TSContent.cementBlock ||
 				validHardenCoords(world, x, y, z - 1) ||
 				validHardenCoords(world, x, y, z + 1) ||
 				validHardenCoords(world, x - 1, y, z) ||
@@ -41,8 +54,6 @@ public class CementFluidBlock extends TSFluidBlock {
 	}
 
 	public boolean validHardenCoords(World world, int x, int y, int z) {
-		Block block = world.getBlock(x, y, z);
-
-		return block == TSContent.cementBlock;
+		return world.getBlock(x, y, z).getMaterial().isSolid();
 	}
 }

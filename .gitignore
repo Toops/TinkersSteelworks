@@ -17,6 +17,8 @@ Thumbs.db
 #eclipse stuff
 /.settings
 /bin
+.project
+.classpath
 
 gradle/
 eclipse/
