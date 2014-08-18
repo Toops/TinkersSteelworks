@@ -38,8 +38,7 @@ public class CementFluidBlock extends TSFluidBlock {
 
 	public void checkForHarden(World world, int x, int y, int z) {
 		if (world.getBlockMetadata(x, y, z) == quantaPerBlock -1 ||
-				world.getBlock(x, y + 1, z) == TSContent.cementBlock ||
-				world.getBlock(x, y - 1, z) == TSContent.cementBlock ||
+				isFlowingVertically(world, x, y, z) ||
 				validHardenCoords(world, x, y, z - 1) ||
 				validHardenCoords(world, x, y, z + 1) ||
 				validHardenCoords(world, x - 1, y, z) ||
