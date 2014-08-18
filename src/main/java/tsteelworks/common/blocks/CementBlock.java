@@ -25,7 +25,7 @@ public class CementBlock extends TSBaseBlock {
 		this.icons = new IIcon[TEXTURE_NAME.length];
 
 		for (int i = 0; i < this.icons.length; ++i) {
-			this.icons[i] = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + "cement/" + "cement_" + TEXTURE_NAME[i]);
+			this.icons[i] = iconRegister.registerIcon(TSRepo.NAMESPACE + "cement/" + "cement_" + TEXTURE_NAME[i]);
 		}
 	}
 }

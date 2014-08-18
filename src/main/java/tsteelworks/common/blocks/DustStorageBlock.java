@@ -51,6 +51,6 @@ public class DustStorageBlock extends BlockFalling {
 		icons = new IIcon[TEXTURE_NAMES.length];
 
 		for (int i = 0; i < icons.length; ++i)
-			icons[i] = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + TEXTURE_NAMES[i] + "_block");
+			icons[i] = iconRegister.registerIcon(TSRepo.NAMESPACE + TEXTURE_NAMES[i] + "_block");
 	}
 }

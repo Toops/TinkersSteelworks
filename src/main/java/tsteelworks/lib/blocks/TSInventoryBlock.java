@@ -102,7 +102,7 @@ public abstract class TSInventoryBlock extends BlockContainer {
 		icons = new IIcon[textureNames.length];
 
 		for (int i = 0; i < icons.length; ++i)
-			icons[i] = iconRegister.registerIcon(TSRepo.TEXTURE_DIR + textureNames[i]);
+			icons[i] = iconRegister.registerIcon(TSRepo.NAMESPACE + textureNames[i]);
 	}
 
 	public static boolean isActive(IBlockAccess world, int x, int y, int z) {
