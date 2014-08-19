@@ -1,6 +1,7 @@
 package tsteelworks.common.blocks.logic;
 
 import mantle.blocks.iface.IFacingLogic;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,7 +43,7 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public void setDirection(float yaw, float pitch, EntityLivingBase player) {
-		direction = (byte) BlockHelper.orientationToMetadataXZ(yaw);
+		direction = (byte) BlockPistonBase.determineOrientation(worldObj, xCoord, yCoord, zCoord, player);
 	}
 
 	// ========== IFluidHandler ===========
