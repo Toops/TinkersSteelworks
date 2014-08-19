@@ -9,7 +9,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import tsteelworks.lib.IMasterLogic;
 
 public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHandler, IFacingLogic {
@@ -50,11 +49,13 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return getTank() != null;
+		return from.ordinal() == direction && getTank() != null;
 	}
 
 	@Override
 	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		if (from.ordinal() != direction) return null;
+
 		IFluidHandler tank = getTank();
 
 		return tank == null ? null : tank.drain(from, resource, doDrain);
@@ -62,6 +63,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		if (from.ordinal() != direction) return null;
+
 		IFluidHandler tank = getTank();
 
 		return tank == null ? null : tank.drain(from, maxDrain, doDrain);
@@ -69,11 +72,13 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return getTank() != null;
+		return from.ordinal() == direction && getTank() != null;
 	}
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		if (from.ordinal() != direction) return 0;
+
 		IFluidHandler tank = getTank();
 
 		return tank == null ? 0 : tank.fill(from, resource, doFill);
@@ -81,6 +86,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		if (from.ordinal() != direction) return null;
+
 		IFluidHandler tank = getTank();
 
 		return tank == null ? new FluidTankInfo[0] : tank.getTankInfo(from);
