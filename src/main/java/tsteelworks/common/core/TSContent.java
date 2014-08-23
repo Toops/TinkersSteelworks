@@ -1,35 +1,27 @@
 package tsteelworks.common.core;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import mantle.items.ItemUtils;
 import mantle.lib.TabTools;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidContainerRegistry.FluidContainerData;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.ModifyBuilder;
 import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.*;
-import tsteelworks.common.blocks.TSFluidBlock;
 import tsteelworks.common.blocks.logic.*;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
@@ -44,14 +36,8 @@ import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
-import java.util.List;
-
 public class TSContent {
 	public static Item materialsTS;
-
-	public static ItemStack bucketSteam;
-	public static ItemStack bucketCement;
-	public static ItemStack bucketLimestone;
 
 	public static Item bookManual;
 	public static Item helmetSteel;
@@ -59,27 +45,25 @@ public class TSContent {
 	public static Item leggingsSteel;
 	public static Item bootsSteel;
 
+	public static Block cementBlock;
 	public static Block highoven;
 	public static Block scorchedSlab;
 	public static Block limestoneBlock;
 	public static Block limestoneSlab;
-	public static Block cementBlock;
 	public static Block tsCharcoalBlock;
 	public static Block dustStorageBlock;
-	public static Block steamBlock;
-	public static Block moltenLimestone;
-	public static Block liquidCement;
+
 	public static Block steamTurbine;
 
+	/** Instance of the fluid we registered, null if we did not */
 	public static Fluid steamFluid;
-	public static Fluid moltenLimestoneFluid;
-	public static Fluid liquidCementFluid;
-	public static boolean steamIsOurs = false;
-	public static boolean limestoneIsOurs = false;
-	public static boolean cementIsOurs = false;
 
-	public static ItemStack charcoalBlock;
-	public static ItemStack thaumcraftAlumentum;
+	/** Instance of the fluid we registered, null if we did not */
+	public static Fluid moltenLimestoneFluid;
+
+	/** Instance of the fluid we registered, null if we did not */
+	public static Fluid liquidCementFluid;
+
 	public static ItemArmor.ArmorMaterial materialSteel;
 
 	public static final TabTools creativeTab = new TabTools(TSRepo.MOD_ID);
@@ -87,12 +71,22 @@ public class TSContent {
 	/**
 	 * Content Constructor
 	 */
-	public TSContent() {
+	public void preInit() {
 		registerItems();
 		registerBlocks();
-		registerFluids();
 		setupCreativeTabs();
 		registerModifiers();
+
+		ModsData.loadSharedData();
+
+	}
+
+	public void postInit() {
+		ModsData.loadModsData();
+
+		createEntities();
+		addCraftingRecipes();
+		registerMixerMaterials();
 	}
 
 	/**
@@ -140,22 +134,6 @@ public class TSContent {
 		scorchedSlab.stepSound = Block.soundTypeStone;
 		GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
 
-		/* Raw Vanilla Materials */
-		List<ItemStack> charcoalBlocks = OreDictionary.getOres("blockCharcoal");
-
-		if (charcoalBlocks.isEmpty()) {
-			tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
-			GameRegistry.registerBlock(tsCharcoalBlock, "blockCharcoal");
-
-			Blocks.fire.setFireInfo(tsCharcoalBlock, 15, 30);
-			OreDictionary.registerOre("blockCharcoal", tsCharcoalBlock);
-
-			charcoalBlock = new ItemStack(tsCharcoalBlock);
-			GameRegistry.registerFuelHandler(new FuelHandler(charcoalBlock, 15000));
-		} else {
-			charcoalBlock = charcoalBlocks.get(0);
-		}
-
 		dustStorageBlock = new DustStorageBlock().setBlockName("tsteelworks.dustblock");
 		GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
 
@@ -173,101 +151,7 @@ public class TSContent {
 		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
 	}
 
-	public void registerFluids() {
-		LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
-		ItemStack bucket = new ItemStack(Items.bucket);
 
-		/* Steam */
-		steamFluid = FluidRegistry.getFluid("steam");
-		if (steamFluid == null) {
-			steamFluid = new Fluid("steam");
-			steamFluid.setDensity(-1).setViscosity(5).setTemperature(1300).setGaseous(true);
-
-			FluidRegistry.registerFluid(steamFluid);
-
-			steamIsOurs = true;
-		}
-
-		if (!steamFluid.canBePlacedInWorld()) {
-			steamBlock = new TSFluidBlock(steamFluid, Material.air, "liquid_steam").setBlockName("steam").setLightOpacity(0);
-			GameRegistry.registerBlock(steamBlock, "steam");
-		} else {
-			steamBlock = steamFluid.getBlock();
-		}
-
-		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(steamFluid, 1000), bucket);
-		if (filledBucket == null) {
-			Item bucketSteam = new ItemBucket(steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam").setCreativeTab(creativeTab);
-			GameRegistry.registerItem(bucketSteam, "steamBucket");
-
-			filledBucket = new ItemStack(bucketSteam, 1, 0);
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(steamFluid, 1000), filledBucket, bucket));
-		}
-
-		bucketSteam = filledBucket;
-
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(steamFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
-
-		/* Limestone */
-		moltenLimestoneFluid = FluidRegistry.getFluid("limestone.molten");
-		if (moltenLimestoneFluid == null) {
-			moltenLimestoneFluid = new Fluid("limestone.molten").setLuminosity(12).setDensity(3000).setViscosity(6000).setTemperature(1300);
-
-			FluidRegistry.registerFluid(moltenLimestoneFluid);
-
-			limestoneIsOurs = true;
-		}
-
-		if (!moltenLimestoneFluid.canBePlacedInWorld()) {
-			moltenLimestone = new TSFluidBlock(moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
-			GameRegistry.registerBlock(moltenLimestone, "molten.limestone");
-		} else {
-			moltenLimestone = moltenLimestoneFluid.getBlock();
-		}
-
-		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(moltenLimestoneFluid, 1000), bucket);
-		if (filledBucket == null) {
-			Item bucketLimestone = new ItemBucket(moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("tsteelworks.bucket.Limestone").setCreativeTab(creativeTab);
-			GameRegistry.registerItem(bucketLimestone, "limestoneBucket");
-
-			filledBucket = new ItemStack(bucketLimestone, 1, 1);
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(moltenLimestoneFluid, 1000), filledBucket, bucket));
-		}
-
-		bucketLimestone = filledBucket;
-
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
-
-		/* Cement */
-		liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
-		if (liquidCementFluid == null) {
-			liquidCementFluid = new Fluid("cement.liquid").setLuminosity(0).setDensity(6000).setViscosity(6000).setTemperature(20);
-
-			FluidRegistry.registerFluid(liquidCementFluid);
-
-			cementIsOurs = true;
-		}
-
-		if (!liquidCementFluid.canBePlacedInWorld()) {
-			liquidCement = new CementFluidBlock(liquidCementFluid, Material.water, "liquid_cement").setBlockName("liquid.cement");
-			GameRegistry.registerBlock(liquidCement, "liquid.cement");
-		} else {
-			liquidCement = liquidCementFluid.getBlock();
-		}
-
-		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(liquidCementFluid, 1000), bucket);
-		if (filledBucket == null) {
-			Item bucketCement = new ItemBucket(liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("tsteelworks.bucket.Cement").setCreativeTab(creativeTab);
-			GameRegistry.registerItem(bucketCement, "cementBucket");
-
-			filledBucket = new ItemStack(bucketCement, 1, 2);
-			FluidContainerRegistry.registerFluidContainer(new FluidContainerData(new FluidStack(liquidCementFluid, 1000), filledBucket, bucket));
-		}
-
-		bucketCement = filledBucket;
-
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(liquidCementFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
-	}
 
 	public void oreRegistry() {
 		// Vanilla
@@ -355,18 +239,6 @@ public class TSContent {
 	 */
 	public void addCraftingRecipes() {
 		TSRecipes.setupCrafting();
-	}
-
-	public void modIntegration() {
-		if (TinkerTools.thaumcraftAvailable) {
-			Item thaumcraftResource = ItemUtils.getItemFromUniqueName("thaumcraft:itemResource");
-
-			if (thaumcraftResource != null) {
-				TSLogger.info("Thaumcraft detected. Registering fuels.");
-
-				thaumcraftAlumentum = new ItemStack(thaumcraftResource, 1, 0);
-			}
-		}
 	}
 
 	public void registerModifiers() {

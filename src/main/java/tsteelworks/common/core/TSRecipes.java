@@ -131,7 +131,11 @@ public class TSRecipes {
 		final ItemStack manual = new ItemStack(TSContent.bookManual, 1, 0);
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 
-		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1), true, 50);
+		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1, 0), true, 50);
+		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1, 1), true, 50);
+		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1, 2), true, 50);
+		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1, 3), true, 50);
+
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Mantle.mantleBook, 1), true, 50);
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Items.book, 1), true, 50);
 	}
@@ -260,10 +264,10 @@ public class TSRecipes {
 	}
 
 	public static void craftStorageBlocks() {
-		GameRegistry.addRecipe(TSContent.charcoalBlock, patBlock, '#', new ItemStack(Items.coal, 1, 1));
+		GameRegistry.addRecipe(ModsData.Shared.charcoalBlock, patBlock, '#', new ItemStack(Items.coal, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), patBlock, '#', new ItemStack(Items.gunpowder, 1));
 		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), patBlock, '#', new ItemStack(Items.sugar, 1));
-		GameRegistry.addRecipe(new ItemStack(Items.coal, 9, 1), "#", '#', TSContent.charcoalBlock);
+		GameRegistry.addRecipe(new ItemStack(Items.coal, 9, 1), "#", '#', ModsData.Shared.charcoalBlock);
 		GameRegistry.addRecipe(new ItemStack(Items.gunpowder, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(Items.sugar, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 1));
 	}

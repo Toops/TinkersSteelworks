@@ -1,6 +1,5 @@
 package tsteelworks;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -60,6 +59,7 @@ public class TSteelworks {
 		proxy.preInit();
 
 		content = new TSContent();
+		content.preInit();
 
 		events = new TSEventHandler();
 		MinecraftForge.EVENT_BUS.register(events);
@@ -81,14 +81,7 @@ public class TSteelworks {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		thermalExpansionAvailable = Loader.isModLoaded("ThermalExpansion");
-		railcraftAvailable = Loader.isModLoaded("Railcraft");
-
-		content.createEntities();
-		content.addCraftingRecipes();
-		content.modIntegration();
-		content.registerMixerMaterials();
-
+		content.postInit();
 		pluginController.postInit();
 
 		proxy.postInit();

@@ -2,9 +2,8 @@ package tsteelworks.lib;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.tools.TinkerTools;
-import tsteelworks.common.core.TSContent;
+import tsteelworks.common.core.ModsData;
 
 public class TSFuelHandler {
 	/*
@@ -12,26 +11,23 @@ public class TSFuelHandler {
 	 * Coal Coke produces more heat than charcoal and last longer too
 	 */
 	public static int getHighOvenFuelBurnTime(ItemStack fuel) {
-		if (fuel.isItemEqual(TSContent.charcoalBlock))
+		if (fuel.isItemEqual(ModsData.Shared.charcoalBlock))
 			return 4200;
 
 		// Charcoal
 		if ((fuel.getItem() == Items.coal) && fuel.getItemDamage() == 1)
 			return 420;
 
-		int[] oreIds = OreDictionary.getOreIDs(fuel);
-
-		for (int oreId : oreIds) {
-			String oreName = OreDictionary.getOreName(oreId);
-
-			if (oreName.equals("fuelCoke"))
+		if (ModsData.Railcraft.isLoaded) {
+			if (fuel.isItemEqual(ModsData.Railcraft.coalCoke))
 				return 840;
-			else if (oreName.equals("blockCoke"))
+
+			if (fuel.isItemEqual(ModsData.Railcraft.coalCokeBlock))
 				return 8400;
 		}
 
 		if (TinkerTools.thaumcraftAvailable) {
-			if (fuel.isItemEqual(TSContent.thaumcraftAlumentum))
+			if (fuel.isItemEqual(ModsData.Thaumcraft.alumentum))
 				return 420 * 4;
 		}
 
@@ -39,26 +35,23 @@ public class TSFuelHandler {
 	}
 
 	public static int getHighOvenFuelHeatRate(ItemStack fuel) {
-		if (fuel.isItemEqual(TSContent.charcoalBlock))
+		if (fuel.isItemEqual(ModsData.Shared.charcoalBlock))
 			return 7;
 
 		// Charcoal
 		if ((fuel.getItem() == Items.coal) && fuel.getItemDamage() == 1)
 			return 4;
 
-		int[] oreIds = OreDictionary.getOreIDs(fuel);
-
-		for (int oreId : oreIds) {
-			String oreName = OreDictionary.getOreName(oreId);
-
-			if (oreName.equals("fuelCoke"))
+		if (ModsData.Railcraft.isLoaded) {
+			if (fuel.isItemEqual(ModsData.Railcraft.coalCoke))
 				return 6;
-			else if (oreName.equals("blockCoke"))
+
+			if (fuel.isItemEqual(ModsData.Railcraft.coalCokeBlock))
 				return 10;
 		}
 
 		if (TinkerTools.thaumcraftAvailable) {
-			if (fuel.isItemEqual(TSContent.thaumcraftAlumentum))
+			if (fuel.isItemEqual(ModsData.Thaumcraft.alumentum))
 				return 1;
 		}
 

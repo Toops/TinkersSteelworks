@@ -2,6 +2,7 @@ package tsteelworks.plugins.fmp;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.item.ItemStack;
+import tsteelworks.common.core.ModsData;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.plugins.ICompatPlugin;
 
@@ -13,7 +14,7 @@ public class CompatFMP implements ICompatPlugin {
 
 	@Override
 	public void init() {
-		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", TSContent.charcoalBlock);
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", ModsData.Shared.charcoalBlock);
 
 		for (int i = 0; i <= 1; i++) {
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.dustStorageBlock, 0, i));

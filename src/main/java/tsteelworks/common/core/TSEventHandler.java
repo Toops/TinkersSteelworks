@@ -23,12 +23,12 @@ public class TSEventHandler {
 			Block fluidBlock = evt.world.getBlock(hitX, hitY, hitZ);
 			ItemStack bucket = null;
 
-			if (fluidBlock == TSContent.steamBlock) {
-				bucket = TSContent.bucketSteam;
-			} else if (fluidBlock == TSContent.moltenLimestone) {
-				bucket = TSContent.bucketLimestone;
-			} else if (fluidBlock == TSContent.liquidCement) {
-				bucket = TSContent.bucketCement;
+			if (fluidBlock == ModsData.Fluids.steamBlock) {
+				bucket = ModsData.Fluids.bucketSteam;
+			} else if (fluidBlock == ModsData.Fluids.moltenLimestone) {
+				bucket = ModsData.Fluids.bucketLimestone;
+			} else if (fluidBlock == ModsData.Fluids.liquidCement) {
+				bucket = ModsData.Fluids.bucketCement;
 			}
 
 			if (bucket == null)

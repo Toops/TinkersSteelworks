@@ -4,9 +4,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import mantle.books.BookData;
 import mantle.client.MProxyClient;
 import mantle.lib.client.MantleClientRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityBreakingFX;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -26,13 +23,14 @@ import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.client.particle.TSParticle;
+import tsteelworks.common.core.ModsData;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.client.TSClientRegistry;
 
 public class TSClientProxy extends TSCommonProxy {
@@ -87,7 +85,7 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2));
 
 		// Misc Blocks
-		MantleClientRegistry.registerManualIcon("charcoalblock", TSContent.charcoalBlock);
+		MantleClientRegistry.registerManualIcon("charcoalblock", ModsData.Shared.charcoalBlock);
 		MantleClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
 		MantleClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
 		MantleClientRegistry.registerManualIcon("spongeblock", new ItemStack(Blocks.sponge));
@@ -152,7 +150,7 @@ public class TSClientProxy extends TSCommonProxy {
 
 		final ItemStack lapis = new ItemStack(Items.dye, 1, 4);
 
-		final ItemStack charcoalBlock = TSContent.charcoalBlock;
+		final ItemStack charcoalBlock = ModsData.Shared.charcoalBlock;
 		final ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
 		final ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
 
