@@ -13,7 +13,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.*;
+import tconstruct.library.crafting.Detailing;
+import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tsteelworks.lib.crafting.AdvancedSmelting;
@@ -128,6 +131,7 @@ public class TSRecipes {
 		final ItemStack manual = new ItemStack(TSContent.bookManual, 1, 0);
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 
+		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1), true, 50);
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Mantle.mantleBook, 1), true, 50);
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(Items.book, 1), true, 50);
 	}
