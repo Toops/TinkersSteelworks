@@ -1,0 +1,4 @@
+scorchedbrick -> limestone brick
+hue 47
+brightness 100 item, 90 block
+contrast 50

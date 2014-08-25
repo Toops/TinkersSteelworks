@@ -1,0 +1,89 @@
+
+// properties are namespaced with _ts_ for (t)inkers(s)teelworks
+ext {
+    _ts_minecraft_version = "1.7.10"
+    _ts_forge_version = "10.13.0.1205"
+
+    _ts_mantle_version = "0.3.1.jenkins172"
+    _ts_tcon_version = "1.6.0"
+    _ts_steelworks_version = "1.0.2"
+
+    _ts_waila_version = "1.5.3_1.7.10"
+    _ts_ccc_version = "1.0.2.9" // CodeChickenCore
+    _ts_cookie_version = "1.2.0"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+repositories {
+    maven { // The repo from which to get waila
+        name = "Mobius Repo"
+        url = "http://mobiusstrip.eu/maven"
+    }
+    maven { // the repo from which to get NEI and stuff
+        name = 'CB Repo'
+        url = "http://chickenbones.net/maven/"
+    }
+    maven { // repo for TConstruct and Mantle
+        name = 'DVS1 Maven FS'
+        url = 'http://dvs1.progwml6.com/files/maven'
+    }
+    mavenLocal() // TODO CookieCore does not appear to have a repo
+}
+
+apply plugin: 'forge'
+
+group = "tsteelworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "${_ts_minecraft_version}-${_ts_steelworks_version}" // http://semver.org/
+archivesBaseName = "TSteelworks"
+
+sourceCompatibility = 7
+targetCompatibility = 7
+
+minecraft {
+    version = "${_ts_minecraft_version}-${_ts_forge_version}"
+    assetDir = "eclipse/assets"
+}
+
+dependencies {
+    //compile "tconstruct:TConstruct:${_ts_minecraft_version}-${_ts_tcon_version}.+"
+
+    compile "mcp.mobius.waila:Waila:${_ts_waila_version}"
+    compile "codechicken:CodeChickenCore:${_ts_minecraft_version}-${_ts_ccc_version}:dev"
+    compile "nf.fr.ephys.cookiecore:cookiecore:${_ts_cookie_version}"
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
