@@ -52,12 +52,8 @@ public class TSteelworks {
 
 		proxy.preInit();
 
-		proxy.registerPlugins(pluginController);
-
 		pluginController.preInit();
 	}
-
-
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {

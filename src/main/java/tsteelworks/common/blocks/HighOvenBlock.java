@@ -315,7 +315,6 @@ public class HighOvenBlock extends TSInventoryBlock {
 		}
 	}
 
-	// todo: if tinkerWorld is disabled, this
 	private void spawnSteelGolem(World world, int x, int y, int z) {
 		if (world.isRemote || !PHConstruct.worldModule) return;
 

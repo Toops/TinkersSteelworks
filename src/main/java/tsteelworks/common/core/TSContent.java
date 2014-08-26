@@ -19,6 +19,8 @@ import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.ModifyBuilder;
 import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.tools.TinkerTools;
+import tconstruct.util.config.PHConstruct;
+import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.*;
 import tsteelworks.common.blocks.logic.*;
@@ -169,7 +171,19 @@ public class TSContent {
 		OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, 0));
 
 		// TConstuct
-		OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TinkerTools.craftedSoil, 1, 3));
+		if (PHConstruct.toolModule) {
+			OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TinkerTools.craftedSoil, 1, 3));
+		}
+
+		// * Dual registry for smelting (slag) purposes (we need the ore prefix)
+		if (PHConstruct.worldModule) {
+			OreDictionary.registerOre("oreberryIron", new ItemStack(TinkerWorld.oreBerries, 1, 0));
+			OreDictionary.registerOre("oreberryCopper", new ItemStack(TinkerWorld.oreBerries, 1, 2));
+			OreDictionary.registerOre("oreberryTin", new ItemStack(TinkerWorld.oreBerries, 1, 3));
+			OreDictionary.registerOre("oreberryAluminum", new ItemStack(TinkerWorld.oreBerries, 1, 4));
+			OreDictionary.registerOre("oreberryAluminium", new ItemStack(TinkerWorld.oreBerries, 1, 4));
+			OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
+		}
 	}
 
 	/**

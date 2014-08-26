@@ -16,6 +16,7 @@ import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
+import tconstruct.util.config.PHConstruct;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.entity.RenderHighGolem;
@@ -23,15 +24,13 @@ import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.client.particle.TSParticle;
-import tsteelworks.common.plugins.PluginController;
-import tsteelworks.common.plugins.tconstruct.world.TWorldClientPlugin;
-import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
+import tsteelworks.lib.ModsData;
 import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.registry.TSClientRegistry;
 
@@ -64,11 +63,6 @@ public class TSClientProxy extends TSCommonProxy {
 		MinecraftForge.EVENT_BUS.register(new TSEventHandler());
 	}
 
-	public void registerPlugins(PluginController pluginController) {
-		// registering these here so TiCon has enough time to load it's config
-		pluginController.registerPlugin(new TWorldClientPlugin());
-	}
-
 	public static BookData getManualFromStack(ItemStack stack) {
 		switch (stack.getItemDamage()) {
 			case 0:
@@ -80,8 +74,6 @@ public class TSClientProxy extends TSCommonProxy {
 
 	private void initManualIcons() {
 		ResourceLocation res = new ResourceLocation("tsteelworks:manuals/deeptankbuild1.png");
-
-		System.out.println(res);
 
 		// Blocks
 		MantleClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
@@ -97,7 +89,6 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
 		MantleClientRegistry.registerManualIcon("spongeblock", new ItemStack(Blocks.sponge));
 		MantleClientRegistry.registerManualIcon("glassBlock", new ItemStack(Blocks.glass));
-		MantleClientRegistry.registerManualIcon("clearGlassBlock", new ItemStack(TinkerSmeltery.clearGlass));
 
 		// Builing Materials
 		MantleClientRegistry.registerManualIcon("scorchedbrick", new ItemStack(TSContent.materialsTS, 1, 0));
@@ -111,14 +102,23 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("bonemeal", new ItemStack(Items.dye, 1, 15));
 
 		MantleClientRegistry.registerManualIcon("redstonedust", new ItemStack(Items.redstone));
-		MantleClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TinkerTools.materials, 1, 40));
 		MantleClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Items.emerald));
 		MantleClientRegistry.registerManualIcon("clayitem", new ItemStack(Items.clay_ball));
 		MantleClientRegistry.registerManualIcon("sandblock", new ItemStack(Blocks.sand));
-		MantleClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TinkerTools.craftedSoil, 1, 3));
 
-		MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
-		MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
+		if (PHConstruct.smelteryModule) {
+			MantleClientRegistry.registerManualIcon("clearGlassBlock", new ItemStack(TinkerSmeltery.clearGlass));
+		}
+
+		if (PHConstruct.toolModule) {
+			MantleClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TinkerTools.craftedSoil, 1, 3));
+			MantleClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TinkerTools.materials, 1, 40));
+		}
+
+		if (PHConstruct.worldModule) {
+			MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
+			MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
+		}
 	}
 
 	private void initManualRecipes() {
