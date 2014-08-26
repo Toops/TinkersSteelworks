@@ -148,18 +148,19 @@ public class HighOvenGui extends GuiContainer {
 		return ((HighOvenContainer) inventorySlots).getLogic();
 	}
 
-	// todo: Gradient this
 	protected int getTempColor() {
-		int temp = getLogic().getInternalTemperature();
+		int tempHex = getLogic().getInternalTemperature();
+		if (tempHex > 2000) return 0xFF0000;
 
-		if (temp == 20)
-			return 0x404040;
-		else if (temp < 1000)
-			return 0xFFFF00;
-		else if ((temp >= 1000) && (temp <= 2000))
-			return 0xFFA500;
-		else
-			return 0xFF0000;
+		// shift the temperature to have a gradient from 0 -> 1980 (which will visually give 20 -> 2000)
+		float percent = (tempHex - 20) / 1980F;
+
+		// 0xFF0000 <- 0x404040
+		int r = (int) ((0xFF - 0x40) * percent) + 0x40;
+		int g = (int) ((0x00 - 0x40) * percent) + 0x40;
+		int b = (int) ((0x00 - 0x40) * percent) + 0x40;
+
+		return r << 16 | g << 8 | b;
 	}
 
 	public static List<String> getLiquidTooltip(FluidStack liquid) {

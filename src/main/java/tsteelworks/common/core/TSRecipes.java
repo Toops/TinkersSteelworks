@@ -63,12 +63,12 @@ public class TSRecipes {
 		FuelHandlerRegistry.addFuel(ModsData.Shared.charcoalBlock, 4200, 7);
 
 		if (ModsData.Railcraft.isLoaded) {
-			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCoke, 840, 6);
-			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCokeBlock, 8400, 10);
+			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCoke, 840, 10);
+			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCokeBlock, 8400, 15);
 		}
 
 		if (ModsData.Thaumcraft.isLoaded) {
-			FuelHandlerRegistry.addFuel(ModsData.Thaumcraft.alumentum, 420 * 4, 1);
+			FuelHandlerRegistry.addFuel(ModsData.Thaumcraft.alumentum, 420 * 4, 4);
 		}
 	}
 
