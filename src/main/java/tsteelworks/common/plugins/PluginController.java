@@ -1,6 +1,5 @@
 package tsteelworks.common.plugins;
 
-import cpw.mods.fml.common.Loader;
 import tsteelworks.common.core.TSLogger;
 
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ public class PluginController {
 	}
 
 	public void registerPlugin(ICompatPlugin plugin) {
-		if (Loader.isModLoaded(plugin.getModId())) {
-			TSLogger.info("Registering compat plugin for " + plugin.getModId());
+		if (plugin.mayLoad()) {
+			TSLogger.info("Registering compat plugin for " + plugin.getPluginName());
 			plugins.add(plugin);
 
 			// Play catch-up if plugin is registered late

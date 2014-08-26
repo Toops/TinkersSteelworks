@@ -23,6 +23,8 @@ import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.client.particle.TSParticle;
+import tsteelworks.common.plugins.PluginController;
+import tsteelworks.common.plugins.tconstruct.world.TWorldClientPlugin;
 import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
@@ -60,6 +62,11 @@ public class TSClientProxy extends TSCommonProxy {
 		initManualPages();
 
 		MinecraftForge.EVENT_BUS.register(new TSEventHandler());
+	}
+
+	public void registerPlugins(PluginController pluginController) {
+		// registering these here so TiCon has enough time to load it's config
+		pluginController.registerPlugin(new TWorldClientPlugin());
 	}
 
 	public static BookData getManualFromStack(ItemStack stack) {
@@ -105,11 +112,12 @@ public class TSClientProxy extends TSCommonProxy {
 
 		MantleClientRegistry.registerManualIcon("redstonedust", new ItemStack(Items.redstone));
 		MantleClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TinkerTools.materials, 1, 40));
-		MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 		MantleClientRegistry.registerManualIcon("emeraldgem", new ItemStack(Items.emerald));
 		MantleClientRegistry.registerManualIcon("clayitem", new ItemStack(Items.clay_ball));
 		MantleClientRegistry.registerManualIcon("sandblock", new ItemStack(Blocks.sand));
 		MantleClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TinkerTools.craftedSoil, 1, 3));
+
+		MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 		MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
 	}
 

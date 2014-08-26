@@ -16,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.smeltery.TinkerSmeltery;
+import tconstruct.util.config.PHConstruct;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.client.block.DeepTankRender;
@@ -314,8 +315,9 @@ public class HighOvenBlock extends TSInventoryBlock {
 		}
 	}
 
+	// todo: if tinkerWorld is disabled, this
 	private void spawnSteelGolem(World world, int x, int y, int z) {
-		if (world.isRemote) return;
+		if (world.isRemote || !PHConstruct.worldModule) return;
 
 		ItemStack blockArdite = new ItemStack(TinkerWorld.metalBlock, 1, 1);
 

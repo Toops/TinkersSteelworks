@@ -2,9 +2,9 @@ package tsteelworks.common.plugins.waila;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import tsteelworks.common.core.TSLogger;
-import tsteelworks.common.plugins.ICompatPlugin;
+import tsteelworks.common.plugins.ModCompatPlugin;
 
-public class Waila implements ICompatPlugin {
+public class WailaPlugin extends ModCompatPlugin {
 	@Override
 	public String getModId() {
 		return "Waila";

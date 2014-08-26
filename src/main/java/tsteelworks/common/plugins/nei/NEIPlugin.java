@@ -1,8 +1,8 @@
 package tsteelworks.common.plugins.nei;
 
-import tsteelworks.common.plugins.ICompatPlugin;
+import tsteelworks.common.plugins.ModCompatPlugin;
 
-public class NEI implements ICompatPlugin {
+public class NEIPlugin extends ModCompatPlugin {
 	@Override
 	public String getModId() {
 		return "NotEnoughItems";

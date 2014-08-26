@@ -12,10 +12,10 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import tsteelworks.common.core.ConfigCore;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSLogger;
-import tsteelworks.lib.TSRepo;
 import tsteelworks.common.plugins.PluginController;
-import tsteelworks.common.plugins.fmp.CompatFMP;
-import tsteelworks.common.plugins.waila.Waila;
+import tsteelworks.common.plugins.fmp.FMPPlugin;
+import tsteelworks.common.plugins.waila.WailaPlugin;
+import tsteelworks.lib.TSRepo;
 
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks
@@ -42,8 +42,8 @@ public class TSteelworks {
 	public TSteelworks() {
 		TSLogger.introMessage();
 
-		pluginController.registerPlugin(new CompatFMP());
-		pluginController.registerPlugin(new Waila());
+		pluginController.registerPlugin(new FMPPlugin());
+		pluginController.registerPlugin(new WailaPlugin());
 	}
 
 	@EventHandler
@@ -52,8 +52,12 @@ public class TSteelworks {
 
 		proxy.preInit();
 
+		proxy.registerPlugins(pluginController);
+
 		pluginController.preInit();
 	}
+
+
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -69,6 +73,9 @@ public class TSteelworks {
 		proxy.postInit();
 
 		pluginController.postInit();
+
+		// we don't need the plugins anymore, go go GC go
+		pluginController = null;
 	}
 
 	public static SimpleNetworkWrapper getNetHandler() {

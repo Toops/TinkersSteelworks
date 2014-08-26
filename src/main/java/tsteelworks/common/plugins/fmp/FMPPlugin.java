@@ -2,11 +2,11 @@ package tsteelworks.common.plugins.fmp;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.item.ItemStack;
-import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.common.plugins.ICompatPlugin;
+import tsteelworks.common.plugins.ModCompatPlugin;
+import tsteelworks.lib.ModsData;
 
-public class CompatFMP implements ICompatPlugin {
+public class FMPPlugin extends ModCompatPlugin {
 	@Override
 	public String getModId() {
 		return "ForgeMicroblock";
