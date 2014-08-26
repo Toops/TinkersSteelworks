@@ -7,6 +7,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import tsteelworks.common.core.ModsData;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.crafting.AlloyInfo;
 
@@ -14,7 +15,7 @@ public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 	public static final int MAX_STEAM = 10000;
 	public static final int MAX_INPUT = 1000;
 
-	private FluidStack steam = new FluidStack(TSContent.steamFluid, 0);
+	private FluidStack steam = new FluidStack(ModsData.Fluids.steamFluid, 0);
 	private FluidStack input;
 	private MultiFluidTank output = new MultiFluidTank(100000);
 

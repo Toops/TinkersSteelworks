@@ -1,6 +1,7 @@
 package tsteelworks.common.blocks.logic;
 
 import mantle.blocks.iface.IFacingLogic;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -312,7 +313,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 	@Override
 	public void setDirection(float yaw, float pitch, EntityLivingBase player) {
-		direction = (byte) BlockHelper.orientationToMetadataXZ(yaw);
+		direction = (byte) BlockPistonBase.determineOrientation(worldObj, xCoord, yCoord, zCoord, player);
 	}
 
 	/* ==================== NBT ==================== */

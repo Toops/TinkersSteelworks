@@ -6,7 +6,7 @@ ext {
 
     _ts_mantle_version = "0.3.1.jenkins172"
     _ts_tcon_version = "1.6.0"
-    _ts_steelworks_version = "1.0.2"
+    _ts_steelworks_version = "1.0.3"
 
     _ts_waila_version = "1.5.3_1.7.10"
     _ts_ccc_version = "1.0.2.9" // CodeChickenCore
