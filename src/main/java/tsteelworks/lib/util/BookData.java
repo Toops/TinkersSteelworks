@@ -1,4 +1,4 @@
-package tsteelworks.lib;
+package tsteelworks.lib.util;
 
 import mantle.books.ManualReader;
 

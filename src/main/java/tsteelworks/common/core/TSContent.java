@@ -33,8 +33,7 @@ import tsteelworks.common.items.blocks.*;
 import tsteelworks.common.modifier.TSActiveOmniMod;
 import tsteelworks.lib.ModsData;
 import tsteelworks.lib.TSRepo;
-import tsteelworks.lib.TSteelworksRegistry;
-import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.lib.registry.AdvancedSmelting;
 
 public class TSContent {
 	public static Item materialsTS;
@@ -96,7 +95,8 @@ public class TSContent {
 	public static void registerItems() {
 		materialsTS = new TSMaterialItem().setUnlocalizedName("tsteelworks.Materials");
 		GameRegistry.registerItem(materialsTS, "Materials");
-		TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
+
+		TConstructRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
 
 		bookManual = new TSManual();
 		GameRegistry.registerItem(bookManual, "tsteelManual");

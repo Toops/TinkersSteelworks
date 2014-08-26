@@ -1,4 +1,4 @@
-package tsteelworks.plugins.nei;
+package tsteelworks.common.plugins.nei;
 
 import codechicken.nei.api.API;
 import codechicken.nei.recipe.TemplateRecipeHandler;

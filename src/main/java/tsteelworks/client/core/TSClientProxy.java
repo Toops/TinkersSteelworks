@@ -31,7 +31,7 @@ import tsteelworks.common.entity.SteelGolem;
 import tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import tsteelworks.common.entity.projectile.EntityScorchedBrick;
 import tsteelworks.lib.TSRepo;
-import tsteelworks.lib.client.TSClientRegistry;
+import tsteelworks.lib.registry.TSClientRegistry;
 
 public class TSClientProxy extends TSCommonProxy {
 	public static BookData highOvenBook;
@@ -186,7 +186,7 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	private void readManuals() {
-		highOvenBook = new tsteelworks.lib.BookData("/assets/tsteelworks/manuals/highoven.xml");
+		highOvenBook = new tsteelworks.lib.util.BookData("/assets/tsteelworks/manuals/highoven.xml");
 		highOvenBook.unlocalizedName = "high_oven_manual";
 		highOvenBook.font = TProxyClient.smallFontRenderer;
 		highOvenBook.modID = TSRepo.MOD_ID;

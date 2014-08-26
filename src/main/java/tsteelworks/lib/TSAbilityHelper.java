@@ -11,6 +11,7 @@ import java.util.Random;
 public class TSAbilityHelper {
 	public static Random random = new Random();
 
+	// todo: move this to lib
 	// Mostly lifted from NEI
 	@SuppressWarnings("unchecked")
 	public static void drawItemsToEntity(World world, EntityLivingBase entity, int distance) {

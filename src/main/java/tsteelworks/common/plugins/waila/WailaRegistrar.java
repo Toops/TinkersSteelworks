@@ -1,4 +1,4 @@
-package tsteelworks.plugins.waila;
+package tsteelworks.common.plugins.waila;
 
 import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.util.StatCollector;

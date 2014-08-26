@@ -1,4 +1,4 @@
-package tsteelworks.lib.blocks;
+package tsteelworks.lib.util;
 
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -16,9 +16,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tsteelworks.lib.TSRepo;
-import tsteelworks.lib.INamable;
-import tsteelworks.lib.IRedstonePowered;
-import tsteelworks.lib.IServantLogic;
+import tsteelworks.lib.logic.INamable;
+import tsteelworks.lib.logic.IRedstonePowered;
+import tsteelworks.lib.logic.IServantLogic;
 
 public abstract class TSInventoryBlock extends BlockContainer {
 	protected IIcon[] icons;

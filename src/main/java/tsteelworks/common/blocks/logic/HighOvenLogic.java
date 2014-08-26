@@ -30,7 +30,9 @@ import tsteelworks.common.core.TSContent;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureHighOven;
 import tsteelworks.lib.*;
-import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.lib.logic.*;
+import tsteelworks.lib.registry.AdvancedSmelting;
+import tsteelworks.lib.registry.FuelHandlerRegistry;
 
 import java.util.Arrays;
 import java.util.List;
@@ -539,11 +541,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			return;
 		}
 
-		int fuelBurnTime = HighOvenLogic.getFuelBurnTime(fuel);
-		if (fuelBurnTime <= 0) return;
+		FuelHandlerRegistry.FuelData fuelData = FuelHandlerRegistry.getHighOvenFuelData(fuel);
 
-		this.fuelBurnTime = fuelBurnTime;
-		this.fuelHeatRate = HighOvenLogic.getFuelHeatRate(fuel);
+		if (fuelData == null) return;
+
+		this.fuelBurnTime = fuelData.getBurnTime();
+		this.fuelHeatRate = fuelData.getHeatRate();
 
 		inventory.decrStackSize(SLOT_FUEL, 1);
 		markDirty();
@@ -559,39 +562,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	/**
-	 * Gets the fuel burn time by given item from the fuel handler.
-	 *
-	 * @param itemstack the stack
-	 * @return the fuel burn time
-	 */
-	public static int getFuelBurnTime(final ItemStack itemstack) {
-		if (itemstack == null) {
-			return 0;
-		}
-
-		return TSFuelHandler.getHighOvenFuelBurnTime(itemstack);
-	}
-
-	/**
 	 * Sets the current fuel heat rate.
 	 *
 	 * @param value the new fuel heat rate
 	 */
 	public void setFuelHeatRate(final int value) {
 		this.fuelHeatRate = value;
-	}
-
-	/**
-	 * Get the rate of heat increase by given item from the fuel handler.
-	 *
-	 * @param itemstack the itemstack
-	 * @return the fuel heat rate
-	 */
-	public static int getFuelHeatRate(final ItemStack itemstack) {
-		if (itemstack == null)
-			return 0;
-
-		return TSFuelHandler.getHighOvenFuelHeatRate(itemstack);
 	}
 
 	/* ==================== Inventory ==================== */
@@ -739,15 +715,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	private boolean canFluidsBeTogether(FluidStack f1, FluidStack f2) {
-		if (f1.isFluidEqual(f2)) return true;
-
-		if (f1.getFluid().equals(ModsData.Fluids.steamFluid) && f2.getFluid().equals(FluidRegistry.WATER))
-			return true;
-
-		if (f2.getFluid().equals(ModsData.Fluids.steamFluid) && f1.getFluid().equals(FluidRegistry.WATER))
-			return true;
-
-		return false;
+		return f1.isFluidEqual(f2) ||
+				f1.getFluid().equals(ModsData.Fluids.steamFluid) && f2.getFluid().equals(FluidRegistry.WATER) ||
+				f2.getFluid().equals(ModsData.Fluids.steamFluid) && f1.getFluid().equals(FluidRegistry.WATER);
 	}
 
 	/**

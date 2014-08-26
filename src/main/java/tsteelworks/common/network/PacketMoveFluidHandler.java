@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.TSteelworks;
-import tsteelworks.lib.IFluidTankHolder;
+import tsteelworks.lib.logic.IFluidTankHolder;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
 	public static void register(int discriminer) {

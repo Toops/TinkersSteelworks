@@ -1,4 +1,4 @@
-package tsteelworks.plugins;
+package tsteelworks.common.plugins;
 
 public interface ICompatPlugin {
 

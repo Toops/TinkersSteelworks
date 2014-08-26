@@ -55,6 +55,8 @@ public class ModsData {
 	 * Anything added by thaumcraft
 	 */
 	public static class Thaumcraft {
+		public static boolean isLoaded;
+
 		public static ItemStack alumentum;
 	}
 
@@ -78,7 +80,8 @@ public class ModsData {
 	}
 
 	public static void loadModsData() {
-		if (TinkerTools.thaumcraftAvailable) {
+		Thaumcraft.isLoaded = Loader.isModLoaded("Thaumcraft");
+		if (Thaumcraft.isLoaded) {
 			TSLogger.info("Thaumcraft detected. Registering fuels.");
 
 			Thaumcraft.alumentum = RegistryHelper.getItemStack("Thaumcraft:ItemResource@0");

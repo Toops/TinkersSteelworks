@@ -1,4 +1,4 @@
-package tsteelworks.lib;
+package tsteelworks.lib.logic;
 
 public interface IRedstonePowered {
 	public boolean getRSmode();

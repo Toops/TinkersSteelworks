@@ -7,7 +7,7 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.network.PacketMoveFluidHandler;
 import tsteelworks.common.network.PacketSetDuctModeHandler;
 import tsteelworks.common.worldgen.TSBaseWorldGenerator;
-import tsteelworks.lib.crafting.AlloyInfo;
+import tsteelworks.lib.registry.AlloyInfo;
 
 public class TSCommonProxy {
 	public void preInit() {

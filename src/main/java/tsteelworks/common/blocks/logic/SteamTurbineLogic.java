@@ -9,7 +9,7 @@ import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.crafting.AlloyInfo;
+import tsteelworks.lib.registry.AlloyInfo;
 
 public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 	public static final int MAX_STEAM = 10000;

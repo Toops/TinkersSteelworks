@@ -28,9 +28,9 @@ import tsteelworks.common.core.TSContent;
 import tsteelworks.lib.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
-import tsteelworks.lib.IMasterLogic;
-import tsteelworks.lib.IServantLogic;
-import tsteelworks.lib.blocks.TSInventoryBlock;
+import tsteelworks.lib.logic.IMasterLogic;
+import tsteelworks.lib.logic.IServantLogic;
+import tsteelworks.lib.util.TSInventoryBlock;
 
 import java.util.List;
 import java.util.Random;

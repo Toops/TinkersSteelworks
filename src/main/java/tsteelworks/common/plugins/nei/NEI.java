@@ -1,6 +1,6 @@
-package tsteelworks.plugins.nei;
+package tsteelworks.common.plugins.nei;
 
-import tsteelworks.plugins.ICompatPlugin;
+import tsteelworks.common.plugins.ICompatPlugin;
 
 public class NEI implements ICompatPlugin {
 	@Override

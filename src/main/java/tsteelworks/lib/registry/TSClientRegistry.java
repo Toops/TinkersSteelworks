@@ -1,4 +1,4 @@
-package tsteelworks.lib.client;
+package tsteelworks.lib.registry;
 
 import net.minecraft.item.ItemStack;
 

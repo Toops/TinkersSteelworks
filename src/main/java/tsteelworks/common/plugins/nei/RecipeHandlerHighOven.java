@@ -1,4 +1,4 @@
-package tsteelworks.plugins.nei;
+package tsteelworks.common.plugins.nei;
 
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import net.minecraft.util.StatCollector;

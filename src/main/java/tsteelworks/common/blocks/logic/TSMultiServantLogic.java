@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
-import tsteelworks.lib.IMasterLogic;
-import tsteelworks.lib.IServantLogic;
+import tsteelworks.lib.logic.IMasterLogic;
+import tsteelworks.lib.logic.IServantLogic;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic, IFacingLogic {
 	private IMasterLogic master;

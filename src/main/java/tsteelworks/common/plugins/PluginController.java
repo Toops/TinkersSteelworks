@@ -1,4 +1,4 @@
-package tsteelworks.plugins;
+package tsteelworks.common.plugins;
 
 import cpw.mods.fml.common.Loader;
 import tsteelworks.common.core.TSLogger;

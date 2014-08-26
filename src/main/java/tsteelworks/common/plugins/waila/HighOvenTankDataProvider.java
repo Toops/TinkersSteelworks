@@ -1,4 +1,4 @@
-package tsteelworks.plugins.waila;
+package tsteelworks.common.plugins.waila;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -9,8 +9,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import tsteelworks.lib.IFluidTankHolder;
-import tsteelworks.lib.IMasterLogic;
+import tsteelworks.lib.logic.IFluidTankHolder;
+import tsteelworks.lib.logic.IMasterLogic;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package tsteelworks.lib.crafting;
+package tsteelworks.lib.registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -15,7 +15,7 @@ import java.util.HashMap;
  */
 public class AdvancedSmelting {
 	/** list of meltables items & blocks mapped to their result (fluidstack, melting point, etc) */
-	private static final HashMap<Meltable, MeltData> meltingList = new HashMap<>();
+	private static final HashMap<HashedItemStack, MeltData> meltingList = new HashMap<>();
 
 	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
 	private static final HashMap<String, MixData> mixItemList = new HashMap<>();
@@ -90,11 +90,11 @@ public class AdvancedSmelting {
 	 * @param liquid      : The result of the process
 	 */
 	public static void addMelting(ItemStack itemstack, int temperature, FluidStack liquid) {
-		meltingList.put(new Meltable(itemstack), new MeltData(temperature, liquid));
+		meltingList.put(new HashedItemStack(itemstack), new MeltData(temperature, liquid));
 	}
 
 	public static MeltData getMeltData(ItemStack stack) {
-		return meltingList.get(new Meltable(stack));
+		return meltingList.get(new HashedItemStack(stack));
 	}
 
 	/* ========== Combinitorial Smelting ========== */
@@ -205,21 +205,28 @@ public class AdvancedSmelting {
 	 * Only here to implement equals used by the HashMap.
 	 * Thanks Mojang btw, implementing ItemStack#areItemsEquals but not ItemStack#equals. >_>
 	 */
-	public static class Meltable {
+	// todo: move this to lib
+	public static class HashedItemStack {
 		private ItemStack itemStack;
 
-		public Meltable(ItemStack itemStack) {
+		public HashedItemStack(ItemStack itemStack) {
 			this.itemStack = itemStack;
 		}
 
 		@Override
 		public boolean equals(Object obj) {
-			return obj instanceof Meltable && ((Meltable) obj).itemStack.isItemEqual(itemStack);
+			return obj instanceof HashedItemStack && ((HashedItemStack) obj).itemStack.isItemEqual(itemStack);
 		}
 
 		@Override
 		public int hashCode() {
 			return itemStack.getItem().hashCode();
+		}
+
+		public HashedItemStack setItemStack(ItemStack itemStack) {
+			this.itemStack = itemStack;
+
+			return this;
 		}
 	}
 

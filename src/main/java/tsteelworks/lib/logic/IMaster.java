@@ -1,4 +1,4 @@
-package tsteelworks.lib;
+package tsteelworks.lib.logic;
 
 import mantle.world.CoordTuple;
 

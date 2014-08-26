@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import tsteelworks.lib.client.TSClientRegistry;
+import tsteelworks.lib.registry.TSClientRegistry;
 
 public class TSHighOvenPage extends BookPage {
 	private static final int[] ICONS_OFFSET_X = new int[] { 120, 52, 6, 6, 6 };

@@ -13,9 +13,9 @@ import tsteelworks.common.core.ConfigCore;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSLogger;
 import tsteelworks.lib.TSRepo;
-import tsteelworks.plugins.PluginController;
-import tsteelworks.plugins.fmp.CompatFMP;
-import tsteelworks.plugins.waila.Waila;
+import tsteelworks.common.plugins.PluginController;
+import tsteelworks.common.plugins.fmp.CompatFMP;
+import tsteelworks.common.plugins.waila.Waila;
 
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks

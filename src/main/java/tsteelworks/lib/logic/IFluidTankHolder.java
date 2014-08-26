@@ -1,4 +1,4 @@
-package tsteelworks.lib;
+package tsteelworks.lib.logic;
 
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 

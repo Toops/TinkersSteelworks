@@ -16,9 +16,9 @@ import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import tsteelworks.lib.TSRepo;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureDeepTank;
-import tsteelworks.lib.IFluidTankHolder;
-import tsteelworks.lib.IMasterLogic;
-import tsteelworks.lib.IServantLogic;
+import tsteelworks.lib.logic.IFluidTankHolder;
+import tsteelworks.lib.logic.IMasterLogic;
+import tsteelworks.lib.logic.IServantLogic;
 
 // todo: reimplement the steam turbine, I'm stupid
 public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {

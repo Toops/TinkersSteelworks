@@ -7,7 +7,7 @@ import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.IServantLogic;
+import tsteelworks.lib.logic.IServantLogic;
 
 import java.util.ArrayList;
 import java.util.List;

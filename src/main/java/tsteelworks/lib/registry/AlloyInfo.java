@@ -1,4 +1,4 @@
-package tsteelworks.lib.crafting;
+package tsteelworks.lib.registry;
 
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;

@@ -8,7 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 import tsteelworks.common.blocks.logic.DeepTankLogic;
 import tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.DeepTankGlassTypes;
+import tsteelworks.lib.registry.DeepTankGlassTypes;
 
 public class StructureDeepTank implements IStructure {
 	/**

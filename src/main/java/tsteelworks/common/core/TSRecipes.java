@@ -21,8 +21,10 @@ import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tconstruct.util.config.PHConstruct;
+import tsteelworks.lib.FuelHandler;
 import tsteelworks.lib.ModsData;
-import tsteelworks.lib.crafting.AdvancedSmelting;
+import tsteelworks.lib.registry.AdvancedSmelting;
+import tsteelworks.lib.registry.FuelHandlerRegistry;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,9 +52,24 @@ public class TSRecipes {
 
 	public static void setupRecipes() {
 		addHighOvenSmelts();
+		addHighOvenFuels();
 		createAlloys();
 
 		createRecipes();
+	}
+
+	private static void addHighOvenFuels() {
+		FuelHandlerRegistry.addFuel(new ItemStack(Items.coal, 1), 420, 4);
+		FuelHandlerRegistry.addFuel(ModsData.Shared.charcoalBlock, 4200, 7);
+
+		if (ModsData.Railcraft.isLoaded) {
+			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCoke, 840, 6);
+			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCokeBlock, 8400, 10);
+		}
+
+		if (ModsData.Thaumcraft.isLoaded) {
+			FuelHandlerRegistry.addFuel(ModsData.Thaumcraft.alumentum, 420 * 4, 1);
+		}
 	}
 
 	public static void addHighOvenSmelts() {

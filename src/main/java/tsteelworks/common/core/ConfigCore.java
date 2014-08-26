@@ -1,7 +1,7 @@
 package tsteelworks.common.core;
 
 import net.minecraftforge.common.config.Configuration;
-import tsteelworks.lib.DeepTankGlassTypes;
+import tsteelworks.lib.registry.DeepTankGlassTypes;
 
 import java.io.File;
 
