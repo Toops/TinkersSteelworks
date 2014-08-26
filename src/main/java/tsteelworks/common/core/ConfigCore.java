@@ -26,26 +26,26 @@ public class ConfigCore {
 	 * modName:blockName@metadata|capacity
 	 */
 	private static String[] defaultGlass = {
-			"minecraft:glass|20000",
-			"minecraft:stained_glass@*|20000",
+			"minecraft:glass|10000",
+			"minecraft:stained_glass@*|10000",
 
-			"ExtraUtilities:decorativeBlock2@0|25000", // thickened glass
-			"ExtraUtilities:decorativeBlock2@1|25000",
-			"ExtraUtilities:decorativeBlock2@2|25000",
-			"ExtraUtilities:decorativeBlock2@3|35000", // creeper glass
-			"ExtraUtilities:decorativeBlock2@4|60000", // golden edged glass
-			"ExtraUtilities:decorativeBlock2@5|50000", // obsidian glass
-			"ExtraUtilities:decorativeBlock2@6|25000",
-			"ExtraUtilities:decorativeBlock2@7|60000", // glowstone glass
-			"ExtraUtilities:decorativeBlock2@8|30000", // heart glass
-			"ExtraUtilities:decorativeBlock2@9|25000",
-			"ExtraUtilities:decorativeBlock2@10|50000", // dark glass
+			"ExtraUtilities:decorativeBlock2@0|12500", // thickened glass
+			"ExtraUtilities:decorativeBlock2@1|12500",
+			"ExtraUtilities:decorativeBlock2@2|12500",
+			"ExtraUtilities:decorativeBlock2@3|17500", // creeper glass
+			"ExtraUtilities:decorativeBlock2@4|30000", // golden edged glass
+			"ExtraUtilities:decorativeBlock2@5|25000", // obsidian glass
+			"ExtraUtilities:decorativeBlock2@6|12500",
+			"ExtraUtilities:decorativeBlock2@7|30000", // glowstone glass
+			"ExtraUtilities:decorativeBlock2@8|15000", // heart glass
+			"ExtraUtilities:decorativeBlock2@9|12500",
+			"ExtraUtilities:decorativeBlock2@10|30000", // dark glass
 
-			"TConstruct:LavaTank@1|35000", // seared glass
-			"TConstruct:LavaTankNether@1|35000",
+			"TConstruct:LavaTank@1|20000", // seared glass
+			"TConstruct:LavaTankNether@1|20000",
 
-			"TConstruct:GlassBlock|25000", // clear glass
-			"TConstruct:GlassBlock.StainedClear@*|25000",
+			"TConstruct:GlassBlock|12500", // clear glass
+			"TConstruct:GlassBlock.StainedClear@*|12500",
 	};
 
 	// --- Worldgen
