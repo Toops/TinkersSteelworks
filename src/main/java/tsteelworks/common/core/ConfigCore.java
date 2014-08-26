@@ -13,9 +13,8 @@ public class ConfigCore {
 	public static boolean hardcorePiston;
 	public static boolean hardcoreFlintAndSteel;
 	public static boolean hardcoreAnvil;
-	public static float ingotsPerOre;
 	public static boolean enableDuctVacuum;
-	public static boolean enableTE3SlagOutput;
+	public static int teSlagOutputChance;
 
 	public static int steamProductionRate;
 	public static String[] blacklistedAlloys;
@@ -60,8 +59,11 @@ public class ConfigCore {
 		enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enables steel armor").getBoolean(true);
 
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
-		ingotsPerOre = (float) config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
-		enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present").getBoolean(true);
+
+		double ingotsPerOre = config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
+		TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ingotsPerOre);
+
+		teSlagOutputChance = config.get("High Oven", "TE Slag output chance", 10, "1 in <config> chance of getting Thermal Expansion slag when smelting ores, set to -1 to disable. Active only if TE is present").getInt(10);
 		steamProductionRate = config.get("High Oven", "Steam rate", 20, "Steam maximum production rate per tick per layer (in mB). Let's not render railcraft's boilers useless, set to 0 to disable steam production" +
 				"\n18 is ~2 TE4 steam dynamos with 6 layers").getInt(20);
 

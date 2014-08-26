@@ -71,7 +71,7 @@ public class TSContent {
 	/**
 	 * Content Constructor
 	 */
-	public void preInit() {
+	public static void preInit() {
 		registerItems();
 		registerBlocks();
 		setupCreativeTabs();
@@ -79,20 +79,21 @@ public class TSContent {
 
 		ModsData.loadSharedData();
 
+		oreRegistry();
 	}
 
-	public void postInit() {
+	public static void postInit() {
 		ModsData.loadModsData();
 
-		createEntities();
-		addCraftingRecipes();
 		registerMixerMaterials();
+
+		createEntities();
 	}
 
 	/**
 	 * Register Items
 	 */
-	public void registerItems() {
+	public static void registerItems() {
 		materialsTS = new TSMaterialItem().setUnlocalizedName("tsteelworks.Materials");
 		GameRegistry.registerItem(materialsTS, "Materials");
 		TSteelworksRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
@@ -119,7 +120,7 @@ public class TSContent {
 	/**
 	 * Register Blocks and TileEntities (Logic)
 	 */
-	public void registerBlocks() {
+	public static void registerBlocks() {
 		/* High Oven */
 		highoven = new HighOvenBlock().setBlockName("HighOven");
 		GameRegistry.registerBlock(highoven, HighOvenItemBlock.class, "HighOven");
@@ -151,9 +152,7 @@ public class TSContent {
 		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
 	}
 
-
-
-	public void oreRegistry() {
+	public static void oreRegistry() {
 		// Vanilla
 		ensureOreIsRegistered("blockSand", new ItemStack(Blocks.sand));
 		ensureOreIsRegistered("dustRedstone", new ItemStack(Items.redstone));
@@ -180,7 +179,8 @@ public class TSContent {
 		OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 	}
 
-	public void ensureOreIsRegistered(String oreName, ItemStack is) {
+	// todo: move to lib
+	public static void ensureOreIsRegistered(String oreName, ItemStack is) {
 		int ids[] = OreDictionary.getOreIDs(is);
 
 		for (int id : ids) {
@@ -194,7 +194,7 @@ public class TSContent {
 	/**
 	 * Register mixer materials
 	 */
-	public void registerMixerMaterials() {
+	public static void registerMixerMaterials() {
 		AdvancedSmelting.registerMixItem("dustGunpowder", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 33);
 		AdvancedSmelting.registerMixItem("dustSulphur", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 29);
 		AdvancedSmelting.registerMixItem("dustSugar", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 62);
@@ -221,11 +221,11 @@ public class TSContent {
 	/**
 	 * Initialize the Steelworks creative tab with an icon.
 	 */
-	private void setupCreativeTabs() {
+	private static void setupCreativeTabs() {
 		creativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
 	}
 
-	public void createEntities() {
+	public static void createEntities() {
 		EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
 		EntityRegistry.registerModEntity(EntityLimestoneBrick.class, "LimestoneBrick", 1, TSteelworks.instance, 32, 3, true);
 
@@ -234,14 +234,7 @@ public class TSContent {
 		EntityRegistry.registerGlobalEntityID(SteelGolem.class, "SteelGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
 	}
 
-	/**
-	 * Make TSRecipes add all crafting recipes
-	 */
-	public void addCraftingRecipes() {
-		TSRecipes.setupCrafting();
-	}
-
-	public void registerModifiers() {
+	public static void registerModifiers() {
 		ItemStack hopper = new ItemStack(Blocks.hopper);
 		ItemStack enderpearl = new ItemStack(Items.ender_pearl);
 		String modifierName = StatCollector.translateToLocal("modifier.tool.vacuous");

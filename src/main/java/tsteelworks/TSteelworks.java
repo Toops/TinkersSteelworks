@@ -9,10 +9,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraftforge.common.MinecraftForge;
-import tsteelworks.common.core.*;
-import tsteelworks.common.worldgen.TSBaseWorldGenerator;
+import tsteelworks.common.core.ConfigCore;
+import tsteelworks.common.core.TSCommonProxy;
+import tsteelworks.common.core.TSLogger;
 import tsteelworks.lib.TSRepo;
 import tsteelworks.plugins.PluginController;
 import tsteelworks.plugins.fmp.CompatFMP;
@@ -36,57 +35,40 @@ public class TSteelworks {
 	@SidedProxy(clientSide = TSRepo.MOD_CLIENT_PROXY, serverSide = TSRepo.MOD_SERV_PROXY)
 	public static TSCommonProxy proxy;
 
-	public static TSContent content;
-	public static TSEventHandler events;
-	public static boolean thermalExpansionAvailable;
-	public static boolean railcraftAvailable;
-
 	private SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel(TSRepo.MOD_ID);
 
 	private PluginController pluginController = new PluginController();
 
 	public TSteelworks() {
+		TSLogger.introMessage();
+
 		pluginController.registerPlugin(new CompatFMP());
 		pluginController.registerPlugin(new Waila());
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		TSLogger.introMessage();
-
 		ConfigCore.preInit(event.getSuggestedConfigurationFile());
 
 		proxy.preInit();
-
-		content = new TSContent();
-		content.preInit();
-
-		events = new TSEventHandler();
-		MinecraftForge.EVENT_BUS.register(events);
-
-		content.oreRegistry();
-
-		GameRegistry.registerWorldGenerator(new TSBaseWorldGenerator(), 8);
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
 		pluginController.preInit();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		pluginController.init();
 		proxy.init();
+
+		pluginController.init();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		content.postInit();
-		pluginController.postInit();
+		ConfigCore.postInit();
 
 		proxy.postInit();
 
-		ConfigCore.postInit();
+		pluginController.postInit();
 	}
 
 	public static SimpleNetworkWrapper getNetHandler() {

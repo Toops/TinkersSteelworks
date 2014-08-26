@@ -1,6 +1,5 @@
 package tsteelworks.common.blocks.logic;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
@@ -26,10 +25,8 @@ import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
-import tsteelworks.TSteelworks;
 import tsteelworks.common.core.ConfigCore;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.TSRepo;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureHighOven;
 import tsteelworks.lib.*;
@@ -438,10 +435,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Output Thermal Expansion 3 slag if available.
 	 */
 	private void outputTE3Slag() {
-		if (TSteelworks.thermalExpansionAvailable && ConfigCore.enableTE3SlagOutput) {
-			if (MathHelper.random.nextInt(10) == 0) {
-				this.addItem(GameRegistry.findItemStack("ThermalExpansion", "slag", 1));
-			}
+		if (ModsData.ThermalExpansion.isLoaded && ConfigCore.teSlagOutputChance >= 0 && MathHelper.random.nextInt(ConfigCore.teSlagOutputChance) == 0) {
+			this.addItem(ModsData.ThermalExpansion.slag.copy());
 		}
 	}
 

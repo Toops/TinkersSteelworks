@@ -88,7 +88,7 @@ public class ModsData {
 		if (ThermalExpansion.isLoaded) {
 			TSLogger.info("TE detected. Getting slagged.");
 
-			ThermalExpansion.slag = RegistryHelper.getItemStack("ThermalExpansion:material@514");
+			ThermalExpansion.slag = GameRegistry.findItemStack("ThermalExpansion", "slag", 1);
 		}
 
 		Railcraft.isLoaded = Loader.isModLoaded("Railcraft");

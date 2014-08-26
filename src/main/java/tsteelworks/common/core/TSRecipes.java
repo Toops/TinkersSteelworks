@@ -44,11 +44,11 @@ public class TSRecipes {
 	public static final String[] PAT_BOOTS = {"# #", "# #"};
 
 	public static final int INGOT_LIQUID_VALUE = TConstruct.ingotLiquidValue;
-	public static final int ORE_LIQUID_VALUE = INGOT_LIQUID_VALUE * ConfigCore.ingotsPerOre;
+	public static int ORE_LIQUID_VALUE = INGOT_LIQUID_VALUE;
 	public static final int BLOCK_LIQUID_VALUE = TConstruct.blockLiquidValue;
 	public static final int NUGGET_LIQUID_VALUE = TConstruct.nuggetLiquidValue;
 
-	public static void setupCrafting() {
+	public static void setupRecipes() {
 		addHighOvenSmelts();
 		createAlloys();
 

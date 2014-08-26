@@ -3,6 +3,7 @@ package tsteelworks.common.network;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.server.MinecraftServer;
@@ -15,7 +16,9 @@ import tsteelworks.TSteelworks;
 import tsteelworks.lib.IFluidTankHolder;
 
 public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHandler.PacketMoveFluid, IMessage> {
-	public static final int DISCRIMINER = 0;
+	public static void register(int discriminer) {
+		TSteelworks.getNetHandler().registerMessage(PacketMoveFluidHandler.class, PacketMoveFluidHandler.PacketMoveFluid.class, discriminer, Side.SERVER);
+	}
 
 	public static void moveFluidGUI(TileEntity tank, FluidStack fluid) {
 		PacketMoveFluid packet = new PacketMoveFluid(

@@ -3,6 +3,7 @@ package tsteelworks.common.network;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -11,7 +12,9 @@ import tsteelworks.TSteelworks;
 import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 
 public class PacketSetDuctModeHandler implements IMessageHandler<PacketSetDuctModeHandler.PacketSetDuctMode, IMessage> {
-	public static final int DISCRIMINER = 1;
+	public static void register(int discriminer) {
+		TSteelworks.getNetHandler().registerMessage(PacketSetDuctModeHandler.class, PacketSetDuctModeHandler.PacketSetDuctMode.class, discriminer, Side.SERVER);
+	}
 
 	public static void changeDuctMode(HighOvenDuctLogic duct, byte mode) {
 		PacketSetDuctMode packet = new PacketSetDuctMode(
