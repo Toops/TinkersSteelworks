@@ -721,19 +721,33 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	/**
 	 * Add molen metal fluidstack.
 	 *
-	 * @param liquid the liquid
+	 * @param fluidToAdd the liquid
 	 * @return Success
 	 */
-	public boolean addFluidToTank(final FluidStack liquid) {
-		// TODO: Tank should only hold multiple fluids under certain special circumstances ex water & steam, anything & slag
-		if (tank.fill(ForgeDirection.UNKNOWN, liquid, false) != liquid.amount)
+	public boolean addFluidToTank(final FluidStack fluidToAdd) {
+		if (tank.getNbFluids() != 0 && !canFluidsBeTogether(fluidToAdd, tank.getFluid(0)))
 			return false;
 
-		tank.fill(ForgeDirection.UNKNOWN, liquid, true);
+		if (tank.fill(fluidToAdd, false) != fluidToAdd.amount)
+			return false;
+
+		tank.fill(fluidToAdd, true);
 
 		markDirty();
 
 		return true;
+	}
+
+	private boolean canFluidsBeTogether(FluidStack f1, FluidStack f2) {
+		if (f1.isFluidEqual(f2)) return true;
+
+		if (f1.getFluid().equals(ModsData.Fluids.steamFluid) && f2.getFluid().equals(FluidRegistry.WATER))
+			return true;
+
+		if (f2.getFluid().equals(ModsData.Fluids.steamFluid) && f1.getFluid().equals(FluidRegistry.WATER))
+			return true;
+
+		return false;
 	}
 
 	/**
@@ -906,6 +920,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		if (tank.getNbFluids() != 0 && !canFluidsBeTogether(resource, tank.getFluid(0)))
+			return 0;
+
 		int filled = tank.fill(from, resource, doFill);
 
 		if (doFill && filled != 0)
