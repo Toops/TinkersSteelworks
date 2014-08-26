@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import nf.fr.ephys.cookiecore.helpers.EntityHelper;
 import tconstruct.library.ActiveToolMod;
 import tconstruct.library.tools.ToolCore;
-import tsteelworks.lib.TSAbilityHelper;
 
 public class TSActiveOmniMod extends ActiveToolMod {
 	@Override
@@ -19,6 +19,6 @@ public class TSActiveOmniMod extends ActiveToolMod {
 		NBTTagCompound tags = stack.getTagCompound().getCompoundTag("InfiTool");
 
 		if (tags.hasKey("Vacuous"))
-			TSAbilityHelper.drawItemsToEntity(world, (EntityLivingBase) entity, tags.getInteger("Vacuous") + 1);
+			EntityHelper.drawItemsToEntity((EntityLivingBase) entity, tags.getInteger("Vacuous") + 1);
 	}
 }

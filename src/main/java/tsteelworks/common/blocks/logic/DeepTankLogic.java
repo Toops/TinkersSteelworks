@@ -20,7 +20,6 @@ import tsteelworks.lib.logic.IFluidTankHolder;
 import tsteelworks.lib.logic.IMasterLogic;
 import tsteelworks.lib.logic.IServantLogic;
 
-// todo: reimplement the steam turbine, I'm stupid
 public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.

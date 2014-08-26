@@ -21,7 +21,6 @@ import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tconstruct.util.config.PHConstruct;
-import tsteelworks.lib.FuelHandler;
 import tsteelworks.lib.ModsData;
 import tsteelworks.lib.registry.AdvancedSmelting;
 import tsteelworks.lib.registry.FuelHandlerRegistry;

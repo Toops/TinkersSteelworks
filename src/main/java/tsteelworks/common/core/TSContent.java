@@ -14,6 +14,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
+import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.ModifyBuilder;
 import tconstruct.modifiers.tools.ModInteger;
@@ -154,14 +155,14 @@ public class TSContent {
 
 	public static void oreRegistry() {
 		// Vanilla
-		ensureOreIsRegistered("blockSand", new ItemStack(Blocks.sand));
-		ensureOreIsRegistered("dustRedstone", new ItemStack(Items.redstone));
-		ensureOreIsRegistered("dustGunpowder", new ItemStack(Items.gunpowder));
-		ensureOreIsRegistered("dustSugar", new ItemStack(Items.sugar));
-		ensureOreIsRegistered("coal", new ItemStack(Items.coal, 1, 0));
+		InventoryHelper.ensureOreIsRegistered("blockSand", new ItemStack(Blocks.sand));
+		InventoryHelper.ensureOreIsRegistered("dustRedstone", new ItemStack(Items.redstone));
+		InventoryHelper.ensureOreIsRegistered("dustGunpowder", new ItemStack(Items.gunpowder));
+		InventoryHelper.ensureOreIsRegistered("dustSugar", new ItemStack(Items.sugar));
+		InventoryHelper.ensureOreIsRegistered("coal", new ItemStack(Items.coal, 1, 0));
 		OreDictionary.registerOre("fuelCoal", new ItemStack(Items.coal, 1, 0));
-		ensureOreIsRegistered("fuelCharcoal", new ItemStack(Items.coal, 1, 1));
-		ensureOreIsRegistered("itemClay", new ItemStack(Items.clay_ball));
+		InventoryHelper.ensureOreIsRegistered("fuelCharcoal", new ItemStack(Items.coal, 1, 1));
+		InventoryHelper.ensureOreIsRegistered("itemClay", new ItemStack(Items.clay_ball));
 
 		// TSteelworks
 		OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
@@ -177,18 +178,6 @@ public class TSContent {
 		OreDictionary.registerOre("oreberryAluminum", new ItemStack(TinkerWorld.oreBerries, 1, 4));
 		OreDictionary.registerOre("oreberryAluminium", new ItemStack(TinkerWorld.oreBerries, 1, 4));
 		OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
-	}
-
-	// todo: move to lib
-	public static void ensureOreIsRegistered(String oreName, ItemStack is) {
-		int ids[] = OreDictionary.getOreIDs(is);
-
-		for (int id : ids) {
-			if (OreDictionary.getOreName(id).equals(oreName))
-				return;
-		}
-
-		OreDictionary.registerOre(oreName, is);
 	}
 
 	/**

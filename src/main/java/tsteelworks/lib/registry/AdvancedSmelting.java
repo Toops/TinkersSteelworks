@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import tconstruct.library.crafting.FluidType;
 
 import java.util.HashMap;
@@ -199,35 +200,6 @@ public class AdvancedSmelting {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Only here to implement equals used by the HashMap.
-	 * Thanks Mojang btw, implementing ItemStack#areItemsEquals but not ItemStack#equals. >_>
-	 */
-	// todo: move this to lib
-	public static class HashedItemStack {
-		private ItemStack itemStack;
-
-		public HashedItemStack(ItemStack itemStack) {
-			this.itemStack = itemStack;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj instanceof HashedItemStack && ((HashedItemStack) obj).itemStack.isItemEqual(itemStack);
-		}
-
-		@Override
-		public int hashCode() {
-			return itemStack.getItem().hashCode();
-		}
-
-		public HashedItemStack setItemStack(ItemStack itemStack) {
-			this.itemStack = itemStack;
-
-			return this;
-		}
 	}
 
 	/**

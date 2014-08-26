@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
