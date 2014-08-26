@@ -12,13 +12,17 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
+import tconstruct.plugins.imc.TinkerThaumcraft;
+import tconstruct.plugins.te4.TinkerTE4;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
+import tconstruct.util.config.PHConstruct;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
 import java.util.Arrays;
@@ -82,8 +86,10 @@ public class TSRecipes {
 			AdvancedSmelting.addDictionaryMelting("block" + name, obsidian, temperatureMod, BLOCK_LIQUID_VALUE);
 		}
 
-		AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
-		AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
+		if (PHConstruct.smelteryModule) {
+			AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
+			AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
+		}
 	}
 
 	public static void createAlloys() {
