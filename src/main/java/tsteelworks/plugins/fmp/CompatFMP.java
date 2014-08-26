@@ -2,7 +2,7 @@ package tsteelworks.plugins.fmp;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.item.ItemStack;
-import tsteelworks.common.core.ModsData;
+import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.plugins.ICompatPlugin;
 

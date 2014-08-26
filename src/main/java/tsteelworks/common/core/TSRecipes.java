@@ -18,11 +18,10 @@ import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
-import tconstruct.plugins.imc.TinkerThaumcraft;
-import tconstruct.plugins.te4.TinkerTE4;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import tconstruct.util.config.PHConstruct;
+import tsteelworks.lib.ModsData;
 import tsteelworks.lib.crafting.AdvancedSmelting;
 
 import java.util.Arrays;
@@ -33,21 +32,21 @@ public class TSRecipes {
 	/*
 	 * Common Patterns
 	 */
-	static String[] patBlock = {"###", "###", "###"};
-	static String[] patSmallBlock = {"##", "##"};
-	static String[] patSlab = {"###"};
-	static String[] patHollow = {"###", "# #", "###"};
-	static String[] patSurround = {"###", "#m#", "###"};
-	static String[] patHead = {"###", "# #"};
-	static String[] patChest = {"# #", "###", "###"};
-	static String[] patLegs = {"###", "# #", "# #"};
-	static String[] patBoots = {"# #", "# #"};
+	public static final String[] PAT_BLOCK = {"###", "###", "###"};
+	public static final String[] PAT_SMALL_BLOCK = {"##", "##"};
+	public static final String[] PAT_SLAB = {"###"};
+	public static final String[] PAT_HOLLOW = {"###", "# #", "###"};
+	public static final String[] PAT_SURROUND = {"###", "#m#", "###"};
 
-	public static final int INGOT_LIQUID_VALUE = 144;
+	public static final String[] PAT_HEAD = {"###", "# #"};
+	public static final String[] PAT_CHEST = {"# #", "###", "###"};
+	public static final String[] PAT_LEGS = {"###", "# #", "# #"};
+	public static final String[] PAT_BOOTS = {"# #", "# #"};
+
+	public static final int INGOT_LIQUID_VALUE = TConstruct.ingotLiquidValue;
 	public static final int ORE_LIQUID_VALUE = INGOT_LIQUID_VALUE * ConfigCore.ingotsPerOre;
-	public static final int BLOCK_LIQUID_VALUE = INGOT_LIQUID_VALUE * 9;
-	public static final int CHUNK_LIQUID_VALUE = INGOT_LIQUID_VALUE / 2;
-	public static final int NUGGET_LIQUID_VALUE = INGOT_LIQUID_VALUE / 9;
+	public static final int BLOCK_LIQUID_VALUE = TConstruct.blockLiquidValue;
+	public static final int NUGGET_LIQUID_VALUE = TConstruct.nuggetLiquidValue;
 
 	public static void setupCrafting() {
 		addHighOvenSmelts();
@@ -157,20 +156,20 @@ public class TSRecipes {
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 		final FluidStack fluidStoneChunk = new FluidStack(TinkerSmeltery.moltenStoneFluid, 32);
 		// High Oven / Deep Tank Components
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), patHollow, '#', itemScorchedBrick);
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), PAT_HOLLOW, '#', itemScorchedBrick);
 		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
-		GameRegistry.addRecipe(blockScorchedBrick, patSmallBlock, '#', itemScorchedBrick);
+		GameRegistry.addRecipe(blockScorchedBrick, PAT_SMALL_BLOCK, '#', itemScorchedBrick);
 		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 12), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 13), patSurround, '#', itemScorchedBrick, 'm', new ItemStack(Items.dye, 1, 4));
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 13), PAT_SURROUND, '#', itemScorchedBrick, 'm', new ItemStack(Items.dye, 1, 4));
 		// Slabs
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), patSlab, '#', new ItemStack(TSContent.highoven, 1, 2));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), patSlab, '#', new ItemStack(TSContent.highoven, 1, 4));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 2), patSlab, '#', new ItemStack(TSContent.highoven, 1, 5));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 3), patSlab, '#', new ItemStack(TSContent.highoven, 1, 6));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 4), patSlab, '#', new ItemStack(TSContent.highoven, 1, 8));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 5), patSlab, '#', new ItemStack(TSContent.highoven, 1, 9));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.highoven, 1, 10));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.highoven, 1, 11));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 2));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 4));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 2), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 5));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 3), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 6));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 4), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 8));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 5), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 9));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 10));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 11));
 		// Recipes to obtain bricks from high oven
 		String[] oxidizers = {"fuelCoal", "coal", "dustCoal"};
 		String[] purifiers = {"blockSand", "Sandblock", "sand"};
@@ -196,7 +195,7 @@ public class TSRecipes {
 	public static void craftLimestone() {
 		final Fluid fluid = TSContent.moltenLimestoneFluid;
 
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), patSmallBlock, '#', new ItemStack(TSContent.materialsTS, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), PAT_SMALL_BLOCK, '#', new ItemStack(TSContent.materialsTS, 1, 1));
 
 		// add to smelt
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
@@ -215,14 +214,14 @@ public class TSRecipes {
 
 		AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
 
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 0), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 0));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 1), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 2), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 2));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 3), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 4));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 4), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 5));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 5), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 6));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 6), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 7));
-		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 7), patSlab, '#', new ItemStack(TSContent.limestoneBlock, 1, 8));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 0));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 2), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 2));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 3), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 4));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 4), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 5));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 5), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 6));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 6), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 7));
+		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 7), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 8));
 
 		TConstructRegistry.getTableCasting().addCastingRecipe(new ItemStack(TSContent.materialsTS, 1, 1), new FluidStack(fluid, INGOT_LIQUID_VALUE), new ItemStack(TinkerSmeltery.metalPattern), false, 25);
 		TConstructRegistry.getBasinCasting().addCastingRecipe(new ItemStack(TSContent.limestoneBlock), new FluidStack(fluid, INGOT_LIQUID_VALUE * 4), 100);
@@ -270,9 +269,9 @@ public class TSRecipes {
 	}
 
 	public static void craftStorageBlocks() {
-		GameRegistry.addRecipe(ModsData.Shared.charcoalBlock, patBlock, '#', new ItemStack(Items.coal, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), patBlock, '#', new ItemStack(Items.gunpowder, 1));
-		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), patBlock, '#', new ItemStack(Items.sugar, 1));
+		GameRegistry.addRecipe(ModsData.Shared.charcoalBlock, PAT_BLOCK, '#', new ItemStack(Items.coal, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), PAT_BLOCK, '#', new ItemStack(Items.gunpowder, 1));
+		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), PAT_BLOCK, '#', new ItemStack(Items.sugar, 1));
 		GameRegistry.addRecipe(new ItemStack(Items.coal, 9, 1), "#", '#', ModsData.Shared.charcoalBlock);
 		GameRegistry.addRecipe(new ItemStack(Items.gunpowder, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(Items.sugar, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 1));
@@ -282,10 +281,10 @@ public class TSRecipes {
 		if (ConfigCore.enableSteelArmor) {
 			final ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
 
-			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, patHead, '#', ingotSteel));
-			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, patChest, '#', ingotSteel));
-			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, patLegs, '#', ingotSteel));
-			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, patBoots, '#', ingotSteel));
+			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.helmetSteel, PAT_HEAD, '#', ingotSteel));
+			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.chestplateSteel, PAT_CHEST, '#', ingotSteel));
+			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.leggingsSteel, PAT_LEGS, '#', ingotSteel));
+			GameRegistry.addRecipe(new ShapedOreRecipe(TSContent.bootsSteel, PAT_BOOTS, '#', ingotSteel));
 		}
 
 		String[] oxidizers = {"dustGunpowder", "dustSulphur", "dustSulfur", "dustSaltpeter", "dustCoal"};

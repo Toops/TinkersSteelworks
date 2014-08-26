@@ -1,6 +1,5 @@
 package tsteelworks.common.core;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
@@ -32,6 +31,7 @@ import tsteelworks.common.items.TSManual;
 import tsteelworks.common.items.TSMaterialItem;
 import tsteelworks.common.items.blocks.*;
 import tsteelworks.common.modifier.TSActiveOmniMod;
+import tsteelworks.lib.ModsData;
 import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.TSteelworksRegistry;
 import tsteelworks.lib.crafting.AdvancedSmelting;

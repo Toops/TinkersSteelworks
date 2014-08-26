@@ -13,7 +13,7 @@ public class ConfigCore {
 	public static boolean hardcorePiston;
 	public static boolean hardcoreFlintAndSteel;
 	public static boolean hardcoreAnvil;
-	public static int ingotsPerOre;
+	public static float ingotsPerOre;
 	public static boolean enableDuctVacuum;
 	public static boolean enableTE3SlagOutput;
 
@@ -60,7 +60,7 @@ public class ConfigCore {
 		enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enables steel armor").getBoolean(true);
 
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
-		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2, "Number of ingots returned from smelting ores in the High Oven").getInt(2);
+		ingotsPerOre = (float) config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
 		enableTE3SlagOutput = config.get("High Oven", "Enable TE3 Slag Output", true, "Enables Thermal Expansion slag output by low chance, if TE3 is present").getBoolean(true);
 		steamProductionRate = config.get("High Oven", "Steam rate", 20, "Steam maximum production rate per tick per layer (in mB). Let's not render railcraft's boilers useless, set to 0 to disable steam production" +
 				"\n18 is ~2 TE4 steam dynamos with 6 layers").getInt(20);

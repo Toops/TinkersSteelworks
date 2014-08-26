@@ -3,7 +3,6 @@ package tsteelworks.lib;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import tconstruct.tools.TinkerTools;
-import tsteelworks.common.core.ModsData;
 
 public class TSFuelHandler {
 	/*

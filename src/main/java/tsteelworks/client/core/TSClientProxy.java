@@ -23,7 +23,7 @@ import tsteelworks.client.entity.RenderSteelGolem;
 import tsteelworks.client.pages.TSHighOvenPage;
 import tsteelworks.client.pages.TSPicturePage;
 import tsteelworks.client.particle.TSParticle;
-import tsteelworks.common.core.ModsData;
+import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSCommonProxy;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.entity.HighGolem;

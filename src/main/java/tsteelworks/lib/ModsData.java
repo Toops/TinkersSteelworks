@@ -1,4 +1,4 @@
-package tsteelworks.common.core;
+package tsteelworks.lib;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -21,6 +21,8 @@ import tconstruct.tools.TinkerTools;
 import tsteelworks.common.blocks.CementFluidBlock;
 import tsteelworks.common.blocks.TSBaseBlock;
 import tsteelworks.common.blocks.TSFluidBlock;
+import tsteelworks.common.core.TSContent;
+import tsteelworks.common.core.TSLogger;
 
 import java.util.List;
 

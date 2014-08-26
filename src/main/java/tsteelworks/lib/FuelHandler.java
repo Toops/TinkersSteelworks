@@ -1,8 +1,9 @@
-package tsteelworks.common.core;
+package tsteelworks.lib;
 
 import cpw.mods.fml.common.IFuelHandler;
 import net.minecraft.item.ItemStack;
 
+// todo: move to Cookiecore
 public class FuelHandler implements IFuelHandler {
 	private ItemStack fuel;
 	private int burntime;
