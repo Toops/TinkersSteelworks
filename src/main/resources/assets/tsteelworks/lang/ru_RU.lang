@@ -70,7 +70,7 @@ HighOven.Brick.Fancy.name=Красивый обгоревший кирпич
 HighOven.Brick.Square.name=Резной обгоревший кирпич
 HighOven.Brick.Creeper.name=Жуткий обгоревший кирпич
 
-Machine.Turbine.name=Паровая турбина
+tile.Machine.Turbine.name=Паровая турбина
 
 Limestone.Stone.name=Известняк
 Limestone.Cobblestone.name=Известняковый булыжник
@@ -94,6 +94,7 @@ Cement.lightgray.name=Светло-серый цемент
 Cement.cyan.name=Бирюзовый цемент
 Cement.purple.name=Фиолетовый цемент
 Cement.blue.name=Синий цемент
+Cement.brown.name=Коричневый цемент
 Cement.green.name=Зелёный цемент
 Cement.red.name=Красный цемент
 Cement.black.name=Чёрный цемент
@@ -126,6 +127,17 @@ material.limestonebrick.tooltip1=Камень окрученный извест�
 manual.steelworks.tooltip1=Автор: Общество инженеров
 
 modifier.tool.vacuous=Пустота
+
+tconstruct.waila.invalidstructure=Неверная структура
+tconstruct.waila.empty=Пустой
+tconstruct.waila.total=Полный
+
+quantity.emerald=Эмеральды
+quantity.block=Блоки
+quantity.panel=Панели
+quantity.mb=mB
+quantity.ingot=Слитки
+quantity.nugget=Самородки
 
 fluid.water=Вода
 iron.molten=Расплавленное железо
