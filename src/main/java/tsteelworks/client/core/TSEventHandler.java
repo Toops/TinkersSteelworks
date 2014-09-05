@@ -2,8 +2,8 @@ package tsteelworks.client.core;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSContent;
+import tsteelworks.lib.ModsData;
 
 public class TSEventHandler {
 	@SubscribeEvent

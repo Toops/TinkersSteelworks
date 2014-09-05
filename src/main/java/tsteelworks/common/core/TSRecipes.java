@@ -20,7 +20,6 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
-import tconstruct.util.config.PHConstruct;
 import tsteelworks.lib.ModsData;
 import tsteelworks.lib.registry.AdvancedSmelting;
 import tsteelworks.lib.registry.FuelHandlerRegistry;
@@ -101,10 +100,8 @@ public class TSRecipes {
 			AdvancedSmelting.addDictionaryMelting("block" + name, obsidian, temperatureMod, BLOCK_LIQUID_VALUE);
 		}
 
-		if (PHConstruct.smelteryModule) {
-			AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
-			AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
-		}
+		AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
+		AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
 
 		FluidType limestoneFluid = FluidType.getFluidType("Limestone");
 		Smeltery.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);

@@ -16,7 +16,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.smeltery.TinkerSmeltery;
-import tconstruct.util.config.PHConstruct;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.TSteelworks;
 import tsteelworks.client.block.DeepTankRender;
@@ -26,9 +25,9 @@ import tsteelworks.common.blocks.logic.HighOvenDuctLogic;
 import tsteelworks.common.blocks.logic.HighOvenLogic;
 import tsteelworks.common.core.GuiHandler;
 import tsteelworks.common.core.TSContent;
-import tsteelworks.lib.TSRepo;
 import tsteelworks.common.entity.HighGolem;
 import tsteelworks.common.entity.SteelGolem;
+import tsteelworks.lib.TSRepo;
 import tsteelworks.lib.logic.IMasterLogic;
 import tsteelworks.lib.logic.IServantLogic;
 import tsteelworks.lib.util.TSInventoryBlock;
@@ -316,7 +315,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	private void spawnSteelGolem(World world, int x, int y, int z) {
-		if (world.isRemote || !PHConstruct.worldModule) return;
+		if (world.isRemote) return;
 
 		ItemStack blockArdite = new ItemStack(TinkerWorld.metalBlock, 1, 1);
 

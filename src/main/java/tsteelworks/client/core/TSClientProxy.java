@@ -16,7 +16,6 @@ import tconstruct.library.client.TConstructClientRegistry;
 import tconstruct.library.tools.ToolCore;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
-import tconstruct.util.config.PHConstruct;
 import tconstruct.world.TinkerWorld;
 import tsteelworks.client.block.DeepTankRender;
 import tsteelworks.client.entity.RenderHighGolem;
@@ -106,19 +105,13 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("clayitem", new ItemStack(Items.clay_ball));
 		MantleClientRegistry.registerManualIcon("sandblock", new ItemStack(Blocks.sand));
 
-		if (PHConstruct.smelteryModule) {
-			MantleClientRegistry.registerManualIcon("clearGlassBlock", new ItemStack(TinkerSmeltery.clearGlass));
-		}
+		MantleClientRegistry.registerManualIcon("clearGlassBlock", new ItemStack(TinkerSmeltery.clearGlass));
 
-		if (PHConstruct.toolModule) {
-			MantleClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TinkerTools.craftedSoil, 1, 3));
-			MantleClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TinkerTools.materials, 1, 40));
-		}
+		MantleClientRegistry.registerManualIcon("graveyardsoil", new ItemStack(TinkerTools.craftedSoil, 1, 3));
+		MantleClientRegistry.registerManualIcon("aluminumdust", new ItemStack(TinkerTools.materials, 1, 40));
 
-		if (PHConstruct.worldModule) {
-			MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
-			MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
-		}
+		MantleClientRegistry.registerManualIcon("essenceberry", new ItemStack(TinkerWorld.oreBerries, 1, 5));
+		MantleClientRegistry.registerManualIcon("hambone", new ItemStack(TinkerWorld.meatBlock, 1, 0));
 	}
 
 	private void initManualRecipes() {
@@ -169,10 +162,8 @@ public class TSClientProxy extends TSCommonProxy {
 
 		final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
 
-		if (PHConstruct.smelteryModule) {
-			TConstructClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TinkerSmeltery.moltenStone, 1), brick);
-			TConstructClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TinkerSmeltery.moltenStone, 1), brickBlock);
-		}
+		TConstructClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TinkerSmeltery.moltenStone, 1), brick);
+		TConstructClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TinkerSmeltery.moltenStone, 1), brickBlock);
 
 		MantleClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
 		MantleClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick, null, scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);

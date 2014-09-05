@@ -1,5 +1,7 @@
 package tsteelworks.common.entity.projectile;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -11,7 +13,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.client.ParticleRegistry;
 import tconstruct.smeltery.TinkerSmeltery;
-import tsteelworks.client.core.TSClientProxy;
 
 public class EntityBrick extends EntityThrowable {
 	public static final Block[] BREAKABLE_DEFAULT = new Block[] {
@@ -20,7 +21,6 @@ public class EntityBrick extends EntityThrowable {
 	};
 
 	private int knockbackStrength = 1;
-	private int particleEffect = -1;
 	private Block[] breakables = BREAKABLE_DEFAULT;
 
 	public EntityBrick(World world) {
@@ -39,10 +39,6 @@ public class EntityBrick extends EntityThrowable {
 		this.knockbackStrength = strength;
 	}
 
-	public void setParticleEffect(int effect) {
-		this.particleEffect = effect;
-	}
-
 	public void setBreakableList(Block[] list) {
 		this.breakables = list;
 	}
@@ -57,8 +53,16 @@ public class EntityBrick extends EntityThrowable {
 		return false;
 	}
 
+	@SideOnly(Side.CLIENT)
+	public int getParticleID() {
+		return -1;
+	}
+
+	@SideOnly(Side.CLIENT)
 	public void doBreakParticleFX() {
-		if (!worldObj.isRemote || particleEffect == -1) return;
+		int particle = getParticleID();
+
+		if (particle == -1) return;
 
 		final int i = 2;
 		for (int j = 0; j < (i * 4); ++j) {
@@ -67,7 +71,7 @@ public class EntityBrick extends EntityThrowable {
 			final float xPos = MathHelper.sin(f) * i * 0.5F * offset;
 			final float zPos = MathHelper.cos(f) * i * 0.5F * offset;
 
-			ParticleRegistry.spawnParticle(TSClientProxy.PARTICLE_HANDLER.SCORCHED_BRICK_ID, posX + xPos, boundingBox.minY, posZ + zPos, 0.0D, 0.0D, 0.0D);
+			ParticleRegistry.spawnParticle(particle, posX + xPos, boundingBox.minY, posZ + zPos, 0.0D, 0.0D, 0.0D);
 		}
 	}
 
@@ -84,7 +88,8 @@ public class EntityBrick extends EntityThrowable {
 			targetentity.entityHit.addVelocity((motionX * knockbackStrength * 0.6000000238418579D) / speed, 0.1D, (motionZ * knockbackStrength * 0.6000000238418579D) / speed);
 		}
 
-		doBreakParticleFX();
+		if (worldObj.isRemote)
+			doBreakParticleFX();
 
 		if (canBreakBlock(worldObj.getBlock(targetentity.blockX, targetentity.blockY, targetentity.blockZ)))
 			worldObj.func_147480_a(targetentity.blockX, targetentity.blockY, targetentity.blockZ, true);

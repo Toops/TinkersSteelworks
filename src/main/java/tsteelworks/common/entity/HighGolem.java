@@ -35,6 +35,7 @@ public class HighGolem extends EntityGolem implements IRangedAttackMob {
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase targetentity, float par2) {
 		final EntityScorchedBrick entityscorchedbrick = new EntityScorchedBrick(worldObj, this);
+
 		final double d0 = targetentity.posX - posX;
 		final double d1 = (targetentity.posY + targetentity.getEyeHeight()) - 1.100000023841858D - entityscorchedbrick.posY;
 		final double d2 = targetentity.posZ - posZ;

@@ -4,11 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import tsteelworks.lib.ModsData;
 import tsteelworks.common.core.TSContent;
+import tsteelworks.lib.ModsData;
 import tsteelworks.lib.registry.AlloyInfo;
 
 public class SteamTurbineLogic extends TileEntity implements IFluidHandler {

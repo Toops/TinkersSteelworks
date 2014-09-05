@@ -19,7 +19,6 @@ import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.tools.TinkerTools;
 import tsteelworks.common.blocks.CementFluidBlock;
 import tsteelworks.common.blocks.TSBaseBlock;
 import tsteelworks.common.blocks.TSFluidBlock;

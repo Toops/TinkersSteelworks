@@ -1,7 +1,6 @@
 package tsteelworks.lib.logic;
 
 import net.minecraft.world.World;
-import tsteelworks.lib.logic.IMasterLogic;
 
 public interface IServantLogic {
 	public boolean hasMaster();
