@@ -4,7 +4,7 @@ ext {
     _ts_minecraft_version = "1.7.10"
     _ts_forge_version = "10.13.0.1205"
 
-    _ts_mantle_version = "0.3.1.jenkins172"
+    _ts_mantle_version = "0.3.1.jenkins176"
     _ts_tcon_version = "1.6.0"
     _ts_steelworks_version = "1.0.3"
 
@@ -61,7 +61,7 @@ minecraft {
 }
 
 dependencies {
-    //compile "tconstruct:TConstruct:${_ts_minecraft_version}-${_ts_tcon_version}.+"
+    compile "tconstruct:TConstruct:${_ts_minecraft_version}-${_ts_tcon_version}.+"
 
     compile "mcp.mobius.waila:Waila:${_ts_waila_version}"
     compile "codechicken:CodeChickenCore:${_ts_minecraft_version}-${_ts_ccc_version}:dev"

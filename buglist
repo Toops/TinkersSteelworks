@@ -10,10 +10,10 @@ Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation
 High oven:
     NEI plugin for recipes
     FMLIntermodComs to add recipes
-    Gradient the text from 0 (0x404040) -> 5000 (0xFF0000), above 5000 just display 0xFF0000
 
 Important:
-    Make the turbine auto-pull&push
     Make the turbine a servant & valid as a deep tank block
 
 The high oven should lookup the smeltery recipes if the item is not smeltable (and remove every copied recipe from the high oven)
+
+# -Dfml.coreMods.load=tconstruct.preloader.TConstructLoaderContainer,nf.fr.ephys.cookiecore.common.CookieCoreASM
