@@ -13,7 +13,7 @@ import tconstruct.library.tools.ToolCore;
 public class TSActiveOmniMod extends ActiveToolMod {
 	@Override
 	public void updateTool(ToolCore tool, ItemStack stack, World world, Entity entity) {
-		if (!(entity instanceof EntityPlayer) || ((EntityPlayer) entity).getHeldItem() != stack)
+		if (!stack.hasTagCompound() || !(entity instanceof EntityPlayer) || ((EntityPlayer) entity).getHeldItem() != stack)
 			return;
 
 		NBTTagCompound tags = stack.getTagCompound().getCompoundTag("InfiTool");

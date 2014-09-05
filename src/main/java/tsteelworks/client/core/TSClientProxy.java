@@ -169,8 +169,10 @@ public class TSClientProxy extends TSCommonProxy {
 
 		final ItemStack charcoal = new ItemStack(Items.coal, 1, 1);
 
-		TConstructClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TinkerSmeltery.moltenStone, 1), brick);
-		TConstructClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TinkerSmeltery.moltenStone, 1), brickBlock);
+		if (PHConstruct.smelteryModule) {
+			TConstructClientRegistry.registerManualSmeltery("scorchedbrickcasting", scorchedbrick, new ItemStack(TinkerSmeltery.moltenStone, 1), brick);
+			TConstructClientRegistry.registerManualSmeltery("scorchedbrickblockcasting", scorchedbrickBlock, new ItemStack(TinkerSmeltery.moltenStone, 1), brickBlock);
+		}
 
 		MantleClientRegistry.registerManualSmallRecipe("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
 		MantleClientRegistry.registerManualLargeRecipe("highovencontroller", new ItemStack(TSContent.highoven, 1, 0), scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick, null, scorchedbrick, scorchedbrick, scorchedbrick, scorchedbrick);
