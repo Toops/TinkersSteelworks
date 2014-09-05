@@ -17,6 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.tools.TinkerTools;
 import tsteelworks.common.blocks.CementFluidBlock;
@@ -186,6 +187,8 @@ public class ModsData {
 		}
 
 		Fluids.bucketLimestone = filledBucket;
+
+		FluidType.registerFluidType("Limestone", Fluids.moltenLimestone, 0, Fluids.moltenLimestoneFluid.getTemperature(), Fluids.moltenLimestoneFluid, false);
 
 		tableCasting.addCastingRecipe(filledBucket, new FluidStack(Fluids.moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 

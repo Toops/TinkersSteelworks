@@ -105,6 +105,15 @@ public class TSRecipes {
 			AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
 			AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
 		}
+
+		FluidType limestoneFluid = FluidType.getFluidType("Limestone");
+		Smeltery.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);
+		AdvancedSmelting.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);
+
+		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
+		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
+		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
+		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
 	}
 
 	public static void createAlloys() {
@@ -216,17 +225,6 @@ public class TSRecipes {
 		// add to smelt
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 0), new ItemStack(TSContent.materialsTS, 4, 1), 2f);
-
-		Smeltery.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
-		Smeltery.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
-
-		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 0, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
-		AdvancedSmelting.addMelting(TSContent.limestoneBlock, 1, 825, new FluidStack(fluid, INGOT_LIQUID_VALUE * 4));
-
-		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
-		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), 825, new FluidStack(fluid, INGOT_LIQUID_VALUE));
-		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), TSContent.limestoneBlock, 1, 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
-		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), 825, new FluidStack(fluid, INGOT_LIQUID_VALUE));
 
 		AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
 
