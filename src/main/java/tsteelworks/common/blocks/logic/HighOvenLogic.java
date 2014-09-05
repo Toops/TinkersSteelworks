@@ -453,6 +453,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 			AdvancedSmelting.MixData mixData = AdvancedSmelting.getMixItemData(stack);
 
+			if (mixData == null)
+				continue;
+
 			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
 				if (stack.stackSize >= mixData.getConsumeAmount()) {
 					inventory.decrStackSize(i, mixData.getConsumeAmount());
