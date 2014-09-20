@@ -72,11 +72,12 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * The amount of fluid the tank may gain per layer - multiplier.
 	 */
 	public static final int FLUID_AMOUNT_PER_LAYER = 20000;
+	public static final int TEMP_PER_LAYER = 500;
 
 	/**
 	 * The max temperature of the smallest High Oven structure.
 	 */
-	public static final int DEFAULT_MAX_TEMP = 2000;
+	public static final int BASE_MAX_TEMP = 2000;
 
 	/**
 	 * Temperature the High Oven defaults to when not cooking.
@@ -147,7 +148,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	/**
 	 * The max temperature.
 	 */
-	private int maxTemp = DEFAULT_MAX_TEMP;
+	private int maxTemp = BASE_MAX_TEMP;
 
 	/**
 	 * The fuel burn time.
@@ -177,7 +178,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @return the int
 	 */
 	public int maxTempByLayer() {
-		return DEFAULT_MAX_TEMP + (structure.getNbLayers() - 1) * 500;
+		return BASE_MAX_TEMP + (structure.getNbLayers() - 1) * TEMP_PER_LAYER;
 	}
 
 	@Override
@@ -336,10 +337,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 			if (fluid.getFluid() != FluidRegistry.WATER) continue;
 
-			int production = Math.min(ConfigCore.steamProductionRate * 40 * structure.getNbLayers(), fluid.amount);
+			int production = Math.min((ConfigCore.steamProductionRate * 40 * internalTemp) / TEMP_PER_LAYER, fluid.amount);
 
 			tank.drain(ForgeDirection.UNKNOWN, new FluidStack(FluidRegistry.WATER, production), true);
-			tank.fill(new FluidStack(TSContent.steamFluid.getID(), production), true);
+			tank.fill(new FluidStack(ModsData.Fluids.steamFluid, production), true);
 
 			// move steam at the bottom of the tank so we don't get complains \o
 			tank.setStackPos(TSContent.steamFluid, 0);
