@@ -1,5 +1,6 @@
 package tsteelworks.common.blocks.logic;
 
+import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;

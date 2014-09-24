@@ -148,7 +148,7 @@ public class ModsData {
 
 		ItemStack filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(Fluids.steamFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketSteam = new ItemBucket(Fluids.steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam").setCreativeTab(TSContent.creativeTab);
+			Item bucketSteam = new ItemBucket(Fluids.steamBlock).setTextureName("TSteelworks:materials/bucket_steam").setUnlocalizedName("tsteelworks.bucket.Steam").setCreativeTab(TSContent.creativeTab).setContainerItem(Items.bucket);
 			GameRegistry.registerItem(bucketSteam, "steamBucket");
 
 			filledBucket = new ItemStack(bucketSteam, 1, 0);
@@ -178,7 +178,7 @@ public class ModsData {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(Fluids.moltenLimestoneFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketLimestone = new ItemBucket(Fluids.moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("tsteelworks.bucket.Limestone").setCreativeTab(TSContent.creativeTab);
+			Item bucketLimestone = new ItemBucket(Fluids.moltenLimestone).setTextureName("TSteelworks:materials/bucket_limestone").setUnlocalizedName("tsteelworks.bucket.Limestone").setCreativeTab(TSContent.creativeTab).setContainerItem(Items.bucket);
 			GameRegistry.registerItem(bucketLimestone, "limestoneBucket");
 
 			filledBucket = new ItemStack(bucketLimestone, 1, 1);
@@ -210,7 +210,7 @@ public class ModsData {
 
 		filledBucket = FluidContainerRegistry.fillFluidContainer(new FluidStack(Fluids.liquidCementFluid, 1000), bucket);
 		if (filledBucket == null) {
-			Item bucketCement = new ItemBucket(Fluids.liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("tsteelworks.bucket.Cement").setCreativeTab(TSContent.creativeTab);
+			Item bucketCement = new ItemBucket(Fluids.liquidCement).setTextureName("TSteelworks:materials/bucket_cement").setUnlocalizedName("tsteelworks.bucket.Cement").setCreativeTab(TSContent.creativeTab).setContainerItem(Items.bucket);
 			GameRegistry.registerItem(bucketCement, "cementBucket");
 
 			filledBucket = new ItemStack(bucketCement, 1, 2);

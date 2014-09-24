@@ -20,7 +20,8 @@ import tsteelworks.lib.logic.IFluidTankHolder;
 import tsteelworks.lib.logic.IMasterLogic;
 import tsteelworks.lib.logic.IServantLogic;
 
-public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
+public class
+		DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.
 	 */
