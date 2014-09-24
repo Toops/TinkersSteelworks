@@ -57,7 +57,7 @@ public class TSRecipes {
 	}
 
 	private static void addHighOvenFuels() {
-		FuelHandlerRegistry.addFuel(new ItemStack(Items.coal, 1), 420, 4);
+		FuelHandlerRegistry.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
 		FuelHandlerRegistry.addFuel(ModsData.Shared.charcoalBlock, 4200, 7);
 
 		if (ModsData.Railcraft.isLoaded) {
