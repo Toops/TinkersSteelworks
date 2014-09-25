@@ -344,7 +344,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			tank.fill(new FluidStack(ModsData.Fluids.steamFluid, production), true);
 
 			// move steam at the bottom of the tank so we don't get complains \o
-			tank.setStackPos(TSContent.steamFluid, 0);
+			tank.setStackPos(ModsData.Fluids.steamFluid, 0);
 
 			markDirty();
 
