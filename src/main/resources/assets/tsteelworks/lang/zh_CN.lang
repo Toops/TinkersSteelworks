@@ -1,12 +1,12 @@
-itemGroup.TSteelworks=TSteelworks
+itemGroup.TSteelworks=匠魂炼钢
 
 crafters.HighOven=高炉
-container.HighOvenDuct=高炉接口
+container.HighOvenDuct=高炉填料口
 tank.DeepTank=深渊储罐
 gui.button.next=>
 gui.button.prev=<
 
-item.tsteelworks.Materials.ScorchedBrick.name=焦黄砖
+item.tsteelworks.Materials.ScorchedBrick.name=焦褐砖
 item.tsteelworks.Materials.LimestoneBrick.name=石灰砖
 item.tsteelworks.Materials.LimestoneDust.name=石灰粉
 item.tsteelworks.manual.highoven.name=炼钢手册
@@ -26,14 +26,14 @@ tile.tsteelworks.blocks.charcoal.name=木炭块
 block.storage.dust.gunpowder.name=火药块
 block.storage.dust.sugar.name=方糖
 
-block.scorchedstone.slab.brick.name=焦黄砖台阶
-block.scorchedstone.slab.stone.name=焦黄石头台阶
-block.scorchedstone.slab.cobble.name=焦黄圆石台阶
-block.scorchedstone.slab.paver.name=焦黄路基台阶
-block.scorchedstone.slab.road.name=焦黄铺路石台阶
-block.scorchedstone.slab.fancy.name=平滑焦黄台阶
-block.scorchedstone.slab.square.name=錾制焦黄台阶
-block.scorchedstone.slab.creeper.name=爬行者焦黄台阶
+block.scorchedstone.slab.brick.name=焦褐砖台阶
+block.scorchedstone.slab.stone.name=焦褐石头台阶
+block.scorchedstone.slab.cobble.name=焦褐圆石台阶
+block.scorchedstone.slab.paver.name=焦褐路基台阶
+block.scorchedstone.slab.road.name=焦褐铺路石台阶
+block.scorchedstone.slab.fancy.name=平滑焦褐台阶
+block.scorchedstone.slab.square.name=錾制焦褐台阶
+block.scorchedstone.slab.creeper.name=爬行者焦褐台阶
 
 block.limestone.slab.brick.name=石灰砖台阶
 block.limestone.slab.stone.name=石灰台阶
@@ -56,19 +56,19 @@ cement.liquid=未凝固的水泥
 
 HighOven.Controller.name=高炉控制器
 HighOven.TankController.name=深渊储罐控制器
-HighOven.Drain.name=高炉泄口
-HighOven.Duct.name=高炉导口
+HighOven.Drain.name=高炉排液口
+HighOven.Duct.name=高炉填料口
 HighOven.Valve.name=高炉阀门
 HighOven.Analyzer.name=高炉分析器
-HighOven.Brick.name=焦黄砖
-HighOven.Stone.name=焦黄石头
-HighOven.Cobblestone.name=焦黄圆石
-HighOven.Paver.name=焦黄路基
-HighOven.Brick.Cracked.name=裂焦黄砖
-HighOven.Road.name=焦黄铺路石
-HighOven.Brick.Fancy.name=平滑焦黄砖
-HighOven.Brick.Square.name=錾制焦黄砖
-HighOven.Brick.Creeper.name=爬行者焦黄砖
+HighOven.Brick.name=焦褐砖
+HighOven.Stone.name=焦褐石头
+HighOven.Cobblestone.name=焦褐圆石
+HighOven.Paver.name=焦褐路基
+HighOven.Brick.Cracked.name=裂焦褐砖
+HighOven.Road.name=焦褐铺路石
+HighOven.Brick.Fancy.name=平滑焦褐砖
+HighOven.Brick.Square.name=錾制焦褐砖
+HighOven.Brick.Creeper.name=爬行者焦褐砖
 
 tile.Machine.Turbine.name=蒸汽涡轮
 
@@ -104,7 +104,7 @@ highoven.controller.tooltip2=(注意:内容物存在压力!)
 highoven.tankcontroller.tooltip1=深渊储罐的主要构成
 highoven.tankcontroller.tooltip2=(高容量!)
 highoven.drain.tooltip1=高炉/深渊储罐液体输入/输入
-highoven.drain.tooltip2=(用于泄口或者管道)
+highoven.drain.tooltip2=(用于输液或者管道)
 highoven.duct.tooltip1=高炉物品输入/输出
 highoven.duct.tooltip2=(用于漏斗,箱子,或者管道)
 highoven.valve.tooltip1=高炉/深渊储罐液体输入/输入
@@ -124,9 +124,9 @@ machine.turbine.tooltip2=(放置于深渊储罐泄口上)
 material.scorchedbrick.tooltip1=用于合成,以及扔!
 material.limestonebrick.tooltip1=更加平滑的石头
 
-manual.steelworks.tooltip1=匠魂社团著
+manual.steelworks.tooltip1=工匠社团著
 
-modifier.tool.vacuous=真空
+modifier.tool.vacuous=虚空
 
 tconstruct.waila.invalidstructure=无效的结构
 tconstruct.waila.empty=空
@@ -162,8 +162,8 @@ silver.molten=熔融银
 lead.molten=熔融铅
 shiny.molten=熔融铂
 invar.molten=熔融因瓦合金
-electrum.molten=液态金银合金
+electrum.molten=熔融琥珀金
 ender=液态末影
-slime.blue=液态史莱姆 
-glue=胶水
+slime.blue=液态史莱姆
+glue=凝胶
 pigiron.molten=熔融生铁
