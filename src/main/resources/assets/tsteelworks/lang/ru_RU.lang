@@ -132,10 +132,10 @@ tconstruct.waila.invalidstructure=Неверная структура
 tconstruct.waila.empty=Пустой
 tconstruct.waila.total=Полный
 
-quantity.emerald=Эмеральды
+quantity.emerald=Изумруды
 quantity.block=Блоки
 quantity.panel=Панели
-quantity.mb=mB
+quantity.mb=мВ
 quantity.ingot=Слитки
 quantity.nugget=Самородки
 
