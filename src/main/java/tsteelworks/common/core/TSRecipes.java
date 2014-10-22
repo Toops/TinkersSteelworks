@@ -270,11 +270,11 @@ public class TSRecipes {
 			));
 		}
 
-		for (int meta = 2; meta < 11; meta ++) {
+		for (int meta = 2; meta <= 11; meta ++) {
 			if (meta == 3)
 				continue;
 
-			Smeltery.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), 0, new FluidStack(fluid, INGOT_LIQUID_VALUE));
+			Smeltery.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
 			AdvancedSmelting.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
 		}
 	}
