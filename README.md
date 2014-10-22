@@ -21,6 +21,9 @@ Indentation is 1 tab character. Braces on same line. Braces may be omitted for s
 ##Licenses
 Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/licenses/by/3.0/).
 
+##Modpacks
+You're free to include this mod in any modpack
+
 ##Notice
 Much of the code and structure of this project is heavily based on projects by [SlimeKnights](https://github.com/SlimeKnights).
 Even this readme file is partially lifted from said projects.  ^_^
