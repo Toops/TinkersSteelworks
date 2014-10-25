@@ -220,8 +220,8 @@ public class TSRecipes {
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneBlock, 1, 2), PAT_SMALL_BLOCK, '#', new ItemStack(TSContent.materialsTS, 1, 1));
 
 		// add to smelt
-		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
-		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 0, 0), new ItemStack(TSContent.materialsTS, 4, 1), 2f);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 1, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
+		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 1, 0), new ItemStack(TSContent.materialsTS, 4, 1), 2f);
 
 		AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
 

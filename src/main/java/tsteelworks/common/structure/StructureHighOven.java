@@ -154,7 +154,7 @@ public class StructureHighOven implements IStructure {
 	public boolean recurseStructureDown(final int x, final int y, final int z) {
 		if (checkHollowLayer(x, y, z)) {
 			nbLayers++;
-			return this.recurseStructureUp(x, y - 1, z);
+			return this.recurseStructureDown(x, y - 1, z);
 		}
 
 		return checkPlainLayer(x, y, z);
