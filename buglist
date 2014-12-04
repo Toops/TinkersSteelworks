@@ -1,0 +1,19 @@
+============ TSteelworks buglist ============
+
+Deep tank:
+    Draining a tank w/ a filter doesn't work if the fluid isn't at the bottom -- could be a ExU error
+
+============ TSteelworks todolist ============
+
+Register bucket usage to the dispenser https://github.com/CoFH/ThermalFoundation/blob/master/src/main/java/thermalfoundation/fluid/TFFluids.java
+
+High oven:
+    NEI plugin for recipes
+    FMLIntermodComs to add recipes
+
+Important:
+    Make the turbine a servant & valid as a deep tank block
+
+The high oven should lookup the smeltery recipes if the item is not smeltable (and remove every copied recipe from the high oven)
+
+# -Dfml.coreMods.load=tconstruct.preloader.TConstructLoaderContainer,nf.fr.ephys.cookiecore.common.CookieCoreASM

@@ -16,3 +16,20 @@ Thumbs.db
 /run/
 #eclipse stuff
 /.settings
+/bin
+.project
+.classpath
+
+gradle/
+eclipse/
+libs/
+
+CREDITS-fml.txt
+forge*
+Forge*
+MinecraftForge*
+README.txt
+gradlew
+gradlew.bat
+LICENSE-fml.txt
+
