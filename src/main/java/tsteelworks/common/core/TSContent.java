@@ -138,6 +138,10 @@ public class TSContent {
 
 		dustStorageBlock = new DustStorageBlock().setBlockName("tsteelworks.dustblock");
 		GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
+		
+		tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] { "charcoal_block" }).setUnlocalizedName("tsteelworks.blocks.charcoal");
+        GameRegistry.registerBlock(tsCharcoalBlock, "blockCharcoal");
+        tsCharcoalBlock.setBurnProperties(tsCharcoalBlock.blockID, 15, 30);
 
 		limestoneBlock = new LimestoneBlock().setBlockName("Limestone");
 		GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
@@ -167,6 +171,7 @@ public class TSContent {
 		// TSteelworks
 		OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
 		OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
+		OreDictionary.registerOre("blockCharcoal", new ItemStack(tsCharcoalBlock, 1, 0)); // Mekanism compat
 
 		for (int i = 0; i < ((LimestoneBlock) limestoneBlock).textureNames.length; i++) {
 			OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, i));
