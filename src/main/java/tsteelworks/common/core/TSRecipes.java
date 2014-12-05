@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
@@ -58,7 +59,9 @@ public class TSRecipes {
 
 	private static void addHighOvenFuels() {
 		FuelHandlerRegistry.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
-		FuelHandlerRegistry.addFuel(ModsData.Shared.charcoalBlock, 4200, 7);
+		for(final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")){
+			FuelHandlerRegistry.addFuel(charcoalBlock, 4200, 7);
+		}
 
 		if (ModsData.Railcraft.isLoaded) {
 			FuelHandlerRegistry.addFuel(ModsData.Railcraft.coalCoke, 840, 10);
