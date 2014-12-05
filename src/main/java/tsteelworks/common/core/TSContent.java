@@ -171,7 +171,7 @@ public class TSContent {
 		// TSteelworks
 		OreDictionary.registerOre("blockGunpowder", new ItemStack(dustStorageBlock, 1, 0));
 		OreDictionary.registerOre("blockSugar", new ItemStack(dustStorageBlock, 1, 1));
-		OreDictionary.registerOre("blockCharcoal", new ItemStack(tsCharcoalBlock, 1, 0)); // Mekanism compat
+		OreDictionary.registerOre("blockCharcoal", new ItemStack(tsCharcoalBlock)); // Mekanism compat
 
 		for (int i = 0; i < ((LimestoneBlock) limestoneBlock).textureNames.length; i++) {
 			OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, i));
