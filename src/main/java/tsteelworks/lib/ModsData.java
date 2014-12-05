@@ -1,31 +1,25 @@
 package tsteelworks.lib;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.GameRegistry;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
-import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
-import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.LiquidCasting;
 import tsteelworks.common.blocks.CementFluidBlock;
 import tsteelworks.common.blocks.TSBaseBlock;
 import tsteelworks.common.blocks.TSFluidBlock;
 import tsteelworks.common.core.TSContent;
 import tsteelworks.common.core.TSLogger;
-
-import java.util.List;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModsData {
 	/**
@@ -171,6 +165,7 @@ public class ModsData {
 
 		if (!Fluids.moltenLimestoneFluid.canBePlacedInWorld()) {
 			Fluids.moltenLimestone = new TSFluidBlock(Fluids.moltenLimestoneFluid, Material.lava, "liquid_limestone").setBlockName("molten.limestone");
+			//Fluids.moltenLimestone.
 			GameRegistry.registerBlock(Fluids.moltenLimestone, "molten.limestone");
 		} else {
 			Fluids.moltenLimestone = Fluids.moltenLimestoneFluid.getBlock();

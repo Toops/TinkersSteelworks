@@ -167,3 +167,6 @@ ender=Liquified Ender
 slime.blue=Liquified Slime
 glue=Glue
 pigiron.molten=Molten Pig Iron
+
+death.attack.moltenLimestone=%1$s tried to swim in molten limestone
+death.attack.moltenLimestone.player=%1$s tried to swim in molten limestone to escape %2$s
