@@ -1,0 +1,169 @@
+itemGroup.TSteelworks=TSteelworks
+
+crafters.HighOven=Большая печь
+container.HighOvenDuct=Канал большой печи
+tank.DeepTank=Глубокий резервуар
+gui.button.next=>
+gui.button.prev=<
+
+item.tsteelworks.Materials.ScorchedBrick.name=Обгоревший кирпич
+item.tsteelworks.Materials.LimestoneBrick.name=Известняковый кирпич
+item.tsteelworks.Materials.LimestoneDust.name=Известняковая пыль
+item.tsteelworks.manual.highoven.name=Работа со сталью и Вы
+item.tsteelworks.helmetSteel.name=Стальной шлем
+item.tsteelworks.chestplateSteel.name=Стальная кираса
+item.tsteelworks.leggingsSteel.name=Стальные поножи
+item.tsteelworks.bootsSteel.name=Стальные ботинки
+
+item.tsteelworks.bucket.Steam.name=Ведро пара
+item.tsteelworks.bucket.Limestone.name=Ведро расплавленного известняка
+item.tsteelworks.bucket.Cement.name=Ведро сырого цемента
+
+entity.HighGolem.name=Большой голем
+entity.SteelGolem.name=Стальной голем
+
+tile.tsteelworks.blocks.charcoal.name=Древесноугольный блок
+block.storage.dust.gunpowder.name=Пороховой блок
+block.storage.dust.sugar.name=Сахарный куб
+
+block.scorchedstone.slab.brick.name=Плита из обгоревшего кирпича
+block.scorchedstone.slab.stone.name=Плита из обгоревшего камня
+block.scorchedstone.slab.cobble.name=Плита из обгоревшего булыжника
+block.scorchedstone.slab.paver.name=Плита из обгоревшей брусчатки
+block.scorchedstone.slab.road.name=Плита из обгоревшей дороги
+block.scorchedstone.slab.fancy.name=Красивая обгоревшая плита
+block.scorchedstone.slab.square.name=Резная обгоревшая плита
+block.scorchedstone.slab.creeper.name=Жуткая обгоревшая плита
+
+block.limestone.slab.brick.name=Плита из известнякового кирпича
+block.limestone.slab.stone.name=Известняковая плита
+block.limestone.slab.cobble.name=Плита из известнякового булыжника
+block.limestone.slab.paver.name=Плита из известняковой брусчатки
+block.limestone.slab.road.name=Плита из известняковой дороги
+block.limestone.slab.fancy.name=Красивая известняковая плита
+block.limestone.slab.square.name=Резная известняковая плита
+block.limestone.slab.creeper.name=Жуткая известняковая плита
+
+tile.steam.name=Пар
+tile.molten.limestone.name=Расплавленный известняк
+tile.liquid.cement.name=Сырой цемент
+fluid.steam=Пар
+fluid.limestone.molten=Расплавленный известняк
+fluid.cement.liquid=Сырой цемент
+steam=Пар
+limestone.molten=Расплавленный известняк
+cement.liquid=Сырой цемент
+
+HighOven.Controller.name=Контроллер большой печи
+HighOven.TankController.name=Контроллер глубокого резервуара
+HighOven.Drain.name=Обгоревший слив
+HighOven.Duct.name=Обгоревший канал
+HighOven.Valve.name=Обгоревший вентиль
+HighOven.Analyzer.name=Обгоревший анализатор
+HighOven.Brick.name=Обгоревший кирпич
+HighOven.Stone.name=Обгоревший камень
+HighOven.Cobblestone.name=Обгоревший булыжник
+HighOven.Paver.name=Обгоревшая брусчатка
+HighOven.Brick.Cracked.name=Потрескавшийся обгоревший кирпич
+HighOven.Road.name=Обгоревшая дорога
+HighOven.Brick.Fancy.name=Красивый обгоревший кирпич
+HighOven.Brick.Square.name=Резной обгоревший кирпич
+HighOven.Brick.Creeper.name=Жуткий обгоревший кирпич
+
+tile.Machine.Turbine.name=Паровая турбина
+
+Limestone.Stone.name=Известняк
+Limestone.Cobblestone.name=Известняковый булыжник
+Limestone.Brick.name=Известняковый кирпич
+Limestone.Brick.Cracked.name=Потрескавшийся известняковый кирпич
+Limestone.Paver.name=Известняковая брусчатка
+Limestone.Road.name=Известняковый дорога
+Limestone.Brick.Fancy.name=Красивый известняковый кирпич
+Limestone.Brick.Square.name=Резной известняковый кирпич
+Limestone.Brick.Creeper.name=Жуткий известняковый кирпич
+
+Cement.white.name=Белый цемент
+Cement.orange.name=Оранжевый цемент
+Cement.magenta.name=Сиреневый цемент
+Cement.lightblue.name=Светло-синий цемент
+Cement.yellow.name=Жёлтый цемент
+Cement.lime.name=Светло-зелёный цемент
+Cement.pink.name=Розовый цемент
+Cement.gray.name=Серый цемент
+Cement.lightgray.name=Светло-серый цемент
+Cement.cyan.name=Бирюзовый цемент
+Cement.purple.name=Фиолетовый цемент
+Cement.blue.name=Синий цемент
+Cement.brown.name=Коричневый цемент
+Cement.green.name=Зелёный цемент
+Cement.red.name=Красный цемент
+Cement.black.name=Чёрный цемент
+
+highoven.controller.tooltip1=Основной компонент большой печи
+highoven.controller.tooltip2=(Внимание: Содержимое под давлением!)
+highoven.tankcontroller.tooltip1=Основной компонент глубокого резервуара
+highoven.tankcontroller.tooltip2=(Высокая ёмкость!)
+highoven.drain.tooltip1=Жидкостный ввод/вывод для большой печи/глубокого резервуара
+highoven.drain.tooltip2=(Для использования с кранами или трубами)
+highoven.duct.tooltip1=Предметный ввод/вывод для большой печи
+highoven.duct.tooltip2=(Для использования с воронками, сундуками или трубами)
+highoven.valve.tooltip1=Жидкостный ввод/вывод для большой печи/глубокого резервуара
+highoven.valve.tooltip2=(Выливает жидкости в мир! Засосите их внутрь!)
+highoven.analyzer.tooltip1=Вывод красного камня для большой печи/глубокого резервуара
+highoven.analyzer.tooltip2=(W.I.P.)
+highoven.brick.tooltip1=Структурный блок большой печи
+highoven.brick.tooltip2=(Безопасен для украшения)
+
+limestone.tooltip1=Осадок
+cement.tooltip1=Форма и функционирование!
+
+dustblock.gunpowder.tooltip=Взорвать!
+dustblock.sugar.tooltip=Какой сладкий!
+machine.turbine.tooltip1=Высокоскоростное вращение от пара
+machine.turbine.tooltip2=(Крепится к сливу глубокого резервуара)
+material.scorchedbrick.tooltip1=Используется для создания или бросания!
+material.limestonebrick.tooltip1=Камень окрученный известью
+
+manual.steelworks.tooltip1=Автор: Общество инженеров
+
+modifier.tool.vacuous=Пустота
+
+tconstruct.waila.invalidstructure=Неверная структура
+tconstruct.waila.empty=Пустой
+tconstruct.waila.total=Полный
+
+quantity.emerald=Изумруды
+quantity.block=Блоки
+quantity.panel=Панели
+quantity.mb=мВ
+quantity.ingot=Слитки
+quantity.nugget=Самородки
+
+fluid.water=Вода
+iron.molten=Расплавленное железо
+gold.molten=Расплавленное золото
+copper.molten=Расплавленная медь
+tin.molten=Расплавленное олово
+aluminum.molten=Расплавленной алюминий
+cobalt.molten=Расплавленный кобальт
+ardite.molten=Расплавленный ардит
+bronze.molten=Расплавленная бронза
+aluminumbrass.molten=Расплавленная алюминиевая латунь
+manyullyn.molten=Расплавленный мануллин
+alumite.molten=Расплавленный алюмит
+obsidian.molten=Расплавленный обсидиан
+steel.molten=Расплавленная сталь
+glass.molten=Расплавленное стекло
+stone.seared=Обожжённый камень
+emerald.liquid=Сжиженный изумруд
+blood=Кровь
+nickel.molten=Расплавленный никель
+silver.molten=Расплавленное серебро
+lead.molten=Расплавленный свинец
+shiny.molten=Расплавленная платина
+invar.molten=Расплавленный инвар
+electrum.molten=Расплавленный электрум
+ender=Жидкость Края
+slime.blue=Жидкая слизь
+glue=Клей
+pigiron.molten=Расплавленное свиное железо
