@@ -18,6 +18,9 @@ Please include the following:
 ## Project Style
 Indentation is 1 tab character. Braces on same line. Braces may be omitted for single-statement conditions and loops, with the statement indented on the next line. [Sun/Oracle guidelines](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html) for everything else.
 
+## Development
+Launch setupCookieCore.sh the setup your workspace with gradle.
+
 ##Licenses
 Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/licenses/by/3.0/).
 
