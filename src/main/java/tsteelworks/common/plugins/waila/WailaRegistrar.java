@@ -17,8 +17,8 @@ public class WailaRegistrar {
 		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
 
 		//config
-		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal", "Show Total");
-		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit", "Adjust bucket units");
+		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal");
+		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit");
 	}
 
 	public static String fluidNameHelper(FluidStack f) {
