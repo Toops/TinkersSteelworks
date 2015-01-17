@@ -35,8 +35,6 @@ public class PacketSetDuctModeHandler implements IMessageHandler<PacketSetDuctMo
 
 		if (te instanceof HighOvenDuctLogic) {
 			((HighOvenDuctLogic) te).setMode(packet.mode);
-
-			te.markDirty();
 		}
 
 		return null;

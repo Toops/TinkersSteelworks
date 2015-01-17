@@ -41,9 +41,6 @@ public class HighOvenDuctGui extends GuiContainer {
 	protected void actionPerformed(GuiButton button) {
 		HighOvenDuctLogic logic = getLogic();
 
-		if (!logic.hasMaster())
-			return;
-
 		int mode = logic.getMode();
 
 		switch (button.id) {

@@ -111,6 +111,8 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 			highOven.addOutputDuct(this);
 		else
 			highOven.removeOutputDuct(this);
+
+		this.markDirty();
 	}
 
 	public HighOvenLogic getHighOvenController() {
