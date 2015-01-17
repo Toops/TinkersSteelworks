@@ -42,7 +42,7 @@ public class TSClientProxy extends TSCommonProxy {
 	public void preInit() {
 		super.preInit();
 
-		readManuals();
+		TSClientProxy.readManuals();
 	}
 
 	@Override
@@ -73,8 +73,6 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	private void initManualIcons() {
-		ResourceLocation res = new ResourceLocation("tsteelworks:manuals/deeptankbuild1.png");
-
 		// Blocks
 		MantleClientRegistry.registerManualIcon("highovenbook", new ItemStack(TSContent.bookManual, 1, 0));
 		MantleClientRegistry.registerManualIcon("highoven", new ItemStack(TSContent.highoven));
@@ -187,7 +185,7 @@ public class TSClientProxy extends TSCommonProxy {
 		}
 	}
 
-	private void readManuals() {
+	public static void readManuals() {
 		// TODO: is there an event that would allow us to reload if the user changes their language ?
 		String currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 

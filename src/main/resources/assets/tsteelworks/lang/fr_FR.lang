@@ -8,7 +8,7 @@ gui.button.prev=<
 
 item.tsteelworks.Materials.ScorchedBrick.name=Briques Roussies
 item.tsteelworks.Materials.LimestoneBrick.name=Briques de Calcaire
-item.tsteelworks.manual.highoven.name=Les Travaux de l'Acier et Vous
+item.tsteelworks.manual.highoven.name=La Sidérurgie et Vous
 item.tsteelworks.helmetSteel.name=Casque en Acier
 item.tsteelworks.chestplateSteel.name=Plastron en Acier
 item.tsteelworks.leggingsSteel.name=Jambières en Acier
@@ -124,6 +124,7 @@ material.limestonebrick.tooltip1=La pierre avec une touche de chaux
 manual.steelworks.tooltip1=By: La Société des Bricoleurs
 
 modifier.tool.vacuous=Vide
+modifier.toolstation.vacuous=Vide
 
 fluid.water=Eau
 iron.molten=Fer Fondu

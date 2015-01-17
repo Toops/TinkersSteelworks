@@ -7,7 +7,7 @@ import tsteelworks.lib.ModsData;
 
 public class TSEventHandler {
 	@SubscribeEvent
-	public void reloadTextures(TextureStitchEvent.Post event) {
+	public void reloadResources(TextureStitchEvent.Post event) {
 		if (TSContent.steamFluid != null)
 			TSContent.steamFluid.setIcons(ModsData.Fluids.steamBlock.getIcon(0,0), ModsData.Fluids.steamBlock.getIcon(2, 0));
 
@@ -16,5 +16,7 @@ public class TSEventHandler {
 
 		if (TSContent.liquidCementFluid != null)
 			TSContent.liquidCementFluid.setIcons(ModsData.Fluids.liquidCement.getIcon(0,0), ModsData.Fluids.liquidCement.getIcon(2, 0));
+
+		TSClientProxy.readManuals();
 	}
 }

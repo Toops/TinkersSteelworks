@@ -85,7 +85,7 @@ public class DeepTankGui extends GuiContainer {
 		List<String> tooltips = new ArrayList<>();
 
 		tooltips.add(liquid.getFluid().getLocalizedName(liquid));
-		tooltips.add(EnumChatFormatting.LIGHT_PURPLE + "mB: " + liquid.amount);
+		tooltips.add(EnumChatFormatting.LIGHT_PURPLE + StatCollector.translateToLocal("quantity.mb") + ": " + liquid.amount);
 
 		drawHoveringText(tooltips, x, z, fontRendererObj);
 	}
