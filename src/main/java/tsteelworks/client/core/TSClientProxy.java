@@ -4,6 +4,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import mantle.books.BookData;
 import mantle.client.MProxyClient;
 import mantle.lib.client.MantleClientRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -187,7 +188,13 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	private void readManuals() {
-		highOvenBook = new tsteelworks.lib.util.BookData("/assets/tsteelworks/manuals/highoven.xml");
+		// TODO: is there an event that would allow us to reload if the user changes their language ?
+		String currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+
+		highOvenBook = tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/" + currentLanguage + "/highoven.xml");
+		if (highOvenBook == null)
+			highOvenBook = tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/en_US/highoven.xml");
+
 		highOvenBook.unlocalizedName = "high_oven_manual";
 		highOvenBook.font = TProxyClient.smallFontRenderer;
 		highOvenBook.modID = TSRepo.MOD_ID;
