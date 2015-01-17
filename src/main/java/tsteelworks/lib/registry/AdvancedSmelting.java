@@ -34,9 +34,10 @@ public class AdvancedSmelting {
 	 * @param temperature   How hot the block should be before liquifying. Max temp in the
 	 *                      Smeltery is 800, other structures may vary
 	 * @param output        The result of the process in liquid form
+	 * @param isOre         The itemstack is an ore
 	 */
-	public static void addMelting(Block block, int metadata, int temperature, FluidStack output) {
-		addMelting(new ItemStack(block, 1, metadata), temperature, output);
+	public static void addMelting(Block block, int metadata, int temperature, FluidStack output, boolean isOre) {
+		addMelting(new ItemStack(block, 1, metadata), temperature, output, isOre);
 	}
 
 	/**
@@ -47,9 +48,10 @@ public class AdvancedSmelting {
 	 * @param temperature   How hot the block should be before liquifying. Max temp in the
 	 *                      Smeltery is 800, other structures may vary
 	 * @param output        The result of the process in liquid form
+	 * @param isOre         The itemstack is an ore
 	 */
-	public static void addMelting(Item item, int metadata, int temperature, FluidStack output) {
-		addMelting(new ItemStack(item, 1, metadata), temperature, output);
+	public static void addMelting(Item item, int metadata, int temperature, FluidStack output, boolean isOre) {
+		addMelting(new ItemStack(item, 1, metadata), temperature, output, isOre);
 	}
 
 	/**
@@ -61,8 +63,10 @@ public class AdvancedSmelting {
 	 * @param fluidAmount Amount of Fluid
 	 */
 	public static void addDictionaryMelting(String oreName, FluidType type, int tempDiff, int fluidAmount) {
+		boolean isOre = oreName.startsWith("ore");
+
 		for (final ItemStack is : OreDictionary.getOres(oreName))
-			addMelting(is, tempDiff, type, fluidAmount);
+			addMelting(is, tempDiff, type, fluidAmount, isOre);
 	}
 
 	/**
@@ -72,14 +76,15 @@ public class AdvancedSmelting {
 	 * @param input       The item to liquify
 	 * @param tempDiff    Difference between FluidType BaseTemperature and the melting temperature
 	 * @param fluidAmount Amount of Fluid
+	 * @param isOre       The itemstack is an ore
 	 */
-	public static void addMelting(ItemStack input, int tempDiff, FluidType type, int fluidAmount) {
+	public static void addMelting(ItemStack input, int tempDiff, FluidType type, int fluidAmount, boolean isOre) {
 		int temp = type.baseTemperature + tempDiff;
 
 		if (temp <= 20)
 			temp = 20;
 
-		addMelting(input, temp, new FluidStack(type.fluid, fluidAmount));
+		addMelting(input, temp, new FluidStack(type.fluid, fluidAmount), isOre);
 	}
 
 	/**
@@ -89,9 +94,10 @@ public class AdvancedSmelting {
 	 * @param itemstack   : The item to liquify
 	 * @param temperature : How hot the block should be before liquifying
 	 * @param liquid      : The result of the process
+	 * @param isOre       : The itemstack is an ore
 	 */
-	public static void addMelting(ItemStack itemstack, int temperature, FluidStack liquid) {
-		meltingList.put(new HashedItemStack(itemstack), new MeltData(temperature, liquid));
+	public static void addMelting(ItemStack itemstack, int temperature, FluidStack liquid, boolean isOre) {
+		meltingList.put(new HashedItemStack(itemstack), new MeltData(temperature, liquid, isOre));
 	}
 
 	public static MeltData getMeltData(ItemStack stack) {
@@ -208,10 +214,12 @@ public class AdvancedSmelting {
 	public static class MeltData {
 		private int meltingPoint;
 		private FluidStack result;
+		private boolean isOre;
 
-		public MeltData(int meltingPoint, FluidStack result) {
+		public MeltData(int meltingPoint, FluidStack result, boolean isOre) {
 			this.meltingPoint = meltingPoint;
 			this.result = result;
+			this.isOre = isOre;
 		}
 
 		public int getMeltingPoint() {
@@ -220,6 +228,10 @@ public class AdvancedSmelting {
 
 		public FluidStack getResult() {
 			return result;
+		}
+
+		public boolean isOre() {
+			return isOre;
 		}
 	}
 

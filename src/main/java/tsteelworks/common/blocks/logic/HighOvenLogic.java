@@ -305,20 +305,19 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			}
 
 			if (this.activeTemps[i] >= this.meltingTemps[i] && !worldObj.isRemote) {
-				final FluidStack result = this.getNormalResultFor(this.smeltableInventory.getStackInSlot(i));
-				final ItemStack resultitemstack = this.getSolidMixedResultFor(result);
+				final AdvancedSmelting.MeltData result = AdvancedSmelting.getMeltData(this.smeltableInventory.getStackInSlot(i));
 
-				if (resultitemstack != null) {
-					this.meltItemsSolidOutput(i, resultitemstack, true);
-				} else if (result != null) {
-					final FluidStack resultEx = this.getLiquidMixedResultFor(result);
+				if (result == null) continue;
 
-					if (resultEx != null) {
-						this.meltItemsLiquidOutput(i, resultEx, true);
-					} else {
-						this.meltItemsLiquidOutput(i, result, false);
-					}
+				final ItemStack resultItemstack = this.getSolidMixedResultFor(result.getResult());
+				if (resultItemstack != null) {
+					this.meltItemsSolidOutput(i, resultItemstack, true);
+					continue;
 				}
+
+				final FluidStack mixResult = this.getLiquidMixedResultFor(result.getResult());
+				final boolean hasMix = mixResult != null;
+				this.meltItemsLiquidOutput(i, hasMix ? mixResult : result.getResult(), hasMix, result.isOre());
 			}
 		}
 
@@ -357,10 +356,9 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * @param fluid the fluid
 	 * @param doMix the do mix
 	 */
-	private void meltItemsLiquidOutput(final int slot, final FluidStack fluid, final Boolean doMix) {
+	private void meltItemsLiquidOutput(final int slot, final FluidStack fluid, final boolean doMix, final boolean isOre) {
 		if (this.addFluidToTank(fluid)) {
-			ItemStack stack = smeltableInventory.getStackInSlot(slot);
-			if (InventoryHelper.itemIsOre(stack))
+			if (isOre)
 				this.outputTE3Slag();
 
 			smeltableInventory.decrStackSize(slot, 1);
@@ -388,18 +386,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			this.removeMixItems();
 
 		this.addItem(stack);
-	}
-
-	/**
-	 * Gets the normal result for.
-	 *
-	 * @param itemstack the stack
-	 * @return the normal result for
-	 */
-	public FluidStack getNormalResultFor(final ItemStack itemstack) {
-		AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(itemstack);
-
-		return data == null ? null : data.getResult();
 	}
 
 	/**

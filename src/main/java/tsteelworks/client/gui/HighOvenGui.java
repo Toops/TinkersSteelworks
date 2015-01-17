@@ -60,7 +60,7 @@ public class HighOvenGui extends GuiContainer {
 				FluidStack liquid = tank.getFluid(i);
 				IIcon icon = liquid.getFluid().getStillIcon();
 
-				float liquidSize = (float) liquid.amount / tank.getCapacity() * TANK_HEIGHT;
+				float liquidSize = (float) liquid.amount * TANK_HEIGHT / tank.getCapacity();
 
 				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
 
@@ -234,9 +234,9 @@ public class HighOvenGui extends GuiContainer {
 		for (int i = 0; i < fluidTank.getNbFluids(); i++) {
 			FluidStack stack = fluidTank.getFluid(i);
 
-			float liquidSize = (float) stack.amount / fluidTank.getCapacity() * TANK_HEIGHT;
+			float liquidSize = (float) stack.amount * TANK_HEIGHT / fluidTank.getCapacity();
 
-			if (posY >= bottomY - (liquidSize + liquidOffset) && posY < bottomY - liquidOffset) {
+			if (posY >= bottomY - (liquidSize + liquidOffset) && posY <= bottomY - liquidOffset) {
 				return stack;
 			}
 
