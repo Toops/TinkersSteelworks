@@ -36,6 +36,10 @@ public class DeepTankGui extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
+		// title
+		final String title = StatCollector.translateToLocal("tank.DeepTank");
+		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 5, 0x404040);
+
 		final String capacity = ChatHelper.formatFluidValue(true, fluidTank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(true, fluidTank.getCapacity());
 
 		fontRendererObj.drawString(capacity, (xSize / 2) - (fontRendererObj.getStringWidth(capacity) / 2), ySize - 14, 0x404040);
@@ -52,11 +56,6 @@ public class DeepTankGui extends GuiContainer {
 		this.mc.getTextureManager().bindTexture(BACKGROUND);
 
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 120, ySize);
-
-		// title
-		final String title = StatCollector.translateToLocal("tank.DeepTank");
-
-		fontRendererObj.drawString(title, (xSize / 2) - (fontRendererObj.getStringWidth(title) / 2), 5, 0x404040);
 
 		//Liquids
 		RenderHelper.loadBlockMap();
