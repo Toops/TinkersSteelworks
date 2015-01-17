@@ -1,3 +1,4 @@
+#!/bin/sh
 
 # Temporary script to install CookieCore until we find a repo for it
 # THIS SHOULD BE REMOVED EVENTUALLY.
