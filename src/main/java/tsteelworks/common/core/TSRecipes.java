@@ -21,6 +21,7 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
+import tsteelworks.common.blocks.HighOvenBlock;
 import tsteelworks.lib.ModsData;
 import tsteelworks.lib.registry.AdvancedSmelting;
 import tsteelworks.lib.registry.FuelHandlerRegistry;
@@ -181,11 +182,14 @@ public class TSRecipes {
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 		final FluidStack fluidStoneChunk = new FluidStack(TinkerSmeltery.moltenStoneFluid, 32);
 		// High Oven / Deep Tank Components
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 0), PAT_HOLLOW, '#', itemScorchedBrick);
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 1), "b b", "b b", "b b", 'b', itemScorchedBrick);
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_HIGHOVEN), PAT_HOLLOW, '#', itemScorchedBrick);
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_DRAIN), "b b", "b b", "b b", 'b', itemScorchedBrick);
 		GameRegistry.addRecipe(blockScorchedBrick, PAT_SMALL_BLOCK, '#', itemScorchedBrick);
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 12), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
-		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, 13), PAT_SURROUND, '#', itemScorchedBrick, 'm', new ItemStack(Items.dye, 1, 4));
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_DUCT), "bbb", "   ", "bbb", 'b', itemScorchedBrick);
+		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_TANK), PAT_SURROUND, '#', itemScorchedBrick, 'm', new ItemStack(Items.dye, 1, 4));
+		GameRegistry.addSmelting(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_COBBLE), new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_STONE), 2);
+		GameRegistry.addSmelting(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_BRICK), new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_CRACKED), 2);
+
 		// Slabs
 		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 2));
 		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 4));

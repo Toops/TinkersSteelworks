@@ -38,7 +38,13 @@ import java.util.Random;
 public class HighOvenBlock extends TSInventoryBlock {
 	public static final int META_HIGHOVEN = 0;
 	public static final int META_DRAIN = 1;
-
+	public static final int META_BRICK = 2;
+	// the fuck is 3 used for ?
+	public static final int META_STONE = 4;
+	public static final int META_COBBLE = 5;
+	// paver
+	public static final int META_CRACKED = 7;
+	// road, fancy, chiseled, creepy
 	public static final int META_DUCT = 12;
 	public static final int META_TANK = 13;
 
@@ -87,7 +93,12 @@ public class HighOvenBlock extends TSInventoryBlock {
 
 	@Override
 	public int damageDropped(int meta) {
-		return meta;
+		return meta == META_STONE ? META_COBBLE : meta;
+	}
+
+	@Override
+	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
+		return metadata == META_STONE;
 	}
 
 	@Override
