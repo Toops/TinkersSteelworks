@@ -253,7 +253,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 		// structural checks and fuel gauge updates
 		if (this.tick % 20 == 0) {
-			if (!structure.isValid() || forceCheck) {
+			if (!worldObj.isRemote && !structure.isValid() || forceCheck) {
 				forceCheck = false;
 				this.checkValidPlacement();
 			}

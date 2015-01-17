@@ -193,35 +193,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 		return false;
 	}
 
-	/* ==================== TileEntity ==================== */
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.minecraft.tileentity.Hopper#getXPos()
-	 */
-	@Override
-	public double getXPos() {
-		return xCoord;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.minecraft.tileentity.Hopper#getYPos()
-	 */
-	@Override
-	public double getYPos() {
-		return yCoord;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see net.minecraft.tileentity.Hopper#getZPos()
-	 */
-	@Override
-	public double getZPos() {
-		return zCoord;
-	}
-
 	public void setTransferCooldown(int value) {
 		transferCooldown = value;
 	}
@@ -319,16 +290,6 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	/* ==================== NBT ==================== */
 
 	@Override
-	public void readCustomNBT(NBTTagCompound tags) {
-		super.readCustomNBT(tags);
-		inventory.readFromNBT(tags.getCompoundTag("inventory"));
-
-		mode = tags.getInteger("Mode");
-		redstoneActivated = tags.getBoolean("RedstoneActivated");
-		setDirection(tags.getByte(TSRepo.NBTNames.DIRECTION));
-	}
-
-	@Override
 	public void writeCustomNBT(NBTTagCompound tags) {
 		super.writeCustomNBT(tags);
 		NBTHelper.setWritable(tags, "inventory", inventory);
@@ -339,9 +300,34 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	}
 
 	@Override
+	public void readCustomNBT(NBTTagCompound tags) {
+		super.readCustomNBT(tags);
+		inventory.readFromNBT(tags.getCompoundTag("inventory"));
+
+		mode = tags.getInteger("Mode");
+		redstoneActivated = tags.getBoolean("RedstoneActivated");
+		setDirection(tags.getByte(TSRepo.NBTNames.DIRECTION));
+	}
+
+	@Override
 	public void markDirty() {
 		super.markDirty();
 
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
+	@Override
+	public double getXPos() {
+		return xCoord;
+	}
+
+	@Override
+	public double getYPos() {
+		return yCoord;
+	}
+
+	@Override
+	public double getZPos() {
+		return zCoord;
 	}
 }

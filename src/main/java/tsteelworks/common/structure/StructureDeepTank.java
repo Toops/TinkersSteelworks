@@ -14,7 +14,7 @@ public class StructureDeepTank implements IStructure {
 	/**
 	 * The structure is valid.
 	 */
-	private boolean validStructure;
+	private boolean validStructure = false;
 
 	/**
 	 * The bottom left corner of the tank (on a x-z axis)

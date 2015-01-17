@@ -74,11 +74,11 @@ public class
 
 	@Override
 	public void updateEntity() {
-		tick++;
+		if (worldObj.isRemote) return;
 
 		structure.checkBlock();
 
-		if (tick == 20) {
+		if (tick++ == 20) {
 			if (!structure.isValid())
 				checkValidPlacement();
 

@@ -96,16 +96,16 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 	// ========== NBT ===========
 
 	@Override
-	public void readCustomNBT(NBTTagCompound tags) {
-		super.readCustomNBT(tags);
-
-		direction = tags.getByte("Direction");
-	}
-
-	@Override
 	public void writeCustomNBT(NBTTagCompound tags) {
 		super.writeCustomNBT(tags);
 
 		tags.setByte("Direction", direction);
+	}
+
+	@Override
+	public void readCustomNBT(NBTTagCompound tags) {
+		super.readCustomNBT(tags);
+
+		direction = tags.getByte("Direction");
 	}
 }

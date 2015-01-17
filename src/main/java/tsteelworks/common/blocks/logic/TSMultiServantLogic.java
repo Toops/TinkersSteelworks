@@ -1,21 +1,17 @@
 package tsteelworks.common.blocks.logic;
 
-import mantle.blocks.iface.IFacingLogic;
-import net.minecraft.entity.EntityLivingBase;
+import mantle.world.CoordTuple;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import nf.fr.ephys.cookiecore.helpers.BlockHelper;
 import tsteelworks.lib.logic.IMasterLogic;
 import tsteelworks.lib.logic.IServantLogic;
 
-public class TSMultiServantLogic extends TileEntity implements IServantLogic, IFacingLogic {
+public class TSMultiServantLogic extends TileEntity implements IServantLogic {
 	private IMasterLogic master;
-	private byte direction;
 
 	@Override
 	public boolean canUpdate() {
@@ -43,6 +39,7 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IF
 			return false;
 
 		master = logic;
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 
 		return true;
 	}
@@ -53,59 +50,50 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic, IF
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tags) {
-		super.readFromNBT(tags);
-		readCustomNBT(tags);
+	public void writeToNBT(NBTTagCompound p_145841_1_) {
+		super.writeToNBT(p_145841_1_);
+
+		writeCustomNBT(p_145841_1_);
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tags) {
-		super.writeToNBT(tags);
-		writeCustomNBT(tags);
+	public void readFromNBT(NBTTagCompound p_145839_1_) {
+		super.readFromNBT(p_145839_1_);
+
+		readCustomNBT(p_145839_1_);
 	}
 
-	public void readCustomNBT(NBTTagCompound tags) {
-		direction = tags.getByte("direction");
-	}
-
-	public void writeCustomNBT(NBTTagCompound tags) {
-		tags.setByte("direction", direction);
-	}
+	protected void writeCustomNBT(NBTTagCompound tags) {}
+	protected void readCustomNBT(NBTTagCompound tags) {}
 
 	/* Packets */
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readCustomNBT(packet.func_148857_g());
+		final NBTTagCompound tags = packet.func_148857_g();
+		readCustomNBT(tags);
+
+		if (tags.hasKey("master")) {
+			int[] coords = tags.getIntArray("master");
+			TileEntity te = worldObj.getTileEntity(coords[0], coords[1], coords[2]);
+
+			if (te instanceof IMasterLogic)
+				master = (IMasterLogic) te;
+		}
 
 		getWorldObj().markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord + 1, yCoord + 1, zCoord + 1);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound tag = new NBTTagCompound();
-		writeCustomNBT(tag);
+		final NBTTagCompound tags = new NBTTagCompound();
+		writeCustomNBT(tags);
 
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
-	}
+		if (master != null) {
+			CoordTuple coords = master.getCoord();
+			tags.setIntArray("master", new int[] { coords.x, coords.y, coords.z });
+		}
 
-	@Override
-	public byte getRenderDirection() {
-		return direction;
-	}
-
-	@Override
-	public ForgeDirection getForgeDirection() {
-		return ForgeDirection.getOrientation(direction);
-	}
-
-	@Override
-	public void setDirection(int i) {
-		direction = (byte) i;
-	}
-
-	@Override
-	public void setDirection(float v, float v1, EntityLivingBase entityLivingBase) {
-		direction = (byte) BlockHelper.orientationToMetadataXZ(entityLivingBase.rotationYaw);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tags);
 	}
 
 	public static TSMultiServantLogic newInstance(World world, int x, int y, int z) {
