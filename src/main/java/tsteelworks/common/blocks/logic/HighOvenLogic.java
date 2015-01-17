@@ -1,6 +1,5 @@
 package tsteelworks.common.blocks.logic;
 
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
@@ -27,7 +26,6 @@ import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import tsteelworks.common.core.ConfigCore;
-import tsteelworks.common.core.TSContent;
 import tsteelworks.common.structure.IStructure;
 import tsteelworks.common.structure.StructureHighOven;
 import tsteelworks.lib.ModsData;
@@ -538,7 +536,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * Update fuel gauge.
 	 */
 	private void updateFuelGauge() {
-		if (this.isBurning() || !this.getRSmode())
+		if (this.isBurning() || this.getRSmode())
 			return;
 
 		ItemStack fuel = inventory.getStackInSlot(SLOT_FUEL);
