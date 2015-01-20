@@ -185,7 +185,6 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	public static void readManuals() {
-		// TODO: is there an event that would allow us to reload if the user changes their language ?
 		String currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 
 		highOvenBook = toops.tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/" + currentLanguage + "/highoven.xml");

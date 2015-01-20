@@ -4,8 +4,8 @@ public class TSRepo {
 	public static final String MOD_ID = "TSteelworks";
 	public static final String MOD_NAME = "Tinkers' Steelworks";
 	public static final String MOD_VER = "1.7.10-1.0.7";
-	public static final String MOD_SERV_PROXY = "TSCommonProxy";
-	public static final String MOD_CLIENT_PROXY = "TSClientProxy";
+	public static final String MOD_SERV_PROXY = "toops.tsteelworks.common.core.TSCommonProxy";
+	public static final String MOD_CLIENT_PROXY = "toops.tsteelworks.client.core.TSClientProxy";
 	public static final String MOD_REQUIRE = "required-after:TConstruct;required-after:Forge@[10.13,);required-after:cookiecore@[1.3.0,);after:CoFHCore,NotEnoughItems";
 	public static final String NAMESPACE = "tsteelworks:";
 

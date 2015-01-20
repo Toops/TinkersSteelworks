@@ -2,9 +2,10 @@ package toops.tsteelworks.api;
 
 import sun.plugin.dom.exception.InvalidStateException;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
@@ -18,10 +19,9 @@ public class PluginFactory {
 	private static boolean isLoaded = false;
 
 	static {
-		FileInputStream stream = null;
-
+		InputStream stream = null;
 		try {
-			stream = new FileInputStream(apiFile);
+			stream = ClassLoader.getSystemResourceAsStream(apiFile);
 			props.load(stream);
 
 			isLoaded = true;
@@ -40,27 +40,23 @@ public class PluginFactory {
 		if (!isLoaded) throw new InvalidStateException("Properties not loaded - might mean TSteelworks is missing. Report this a bug otherwise");
 
 		String iClassName = iClazz.getCanonicalName();
-
 		String className = props.getProperty(iClassName);
 
 		if (className == null) {
-			props.setProperty(iClassName, "<TO_SET>");
-
-			try {
-				FileOutputStream stream = new FileOutputStream(apiFile);
-				props.store(stream, "TSteelworks API instances");
-				stream.close();
-			} catch (IOException ignore) {}
-
-			throw new RuntimeException("Could not fetch class for interface " + iClassName + ": Invalid properties file.");
+			throw new RuntimeException("Could not fetch class for interface " + iClassName + ": Missing from properties file.");
 		}
 
 		try {
 			Class clazz = Class.forName(className);
 
-			return clazz.newInstance();
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
+			@SuppressWarnings("unchecked")
+			Constructor constructor = clazz.getDeclaredConstructor();
+
+			constructor.setAccessible(true);
+
+			return constructor.newInstance();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+			throw new RuntimeException("Could not fetch class for interface " + iClassName, e);
 		}
 	}
 }
