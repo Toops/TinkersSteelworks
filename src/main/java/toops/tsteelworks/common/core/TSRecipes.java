@@ -2,7 +2,6 @@ package toops.tsteelworks.common.core;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.Mantle;
-import mantle.utils.RecipeRemover;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,23 +12,15 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import tconstruct.TConstruct;
-import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.Detailing;
-import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.library.crafting.Smeltery;
-import tconstruct.smeltery.TinkerSmeltery;
+import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.tools.TinkerTools;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.HighOvenBlock;
+import toops.tsteelworks.common.plugins.tconstruct.TCSmeltery;
+import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.lib.ModsData;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 public class TSRecipes {
 	/*
@@ -46,10 +37,10 @@ public class TSRecipes {
 	public static final String[] PAT_LEGS = {"###", "# #", "# #"};
 	public static final String[] PAT_BOOTS = {"# #", "# #"};
 
-	public static final int INGOT_LIQUID_VALUE = TConstruct.ingotLiquidValue;
+	public static int INGOT_LIQUID_VALUE = 144;
 	public static int ORE_LIQUID_VALUE = INGOT_LIQUID_VALUE;
-	public static final int BLOCK_LIQUID_VALUE = TConstruct.blockLiquidValue;
-	public static final int NUGGET_LIQUID_VALUE = TConstruct.nuggetLiquidValue;
+	public static int BLOCK_LIQUID_VALUE = INGOT_LIQUID_VALUE * 4;
+	public static int NUGGET_LIQUID_VALUE = INGOT_LIQUID_VALUE / 9;
 
 	public static void setupRecipes() {
 		addHighOvenSmelts();
@@ -61,6 +52,7 @@ public class TSRecipes {
 
 	private static void addHighOvenFuels() {
 		IFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
+
 		for(final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")){
 			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 4200, 7);
 		}
@@ -76,54 +68,17 @@ public class TSRecipes {
 	}
 
 	public static void addHighOvenSmelts() {
-		final List<String> exceptions = Arrays.asList("Water", "Stone", "Ender", "Glass", "Slime", "Obsidian");
-		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
-
-		for (Map.Entry<String, FluidType> entry : FluidType.fluidTypes.entrySet()) {
-			if (exceptions.contains(entry.getKey())) continue;
-
-			final int temperatureMod = getFluidTempMod(entry.getKey());
-			final FluidStack ingotFS = new FluidStack(entry.getValue().fluid, INGOT_LIQUID_VALUE);
-
-			advancedSmelting.addDictionaryMeltable("nugget" + entry.getKey(), new FluidStack(entry.getValue().fluid, NUGGET_LIQUID_VALUE), temperatureMod);
-			advancedSmelting.addDictionaryMeltable("ingot" + entry.getKey(), ingotFS, temperatureMod);
-			advancedSmelting.addDictionaryMeltable("dust" + entry.getKey(), ingotFS, temperatureMod);
-			advancedSmelting.addDictionaryMeltable("crystalline" + entry.getKey(), ingotFS, temperatureMod);
-			advancedSmelting.addDictionaryMeltable("ore" + entry.getKey(), new FluidStack(entry.getValue().fluid, ORE_LIQUID_VALUE), temperatureMod);
-			advancedSmelting.addDictionaryMeltable("oreNether" + entry.getKey(), new FluidStack(entry.getValue().fluid, ORE_LIQUID_VALUE * 2), temperatureMod);
-			advancedSmelting.addDictionaryMeltable("block" + entry.getKey(), new FluidStack(entry.getValue().fluid, BLOCK_LIQUID_VALUE), temperatureMod);
-		}
-
-		final FluidType obsidian = FluidType.getFluidType("Obsidian");
-		if (obsidian != null) {
-			final String name = "Obsidian";
-			final FluidStack ingotFS = new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE);
-			final int temperatureMod = getFluidTempMod(name);
-
-			advancedSmelting.addDictionaryMeltable("nugget" + name, new FluidStack(obsidian.fluid, NUGGET_LIQUID_VALUE), temperatureMod);
-			advancedSmelting.addDictionaryMeltable("ingot" + name, ingotFS, temperatureMod);
-			advancedSmelting.addDictionaryMeltable("dust" + name, new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE / 2), temperatureMod);
-			advancedSmelting.addDictionaryMeltable("block" + name, new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE), temperatureMod);
-		}
-
-		advancedSmelting.addMeltable(new ItemStack(Items.emerald), false, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
-		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.glueBlock), false, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
-
-		FluidType limestoneFluid = FluidType.getFluidType("Limestone");
-		Smeltery.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);
-		advancedSmelting.addDictionaryMeltable("blockLimestone", new FluidStack(limestoneFluid.fluid, INGOT_LIQUID_VALUE * 4), 825);
-
-		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
-		advancedSmelting.addMeltable(new ItemStack(TSContent.materialsTS, 1, 1), false, 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
-
-		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
-		advancedSmelting.addMeltable(new ItemStack(TSContent.materialsTS, 1, 2), false, 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
+		TConstructPlugin.addDictionaryMeltable("blockLimestone", "Limestone", 825, INGOT_LIQUID_VALUE * 4, ModsData.Fluids.moltenLimestoneFluid);
+		TConstructPlugin.addMeltable(new ItemStack(TSContent.materialsTS, 1, 1), "Limestone", 825, INGOT_LIQUID_VALUE, ModsData.Fluids.moltenLimestoneFluid);
+		TConstructPlugin.addMeltable(new ItemStack(TSContent.materialsTS, 1, 2), "Limestone", 825, INGOT_LIQUID_VALUE, ModsData.Fluids.moltenLimestoneFluid);
 	}
 
 	public static void createAlloys() {
-		Smeltery.addAlloyMixing(
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
+		TCSmeltery.registerAlloy(
 				new FluidStack(TSContent.liquidCementFluid, 1),
-				new FluidStack(TinkerSmeltery.moltenStoneFluid, 1),
+				new FluidStack(TCSmeltery.getFluidForType("Stone"), 1),
 				new FluidStack(TSContent.moltenLimestoneFluid, 1)
 		);
 	}
@@ -148,7 +103,6 @@ public class TSRecipes {
 
 		if (ConfigCore.hardcoreAnvil)
 			TSRecipes.changeAnvil();
-
 
 		final ItemStack netherQuartz = new ItemStack(Items.quartz, 2);
 		IMixerRegistry.INSTANCE.registerMix(netherQuartz, TinkerSmeltery.moltenGlassFluid, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
@@ -290,10 +244,12 @@ public class TSRecipes {
 	}
 
 	public static void craftStorageBlocks() {
-		GameRegistry.addRecipe(ModsData.Shared.charcoalBlock, PAT_BLOCK, '#', new ItemStack(Items.coal, 1, 1));
+		ItemStack charcoal = new ItemStack(TSContent.tsCharcoalBlock);
+
+		GameRegistry.addRecipe(charcoal, PAT_BLOCK, '#', new ItemStack(Items.coal, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 0), PAT_BLOCK, '#', new ItemStack(Items.gunpowder, 1));
 		GameRegistry.addRecipe(new ItemStack(TSContent.dustStorageBlock, 1, 1), PAT_BLOCK, '#', new ItemStack(Items.sugar, 1));
-		GameRegistry.addRecipe(new ItemStack(Items.coal, 9, 1), "#", '#', ModsData.Shared.charcoalBlock);
+		GameRegistry.addRecipe(new ItemStack(Items.coal, 9, 1), "#", '#', charcoal);
 		GameRegistry.addRecipe(new ItemStack(Items.gunpowder, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(Items.sugar, 9), "#", '#', new ItemStack(TSContent.dustStorageBlock, 1, 1));
 	}
@@ -347,30 +303,38 @@ public class TSRecipes {
 	}
 
 	public static void changeAnvil() {
-		RecipeRemover.removeShapedRecipe(new ItemStack(Blocks.anvil));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.anvil), "bbb", " i ", "iii", 'i', "ingotSteel", 'b', "blockSteel"));
+		ItemStack anvil = new ItemStack(Blocks.anvil);
 
-		FluidType steel = FluidType.getFluidType("Steel");
-		Smeltery.addMelting(steel, new ItemStack(Blocks.anvil, 1, 0), 0, INGOT_LIQUID_VALUE * 31);
-		Smeltery.addMelting(steel, new ItemStack(Blocks.anvil, 1, 1), 0, INGOT_LIQUID_VALUE * 31);
-		Smeltery.addMelting(steel, new ItemStack(Blocks.anvil, 1, 2), 0, INGOT_LIQUID_VALUE * 31);
+		RegistryHelper.removeItemRecipe(anvil);
+		GameRegistry.addRecipe(new ShapedOreRecipe(anvil, "bbb", " i ", "iii", 'i', "ingotSteel", 'b', "blockSteel"));
+
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
+		for (int i = 0; i < 3; i++) {
+			TConstructPlugin.addMeltable(new ItemStack(Blocks.anvil, 1, i), "Steel", 840, INGOT_LIQUID_VALUE * 31, null);
+		}
 	}
 
 	public static void changeFlintAndSteel() {
-		RecipeRemover.removeShapedRecipe(new ItemStack(Items.flint_and_steel));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.flint_and_steel), "s ", " f", 's', "ingotSteel", 'f', new ItemStack(Items.flint)));
+		ItemStack flintAndSteel = new ItemStack(Items.flint_and_steel, 1, 0);
+		RegistryHelper.removeItemRecipe(flintAndSteel);
+		GameRegistry.addRecipe(new ShapedOreRecipe(flintAndSteel, "s ", " f", 's', "ingotSteel", 'f', Items.flint));
 
 		Items.flint_and_steel.setMaxDamage(128);
 
-		FluidType steel = FluidType.getFluidType("Steel");
-		Smeltery.addMelting(steel, new ItemStack(Items.flint_and_steel, 1, 0), 0, INGOT_LIQUID_VALUE);
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
+		TConstructPlugin.addMeltable(flintAndSteel, "Steel", 840, INGOT_LIQUID_VALUE, null);
 	}
 
 	public static void changePiston() {
+		if (!TConstructPlugin.isToolsLoaded()) return;
+
 		final ItemStack rod = new ItemStack(TinkerTools.toughRod, 1, 2);
 
-		RecipeRemover.removeAnyRecipe(new ItemStack(Blocks.piston));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.piston), "WWW", "CTC", "CRC", 'C', "cobblestone", 'T', rod, 'R', "dustRedstone", 'W', "plankWood"));
+		ItemStack pison = new ItemStack(Blocks.piston);
+		RegistryHelper.removeItemRecipe(pison);
+		GameRegistry.addRecipe(new ShapedOreRecipe(pison, "WWW", "CTC", "CRC", 'C', "cobblestone", 'T', rod, 'R', "dustRedstone", 'W', "plankWood"));
 	}
 
 	public static int getFluidTempMod(String fluidName) {

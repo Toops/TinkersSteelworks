@@ -1,12 +1,14 @@
 package toops.tsteelworks.lib;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -43,13 +45,6 @@ public class ModsData {
 		public static Fluid liquidCementFluid;
 		public static ItemStack bucketCement;
 		public static Block liquidCement;
-	}
-
-	/**
-	 * Anything that can also be added by other mods, includes oredict things
-	 */
-	public static class Shared {
-		public static ItemStack charcoalBlock;
 	}
 
 	/**
@@ -104,27 +99,7 @@ public class ModsData {
 		}
 	}
 
-	public static void loadSharedData() {
-		registerFluids();
-
-		/* Raw Vanilla Materials */
-		List<ItemStack> charcoalBlocks = OreDictionary.getOres("blockCharcoal");
-
-		if (charcoalBlocks.isEmpty()) {
-			TSContent.tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
-			GameRegistry.registerBlock(TSContent.tsCharcoalBlock, "blockCharcoal");
-
-			Blocks.fire.setFireInfo(TSContent.tsCharcoalBlock, 15, 30);
-			OreDictionary.registerOre("blockCharcoal", TSContent.tsCharcoalBlock);
-
-			Shared.charcoalBlock = new ItemStack(TSContent.tsCharcoalBlock);
-			GameRegistry.registerFuelHandler(new FuelHandler(Shared.charcoalBlock, 15000));
-		} else {
-			Shared.charcoalBlock = charcoalBlocks.get(0);
-		}
-	}
-
-	private static void registerFluids() {
+	public static void registerFluids() {
 		LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
 		ItemStack bucket = new ItemStack(Items.bucket);
 

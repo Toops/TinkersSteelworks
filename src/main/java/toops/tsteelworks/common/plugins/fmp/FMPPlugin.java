@@ -14,7 +14,7 @@ public class FMPPlugin extends ModCompatPlugin {
 
 	@Override
 	public void init() {
-		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", ModsData.Shared.charcoalBlock);
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.tsCharcoalBlock));
 
 		for (int i = 0; i <= 1; i++) {
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(TSContent.dustStorageBlock, 0, i));

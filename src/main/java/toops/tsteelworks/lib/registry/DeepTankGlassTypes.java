@@ -7,6 +7,7 @@ import toops.tsteelworks.common.core.TSLogger;
 
 import java.util.HashMap;
 
+// TODO: cleanup & move to API
 // the item metadata ignore code isn't really working well looking at all the special cases. But it's reducing the hashmap size so much :(
 public class DeepTankGlassTypes {
 	private static HashMap<GlassType, Integer> glassTypes = new HashMap<>();

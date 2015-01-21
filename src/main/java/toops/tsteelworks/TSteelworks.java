@@ -14,6 +14,7 @@ import toops.tsteelworks.common.plugins.PluginController;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSLogger;
 import toops.tsteelworks.common.plugins.fmp.FMPPlugin;
+import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.common.plugins.waila.WailaPlugin;
 import toops.tsteelworks.lib.TSRepo;
 
@@ -44,6 +45,7 @@ public class TSteelworks {
 
 		pluginController.registerPlugin(new FMPPlugin());
 		pluginController.registerPlugin(new WailaPlugin());
+		pluginController.registerPlugin(new TConstructPlugin());
 	}
 
 	@EventHandler

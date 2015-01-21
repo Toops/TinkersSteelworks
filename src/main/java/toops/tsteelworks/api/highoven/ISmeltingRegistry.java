@@ -11,11 +11,11 @@ public interface ISmeltingRegistry {
 	 * Adds mappings between an input and its liquid.
 	 *
 	 * @param input             The item to liquify
-	 * @param meltTemperature   How hot the block should be before liquifying
-	 * @param output            The result of the process
 	 * @param isOre             The itemstack is an ore
+	 * @param output            The result of the process
+	 * @param meltTemperature   How hot the block should be before liquifying
 	 */
-	public void addMeltable(ItemStack input, boolean isOre, int meltTemperature, FluidStack output);
+	public void addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
 
 	/**
 	 * Adds all Items to the Smeltery based on the oreDictionary Name

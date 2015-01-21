@@ -22,11 +22,11 @@ class AdvancedSmelting implements ISmeltingRegistry, IMixerRegistry, IMixAgentRe
 		final boolean isOre = inputOre.startsWith("ore");
 
 		for (final ItemStack stack : OreDictionary.getOres(inputOre))
-			addMeltable(stack, isOre, meltTemperature, output);
+			addMeltable(stack, isOre, output, meltTemperature);
 	}
 
 	@Override
-	public void addMeltable(ItemStack input, boolean isOre, int meltTemperature, FluidStack output) {
+	public void addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature) {
 		if (meltTemperature <= 20)
 			meltTemperature = 20;
 

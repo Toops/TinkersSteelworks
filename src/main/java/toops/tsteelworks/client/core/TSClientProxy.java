@@ -29,7 +29,6 @@ import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.entity.HighGolem;
 import toops.tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import toops.tsteelworks.common.entity.projectile.EntityScorchedBrick;
-import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.registry.TSClientRegistry;
 
@@ -81,7 +80,7 @@ public class TSClientProxy extends TSCommonProxy {
 		MantleClientRegistry.registerManualIcon("scorchedbrickblock", new ItemStack(TSContent.highoven, 1, 2));
 
 		// Misc Blocks
-		MantleClientRegistry.registerManualIcon("charcoalblock", ModsData.Shared.charcoalBlock);
+		MantleClientRegistry.registerManualIcon("charcoalblock", new ItemStack(TSContent.tsCharcoalBlock));
 		MantleClientRegistry.registerManualIcon("gunpowderblock", new ItemStack(TSContent.dustStorageBlock, 1, 0));
 		MantleClientRegistry.registerManualIcon("sugarblock", new ItemStack(TSContent.dustStorageBlock, 1, 1));
 		MantleClientRegistry.registerManualIcon("spongeblock", new ItemStack(Blocks.sponge));
@@ -149,7 +148,7 @@ public class TSClientProxy extends TSCommonProxy {
 
 		final ItemStack lapis = new ItemStack(Items.dye, 1, 4);
 
-		final ItemStack charcoalBlock = ModsData.Shared.charcoalBlock;
+		final ItemStack charcoalBlock = new ItemStack(TSContent.tsCharcoalBlock);
 		final ItemStack gunpowderBlock = new ItemStack(TSContent.dustStorageBlock, 1, 0);
 		final ItemStack sugarBlock = new ItemStack(TSContent.dustStorageBlock, 1, 1);
 

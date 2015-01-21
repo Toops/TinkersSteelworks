@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
@@ -18,7 +19,7 @@ import toops.tsteelworks.lib.logic.IMasterLogic;
 
 import java.util.List;
 
-public class HighOvenTankDataProvider implements IWailaDataProvider {
+class HighOvenTankDataProvider implements IWailaDataProvider {
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return null;
@@ -67,12 +68,16 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 			FluidStack stack = tank.getFluid(i);
 
 			String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
-			currenttip.add(WailaRegistrar.fluidNameHelper(stack) + " (" + textValue + ")");
+			currenttip.add(fluidNameHelper(stack) + " (" + textValue + ")");
 		}
 
 		if (showTotal) {
 			currenttip.add("-----");
 			currenttip.add(ChatHelper.formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
 		}
+	}
+
+	private static String fluidNameHelper(FluidStack f) {
+		return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
 	}
 }

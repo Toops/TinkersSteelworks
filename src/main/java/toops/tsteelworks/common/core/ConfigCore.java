@@ -15,6 +15,7 @@ public class ConfigCore {
 	public static boolean hardcoreAnvil;
 	public static boolean enableDuctVacuum;
 	public static int teSlagOutputChance;
+	public static double ingotsPerOre;
 
 	public static int steamProductionRate;
 	public static String[] blacklistedAlloys;
@@ -60,7 +61,7 @@ public class ConfigCore {
 
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
 
-		double ingotsPerOre = config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
+		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
 		TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ingotsPerOre);
 
 		teSlagOutputChance = config.get("High Oven", "TE Slag output chance", 10, "1 in <config> chance of getting Thermal Expansion slag when smelting ores, set to -1 to disable. Active only if TE is present").getInt(10);

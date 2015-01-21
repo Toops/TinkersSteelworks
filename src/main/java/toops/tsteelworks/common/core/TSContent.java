@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mantle.lib.TabTools;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
+import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.ModifyBuilder;
@@ -77,7 +79,7 @@ public class TSContent {
 		setupCreativeTabs();
 		registerModifiers();
 
-		ModsData.loadSharedData();
+		ModsData.registerFluids();
 
 		oreRegistry();
 	}
@@ -151,6 +153,12 @@ public class TSContent {
 		steamTurbine = new SteamTurbineBlock().setBlockName("Machine.Turbine").setStepSound(Block.soundTypeMetal).setCreativeTab(creativeTab);
 		GameRegistry.registerBlock(steamTurbine, steamTurbine.getUnlocalizedName());
 		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
+
+		TSContent.tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
+		GameRegistry.registerBlock(TSContent.tsCharcoalBlock, "blockCharcoal");
+		Blocks.fire.setFireInfo(TSContent.tsCharcoalBlock, 15, 30);
+		OreDictionary.registerOre("blockCharcoal", TSContent.tsCharcoalBlock);
+		GameRegistry.registerFuelHandler(new FuelHandler(new ItemStack(TSContent.tsCharcoalBlock), 15000));
 	}
 
 	public static void oreRegistry() {
