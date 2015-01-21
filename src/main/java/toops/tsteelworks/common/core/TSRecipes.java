@@ -21,10 +21,11 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
-import toops.tsteelworks.api.highoven.IHighOvenFuelRegistry;
+import toops.tsteelworks.api.highoven.IFuelRegistry;
+import toops.tsteelworks.api.highoven.IMixerRegistry;
+import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.HighOvenBlock;
 import toops.tsteelworks.lib.ModsData;
-import toops.tsteelworks.lib.registry.AdvancedSmelting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,62 +60,64 @@ public class TSRecipes {
 	}
 
 	private static void addHighOvenFuels() {
-		IHighOvenFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
+		IFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
 		for(final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")){
-			IHighOvenFuelRegistry.INSTANCE.addFuel(charcoalBlock, 4200, 7);
+			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 4200, 7);
 		}
 
 		if (ModsData.Railcraft.isLoaded) {
-			IHighOvenFuelRegistry.INSTANCE.addFuel(ModsData.Railcraft.coalCoke, 840, 10);
-			IHighOvenFuelRegistry.INSTANCE.addFuel(ModsData.Railcraft.coalCokeBlock, 8400, 15);
+			IFuelRegistry.INSTANCE.addFuel(ModsData.Railcraft.coalCoke, 840, 10);
+			IFuelRegistry.INSTANCE.addFuel(ModsData.Railcraft.coalCokeBlock, 8400, 15);
 		}
 
 		if (ModsData.Thaumcraft.isLoaded) {
-			IHighOvenFuelRegistry.INSTANCE.addFuel(ModsData.Thaumcraft.alumentum, 420 * 4, 4);
+			IFuelRegistry.INSTANCE.addFuel(ModsData.Thaumcraft.alumentum, 420 * 4, 4);
 		}
 	}
 
 	public static void addHighOvenSmelts() {
 		final List<String> exceptions = Arrays.asList("Water", "Stone", "Ender", "Glass", "Slime", "Obsidian");
+		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
 		for (Map.Entry<String, FluidType> entry : FluidType.fluidTypes.entrySet()) {
 			if (exceptions.contains(entry.getKey())) continue;
 
 			final int temperatureMod = getFluidTempMod(entry.getKey());
-			AdvancedSmelting.addDictionaryMelting("nugget" + entry.getKey(), entry.getValue(), temperatureMod, NUGGET_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("ingot" + entry.getKey(), entry.getValue(), temperatureMod, INGOT_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("dust" + entry.getKey(), entry.getValue(), temperatureMod, INGOT_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("crystalline" + entry.getKey(), entry.getValue(), temperatureMod, INGOT_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("ore" + entry.getKey(), entry.getValue(), temperatureMod, ORE_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("oreNether" + entry.getKey(), entry.getValue(), temperatureMod, ORE_LIQUID_VALUE * 2);
-			AdvancedSmelting.addDictionaryMelting("block" + entry.getKey(), entry.getValue(), temperatureMod, BLOCK_LIQUID_VALUE);
+			final FluidStack ingotFS = new FluidStack(entry.getValue().fluid, INGOT_LIQUID_VALUE);
+
+			advancedSmelting.addDictionaryMeltable("nugget" + entry.getKey(), new FluidStack(entry.getValue().fluid, NUGGET_LIQUID_VALUE), temperatureMod);
+			advancedSmelting.addDictionaryMeltable("ingot" + entry.getKey(), ingotFS, temperatureMod);
+			advancedSmelting.addDictionaryMeltable("dust" + entry.getKey(), ingotFS, temperatureMod);
+			advancedSmelting.addDictionaryMeltable("crystalline" + entry.getKey(), ingotFS, temperatureMod);
+			advancedSmelting.addDictionaryMeltable("ore" + entry.getKey(), new FluidStack(entry.getValue().fluid, ORE_LIQUID_VALUE), temperatureMod);
+			advancedSmelting.addDictionaryMeltable("oreNether" + entry.getKey(), new FluidStack(entry.getValue().fluid, ORE_LIQUID_VALUE * 2), temperatureMod);
+			advancedSmelting.addDictionaryMeltable("block" + entry.getKey(), new FluidStack(entry.getValue().fluid, BLOCK_LIQUID_VALUE), temperatureMod);
 		}
 
-		FluidType obsidian = FluidType.getFluidType("Obsidian");
+		final FluidType obsidian = FluidType.getFluidType("Obsidian");
 		if (obsidian != null) {
-			String name = "Obsidian";
-
+			final String name = "Obsidian";
+			final FluidStack ingotFS = new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE);
 			final int temperatureMod = getFluidTempMod(name);
-			AdvancedSmelting.addDictionaryMelting("nugget" + name, obsidian, temperatureMod, NUGGET_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("ingot" + name, obsidian, temperatureMod, INGOT_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("dust" + name, obsidian, temperatureMod, INGOT_LIQUID_VALUE / 4);
-			AdvancedSmelting.addDictionaryMelting("crystalline" + name, obsidian, temperatureMod, INGOT_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("ore" + name, obsidian, temperatureMod, ORE_LIQUID_VALUE);
-			AdvancedSmelting.addDictionaryMelting("oreNether" + name, obsidian, temperatureMod, ORE_LIQUID_VALUE * 2);
-			AdvancedSmelting.addDictionaryMelting("block" + name, obsidian, temperatureMod, BLOCK_LIQUID_VALUE);
+
+			advancedSmelting.addDictionaryMeltable("nugget" + name, new FluidStack(obsidian.fluid, NUGGET_LIQUID_VALUE), temperatureMod);
+			advancedSmelting.addDictionaryMeltable("ingot" + name, ingotFS, temperatureMod);
+			advancedSmelting.addDictionaryMeltable("dust" + name, new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE / 2), temperatureMod);
+			advancedSmelting.addDictionaryMeltable("block" + name, new FluidStack(obsidian.fluid, INGOT_LIQUID_VALUE), temperatureMod);
 		}
 
-		AdvancedSmelting.addMelting(Items.emerald, 0, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE), false);
-		AdvancedSmelting.addMelting(TinkerSmeltery.glueBlock, 0, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE), false);
+		advancedSmelting.addMeltable(new ItemStack(Items.emerald), false, getFluidTempMod("Emerald"), new FluidStack(TinkerSmeltery.moltenEmeraldFluid, INGOT_LIQUID_VALUE));
+		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.glueBlock), false, getFluidTempMod("Glue"), new FluidStack(TinkerSmeltery.glueFluid, BLOCK_LIQUID_VALUE));
 
 		FluidType limestoneFluid = FluidType.getFluidType("Limestone");
 		Smeltery.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);
-		AdvancedSmelting.addDictionaryMelting("blockLimestone", limestoneFluid, 825, INGOT_LIQUID_VALUE * 4);
+		advancedSmelting.addDictionaryMeltable("blockLimestone", new FluidStack(limestoneFluid.fluid, INGOT_LIQUID_VALUE * 4), 825);
 
 		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
-		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 1), 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE), false);
+		advancedSmelting.addMeltable(new ItemStack(TSContent.materialsTS, 1, 1), false, 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
+
 		Smeltery.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), TSContent.limestoneBlock, 1, 0, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
-		AdvancedSmelting.addMelting(new ItemStack(TSContent.materialsTS, 1, 2), 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE), false);
+		advancedSmelting.addMeltable(new ItemStack(TSContent.materialsTS, 1, 2), false, 825, new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE));
 	}
 
 	public static void createAlloys() {
@@ -133,7 +136,6 @@ public class TSRecipes {
 		craftStorageBlocks();
 		craftSteel();
 		craftPigIron();
-		craftObsidian();
 		craftGlass();
 		craftWater();
 		craftMachines();
@@ -149,7 +151,7 @@ public class TSRecipes {
 
 
 		final ItemStack netherQuartz = new ItemStack(Items.quartz, 2);
-		AdvancedSmelting.registerMixComboForSolidOutput(netherQuartz, TinkerSmeltery.moltenGlassFluid, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
+		IMixerRegistry.INSTANCE.registerMix(netherQuartz, TinkerSmeltery.moltenGlassFluid, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
 	}
 
 	public static void craftMachines() {
@@ -205,7 +207,7 @@ public class TSRecipes {
 
 		for (String o : oxidizers)
 			for (String p : purifiers)
-				AdvancedSmelting.registerMixComboForSolidOutput(itemScorchedBrick, TinkerSmeltery.moltenStoneFluid, o, null, p);
+				IMixerRegistry.INSTANCE.registerMix(itemScorchedBrick, TinkerSmeltery.moltenStoneFluid, o, null, p);
 
 		// Casting
 		tableCasting.addCastingRecipe(itemScorchedBrick, fluidStoneMinor, new ItemStack(Items.brick), true, 50);
@@ -230,7 +232,7 @@ public class TSRecipes {
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 1, 1), new ItemStack(TSContent.limestoneBlock, 1, 0), 2f);
 		FurnaceRecipes.smelting().func_151394_a(new ItemStack(TSContent.limestoneBlock, 1, 0), new ItemStack(TSContent.materialsTS, 4, 1), 2f);
 
-		AdvancedSmelting.registerMixComboForSolidOutput(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
+		IMixerRegistry.INSTANCE.registerMix(new ItemStack(TSContent.materialsTS, 1, 1), TinkerSmeltery.moltenStoneFluid, "dyeLime", null, "blockSand");
 
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(TSContent.limestoneSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.limestoneBlock, 1, 1));
@@ -257,13 +259,14 @@ public class TSRecipes {
 	public static void craftStone() {
 		final String fluidName = "Stone";
 		final Fluid fluid = TinkerSmeltery.moltenStoneFluid;
+		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
-		AdvancedSmelting.addMelting(Blocks.stone, 0, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18), false);
-		AdvancedSmelting.addMelting(Blocks.cobblestone, 0, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18), false);
-		AdvancedSmelting.addMelting(TinkerTools.craftedSoil, 1, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 4), false);
+		advancedSmelting.addMeltable(new ItemStack(Blocks.stone), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
+		advancedSmelting.addMeltable(new ItemStack(Blocks.cobblestone), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
+		advancedSmelting.addMeltable(new ItemStack(TinkerTools.craftedSoil, 1, 1), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 4));
 
 		Smeltery.addMelting(FluidType.getFluidType(fluidName), new ItemStack(TinkerTools.materials, 1, 2), 0, INGOT_LIQUID_VALUE);
-		AdvancedSmelting.addMelting(new ItemStack(TinkerTools.materials, 1, 2), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE), false);
+		advancedSmelting.addMeltable(new ItemStack(TinkerTools.materials, 1, 2), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
 
 		final String[] dyes = new String[] { "dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack" };
 
@@ -282,7 +285,7 @@ public class TSRecipes {
 				continue;
 
 			Smeltery.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
-			AdvancedSmelting.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE), false);
+			advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.smeltery, 1, meta), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
 		}
 	}
 
@@ -313,36 +316,34 @@ public class TSRecipes {
 		for (String o : oxidizers)
 			for (String r : reducers)
 				for (String p : purifiers)
-					AdvancedSmelting.registerMixComboForFluidOutput(steel, TinkerSmeltery.moltenIronFluid, o, r, p);
+					IMixerRegistry.INSTANCE.registerMix(steel, TinkerSmeltery.moltenIronFluid, o, r, p);
 	}
 
 	public static void craftPigIron() {
-		AdvancedSmelting.registerMixComboForFluidOutput(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), TinkerSmeltery.moltenIronFluid, "dustSugar", "dyeWhite", "hambone");
-	}
-
-	public static void craftObsidian() {
-		AdvancedSmelting.addMelting(Blocks.obsidian, 0, getFluidTempMod("Obsidian"), new FluidStack(TinkerSmeltery.moltenObsidianFluid, INGOT_LIQUID_VALUE * 2), false);
+		IMixerRegistry.INSTANCE.registerMix(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), TinkerSmeltery.moltenIronFluid, "dustSugar", "dyeWhite", "hambone");
 	}
 
 	public static void craftGlass() {
 		final String fluidName = "Glass";
 		final Fluid glassFluid = TinkerSmeltery.moltenGlassFluid;
+		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
-		AdvancedSmelting.addMelting(Blocks.sand, 0, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME), false);
-		AdvancedSmelting.addMelting(Blocks.glass, 0, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME), false);
-		AdvancedSmelting.addMelting(Blocks.glass_pane, 0, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250), false);
+		advancedSmelting.addMeltable(new ItemStack(Blocks.sand), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME));
+		advancedSmelting.addMeltable(new ItemStack(Blocks.glass), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME));
+		advancedSmelting.addMeltable(new ItemStack(Blocks.glass_pane), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250));
 
-		AdvancedSmelting.addMelting(TinkerSmeltery.clearGlass, 0, getFluidTempMod(fluidName), new FluidStack(glassFluid, 1000), false);
-		AdvancedSmelting.addMelting(TinkerSmeltery.glassPane, 0, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250), false);
+		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.clearGlass), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 1000));
+		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.glassPane), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250));
 	}
 
 	public static void craftWater() {
 		final String fluidName = "Water";
 		final Fluid fluidWater = FluidRegistry.WATER;
+		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
-		AdvancedSmelting.addMelting(Blocks.ice, 0, getFluidTempMod(fluidName), new FluidStack(fluidWater, 1000), false);
-		AdvancedSmelting.addMelting(Blocks.snow, 0, getFluidTempMod(fluidName), new FluidStack(fluidWater, 500), false);
-		AdvancedSmelting.addMelting(Items.snowball, 0, getFluidTempMod(fluidName), new FluidStack(fluidWater, 125), false);
+		advancedSmelting.addMeltable(new ItemStack(Blocks.ice), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 1000));
+		advancedSmelting.addMeltable(new ItemStack(Blocks.snow), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 500));
+		advancedSmelting.addMeltable(new ItemStack(Items.snowball), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 125));
 	}
 
 	public static void changeAnvil() {

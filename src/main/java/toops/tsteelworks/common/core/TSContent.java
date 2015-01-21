@@ -21,6 +21,7 @@ import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import toops.tsteelworks.TSteelworks;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 import toops.tsteelworks.common.blocks.*;
 import toops.tsteelworks.common.blocks.logic.*;
 import toops.tsteelworks.common.entity.HighGolem;
@@ -32,7 +33,6 @@ import toops.tsteelworks.common.items.TSMaterialItem;
 import toops.tsteelworks.common.items.blocks.*;
 import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.TSRepo;
-import toops.tsteelworks.lib.registry.AdvancedSmelting;
 import toops.tsteelworks.common.items.TSArmorBasic;
 import toops.tsteelworks.common.modifier.TSActiveOmniMod;
 
@@ -183,27 +183,29 @@ public class TSContent {
 	 * Register mixer materials
 	 */
 	public static void registerMixerMaterials() {
-		AdvancedSmelting.registerMixItem("dustGunpowder", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 33);
-		AdvancedSmelting.registerMixItem("dustSulphur", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 29);
-		AdvancedSmelting.registerMixItem("dustSugar", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 62);
-		AdvancedSmelting.registerMixItem("fuelCoal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 43);
-		AdvancedSmelting.registerMixItem("coal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 43);
-		AdvancedSmelting.registerMixItem("dustCoal", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 37);
-		AdvancedSmelting.registerMixItem("dyeLime", AdvancedSmelting.MixData.MixType.OXYDIZER, 1, 37);
+		IMixAgentRegistry registry = IMixAgentRegistry.INSTANCE;
 
-		AdvancedSmelting.registerMixItem("dustRedstone", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 65);
-		AdvancedSmelting.registerMixItem("dustManganese", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 47);
-		AdvancedSmelting.registerMixItem("oreManganese", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 51);
-		AdvancedSmelting.registerMixItem("dustAluminum", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 60);
-		AdvancedSmelting.registerMixItem("dustAluminium", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 60);
-		AdvancedSmelting.registerMixItem("dyeWhite", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 37);
-		AdvancedSmelting.registerMixItem("oreberryEssence", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 27);
-		AdvancedSmelting.registerMixItem("dustSaltpeter", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 30);
-		AdvancedSmelting.registerMixItem("dustSaltpetre", AdvancedSmelting.MixData.MixType.PURIFIER, 1, 30);
+		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXYDIZER, 1, 33);
+		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXYDIZER, 1, 29);
+		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXYDIZER, 1, 62);
+		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 43);
+		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 43);
+		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 37);
+		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXYDIZER, 1, 37);
 
-		AdvancedSmelting.registerMixItem("blockSand", AdvancedSmelting.MixData.MixType.REDUCER, 1, 100);
-		AdvancedSmelting.registerMixItem("hambone", AdvancedSmelting.MixData.MixType.REDUCER, 1, 73);
-		AdvancedSmelting.registerMixItem("blockGraveyardDirt", AdvancedSmelting.MixData.MixType.REDUCER, 1, 59);
+		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.PURIFIER, 1, 65);
+		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 47);
+		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 51);
+		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
+		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
+		registry.registerAgent("dyeWhite", IMixAgentRegistry.AgentType.PURIFIER, 1, 37);
+		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.PURIFIER, 1, 27);
+		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);
+		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);
+
+		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.REDUCER, 1, 100);
+		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.REDUCER, 1, 73);
+		registry.registerAgent("blockGraveyardDirt", IMixAgentRegistry.AgentType.REDUCER, 1, 59);
 	}
 
 	/**

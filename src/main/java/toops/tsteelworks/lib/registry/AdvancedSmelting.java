@@ -1,221 +1,52 @@
 package toops.tsteelworks.lib.registry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.util.HashedItemStack;
-import tconstruct.library.crafting.FluidType;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry;
+import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 
 import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author Toops
- */
-public class AdvancedSmelting implements ISmeltingRegistry {
+class AdvancedSmelting implements ISmeltingRegistry, IMixerRegistry, IMixAgentRegistry {
+/* ========== ISmeltingRegistry  ========== */
 	/** list of meltables items & blocks mapped to their result (fluidstack, melting point, etc) */
-	private static final HashMap<HashedItemStack, MeltData> meltingList = new HashMap<>();
+	private final Map<HashedItemStack, IMeltData> meltingList = new HashMap<>();
 
-	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
-	private static final HashMap<String, MixData> mixItemList = new HashMap<>();
+	@Override
+	public void addDictionaryMeltable(final String inputOre, final FluidStack output, final int meltTemperature) {
+		final boolean isOre = inputOre.startsWith("ore");
 
-	private static final HashMap<MixCombo, FluidStack> fluidComboList = new HashMap<>();
-	private static final HashMap<MixCombo, ItemStack> itemComboList = new HashMap<>();
-
-	/* ========== Normal Smelting  ========== */
-
-	/**
-	 * Adds mappings between a block and its liquid.
-	 *
-	 * @param block         The instance of the block to liquify
-	 * @param metadata      The metadata of the block to liquify
-	 * @param temperature   How hot the block should be before liquifying. Max temp in the
-	 *                      Smeltery is 800, other structures may vary
-	 * @param output        The result of the process in liquid form
-	 * @param isOre         The itemstack is an ore
-	 */
-	public static void addMelting(Block block, int metadata, int temperature, FluidStack output, boolean isOre) {
-		addMelting(new ItemStack(block, 1, metadata), temperature, output, isOre);
+		for (final ItemStack stack : OreDictionary.getOres(inputOre))
+			addMeltable(stack, isOre, meltTemperature, output);
 	}
 
-	/**
-	 * Adds mappings between an item and its liquid.
-	 *
-	 * @param item          The instance of the item to liquify and render
-	 * @param metadata      The metadata of the block to liquify and render
-	 * @param temperature   How hot the block should be before liquifying. Max temp in the
-	 *                      Smeltery is 800, other structures may vary
-	 * @param output        The result of the process in liquid form
-	 * @param isOre         The itemstack is an ore
-	 */
-	public static void addMelting(Item item, int metadata, int temperature, FluidStack output, boolean isOre) {
-		addMelting(new ItemStack(item, 1, metadata), temperature, output, isOre);
+	@Override
+	public void addMeltable(ItemStack input, boolean isOre, int meltTemperature, FluidStack output) {
+		if (meltTemperature <= 20)
+			meltTemperature = 20;
+
+		meltingList.put(new HashedItemStack(input), new MeltData(meltTemperature, output, isOre));
 	}
 
-	/**
-	 * Adds all Items to the Smeltery based on the oreDictionary Name
-	 *
-	 * @param oreName     oreDictionary name e.g. oreIron
-	 * @param type        Type of Fluid
-	 * @param tempDiff    Difference between FluidType BaseTemperature
-	 * @param fluidAmount Amount of Fluid
-	 */
-	public static void addDictionaryMelting(String oreName, FluidType type, int tempDiff, int fluidAmount) {
-		boolean isOre = oreName.startsWith("ore");
-
-		for (final ItemStack is : OreDictionary.getOres(oreName))
-			addMelting(is, tempDiff, type, fluidAmount, isOre);
-	}
-
-	/**
-	 * Adds a mapping between FluidType and ItemStack
-	 *
-	 * @param type        Type of Fluid
-	 * @param input       The item to liquify
-	 * @param tempDiff    Difference between FluidType BaseTemperature and the melting temperature
-	 * @param fluidAmount Amount of Fluid
-	 * @param isOre       The itemstack is an ore
-	 */
-	public static void addMelting(ItemStack input, int tempDiff, FluidType type, int fluidAmount, boolean isOre) {
-		int temp = type.baseTemperature + tempDiff;
-
-		if (temp <= 20)
-			temp = 20;
-
-		addMelting(input, temp, new FluidStack(type.fluid, fluidAmount), isOre);
-	}
-
-	/**
-	 * Adds mappings between an input and its liquid. Renders with the given
-	 * input's block ID and metadata.
-	 *
-	 * @param itemstack   : The item to liquify
-	 * @param temperature : How hot the block should be before liquifying
-	 * @param liquid      : The result of the process
-	 * @param isOre       : The itemstack is an ore
-	 */
-	public static void addMelting(ItemStack itemstack, int temperature, FluidStack liquid, boolean isOre) {
-		meltingList.put(new HashedItemStack(itemstack), new MeltData(temperature, liquid, isOre));
-	}
-
-	public static MeltData getMeltData(ItemStack stack) {
+	@Override
+	public IMeltData getMeltable(ItemStack stack) {
 		return meltingList.get(new HashedItemStack(stack));
 	}
 
-	/* ========== Combinitorial Smelting ========== */
-
-	/**
-	 * Adds a mapping between an item and its mix type and consume chance
-	 * Stack size determines the amount required for consumption
-	 */
-	public static void registerMixItem(String oreName, MixData.MixType type, int consume, int chance) {
-		mixItemList.put(oreName, new MixData(type, consume, chance));
+	@Override
+	public IMeltData removeMeltable(ItemStack stack) {
+		return meltingList.remove(new HashedItemStack(stack));
 	}
 
-	public static MixData getMixItemData(ItemStack itemStack) {
-		int ids[] = OreDictionary.getOreIDs(itemStack);
-
-		for (int id : ids) {
-			String name = OreDictionary.getOreName(id);
-			if (mixItemList.containsKey(name))
-				return mixItemList.get(name);
-		}
-
-		return null;
-	}
-
-	public static void registerMixComboForFluidOutput(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
-		fluidComboList.put(new MixCombo(ox, red, pur, fluidin), fluidout);
-	}
-
-	public static void registerMixComboForSolidOutput(ItemStack stackout, Fluid fluidin, String i1, String i2, String i3) {
-		itemComboList.put(new MixCombo(i1, i2, i3, fluidin), stackout);
-	}
-
-	/**
-	 * Obtains items passed from slots, compares with the fluid combo list,
-	 * and if matching returns the fluid type from the fluid combo list.
-	 *
-	 * @return FluiStack from fluidComboList on success, null otherwise
-	 */
-	public static FluidStack getMixFluidSmeltingResult(Fluid fluid, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
-		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
-		int[] reduIDs = OreDictionary.getOreIDs(reducer);
-		int[] puriIDs = OreDictionary.getOreIDs(purifier);
-
-		MixCombo combo = new MixCombo();
-		combo.setFluidname(fluid.getName());
-
-		for (int oxidID : oxidIDs) {
-			String oxiName = OreDictionary.getOreName(oxidID);
-			combo.setOxydizer(oxiName);
-
-			for (int reduID : reduIDs) {
-				String reduName = OreDictionary.getOreName(reduID);
-				combo.setReducer(reduName);
-
-				for (int puriID : puriIDs) {
-					String puriName = OreDictionary.getOreName(puriID);
-					combo.setPurifier(puriName);
-
-					FluidStack result = fluidComboList.get(combo);
-
-					if (result != null)
-						return result.copy();
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Obtains items passed from slots, compares with the item combo list,
-	 * and if matching returns the fluid type from the item combo list.
-	 *
-	 * @return ItemStack from itemComboList on success, null otherwise
-	 */
-	public static ItemStack getMixItemSmeltingResult(Fluid fluid, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
-		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
-		int[] reduIDs = OreDictionary.getOreIDs(reducer);
-		int[] puriIDs = OreDictionary.getOreIDs(purifier);
-
-		MixCombo combo = new MixCombo();
-		combo.setFluidname(fluid.getName());
-
-		for (int oxidID : oxidIDs) {
-			String oxiName = OreDictionary.getOreName(oxidID);
-			combo.setOxydizer(oxiName);
-
-			for (int reduID : reduIDs) {
-				String reduName = OreDictionary.getOreName(reduID);
-				combo.setReducer(reduName);
-
-				for (int puriID : puriIDs) {
-					String puriName = OreDictionary.getOreName(puriID);
-					combo.setPurifier(puriName);
-
-					ItemStack result = itemComboList.get(combo);
-
-					if (result != null)
-						return result.copy();
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Hold information (meltpoint & result) about something meltable
-	 */
-	public static class MeltData {
-		private int meltingPoint;
-		private FluidStack result;
-		private boolean isOre;
+	private static final class MeltData implements IMeltData {
+		private final int meltingPoint;
+		private final FluidStack result;
+		private final boolean isOre;
 
 		public MeltData(int meltingPoint, FluidStack result, boolean isOre) {
 			this.meltingPoint = meltingPoint;
@@ -223,25 +54,99 @@ public class AdvancedSmelting implements ISmeltingRegistry {
 			this.isOre = isOre;
 		}
 
+		@Override
 		public int getMeltingPoint() {
 			return meltingPoint;
 		}
 
+		@Override
 		public FluidStack getResult() {
 			return result;
 		}
 
+		@Override
 		public boolean isOre() {
 			return isOre;
 		}
 	}
 
-	// ======================= mixs =========================
+/* ========== IMixerRegistry ========== */
+	private final Map<MixCombo, FluidStack> fluidComboList = new HashMap<>();
+	private final Map<MixCombo, ItemStack> itemComboList = new HashMap<>();
+
+	@Override
+	public boolean registerMix(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
+		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
+
+		if (fluidComboList.containsKey(mix) || itemComboList.containsKey(mix))
+			return false;
+
+		fluidComboList.put(mix, fluidout);
+
+		return true;
+	}
+
+	@Override
+	public boolean registerMix(ItemStack stackout, Fluid fluidin, String ox, String red, String pur) {
+		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
+
+		if (fluidComboList.containsKey(mix) || itemComboList.containsKey(mix))
+			return false;
+
+		itemComboList.put(mix, stackout);
+
+		return true;
+	}
+
+	@Override
+	public Object removeMix(Fluid input, String oxidizer, String reducer, String purifier) {
+		MixCombo mix = new MixCombo(oxidizer, reducer, purifier, input);
+
+		FluidStack fs = fluidComboList.remove(mix);
+		if (fs != null) return fs;
+
+		return itemComboList.remove(mix);
+	}
+
+	@Override
+	public Object getMix(Fluid fluid, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
+		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
+		int[] reduIDs = OreDictionary.getOreIDs(reducer);
+		int[] puriIDs = OreDictionary.getOreIDs(purifier);
+
+		MixCombo combo = new MixCombo();
+		combo.setFluidname(fluid.getName());
+
+		for (int oxidID : oxidIDs) {
+			String oxiName = OreDictionary.getOreName(oxidID);
+			combo.setOxydizer(oxiName);
+
+			for (int reduID : reduIDs) {
+				String reduName = OreDictionary.getOreName(reduID);
+				combo.setReducer(reduName);
+
+				for (int puriID : puriIDs) {
+					String puriName = OreDictionary.getOreName(puriID);
+					combo.setPurifier(puriName);
+
+					FluidStack resultFS = fluidComboList.get(combo);
+					if (resultFS != null)
+						return resultFS.copy();
+
+					ItemStack resultIS = itemComboList.get(combo);
+					if (resultIS != null)
+						return resultIS.copy();
+				}
+			}
+		}
+
+		return null;
+	}
 
 	/**
 	 * Wrapper for a combo
 	 */
-	public static class MixCombo {
+	private static class MixCombo {
 		private String oxydizer;
 		private String reducer;
 		private String purifier;
@@ -254,21 +159,21 @@ public class AdvancedSmelting implements ISmeltingRegistry {
 			this.fluidname = fluid.getName();
 		}
 
-		public MixCombo() {}
+		private MixCombo() {}
 
-		public void setFluidname(String fluidname) {
+		private void setFluidname(String fluidname) {
 			this.fluidname = fluidname;
 		}
 
-		public void setPurifier(String purifier) {
+		private void setPurifier(String purifier) {
 			this.purifier = purifier;
 		}
 
-		public void setReducer(String reducer) {
+		private void setReducer(String reducer) {
 			this.reducer = reducer;
 		}
 
-		public void setOxydizer(String oxydizer) {
+		private void setOxydizer(String oxydizer) {
 			this.oxydizer = oxydizer;
 		}
 
@@ -303,32 +208,55 @@ public class AdvancedSmelting implements ISmeltingRegistry {
 		}
 	}
 
-	/**
-	 * Hold information (mixer type, consume amount & consume chance) for a mix
-	 */
-	public static class MixData {
-		public static enum MixType {
-			OXYDIZER, REDUCER, PURIFIER
+/* ========== IMixAgentRegistry ========== */
+	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
+	private final Map<String, MixAgent> mixItemList = new HashMap<>();
+
+	@Override
+	public void registerAgent(String oreName, IMixAgentRegistry.AgentType type, int consume, int chance) {
+		mixItemList.put(oreName, new MixAgent(type, consume, chance));
+	}
+
+	@Override
+	public IMixAgent getAgentData(ItemStack itemStack) {
+		int ids[] = OreDictionary.getOreIDs(itemStack);
+
+		for (int id : ids) {
+			String name = OreDictionary.getOreName(id);
+			if (mixItemList.containsKey(name))
+				return mixItemList.get(name);
 		}
 
-		private MixType type;
-		private int consumeAmount;
-		private int consumeChance;
+		return null;
+	}
 
-		public MixData(MixType type, int consumeAmount, int consumeChance) {
+	@Override
+	public IMixAgent unregisterAgent(String oreName) {
+		return mixItemList.remove(oreName);
+	}
+
+	private static class MixAgent implements IMixAgentRegistry.IMixAgent {
+		private final IMixAgentRegistry.AgentType type;
+		private final int consumeAmount;
+		private final int consumeChance;
+
+		public MixAgent(IMixAgentRegistry.AgentType type, int consumeAmount, int consumeChance) {
 			this.type = type;
 			this.consumeAmount = consumeAmount;
 			this.consumeChance = consumeChance;
 		}
 
-		public MixType getType() {
+		@Override
+		public IMixAgentRegistry.AgentType getType() {
 			return type;
 		}
 
+		@Override
 		public int getConsumeAmount() {
 			return consumeAmount;
 		}
 
+		@Override
 		public int getConsumeChance() {
 			return consumeChance;
 		}

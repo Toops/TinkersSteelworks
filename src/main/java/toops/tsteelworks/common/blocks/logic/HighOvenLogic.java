@@ -25,10 +25,12 @@ import nf.fr.ephys.cookiecore.helpers.MathHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
-import toops.tsteelworks.api.highoven.IHighOvenFuelRegistry;
-import toops.tsteelworks.api.highoven.IHighOvenFuelRegistry.IFuelData;
+import toops.tsteelworks.api.highoven.IFuelRegistry;
+import toops.tsteelworks.api.highoven.IFuelRegistry.IFuelData;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry;
+import toops.tsteelworks.api.highoven.IMixerRegistry;
+import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.lib.logic.*;
-import toops.tsteelworks.lib.registry.AdvancedSmelting;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.structure.IStructure;
 import toops.tsteelworks.common.structure.StructureHighOven;
@@ -306,19 +308,29 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			}
 
 			if (this.activeTemps[i] >= this.meltingTemps[i] && !worldObj.isRemote) {
-				final AdvancedSmelting.MeltData result = AdvancedSmelting.getMeltData(this.smeltableInventory.getStackInSlot(i));
+				final ISmeltingRegistry.IMeltData meltData = ISmeltingRegistry.INSTANCE.getMeltable(this.smeltableInventory.getStackInSlot(i));
 
-				if (result == null) continue;
+				if (meltData == null) continue;
 
-				final ItemStack resultItemstack = this.getSolidMixedResultFor(result.getResult());
-				if (resultItemstack != null) {
-					this.meltItemsSolidOutput(i, resultItemstack, true);
+				final FluidStack meltResult = meltData.getResult();
+
+				final Object mixResult = IMixerRegistry.INSTANCE.getMix(meltResult.getFluid(),
+						inventory.getStackInSlot(SLOT_OXIDIZER),
+						inventory.getStackInSlot(SLOT_REDUCER),
+						inventory.getStackInSlot(SLOT_PURIFIER));
+
+				if (mixResult == null) {
+					meltItemsLiquidOutput(i, meltData.getResult(), false, meltData.isOre());
 					continue;
 				}
 
-				final FluidStack mixResult = this.getLiquidMixedResultFor(result.getResult());
-				final boolean hasMix = mixResult != null;
-				this.meltItemsLiquidOutput(i, hasMix ? mixResult : result.getResult(), hasMix, result.isOre());
+				if (mixResult instanceof ItemStack) {
+					meltItemsSolidOutput(i, (ItemStack) mixResult, true);
+					continue;
+				}
+
+				((FluidStack) mixResult).amount = meltData.getResult().amount;
+				meltItemsLiquidOutput(i, (FluidStack) mixResult, true, meltData.isOre());
 			}
 		}
 
@@ -390,38 +402,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	/**
-	 * Gets the liquid mixed result for.
-	 *
-	 * @param fluidstack the stack
-	 * @return the liquid mixed result for
-	 */
-	public FluidStack getLiquidMixedResultFor(final FluidStack fluidstack) {
-		final FluidStack mixResult = AdvancedSmelting.getMixFluidSmeltingResult(fluidstack.getFluid(),
-				inventory.getStackInSlot(SLOT_OXIDIZER),
-				inventory.getStackInSlot(SLOT_REDUCER),
-				inventory.getStackInSlot(SLOT_PURIFIER)
-		);
-
-		if (mixResult != null)
-			mixResult.amount = fluidstack.amount;
-
-		return mixResult;
-	}
-
-	/**
-	 * Gets the solid mixed result for.
-	 *
-	 * @param fluidstack the stack
-	 * @return the solid mixed result for
-	 */
-	public ItemStack getSolidMixedResultFor(final FluidStack fluidstack) {
-		return AdvancedSmelting.getMixItemSmeltingResult(fluidstack.getFluid(),
-				inventory.getStackInSlot(SLOT_OXIDIZER),
-				inventory.getStackInSlot(SLOT_REDUCER),
-				inventory.getStackInSlot(SLOT_PURIFIER));
-	}
-
-	/**
 	 * Output Thermal Expansion 3 slag if available.
 	 */
 	private void outputTE3Slag() {
@@ -439,7 +419,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (stack == null)
 				continue;
 
-			AdvancedSmelting.MixData mixData = AdvancedSmelting.getMixItemData(stack);
+			IMixAgentRegistry.IMixAgent mixData = IMixAgentRegistry.INSTANCE.getAgentData(stack);
 
 			if (mixData == null)
 				continue;
@@ -495,7 +475,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 				continue;
 			}
 
-			AdvancedSmelting.MeltData data = AdvancedSmelting.getMeltData(stack);
+			ISmeltingRegistry.IMeltData data = ISmeltingRegistry.INSTANCE.getMeltable(stack);
 
 			if (data == null)
 				meltingTemps[i] = activeTemps[i] = ROOM_TEMP;
@@ -532,7 +512,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			return;
 		}
 
-		IFuelData fuelData = IHighOvenFuelRegistry.INSTANCE.getFuel(fuel);
+		IFuelData fuelData = IFuelRegistry.INSTANCE.getFuel(fuel);
 
 		if (fuelData == null) return;
 

@@ -2,11 +2,11 @@ package toops.tsteelworks.lib.registry;
 
 import net.minecraft.item.ItemStack;
 import nf.fr.ephys.cookiecore.util.HashedItemStack;
-import toops.tsteelworks.api.highoven.IHighOvenFuelRegistry;
+import toops.tsteelworks.api.highoven.IFuelRegistry;
 
 import java.util.HashMap;
 
-class HighOvenFuelRegistry implements IHighOvenFuelRegistry {
+class HighOvenFuelRegistry implements IFuelRegistry {
 	private HashedItemStack proxy = new HashedItemStack(null);
 	private HashMap<HashedItemStack, FuelData> fuelCollection = new HashMap<>();
 

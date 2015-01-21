@@ -3,8 +3,8 @@ package toops.tsteelworks.api.highoven;
 import net.minecraft.item.ItemStack;
 import toops.tsteelworks.api.PluginFactory;
 
-public interface IHighOvenFuelRegistry {
-	public static final IHighOvenFuelRegistry INSTANCE = (IHighOvenFuelRegistry) PluginFactory.getInstance(IHighOvenFuelRegistry.class);
+public interface IFuelRegistry {
+	public static final IFuelRegistry INSTANCE = (IFuelRegistry) PluginFactory.getInstance(IFuelRegistry.class);
 
 	/**
 	 * Gets the FuelData instance registered for a given ItemStack

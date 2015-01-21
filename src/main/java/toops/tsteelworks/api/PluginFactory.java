@@ -1,11 +1,11 @@
 package toops.tsteelworks.api;
 
-import sun.plugin.dom.exception.InvalidStateException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -13,20 +13,19 @@ import java.util.Properties;
  */
 public class PluginFactory {
 	public static final String apiVersion = "1";
-
-	private static final Properties props = new Properties();
 	private static final String apiFile = "assets/tsteelworks/api.properties";
-	private static boolean isLoaded = false;
+
+	private static Properties props = new Properties();
+	private static Map<String, Object> instances = new HashMap<>();
+	private static Exception error = null;
 
 	static {
 		InputStream stream = null;
 		try {
 			stream = ClassLoader.getSystemResourceAsStream(apiFile);
 			props.load(stream);
-
-			isLoaded = true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			error = e;
 		} finally {
 			if (stream != null) {
 				try {
@@ -37,7 +36,9 @@ public class PluginFactory {
 	}
 
 	public static Object getInstance(Class iClazz) {
-		if (!isLoaded) throw new InvalidStateException("Properties not loaded - might mean TSteelworks is missing. Report this a bug otherwise");
+		if (error != null) {
+			throw new RuntimeException("Properties not loaded - might mean TSteelworks is missing. Report this a bug otherwise", error);
+		}
 
 		String iClassName = iClazz.getCanonicalName();
 		String className = props.getProperty(iClassName);
@@ -45,6 +46,10 @@ public class PluginFactory {
 		if (className == null) {
 			throw new RuntimeException("Could not fetch class for interface " + iClassName + ": Missing from properties file.");
 		}
+
+		// Reuse existing instances
+		Object instance = instances.get(className);
+		if (instance != null) return instance;
 
 		try {
 			Class clazz = Class.forName(className);
@@ -54,7 +59,10 @@ public class PluginFactory {
 
 			constructor.setAccessible(true);
 
-			return constructor.newInstance();
+			instance = constructor.newInstance();
+			instances.put(className, instance);
+
+			return instance;
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new RuntimeException("Could not fetch class for interface " + iClassName, e);
 		}
