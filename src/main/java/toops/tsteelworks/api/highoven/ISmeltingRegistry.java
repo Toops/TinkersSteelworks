@@ -3,8 +3,9 @@ package toops.tsteelworks.api.highoven;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import toops.tsteelworks.api.PluginFactory;
+import toops.tsteelworks.api.event.IRegistry;
 
-public interface ISmeltingRegistry {
+public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistry.IMeltData> {
 	public static final ISmeltingRegistry INSTANCE = (ISmeltingRegistry) PluginFactory.getInstance(ISmeltingRegistry.class);
 
 	/**

@@ -2,8 +2,9 @@ package toops.tsteelworks.api.highoven;
 
 import net.minecraft.item.ItemStack;
 import toops.tsteelworks.api.PluginFactory;
+import toops.tsteelworks.api.event.IRegistry;
 
-public interface IMixAgentRegistry {
+public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.IMixAgent> {
 	public static final IMixAgentRegistry INSTANCE = (IMixAgentRegistry) PluginFactory.getInstance(IMixAgentRegistry.class);
 
 	public static enum AgentType {

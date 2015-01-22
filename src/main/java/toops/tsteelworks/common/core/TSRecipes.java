@@ -7,12 +7,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
+import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.Detailing;
+import tconstruct.library.crafting.FluidType;
+import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.Smeltery;
+import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
@@ -91,8 +95,6 @@ public class TSRecipes {
 		craftStorageBlocks();
 		craftSteel();
 		craftPigIron();
-		craftGlass();
-		craftWater();
 		craftMachines();
 
 		if (ConfigCore.hardcorePiston)
@@ -104,6 +106,8 @@ public class TSRecipes {
 		if (ConfigCore.hardcoreAnvil)
 			TSRecipes.changeAnvil();
 
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
 		final ItemStack netherQuartz = new ItemStack(Items.quartz, 2);
 		IMixerRegistry.INSTANCE.registerMix(netherQuartz, TinkerSmeltery.moltenGlassFluid, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
 	}
@@ -113,9 +117,11 @@ public class TSRecipes {
 	}
 
 	public static void craftManual() {
-		final LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
-
 		final ItemStack manual = new ItemStack(TSContent.bookManual, 1, 0);
+
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
+		final LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 
 		tableCasting.addCastingRecipe(manual, fluidStoneMinor, new ItemStack(TinkerTools.manualBook, 1, 0), true, 50);
@@ -137,6 +143,7 @@ public class TSRecipes {
 		final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
 		final FluidStack fluidStoneMinor = new FluidStack(TinkerSmeltery.moltenStoneFluid, 8);
 		final FluidStack fluidStoneChunk = new FluidStack(TinkerSmeltery.moltenStoneFluid, 32);
+
 		// High Oven / Deep Tank Components
 		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_HIGHOVEN), PAT_HOLLOW, '#', itemScorchedBrick);
 		GameRegistry.addRecipe(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_DRAIN), "b b", "b b", "b b", 'b', itemScorchedBrick);
@@ -215,12 +222,13 @@ public class TSRecipes {
 		final Fluid fluid = TinkerSmeltery.moltenStoneFluid;
 		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
-		advancedSmelting.addMeltable(new ItemStack(Blocks.stone), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
-		advancedSmelting.addMeltable(new ItemStack(Blocks.cobblestone), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 18));
-		advancedSmelting.addMeltable(new ItemStack(TinkerTools.craftedSoil, 1, 1), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE / 4));
+		int temp = getFluidTempMod(fluidName);
+		advancedSmelting.addMeltable(new ItemStack(Blocks.stone), false, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18), temp);
+		advancedSmelting.addMeltable(new ItemStack(Blocks.cobblestone), false, new FluidStack(fluid, INGOT_LIQUID_VALUE / 18), temp);
+		advancedSmelting.addMeltable(new ItemStack(TinkerTools.craftedSoil, 1, 1), false, new FluidStack(fluid, INGOT_LIQUID_VALUE / 4), temp);
 
 		Smeltery.addMelting(FluidType.getFluidType(fluidName), new ItemStack(TinkerTools.materials, 1, 2), 0, INGOT_LIQUID_VALUE);
-		advancedSmelting.addMeltable(new ItemStack(TinkerTools.materials, 1, 2), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
+		advancedSmelting.addMeltable(new ItemStack(TinkerTools.materials, 1, 2), false, new FluidStack(fluid, INGOT_LIQUID_VALUE), temp);
 
 		final String[] dyes = new String[] { "dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack" };
 
@@ -238,8 +246,8 @@ public class TSRecipes {
 			if (meta == 3)
 				continue;
 
-			Smeltery.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
-			advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.smeltery, 1, meta), false, getFluidTempMod(fluidName), new FluidStack(fluid, INGOT_LIQUID_VALUE));
+			Smeltery.addMelting(new ItemStack(TinkerSmeltery.smeltery, 1, meta), temp, new FluidStack(fluid, INGOT_LIQUID_VALUE));
+			advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.smeltery, 1, meta), false, new FluidStack(fluid, INGOT_LIQUID_VALUE), temp);
 		}
 	}
 
@@ -255,6 +263,8 @@ public class TSRecipes {
 	}
 
 	public static void craftSteel() {
+		if (!TConstructPlugin.isSmelteryLoaded()) return;
+
 		if (ConfigCore.enableSteelArmor) {
 			final ItemStack ingotSteel = TConstructRegistry.getItemStack("ingotSteel");
 
@@ -279,29 +289,6 @@ public class TSRecipes {
 		IMixerRegistry.INSTANCE.registerMix(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), TinkerSmeltery.moltenIronFluid, "dustSugar", "dyeWhite", "hambone");
 	}
 
-	public static void craftGlass() {
-		final String fluidName = "Glass";
-		final Fluid glassFluid = TinkerSmeltery.moltenGlassFluid;
-		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
-
-		advancedSmelting.addMeltable(new ItemStack(Blocks.sand), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME));
-		advancedSmelting.addMeltable(new ItemStack(Blocks.glass), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, FluidContainerRegistry.BUCKET_VOLUME));
-		advancedSmelting.addMeltable(new ItemStack(Blocks.glass_pane), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250));
-
-		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.clearGlass), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 1000));
-		advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.glassPane), false, getFluidTempMod(fluidName), new FluidStack(glassFluid, 250));
-	}
-
-	public static void craftWater() {
-		final String fluidName = "Water";
-		final Fluid fluidWater = FluidRegistry.WATER;
-		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
-
-		advancedSmelting.addMeltable(new ItemStack(Blocks.ice), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 1000));
-		advancedSmelting.addMeltable(new ItemStack(Blocks.snow), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 500));
-		advancedSmelting.addMeltable(new ItemStack(Items.snowball), false, getFluidTempMod(fluidName), new FluidStack(fluidWater, 125));
-	}
-
 	public static void changeAnvil() {
 		ItemStack anvil = new ItemStack(Blocks.anvil);
 
@@ -309,7 +296,6 @@ public class TSRecipes {
 		GameRegistry.addRecipe(new ShapedOreRecipe(anvil, "bbb", " i ", "iii", 'i', "ingotSteel", 'b', "blockSteel"));
 
 		if (!TConstructPlugin.isSmelteryLoaded()) return;
-
 		for (int i = 0; i < 3; i++) {
 			TConstructPlugin.addMeltable(new ItemStack(Blocks.anvil, 1, i), "Steel", 840, INGOT_LIQUID_VALUE * 31, null);
 		}

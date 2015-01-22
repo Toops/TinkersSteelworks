@@ -4,8 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import toops.tsteelworks.api.PluginFactory;
+import toops.tsteelworks.api.event.IRegistry;
 
-public interface IMixerRegistry {
+public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, Object> {
 	public static final IMixerRegistry INSTANCE = (IMixerRegistry) PluginFactory.getInstance(IMixerRegistry.class);
 
 	/**
@@ -57,4 +58,26 @@ public interface IMixerRegistry {
 	 * @return the resulting ItemStack or FluidStack, or null if the mix is invalid
 	 */
 	public Object getMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier);
+
+	public static interface IMixHolder {
+		/**
+		 * @return Oredict name for oxidizer
+		 */
+		public String getOxidizer();
+
+		/**
+		 * @return Oredict name for reducer
+		 */
+		public String getReducer();
+
+		/**
+		 * @return Oredict name for purifier
+		 */
+		public String getPurifier();
+
+		/**
+		 * @return input fluid
+		 */
+		public Fluid getInputFluid();
+	}
 }

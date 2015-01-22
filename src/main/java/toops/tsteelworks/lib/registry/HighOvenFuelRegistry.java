@@ -6,7 +6,7 @@ import toops.tsteelworks.api.highoven.IFuelRegistry;
 
 import java.util.HashMap;
 
-class HighOvenFuelRegistry implements IFuelRegistry {
+class HighOvenFuelRegistry extends BasicRegistry<ItemStack, IFuelRegistry.IFuelData> implements IFuelRegistry {
 	private HashedItemStack proxy = new HashedItemStack(null);
 	private HashMap<HashedItemStack, FuelData> fuelCollection = new HashMap<>();
 
@@ -15,11 +15,22 @@ class HighOvenFuelRegistry implements IFuelRegistry {
 	}
 
 	public IFuelData addFuel(ItemStack fuel, int burnTime, int heatRate) {
-		return fuelCollection.put(new HashedItemStack(fuel), new FuelData(burnTime, heatRate));
+		FuelData fueldata = new FuelData(burnTime, heatRate);
+		FuelData oldData = fuelCollection.put(new HashedItemStack(fuel), fueldata);
+
+		if (oldData != null) dispatchDeleteEvent(fuel, oldData);
+
+		dispatchAddEvent(fuel, fueldata);
+		return fueldata;
 	}
 
 	public IFuelData removeFuel(ItemStack fuel) {
-		return fuelCollection.remove(new HashedItemStack(fuel));
+		FuelData fuelData = fuelCollection.remove(new HashedItemStack(fuel));
+
+		if (fuelData == null) return null;
+
+		dispatchDeleteEvent(fuel, fuelData);
+		return fuelData;
 	}
 
 	static final class FuelData implements IFuelData {

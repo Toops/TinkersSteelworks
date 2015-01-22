@@ -2,8 +2,9 @@ package toops.tsteelworks.api.highoven;
 
 import net.minecraft.item.ItemStack;
 import toops.tsteelworks.api.PluginFactory;
+import toops.tsteelworks.api.event.IRegistry;
 
-public interface IFuelRegistry {
+public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelData> {
 	public static final IFuelRegistry INSTANCE = (IFuelRegistry) PluginFactory.getInstance(IFuelRegistry.class);
 
 	/**
