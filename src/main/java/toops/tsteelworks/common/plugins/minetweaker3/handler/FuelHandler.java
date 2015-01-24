@@ -8,7 +8,7 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 
-@ZenClass("mods.tsteelworks.highoven.fuels")
+@ZenClass("mods.tsteelworks.highoven.fuel")
 public class FuelHandler {
 	@ZenMethod
 	public static void addFuel(IItemStack fuel, int burnTime, int heatValue) {

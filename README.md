@@ -31,12 +31,21 @@ You're free to include this mod in any modpack
 
 TSteelworks comes with built-in minetweaker3 support, here is a list of available methods:
 
+###High oven fuel
 ```zenscript
-// Adds a valid High Oven fuel (ItemStack, Burn time, heat rate)
-mods.tsteelworks.highoven.fuels.addFuel(<minecraft:stone>, 20, 1000);
+// Adds a valid High Oven fuel (ItemStack fuel, int burnTime, int heatRate)
+mods.tsteelworks.highoven.fuel.addFuel(<minecraft:stone>, 20, 1000);
 
-// removes a valid High Oven fuel
-mods.tsteelworks.highoven.fuels.removeFuel(<minecraft:coal:1>);
+// removes a valid High Oven fuel (ItemStack fuel)
+mods.tsteelworks.highoven.fuel.removeFuel(<minecraft:coal:1>);
+```
+##High oven meltables
+```zenscript
+// Makes an itemstack meltable in the high oven (ItemStack input, boolean isOre, FluidStack output, int meltTemp)
+mods.tsteelworks.highoven.meltable.addMeltable(<minecraft:dirt>, true, <liquid:iron.molten> * 72, 1500);
+
+// Makes an itemstack not smeltable in the high oven
+mods.tsteelworks.highoven.meltable.removeMeltable(<minecraft:dirt>);
 ```
 
 ##Notice

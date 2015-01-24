@@ -5,6 +5,7 @@ import toops.tsteelworks.common.plugins.ModCompatPlugin;
 import toops.tsteelworks.common.plugins.minetweaker3.handler.FuelHandler;
 import toops.tsteelworks.common.plugins.minetweaker3.handler.MixAgentHandler;
 import toops.tsteelworks.common.plugins.minetweaker3.handler.MixerHandler;
+import toops.tsteelworks.common.plugins.minetweaker3.handler.SmeltingHandler;
 
 public class MinetweakerPlugin extends ModCompatPlugin {
 	@Override
@@ -20,7 +21,7 @@ public class MinetweakerPlugin extends ModCompatPlugin {
 		MineTweakerAPI.registerClass(FuelHandler.class);
 		MineTweakerAPI.registerClass(MixerHandler.class);
 		MineTweakerAPI.registerClass(MixAgentHandler.class);
-		MineTweakerAPI.registerClass(FuelHandler.class);
+		MineTweakerAPI.registerClass(SmeltingHandler.class);
 	}
 
 	@Override

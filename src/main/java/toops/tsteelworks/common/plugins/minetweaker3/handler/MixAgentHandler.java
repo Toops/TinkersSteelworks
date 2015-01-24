@@ -2,6 +2,6 @@ package toops.tsteelworks.common.plugins.minetweaker3.handler;
 
 import stanhebben.zenscript.annotations.ZenClass;
 
-@ZenClass("mods.tsteelworks.mix.agents")
+@ZenClass("mods.tsteelworks.mix.agent")
 public class MixAgentHandler {
 }
