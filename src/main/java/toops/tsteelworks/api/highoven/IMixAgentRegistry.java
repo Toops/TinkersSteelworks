@@ -18,8 +18,9 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	 * @param type          Agent type
 	 * @param consumeAmount Amount of items to consume
 	 * @param consumeChance Chance that an item will be consumed
+	 * @return The previously registered information for this oreName or null if it wasn't already registered.
 	 */
-	public void registerAgent(String oreName, AgentType type, int consumeAmount, int consumeChance);
+	public IMixAgent registerAgent(String oreName, AgentType type, int consumeAmount, int consumeChance);
 
 	/**
 	 * Removes an ItemStack as valid Agent

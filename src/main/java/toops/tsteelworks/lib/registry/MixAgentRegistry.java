@@ -13,7 +13,7 @@ public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IM
 	private final Map<String, MixAgent> mixItemList = new HashMap<>();
 
 	@Override
-	public void registerAgent(String oreName, IMixAgentRegistry.AgentType type, int consume, int chance) {
+	public IMixAgent registerAgent(String oreName, IMixAgentRegistry.AgentType type, int consume, int chance) {
 		MixAgent newAgent = new MixAgent(type, consume, chance);
 		MixAgent oldAgent = mixItemList.put(oreName, newAgent);
 
@@ -21,6 +21,8 @@ public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IM
 			dispatchDeleteEvent(oreName, oldAgent);
 
 		dispatchAddEvent(oreName, newAgent);
+		
+		return oldAgent;
 	}
 
 	@Override

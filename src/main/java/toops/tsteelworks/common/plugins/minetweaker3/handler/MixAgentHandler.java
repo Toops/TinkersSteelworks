@@ -1,10 +1,11 @@
 package toops.tsteelworks.common.plugins.minetweaker3.handler;
 
-import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry.IMixAgent;
+import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 @ZenClass("mods.tsteelworks.mix")
 public class MixAgentHandler {
@@ -28,92 +29,65 @@ public class MixAgentHandler {
 		MineTweakerAPI.apply(new Remove(agent));
 	}
 
-	private static class Add implements IUndoableAction {
-		private final String agent;
-		private final int consumeAmount;
-		private final int consumeChance;
-		private final IMixAgentRegistry.AgentType agentType;
+	private static class Add extends MinetweakerPlugin.Add<String, IMixAgent> {
+		public Add(final String agent, final int consumeAmount, final int consumeChance, final IMixAgentRegistry.AgentType agentType) {
+			super(agent, new IMixAgent() {
+				@Override
+				public IMixAgentRegistry.AgentType getType() {
+					return agentType;
+				}
 
-		public Add(String agent, int consumeAmount, int consumeChance, IMixAgentRegistry.AgentType agentType) {
-			this.consumeAmount = consumeAmount;
-			this.consumeChance = consumeChance;
-			this.agentType = agentType;
-			this.agent = agent;
+				@Override
+				public int getConsumeAmount() {
+					return consumeAmount;
+				}
+
+				@Override
+				public int getConsumeChance() {
+					return consumeChance;
+				}
+			});
 		}
 
 		@Override
 		public void apply() {
-			IMixAgentRegistry.INSTANCE.registerAgent(agent, agentType, consumeAmount, consumeChance);
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+			oldData = IMixAgentRegistry.INSTANCE.registerAgent(key, newData.getType(), newData.getConsumeAmount(), newData.getConsumeChance());
 		}
 
 		@Override
 		public void undo() {
-			IMixAgentRegistry.INSTANCE.unregisterAgent(agent);
+			if (oldData == null)
+				IMixAgentRegistry.INSTANCE.unregisterAgent(key);
+			else
+				IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeAmount(), oldData.getConsumeChance());
 		}
 
 		@Override
 		public String describe() {
-			return "Added " + agent + " as valid mixing agent.";
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Removed " + agent + " as valid mixing agent.";
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
+			return (oldData == null ? "Added " : "Replaced ") + key + " as valid mixing agent.";
 		}
 	}
 
-	private static class Remove implements IUndoableAction {
-		private final String agent;
-		private int consumeAmount;
-		private int consumeChance;
-		private IMixAgentRegistry.AgentType agentType;
-
+	private static class Remove extends MinetweakerPlugin.Remove<String, IMixAgent> {
 		public Remove(String agent) {
-			this.agent = agent;
+			super(agent);
 		}
 
 		@Override
 		public void apply() {
-			IMixAgentRegistry.IMixAgent data = IMixAgentRegistry.INSTANCE.unregisterAgent(agent);
-
-			consumeAmount = data.getConsumeAmount();
-			consumeChance = data.getConsumeChance();
-			agentType = data.getType();
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+			oldData = IMixAgentRegistry.INSTANCE.unregisterAgent(key);
 		}
 
 		@Override
 		public void undo() {
-			IMixAgentRegistry.INSTANCE.registerAgent(agent, agentType, consumeAmount, consumeChance);
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Added " + agent + " as valid mixing agent.";
+			if (oldData == null) return;
+			
+			IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeAmount(), oldData.getConsumeChance());
 		}
 
 		@Override
 		public String describe() {
-			return "Removed " + agent + " as valid mixing agent.";
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
+			return "Removed " + key + " as valid mixing agent.";
 		}
 	}
 }
