@@ -28,6 +28,11 @@ public class ConfigCore {
 	private static String[] defaultGlass = {
 			"minecraft:glass|10000",
 			"minecraft:stained_glass@*|10000",
+			"chisel:glass@*|10000",
+			"chisel:stained_glass_white@*|10000",
+			"chisel:stained_glass_yellow@*|10000",
+			"chisel:stained_glass_lightgray@*|10000",
+			"chisel:stained_glass_brown@*|10000",
 
 			"ExtraUtilities:decorativeBlock2@0|12500", // thickened glass
 			"ExtraUtilities:decorativeBlock2@1|12500",
@@ -41,11 +46,20 @@ public class ConfigCore {
 			"ExtraUtilities:decorativeBlock2@9|12500",
 			"ExtraUtilities:decorativeBlock2@10|30000", // dark glass
 
-			"TConstruct:LavaTank@1|20000", // seared glass
-			"TConstruct:LavaTankNether@1|20000",
-
 			"TConstruct:GlassBlock|12500", // clear glass
 			"TConstruct:GlassBlock.StainedClear@*|12500",
+
+			"Botania:elfGlass|17500",
+			"Botania:manaGlass|12500",
+			"Botany:stained@*|10000",
+			"Forestry:stained@*|17500",
+			"Natura:NetherGlass@*|12500",
+			"Railcraft:tile.railcraftglass@*|30000",
+			"MineFactoryReloaded:stainedglass.block@*|12500",
+			"ThermalExpansion:Glass@0|45000",
+			"Ztones:tile.glaxx@*|17500",
+			"EnderIO:blockFusedQuartz@0|45000",
+			"EnderIO:blockFusedQuartz@1|10000"
 	};
 
 	// --- Worldgen
@@ -72,7 +86,7 @@ public class ConfigCore {
 				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +
 				"\nex: minecraft:glass@*|2000 (Note: Each entry must be on a seperate line)").getStringList();
 
-		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod").getBoolean(false);
+		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod (note: requires TConstruct)").getBoolean(false);
 		hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);
 		hardcoreAnvil = config.get("TSteelification", "Hardcore Anvil", false, "Anvil requires steel materials").getBoolean(false);
 
