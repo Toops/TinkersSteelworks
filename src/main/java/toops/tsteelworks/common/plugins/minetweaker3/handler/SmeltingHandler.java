@@ -9,15 +9,32 @@ import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
+import toops.tsteelworks.api.highoven.ISmeltingRegistry.IMeltData;
 import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseItem;
+import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseLiquid;
 
 @ZenClass("mods.tsteelworks.highoven")
 public class SmeltingHandler {
 	@ZenMethod
-	public static void addMeltable(IItemStack meltable, boolean isOre, ILiquidStack output, int meltTemp) {
-		MineTweakerAPI.apply(new Add(parseItem(meltable), isOre, MinetweakerPlugin.parseLiquid(output), meltTemp));
+	public static void addMeltable(IItemStack meltable, final boolean isOre, final ILiquidStack output, final int meltTemp) {
+		MineTweakerAPI.apply(new Add(parseItem(meltable), new IMeltData() {
+			@Override
+			public int getMeltingPoint() {
+				return meltTemp;
+			}
+
+			@Override
+			public FluidStack getResult() {
+				return parseLiquid(output);
+			}
+
+			@Override
+			public boolean isOre() {
+				return isOre;
+			}
+		}));
 	}
 
 	@ZenMethod
@@ -25,92 +42,50 @@ public class SmeltingHandler {
 		MineTweakerAPI.apply(new Remove(parseItem(meltable)));
 	}
 
-	private static class Add implements IUndoableAction {
-		private final ItemStack meltable;
-		private final boolean isOre;
-		private final FluidStack output;
-		private final int meltTemp;
-
-		public Add(ItemStack meltable, boolean isOre, FluidStack output, int meltTemp) {
-			this.meltable = meltable;
-			this.output = output;
-			this.isOre = isOre;
-			this.meltTemp = meltTemp;
+	private static class Add extends MinetweakerPlugin.Add<ItemStack, IMeltData> {
+		public Add(ItemStack meltable, IMeltData data) {
+			super(meltable, data);
 		}
 
 		@Override
 		public void apply() {
-			ISmeltingRegistry.INSTANCE.addMeltable(meltable, isOre, output, meltTemp);
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+			oldData = ISmeltingRegistry.INSTANCE.addMeltable(key, newData.isOre(), newData.getResult(), newData.getMeltingPoint());
 		}
 
 		@Override
 		public void undo() {
-			ISmeltingRegistry.INSTANCE.removeMeltable(meltable);
+			if (oldData == null)
+				ISmeltingRegistry.INSTANCE.removeMeltable(key);
+			else
+				ISmeltingRegistry.INSTANCE.addMeltable(key, oldData.isOre(), oldData.getResult(), oldData.getMeltingPoint());
 		}
 
 		@Override
 		public String describe() {
-			return "Added " + meltable.getDisplayName() + " as valid High Oven meltable.";
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Removed " + meltable.getDisplayName() + " as valid High Oven meltable.";
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
+			return (oldData == null ? "Added " : "Remplaced ") + key.getDisplayName() + " as valid High Oven meltable.";
 		}
 	}
 
-	private static class Remove implements IUndoableAction {
-		private final ItemStack meltable;
-		private boolean isOre;
-		private FluidStack output;
-		private int meltTemp;
-
+	private static class Remove extends MinetweakerPlugin.Remove<ItemStack, IMeltData> {
 		public Remove(ItemStack stack) {
-			this.meltable = stack;
+			super(stack);
 		}
 
 		@Override
 		public void apply() {
-			ISmeltingRegistry.IMeltData data = ISmeltingRegistry.INSTANCE.removeMeltable(meltable);
-
-			isOre = data.isOre();
-			meltTemp = data.getMeltingPoint();
-			output = data.getResult();
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+			oldData = ISmeltingRegistry.INSTANCE.removeMeltable(key);
 		}
 
 		@Override
 		public void undo() {
-			ISmeltingRegistry.INSTANCE.addMeltable(meltable, isOre, output, meltTemp);
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Added " + meltable.getDisplayName() + " as valid High Oven meltable.";
+			if (oldData == null) return;
+			
+			ISmeltingRegistry.INSTANCE.addMeltable(key, oldData.isOre(), oldData.getResult(), oldData.getMeltingPoint());
 		}
 
 		@Override
 		public String describe() {
-			return "Removed " + meltable.getDisplayName() + " as valid High Oven meltable.";
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
+			return "Removed " + key.getDisplayName() + " as valid High Oven meltable.";
 		}
 	}
 }

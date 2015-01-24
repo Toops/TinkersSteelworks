@@ -44,7 +44,7 @@ public class MinetweakerPlugin extends ModCompatPlugin {
 	
 	public static abstract class Remove<Key, Value> implements IUndoableAction {
 		protected final Key key;
-		protected Value removedData;
+		protected Value oldData;
 
 		public Remove(Key stack) {
 			this.key = stack;

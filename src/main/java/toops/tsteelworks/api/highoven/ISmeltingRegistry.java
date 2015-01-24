@@ -16,7 +16,7 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 	 * @param output            The result of the process
 	 * @param meltTemperature   How hot the block should be before liquifying
 	 */
-	public void addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
+	public IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
 
 	/**
 	 * Adds all Items to the Smeltery based on the oreDictionary Name

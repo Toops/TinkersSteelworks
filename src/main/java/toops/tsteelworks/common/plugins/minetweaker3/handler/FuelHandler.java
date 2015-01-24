@@ -55,10 +55,7 @@ public class FuelHandler {
 
 		@Override
 		public String describe() {
-			if (oldData == null)
-				return "Added " + key.getDisplayName() + " as valid High Oven fuel.";
-			else
-				return "Replaced " + key.getDisplayName() + " as valid High Oven fuel.";
+			return (oldData == null ? "Added " : "Replaced ") + key.getDisplayName() + " as valid High Oven fuel.";
 		}
 	}
 
@@ -69,15 +66,14 @@ public class FuelHandler {
 
 		@Override
 		public void apply() {
-			removedData = IFuelRegistry.INSTANCE.removeFuel(key);
+			oldData = IFuelRegistry.INSTANCE.removeFuel(key);
 		}
 
 		@Override
 		public void undo() {
-			if (removedData == null) return;
+			if (oldData == null) return;
 			
-			IFuelRegistry.INSTANCE.addFuel(key, removedData.getBurnTime(), removedData.getHeatRate());
-			removedData = null;
+			IFuelRegistry.INSTANCE.addFuel(key, oldData.getBurnTime(), oldData.getHeatRate());
 		}
 
 		@Override

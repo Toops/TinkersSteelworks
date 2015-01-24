@@ -23,7 +23,7 @@ class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltD
 	}
 
 	@Override
-	public void addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature) {
+	public IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature) {
 		if (meltTemperature <= 20)
 			meltTemperature = 20;
 
@@ -31,8 +31,9 @@ class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltD
 		IMeltData oldData = meltingList.put(new HashedItemStack(input), newData);
 
 		if (oldData != null) dispatchDeleteEvent(input, oldData);
-
 		dispatchAddEvent(input, newData);
+		
+		return oldData;
 	}
 
 	@Override
