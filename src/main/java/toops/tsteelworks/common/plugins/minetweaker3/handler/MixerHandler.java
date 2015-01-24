@@ -1,6 +1,5 @@
 package toops.tsteelworks.common.plugins.minetweaker3.handler;
 
-import minetweaker.IUndoableAction;
 import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
@@ -10,6 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
+import toops.tsteelworks.api.highoven.IMixerRegistry.IMixHolder;
+import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseItem;
 import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseLiquid;
@@ -30,100 +31,99 @@ public class MixerHandler {
 		MineTweakerAPI.apply(new Remove(parseLiquid(input).getFluid(), oxidizer, purifier, reducer));
 	}
 
-	private static class Add implements IUndoableAction {
-		private final Fluid input;
-		private final String ox;
-		private final String pur;
-		private final String red;
-		private final Object output;
-
-		public Add(Fluid input, String ox, String pur, String red, Object output) {
-			this.input = input;
-			this.ox = ox;
-			this.pur = pur;
-			this.red = red;
-			this.output = output;
+	private static class Add extends MinetweakerPlugin.Add<IMixHolder, Object> {
+		public Add(final Fluid input, final String ox, final String pur, final String red, final Object output) {
+			super(new MixHolder(ox, red, pur, input), output);
 		}
 
 		@Override
 		public void apply() {
-			if (output instanceof ItemStack)
-				IMixerRegistry.INSTANCE.registerMix((ItemStack) output, input, ox, pur, red);
+			if (newData instanceof ItemStack)
+				oldData = IMixerRegistry.INSTANCE.registerMix((ItemStack) newData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 			else
-				IMixerRegistry.INSTANCE.registerMix((FluidStack) output, input, ox, pur, red);
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+				oldData = IMixerRegistry.INSTANCE.registerMix((FluidStack) newData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 		}
 
 		@Override
 		public void undo() {
-			IMixerRegistry.INSTANCE.removeMix(input, ox, pur, red);
+			if (oldData == null)
+				IMixerRegistry.INSTANCE.removeMix(key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+			else {
+				if (oldData instanceof ItemStack)
+					IMixerRegistry.INSTANCE.registerMix((ItemStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+				else
+					IMixerRegistry.INSTANCE.registerMix((FluidStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+			}
 		}
 
 		@Override
 		public String describe() {
-			return "Added [" + input.getName() + ", " + ox + ", " + pur + ", " + red + "] as valid mix.";
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Removed [" + input.getName() + ", " + ox + ", " + pur + ", " + red + "] as valid mix.";
-		}
-
-		@Override
-		public Object getOverrideKey() {
-			return null;
+			return (oldData == null ? "Added " : "Replaced ") + key.toString() + " as valid mix.";
 		}
 	}
 
-	private static class Remove implements IUndoableAction {
-		private final Fluid input;
-		private final String ox;
-		private final String pur;
-		private final String red;
-		private Object output;
-
+	private static class Remove extends MinetweakerPlugin.Remove<IMixHolder, Object> {
 		public Remove(Fluid input, String ox, String pur, String red) {
-			this.input = input;
-			this.ox = ox;
-			this.pur = pur;
-			this.red = red;
+			super(new MixHolder(ox, red, pur, input));
 		}
 
 		@Override
 		public void apply() {
-			output = IMixerRegistry.INSTANCE.removeMix(input, ox, pur, red);
-		}
-
-		@Override
-		public boolean canUndo() {
-			return true;
+			oldData = IMixerRegistry.INSTANCE.removeMix(key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 		}
 
 		@Override
 		public void undo() {
-			if (output instanceof ItemStack)
-				IMixerRegistry.INSTANCE.registerMix((ItemStack) output, input, ox, pur, red);
+			if (oldData == null) return;
+			
+			if (oldData instanceof ItemStack)
+				IMixerRegistry.INSTANCE.registerMix((ItemStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 			else
-				IMixerRegistry.INSTANCE.registerMix((FluidStack) output, input, ox, pur, red);
-		}
-
-		@Override
-		public String describeUndo() {
-			return "Added [" + input.getName() + ", " + ox + ", " + pur + ", " + red + "] as valid mix.";
+				IMixerRegistry.INSTANCE.registerMix((FluidStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 		}
 
 		@Override
 		public String describe() {
-			return "Removed [" + input.getName() + ", " + ox + ", " + pur + ", " + red + "] as valid mix.";
+			return "Removed " + key.toString() + " as valid mix.";
+		}
+	}
+
+	private static class MixHolder implements IMixHolder {
+		private final String ox;
+		private final String red;
+		private final String pur;
+		private final Fluid input;
+
+		public MixHolder(String ox, String red, String pur, Fluid input) {
+			this.ox = ox;
+			this.red = red;
+			this.pur = pur;
+			this.input = input;
 		}
 
 		@Override
-		public Object getOverrideKey() {
-			return null;
+		public String getOxidizer() {
+			return ox;
+		}
+
+		@Override
+		public String getReducer() {
+			return red;
+		}
+
+		@Override
+		public String getPurifier() {
+			return pur;
+		}
+
+		@Override
+		public Fluid getInputFluid() {
+			return input;
+		}
+
+		@Override
+		public String toString() {
+			return "[" + input.getName() + ", " + ox + ", " + pur + ", " + red + "]";
 		}
 	}
 }
