@@ -1,35 +1,11 @@
-package toops.tsteelworks.common.plugins.minetweaker3.handler;
+package toops.tsteelworks.common.plugins.minetweaker3.handler.mix;
 
-import minetweaker.MineTweakerAPI;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry.IMixAgent;
 import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
-@ZenClass("mods.tsteelworks.mix")
-public class MixAgentHandler {
-	@ZenMethod
-	public static void addOxidizer(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.OXIDIZER));
-	}
-
-	@ZenMethod
-	public static void addReducer(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.REDUCER));
-	}
-
-	@ZenMethod
-	public static void addPurifier(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.PURIFIER));
-	}
-
-	@ZenMethod
-	public static void removeAgent(String agent) {
-		MineTweakerAPI.apply(new Remove(agent));
-	}
-
-	private static class Add extends MinetweakerPlugin.Add<String, IMixAgent> {
+class MixAgentHandler {
+	static class Add extends MinetweakerPlugin.Add<String, IMixAgent> {
 		public Add(final String agent, final int consumeAmount, final int consumeChance, final IMixAgentRegistry.AgentType agentType) {
 			super(agent, new IMixAgent() {
 				@Override
@@ -68,7 +44,7 @@ public class MixAgentHandler {
 		}
 	}
 
-	private static class Remove extends MinetweakerPlugin.Remove<String, IMixAgent> {
+	static class Remove extends MinetweakerPlugin.Remove<String, IMixAgent> {
 		public Remove(String agent) {
 			super(agent);
 		}

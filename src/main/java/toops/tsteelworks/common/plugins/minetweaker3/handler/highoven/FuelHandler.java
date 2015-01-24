@@ -1,41 +1,24 @@
-package toops.tsteelworks.common.plugins.minetweaker3.handler;
+package toops.tsteelworks.common.plugins.minetweaker3.handler.highoven;
 
-import minetweaker.MineTweakerAPI;
-import minetweaker.api.item.IItemStack;
 import net.minecraft.item.ItemStack;
-import stanhebben.zenscript.annotations.ZenClass;
-import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 import toops.tsteelworks.api.highoven.IFuelRegistry.IFuelData;
 import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
-import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseItem;
+class FuelHandler {
+	static class Add extends MinetweakerPlugin.Add<ItemStack, IFuelData> {
+		public Add(final ItemStack fuel, final int burnTime, final int heatRate) {
+			super(fuel, new IFuelRegistry.IFuelData() {
+				@Override
+				public int getBurnTime() {
+					return burnTime;
+				}
 
-@ZenClass("mods.tsteelworks.highoven")
-public class FuelHandler {
-	@ZenMethod
-	public static void addFuel(IItemStack fuel, final int burnTime, final int heatValue) {
-		MineTweakerAPI.apply(new Add(parseItem(fuel), new IFuelData() {
-			@Override
-			public int getBurnTime() {
-				return burnTime;
-			}
-
-			@Override
-			public int getHeatRate() {
-				return heatValue;
-			}
-		}));
-	}
-
-	@ZenMethod
-	public static void removeFuel(IItemStack fuel) {
-		MineTweakerAPI.apply(new Remove(parseItem(fuel)));
-	}
-
-	private static class Add extends MinetweakerPlugin.Add<ItemStack, IFuelData> {
-		public Add(ItemStack fuel, IFuelData data) {
-			super(fuel, data);
+				@Override
+				public int getHeatRate() {
+					return heatRate;
+				}
+			});
 		}
 
 		@Override
@@ -59,7 +42,7 @@ public class FuelHandler {
 		}
 	}
 
-	private static class Remove extends MinetweakerPlugin.Remove<ItemStack, IFuelData> {
+	static class Remove extends MinetweakerPlugin.Remove<ItemStack, IFuelData> {
 		public Remove(ItemStack stack) {
 			super(stack);
 		}
