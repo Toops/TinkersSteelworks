@@ -39,7 +39,7 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	public IMixAgent getAgentData(ItemStack itemStack);
 
 	/**
-	 * Hold information (mixer type, consume amount & consume chance) for a mix agent
+	 * Hold information (mixer type, consume amount &amp; consume chance) for a mix agent
 	 */
 	public interface IMixAgent {
 		public AgentType getType();

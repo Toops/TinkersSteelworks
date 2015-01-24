@@ -66,7 +66,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public static final int SLOT_FUEL = 3;
 
 	/**
-	 * Smeltables (4 -> 10)
+	 * Smeltables (4 -&gt; 10)
 	 */
 	public static final int SLOT_FIRST_MELTABLE = 4;
 
