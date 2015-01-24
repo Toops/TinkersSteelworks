@@ -27,6 +27,19 @@ Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/li
 ##Modpacks
 You're free to include this mod in any modpack
 
+##Minetweaker support
+
+TSteelworks comes with built-in minetweaker3 support, here is a list of available methods:
+
+```zenscript
+// Add a valid High Oven fuel (ItemStack, Burn time, heat rate)
+// heat rate is the amount of temperature the fuel will add per operation
+mods.tsteelworks.highoven.fuels.addFuel(<minecraft:stone>, 20, 1000);
+
+// removes a valid High Oven fuel
+mods.tsteelworks.highoven.fuels.removeFuel(<minecraft:coal:1>);
+```
+
 ##Notice
 Much of the code and structure of this project is heavily based on projects by [SlimeKnights](https://github.com/SlimeKnights).
 Even this readme file is partially lifted from said projects.  ^_^

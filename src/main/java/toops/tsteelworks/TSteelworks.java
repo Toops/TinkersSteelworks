@@ -13,6 +13,7 @@ import toops.tsteelworks.common.core.TSCommonProxy;
 import toops.tsteelworks.common.plugins.PluginController;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSLogger;
+import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 import toops.tsteelworks.common.plugins.mods.FMPPlugin;
 import toops.tsteelworks.common.plugins.mods.RailcraftPlugin;
 import toops.tsteelworks.common.plugins.mods.ThaumcraftPlugin;
@@ -57,6 +58,7 @@ public class TSteelworks {
 		pluginController.registerPlugin(new RailcraftPlugin());
 		pluginController.registerPlugin(new ThaumcraftPlugin());
 		pluginController.registerPlugin(Plugins.TConstruct);
+		pluginController.registerPlugin(new MinetweakerPlugin());
 	}
 
 	@EventHandler
