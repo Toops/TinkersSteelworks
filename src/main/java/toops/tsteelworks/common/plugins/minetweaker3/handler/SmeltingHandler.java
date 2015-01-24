@@ -5,22 +5,24 @@ import minetweaker.MineTweakerAPI;
 import minetweaker.api.item.IItemStack;
 import minetweaker.api.liquid.ILiquidStack;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
+import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
-@ZenClass("mods.tsteelworks.highoven.meltable")
+import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseItem;
+
+@ZenClass("mods.tsteelworks.highoven")
 public class SmeltingHandler {
 	@ZenMethod
 	public static void addMeltable(IItemStack meltable, boolean isOre, ILiquidStack output, int meltTemp) {
-		MineTweakerAPI.apply(new Add(meltable, isOre, output, meltTemp));
+		MineTweakerAPI.apply(new Add(parseItem(meltable), isOre, MinetweakerPlugin.parseLiquid(output), meltTemp));
 	}
 
 	@ZenMethod
 	public static void removeMeltable(IItemStack meltable) {
-		MineTweakerAPI.apply(new Remove(meltable));
+		MineTweakerAPI.apply(new Remove(parseItem(meltable)));
 	}
 
 	private static class Add implements IUndoableAction {
@@ -29,9 +31,9 @@ public class SmeltingHandler {
 		private final FluidStack output;
 		private final int meltTemp;
 
-		public Add(IItemStack meltable, boolean isOre, ILiquidStack output, int meltTemp) {
-			this.meltable = (ItemStack) meltable.getInternal();
-			this.output = FluidRegistry.getFluidStack(output.getName(), output.getAmount());
+		public Add(ItemStack meltable, boolean isOre, FluidStack output, int meltTemp) {
+			this.meltable = meltable;
+			this.output = output;
 			this.isOre = isOre;
 			this.meltTemp = meltTemp;
 		}
@@ -73,8 +75,8 @@ public class SmeltingHandler {
 		private FluidStack output;
 		private int meltTemp;
 
-		public Remove(IItemStack stack) {
-			this.meltable = (ItemStack) stack.getInternal();
+		public Remove(ItemStack stack) {
+			this.meltable = stack;
 		}
 
 		@Override

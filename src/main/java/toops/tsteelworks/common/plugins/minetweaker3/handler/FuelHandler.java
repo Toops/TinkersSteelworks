@@ -8,16 +8,18 @@ import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 
-@ZenClass("mods.tsteelworks.highoven.fuel")
+import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.parseItem;
+
+@ZenClass("mods.tsteelworks.highoven")
 public class FuelHandler {
 	@ZenMethod
 	public static void addFuel(IItemStack fuel, int burnTime, int heatValue) {
-		MineTweakerAPI.apply(new Add(fuel, burnTime, heatValue));
+		MineTweakerAPI.apply(new Add(parseItem(fuel), burnTime, heatValue));
 	}
 
 	@ZenMethod
 	public static void removeFuel(IItemStack fuel) {
-		MineTweakerAPI.apply(new Remove(fuel));
+		MineTweakerAPI.apply(new Remove(parseItem(fuel)));
 	}
 
 	private static class Add implements IUndoableAction {
@@ -25,8 +27,8 @@ public class FuelHandler {
 		private final int burnTime;
 		private final int heatRate;
 
-		public Add(IItemStack fuel, int burnTime, int heatRate) {
-			this.fuel = (ItemStack) fuel.getInternal();
+		public Add(ItemStack fuel, int burnTime, int heatRate) {
+			this.fuel = fuel;
 			this.burnTime = burnTime;
 			this.heatRate = heatRate;
 		}
@@ -67,8 +69,8 @@ public class FuelHandler {
 		private int burnTime;
 		private int heatRate;
 
-		public Remove(IItemStack stack) {
-			this.fuel = (ItemStack) stack.getInternal();
+		public Remove(ItemStack stack) {
+			this.fuel = stack;
 		}
 
 		@Override

@@ -8,7 +8,7 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	public static final IMixAgentRegistry INSTANCE = (IMixAgentRegistry) PluginFactory.getInstance(IMixAgentRegistry.class);
 
 	public static enum AgentType {
-		OXYDIZER, REDUCER, PURIFIER
+		OXIDIZER, REDUCER, PURIFIER
 	}
 
 	/**

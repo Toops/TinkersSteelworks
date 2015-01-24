@@ -1,6 +1,11 @@
 package toops.tsteelworks.common.plugins.minetweaker3;
 
 import minetweaker.MineTweakerAPI;
+import minetweaker.api.item.IItemStack;
+import minetweaker.api.liquid.ILiquidStack;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import toops.tsteelworks.common.plugins.ModCompatPlugin;
 import toops.tsteelworks.common.plugins.minetweaker3.handler.FuelHandler;
 import toops.tsteelworks.common.plugins.minetweaker3.handler.MixAgentHandler;
@@ -26,4 +31,12 @@ public class MinetweakerPlugin extends ModCompatPlugin {
 
 	@Override
 	public void postInit() {}
+
+	public static FluidStack parseLiquid(ILiquidStack ls) {
+		return FluidRegistry.getFluidStack(ls.getName(), ls.getAmount());
+	}
+
+	public static ItemStack parseItem(IItemStack is) {
+		return (ItemStack) is.getInternal();
+	}
 }

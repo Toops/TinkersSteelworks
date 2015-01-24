@@ -182,13 +182,13 @@ public class TSContent {
 	public static void registerMixerMaterials() {
 		IMixAgentRegistry registry = IMixAgentRegistry.INSTANCE;
 
-		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXYDIZER, 1, 33);
-		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXYDIZER, 1, 29);
-		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXYDIZER, 1, 62);
-		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 43);
-		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 43);
-		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXYDIZER, 1, 37);
-		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXYDIZER, 1, 37);
+		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXIDIZER, 1, 33);
+		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXIDIZER, 1, 29);
+		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXIDIZER, 1, 62);
+		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 43);
+		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 43);
+		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 37);
+		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXIDIZER, 1, 37);
 
 		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.PURIFIER, 1, 65);
 		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 47);

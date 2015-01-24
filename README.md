@@ -7,7 +7,7 @@ Please include the following:
 
 * Minecraft version
 * Forge version/build
-* Tinkers' Construct version
+* Tinkers' Construct version (if available)
 * Tinkers' Steelworks version
 * Versions of any mods potentially related to the issue 
 * Any relevant screenshots are greatly appreciated.
@@ -19,7 +19,7 @@ Please include the following:
 Indentation is 1 tab character. Braces on same line. Braces may be omitted for single-statement conditions and loops, with the statement indented on the next line. [Sun/Oracle guidelines](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html) for everything else.
 
 ## Development
-Launch setupCookieCore.sh the setup your workspace with gradle.
+Launch setupCookieCore.sh then setup your workspace with gradle.
 
 ##Licenses
 Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/licenses/by/3.0/).
@@ -28,24 +28,38 @@ Most code is licensed under [Creative Commons 3.0](http://creativecommons.org/li
 You're free to include this mod in any modpack
 
 ##Minetweaker support
-
 TSteelworks comes with built-in minetweaker3 support, here is a list of available methods:
 
 ###High oven fuel
 ```zenscript
 // Adds a valid High Oven fuel (ItemStack fuel, int burnTime, int heatRate)
-mods.tsteelworks.highoven.fuel.addFuel(<minecraft:stone>, 20, 1000);
-
-// removes a valid High Oven fuel (ItemStack fuel)
-mods.tsteelworks.highoven.fuel.removeFuel(<minecraft:coal:1>);
+mods.tsteelworks.highoven.addFuel(<minecraft:stone>, 20, 1000);
+mods.tsteelworks.highoven.removeFuel(<minecraft:coal:1>);
 ```
-##High oven meltables
+###High oven meltables
 ```zenscript
 // Makes an itemstack meltable in the high oven (ItemStack input, boolean isOre, FluidStack output, int meltTemp)
-mods.tsteelworks.highoven.meltable.addMeltable(<minecraft:dirt>, true, <liquid:iron.molten> * 72, 1500);
+mods.tsteelworks.highoven.addMeltable(<minecraft:dirt>, true, <liquid:iron.molten> * 72, 1500);
+mods.tsteelworks.highoven.removeMeltable(<minecraft:dirt>);
+```
+###Mixing agents
+These are used in mixs (like redstone + gunpowder + sand [+ liquid iron] => liquid steel)
+```zenscript
+// agents are managed using oredict, you need to pass it as a string (we're weirdos)
+// An agent can only be an oxidizer, a reducer or a purifier, not more than one at a time
+mods.tsteelworks.mix.addOxidizer(String agent, int consumeChance, int consumeAmount)
+mods.tsteelworks.mix.addReducer(String agent, int consumeChance, int consumeAmount)
+mods.tsteelworks.mix.addPurifier(String agent, int consumeChance, int consumeAmount)
 
-// Makes an itemstack not smeltable in the high oven
-mods.tsteelworks.highoven.meltable.removeMeltable(<minecraft:dirt>);
+mods.tsteelworks.mix.removeAgent(String agent)
+```
+###Mix recipes
+```zenscript
+// agents used in here must be registered.
+mods.tsteelworks.mix.addFluidMix(FluidStack input, String oxidizer, String purifier, String reducer, FluidStack output)
+mods.tsteelworks.mix.addSolidMix(FluidStack input, String oxidizer, String purifier, String reducer, ItemStack output)
+
+mods.tsteelworks.mix.removeMix(FluidStack input, String oxidizer, String purifier, String reducer)
 ```
 
 ##Notice
