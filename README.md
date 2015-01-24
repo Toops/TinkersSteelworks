@@ -32,8 +32,7 @@ You're free to include this mod in any modpack
 TSteelworks comes with built-in minetweaker3 support, here is a list of available methods:
 
 ```zenscript
-// Add a valid High Oven fuel (ItemStack, Burn time, heat rate)
-// heat rate is the amount of temperature the fuel will add per operation
+// Adds a valid High Oven fuel (ItemStack, Burn time, heat rate)
 mods.tsteelworks.highoven.fuels.addFuel(<minecraft:stone>, 20, 1000);
 
 // removes a valid High Oven fuel
