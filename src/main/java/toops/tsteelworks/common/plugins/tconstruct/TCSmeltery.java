@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
@@ -25,6 +26,7 @@ import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.core.TSRecipes;
+import toops.tsteelworks.lib.ModsData.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +107,11 @@ class TCSmeltery {
 		final Fluid limestoneFluid = TSContent.moltenLimestoneFluid;
 		tableCasting.addCastingRecipe(new ItemStack(TSContent.materialsTS, 1, 1), new FluidStack(limestoneFluid, TSRecipes.INGOT_LIQUID_VALUE), new ItemStack(TinkerSmeltery.metalPattern), false, 25);
 		basinCasting.addCastingRecipe(new ItemStack(TSContent.limestoneBlock), new FluidStack(limestoneFluid, TSRecipes.INGOT_LIQUID_VALUE * 4), 100);
+
+		ItemStack bucket = new ItemStack(Items.bucket);
+		tableCasting.addCastingRecipe(Fluids.bucketSteam, new FluidStack(Fluids.steamFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+		tableCasting.addCastingRecipe(Fluids.bucketLimestone, new FluidStack(Fluids.moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
+		tableCasting.addCastingRecipe(Fluids.bucketCement, new FluidStack(Fluids.liquidCementFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 	}
 
 	/**

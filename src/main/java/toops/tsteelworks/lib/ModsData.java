@@ -12,17 +12,11 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.FluidType;
-import tconstruct.library.crafting.LiquidCasting;
 import toops.tsteelworks.common.blocks.CementFluidBlock;
 import toops.tsteelworks.common.blocks.TSFluidBlock;
 import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.core.TSLogger;
 
-/**
- * Todo: move this to plugins
- */
 public class ModsData {
 	/**
 	 * Anything fluid
@@ -60,7 +54,6 @@ public class ModsData {
 	}
 
 	public static void registerFluids() {
-		LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
 		ItemStack bucket = new ItemStack(Items.bucket);
 
 		/* Steam */
@@ -92,8 +85,6 @@ public class ModsData {
 
 		Fluids.bucketSteam = filledBucket;
 
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(Fluids.steamFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
-
 		/* Limestone */
 		Fluids.moltenLimestoneFluid = FluidRegistry.getFluid("limestone.molten");
 		if (Fluids.moltenLimestoneFluid == null) {
@@ -122,10 +113,6 @@ public class ModsData {
 
 		Fluids.bucketLimestone = filledBucket;
 
-		FluidType.registerFluidType("Limestone", Fluids.moltenLimestone, 0, Fluids.moltenLimestoneFluid.getTemperature(), Fluids.moltenLimestoneFluid, false);
-
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(Fluids.moltenLimestoneFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
-
 		/* Cement */
 		Fluids.liquidCementFluid = FluidRegistry.getFluid("cement.liquid");
 		if (Fluids.liquidCementFluid == null) {
@@ -153,7 +140,5 @@ public class ModsData {
 		}
 
 		Fluids.bucketCement = filledBucket;
-
-		tableCasting.addCastingRecipe(filledBucket, new FluidStack(Fluids.liquidCementFluid, FluidContainerRegistry.BUCKET_VOLUME), bucket, true, 10);
 	}
 }

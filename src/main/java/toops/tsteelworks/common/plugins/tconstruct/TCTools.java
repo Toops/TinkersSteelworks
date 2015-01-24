@@ -6,6 +6,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.library.TConstructRegistry;
@@ -30,6 +31,11 @@ class TCTools {
 
 		changePiston();
 		registerChisel();
+		oreRegistry();
+	}
+
+	private void oreRegistry() {
+		OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TinkerTools.craftedSoil, 1, 3));
 	}
 
 	private void registerChisel() {

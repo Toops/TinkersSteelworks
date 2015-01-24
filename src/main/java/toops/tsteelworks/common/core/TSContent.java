@@ -15,9 +15,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
-import tconstruct.library.TConstructRegistry;
-import tconstruct.tools.TinkerTools;
-import tconstruct.world.TinkerWorld;
 import toops.tsteelworks.TSteelworks;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 import toops.tsteelworks.common.blocks.*;
@@ -94,8 +91,6 @@ public class TSContent {
 	public static void registerItems() {
 		materialsTS = new TSMaterialItem().setUnlocalizedName("tsteelworks.Materials");
 		GameRegistry.registerItem(materialsTS, "Materials");
-
-		TConstructRegistry.addItemStackToDirectory("scorchedBrick", new ItemStack(materialsTS, 1, 0));
 
 		bookManual = new TSManual();
 		GameRegistry.registerItem(bookManual, "tsteelManual");
@@ -179,12 +174,6 @@ public class TSContent {
 		for (int i = 0; i < ((LimestoneBlock) limestoneBlock).textureNames.length; i++) {
 			OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, i));
 		}
-
-		// TConstuct
-		OreDictionary.registerOre("blockGraveyardDirt", new ItemStack(TinkerTools.craftedSoil, 1, 3));
-
-		if (TinkerWorld.oreBerries != null)
-			OreDictionary.registerOre("oreberryEssence", new ItemStack(TinkerWorld.oreBerries, 1, 5));
 	}
 
 	/**
@@ -220,7 +209,12 @@ public class TSContent {
 	 * Initialize the Steelworks creative tab with an icon.
 	 */
 	private static void setupCreativeTabs() {
-		creativeTab.init(TConstructRegistry.getItemStack("ingotSteel"));
+		List<ItemStack> steels = OreDictionary.getOres("ingotSteel");
+
+		if (steels.size() == 0)
+			creativeTab.init(new ItemStack(TSContent.materialsTS));
+		else
+			creativeTab.init(steels.get(0));
 	}
 
 	public static void createEntities() {
