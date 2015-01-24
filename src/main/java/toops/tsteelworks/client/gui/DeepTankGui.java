@@ -65,11 +65,11 @@ public class DeepTankGui extends GuiContainer {
 		float yBottom = guiTop + TANK_HEIGHT + TANK_YPOS - 16;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack liquid = tank.getFluid(i);
-			IIcon icon = liquid.getFluid().getStillIcon();
-
 			float liquidSize = (float) liquid.amount  * TANK_HEIGHT / tank.getCapacity();
-
-			RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
+			
+			IIcon icon = liquid.getFluid().getStillIcon();
+			if (icon != null)
+				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
 
 			yBottom -= liquidSize;
 		}

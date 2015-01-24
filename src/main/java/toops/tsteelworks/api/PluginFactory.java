@@ -1,5 +1,7 @@
 package toops.tsteelworks.api;
 
+import cpw.mods.fml.common.Loader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -22,9 +24,10 @@ public class PluginFactory {
 	static {
 		InputStream stream = null;
 		try {
-			stream = ClassLoader.getSystemResourceAsStream(apiFile);
+			ClassLoader loader = Loader.instance().getIndexedModList().get("TSteelworks").getMetadata().getClass().getClassLoader();
+			stream = loader.getResourceAsStream(apiFile);
 			props.load(stream);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			error = e;
 		} finally {
 			if (stream != null) {

@@ -71,10 +71,12 @@ public class TSContent {
 		registerItems();
 		registerBlocks();
 		setupCreativeTabs();
+		oreRegistry();
 
 		ModsData.registerFluids();
-
-		oreRegistry();
+	}
+	
+	public static void init() {
 	}
 
 	public static void postInit() {

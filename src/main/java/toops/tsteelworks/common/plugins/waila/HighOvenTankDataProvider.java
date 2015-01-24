@@ -3,6 +3,7 @@ package toops.tsteelworks.common.plugins.waila;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,12 +15,27 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
+import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
+import toops.tsteelworks.common.core.TSLogger;
 import toops.tsteelworks.lib.logic.IFluidTankHolder;
 import toops.tsteelworks.lib.logic.IMasterLogic;
 
 import java.util.List;
 
 class HighOvenTankDataProvider implements IWailaDataProvider {
+	public static void register(IWailaRegistrar registrar) {
+		TSLogger.info("[Waila-Compat] Got registrar: " + registrar);
+
+		// Tanks
+		registrar.registerBodyProvider(new HighOvenTankDataProvider(), DeepTankLogic.class);
+		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
+
+		//config
+		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal");
+		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit");
+	}
+	
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return null;

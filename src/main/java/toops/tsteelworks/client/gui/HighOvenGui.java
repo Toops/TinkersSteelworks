@@ -28,7 +28,7 @@ public class HighOvenGui extends GuiContainer {
 
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
-
+	
 	public HighOvenGui(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
 		super(new HighOvenContainer(inventoryplayer, highoven));
 
@@ -58,11 +58,11 @@ public class HighOvenGui extends GuiContainer {
 			float yBottom = guiTop + TANK_HEIGHT;
 			for (int i = 0; i < tank.getNbFluids(); i++) {
 				FluidStack liquid = tank.getFluid(i);
-				IIcon icon = liquid.getFluid().getStillIcon();
-
 				float liquidSize = (float) liquid.amount * TANK_HEIGHT / tank.getCapacity();
 
-				RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
+				IIcon icon = liquid.getFluid().getStillIcon();
+				if (icon != null)
+					RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
 
 				yBottom -= liquidSize;
 			}
