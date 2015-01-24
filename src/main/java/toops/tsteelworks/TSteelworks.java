@@ -13,7 +13,9 @@ import toops.tsteelworks.common.core.TSCommonProxy;
 import toops.tsteelworks.common.plugins.PluginController;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSLogger;
-import toops.tsteelworks.common.plugins.fmp.FMPPlugin;
+import toops.tsteelworks.common.plugins.mods.FMPPlugin;
+import toops.tsteelworks.common.plugins.mods.RailcraftPlugin;
+import toops.tsteelworks.common.plugins.mods.ThaumcraftPlugin;
 import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.common.plugins.waila.WailaPlugin;
 import toops.tsteelworks.lib.TSRepo;
@@ -38,6 +40,13 @@ public class TSteelworks {
 
 	private SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel(TSRepo.MOD_ID);
 
+	/**
+	 * Stores the plugins that are actually useful elsewhere in the code
+	 */
+	public static class Plugins {
+		public static final TConstructPlugin TConstruct = new TConstructPlugin();
+	}
+
 	private PluginController pluginController = new PluginController();
 
 	public TSteelworks() {
@@ -45,7 +54,9 @@ public class TSteelworks {
 
 		pluginController.registerPlugin(new FMPPlugin());
 		pluginController.registerPlugin(new WailaPlugin());
-		pluginController.registerPlugin(new TConstructPlugin());
+		pluginController.registerPlugin(new RailcraftPlugin());
+		pluginController.registerPlugin(new ThaumcraftPlugin());
+		pluginController.registerPlugin(Plugins.TConstruct);
 	}
 
 	@EventHandler

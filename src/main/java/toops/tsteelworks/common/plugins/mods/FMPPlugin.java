@@ -1,4 +1,4 @@
-package toops.tsteelworks.common.plugins.fmp;
+package toops.tsteelworks.common.plugins.mods;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.item.ItemStack;

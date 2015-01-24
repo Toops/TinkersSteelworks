@@ -10,16 +10,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.library.TConstructRegistry;
-import tconstruct.library.crafting.ModifyBuilder;
-import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import toops.tsteelworks.TSteelworks;
@@ -30,13 +26,14 @@ import toops.tsteelworks.common.entity.HighGolem;
 import toops.tsteelworks.common.entity.SteelGolem;
 import toops.tsteelworks.common.entity.projectile.EntityLimestoneBrick;
 import toops.tsteelworks.common.entity.projectile.EntityScorchedBrick;
+import toops.tsteelworks.common.items.TSArmorBasic;
 import toops.tsteelworks.common.items.TSManual;
 import toops.tsteelworks.common.items.TSMaterialItem;
 import toops.tsteelworks.common.items.blocks.*;
 import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.TSRepo;
-import toops.tsteelworks.common.items.TSArmorBasic;
-import toops.tsteelworks.common.modifier.TSActiveOmniMod;
+
+import java.util.List;
 
 public class TSContent {
 	public static Item materialsTS;
@@ -77,7 +74,6 @@ public class TSContent {
 		registerItems();
 		registerBlocks();
 		setupCreativeTabs();
-		registerModifiers();
 
 		ModsData.registerFluids();
 
@@ -105,18 +101,22 @@ public class TSContent {
 		GameRegistry.registerItem(bookManual, "tsteelManual");
 
 		if (ConfigCore.enableSteelArmor) {
-			materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[] {3, 7, 5, 3}, 10);
-			materialSteel.customCraftingMaterial = TConstructRegistry.getItemStack("ingotSteel").getItem();
+			List<ItemStack> steels = OreDictionary.getOres("ingotSteel");
 
-			helmetSteel = new TSArmorBasic(materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
-			chestplateSteel = new TSArmorBasic(materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
-			leggingsSteel = new TSArmorBasic(materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
-			bootsSteel = new TSArmorBasic(materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
+			if (steels.size() > 0) {
+				materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[]{3, 7, 5, 3}, 10);
+				materialSteel.customCraftingMaterial = steels.get(0).getItem();
 
-			GameRegistry.registerItem(helmetSteel, "helmetSteel");
-			GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
-			GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
-			GameRegistry.registerItem(bootsSteel, "bootsSteel");
+				helmetSteel = new TSArmorBasic(materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
+				chestplateSteel = new TSArmorBasic(materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
+				leggingsSteel = new TSArmorBasic(materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
+				bootsSteel = new TSArmorBasic(materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
+
+				GameRegistry.registerItem(helmetSteel, "helmetSteel");
+				GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
+				GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
+				GameRegistry.registerItem(bootsSteel, "bootsSteel");
+			}
 		}
 	}
 
@@ -230,15 +230,5 @@ public class TSContent {
 		// TODO: Register with registerModEntity instead. We do this because registerModEntity does not seemingly add a mob spawner egg.
 		EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
 		EntityRegistry.registerGlobalEntityID(SteelGolem.class, "SteelGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
-	}
-
-	public static void registerModifiers() {
-		ItemStack hopper = new ItemStack(Blocks.hopper);
-		ItemStack enderpearl = new ItemStack(Items.ender_pearl);
-		String modifierName = StatCollector.translateToLocal("modifier.tool.vacuous");
-
-		ModifyBuilder.registerModifier(new ModInteger(new ItemStack[] {hopper, enderpearl}, 50, "Vacuous", 5, EnumChatFormatting.GREEN.toString(), modifierName));
-
-		TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
 	}
 }

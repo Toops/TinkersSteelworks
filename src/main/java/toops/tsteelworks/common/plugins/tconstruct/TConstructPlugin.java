@@ -1,28 +1,32 @@
 package toops.tsteelworks.common.plugins.tconstruct;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
-import tconstruct.library.crafting.FluidType;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.tools.TinkerTools;
-import toops.tsteelworks.api.highoven.ISmeltingRegistry;
+import toops.tsteelworks.TSteelworks;
 import toops.tsteelworks.common.plugins.ModCompatPlugin;
 
 /**
  * This is full of hacks to ensure TConstruct compatibility without having a hard dep on it.
  */
 public class TConstructPlugin extends ModCompatPlugin {
-	private static boolean smelteryLoaded;
-	private static boolean toolsLoaded;
+	private TCSmeltery smelteryPlugin;
+	private TCTools toolsPlugin;
 
-	public static boolean isSmelteryLoaded() {
-		return smelteryLoaded;
+	public boolean isSmelteryLoaded() {
+		return smelteryPlugin != null;
 	}
 
-	public static boolean isToolsLoaded() {
-		return toolsLoaded;
+	public boolean isToolsLoaded() {
+		return toolsPlugin != null;
+	}
+
+	public TCSmeltery getSmelteryPlugin() {
+		return smelteryPlugin;
+	}
+
+	public TCTools getToolsPlugin() {
+		return toolsPlugin;
 	}
 
 	@Override
@@ -31,51 +35,40 @@ public class TConstructPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public String getPluginName() {
-		return "TConstruct";
-	}
-
-	@Override
 	public void preInit() {
-		smelteryLoaded = TinkerSmeltery.smeltery != null;
-		toolsLoaded = TinkerTools.binding != null;
+		if (TinkerSmeltery.smeltery != null)
+			smelteryPlugin = new TCSmeltery();
 
-		if (smelteryLoaded)
-			TCSmeltery.preInit();
+		if (TinkerTools.binding != null)
+			toolsPlugin = new TCTools();
+
+		if (isSmelteryLoaded())
+			smelteryPlugin.preInit();
+
+		if (isToolsLoaded())
+			toolsPlugin.preInit();
 	}
 
 	@Override
 	public void init() {
-		if (smelteryLoaded)
-			TCSmeltery.init();
+		if (isSmelteryLoaded())
+			smelteryPlugin.init();
 	}
 
 	@Override
-	public void postInit() {}
+	public void postInit() {
+		if (isSmelteryLoaded())
+			smelteryPlugin.postInit();
 
-	public static void addDictionaryMeltable(String ore, String tcFluidName, int temp, int amount, Fluid fluid) {
-		if (smelteryLoaded) {
-			TCSmeltery.addDictionaryMeltable(ore, tcFluidName, temp, amount);
-
-			if (fluid == null)
-				fluid = TCSmeltery.getFluidForType(tcFluidName);
-		}
-
-		if (fluid == null) return;
-
-		ISmeltingRegistry.INSTANCE.addDictionaryMeltable(ore, new FluidStack(fluid, amount), temp);
 	}
 
-	public static void addMeltable(ItemStack is, String tcFluidName, int temp, int amount, Fluid fluid) {
-		if (smelteryLoaded) {
-			TCSmeltery.addMeltable(is, tcFluidName, temp, amount);
+	public static boolean registerAlloy(FluidStack input1, FluidStack input2, FluidStack output) {
+		TConstructPlugin self = TSteelworks.Plugins.TConstruct;
 
-			if (fluid == null)
-				fluid = TCSmeltery.getFluidForType(tcFluidName);
-		}
+		if (!self.isSmelteryLoaded()) return false;
 
-		if (fluid == null) return;
+		self.getSmelteryPlugin().registerAlloy(input1, input2, output);
 
-		ISmeltingRegistry.INSTANCE.addMeltable(is, InventoryHelper.itemIsOre(is), new FluidStack(fluid, amount), temp);
+		return true;
 	}
 }

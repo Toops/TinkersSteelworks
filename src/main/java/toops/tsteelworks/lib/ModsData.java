@@ -1,34 +1,28 @@
 package toops.tsteelworks.lib;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
-import nf.fr.ephys.cookiecore.common.registryUtil.FuelHandler;
-import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import toops.tsteelworks.common.blocks.CementFluidBlock;
-import toops.tsteelworks.common.blocks.TSBaseBlock;
 import toops.tsteelworks.common.blocks.TSFluidBlock;
-import toops.tsteelworks.common.core.TSLogger;
 import toops.tsteelworks.common.core.TSContent;
+import toops.tsteelworks.common.core.TSLogger;
 
-import java.util.List;
-
+/**
+ * Todo: move this to plugins
+ */
 public class ModsData {
 	/**
 	 * Anything fluid
@@ -48,15 +42,6 @@ public class ModsData {
 	}
 
 	/**
-	 * Anything added by thaumcraft
-	 */
-	public static class Thaumcraft {
-		public static boolean isLoaded;
-
-		public static ItemStack alumentum;
-	}
-
-	/**
 	 * Anything added by TE
 	 */
 	public static class ThermalExpansion {
@@ -65,37 +50,12 @@ public class ModsData {
 		public static ItemStack slag;
 	}
 
-	/**
-	 * Anything added by Railcraft
-	 */
-	public static class Railcraft {
-		public static boolean isLoaded;
-
-		public static ItemStack coalCoke;
-		public static ItemStack coalCokeBlock;
-	}
-
 	public static void loadModsData() {
-		Thaumcraft.isLoaded = Loader.isModLoaded("Thaumcraft");
-		if (Thaumcraft.isLoaded) {
-			TSLogger.info("Thaumcraft detected. Registering fuels.");
-
-			Thaumcraft.alumentum = RegistryHelper.getItemStack("Thaumcraft:ItemResource@0");
-		}
-
 		ThermalExpansion.isLoaded = Loader.isModLoaded("ThermalExpansion");
 		if (ThermalExpansion.isLoaded) {
 			TSLogger.info("TE detected. Getting slagged.");
 
 			ThermalExpansion.slag = GameRegistry.findItemStack("ThermalExpansion", "slag", 1);
-		}
-
-		Railcraft.isLoaded = Loader.isModLoaded("Railcraft");
-		if (Railcraft.isLoaded) {
-			TSLogger.info("Railcraft detected. Coke production in progress.");
-
-			Railcraft.coalCoke = RegistryHelper.getItemStack("Railcraft:fuel.coke@0");
-			Railcraft.coalCokeBlock = RegistryHelper.getItemStack("Railcraft:tile.railcraft.cube@0");
 		}
 	}
 

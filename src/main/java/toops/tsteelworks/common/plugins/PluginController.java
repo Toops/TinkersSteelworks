@@ -11,7 +11,6 @@ public class PluginController {
 	}
 
 	private List<ICompatPlugin> plugins = new ArrayList<>();
-
 	private Phase currPhase = Phase.PRELAUNCH;
 
 	public void init() {
@@ -39,21 +38,8 @@ public class PluginController {
 			TSLogger.info("Registering compat plugin for " + plugin.getPluginName());
 			plugins.add(plugin);
 
-			// Play catch-up if plugin is registered late
-			switch (currPhase) {
-				case DONE:
-				case POSTINIT:
-					plugin.preInit();
-					plugin.init();
-					plugin.postInit();
-					break;
-				case INIT:
-					plugin.preInit();
-					plugin.init();
-					break;
-				case PREINIT:
-					plugin.preInit();
-			}
+			if (currPhase != Phase.PRELAUNCH)
+				throw new IllegalStateException("Compat plugins must be registered before preinit");
 		}
 	}
 }
