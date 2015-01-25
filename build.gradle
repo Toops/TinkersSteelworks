@@ -1,87 +1,133 @@
-
-// properties are namespaced with _ts_ for (t)inkers(s)teelworks
-ext {
-    _ts_minecraft_version = "1.7.10"
-    _ts_forge_version = "10.13.2.1286"
-
-   // _ts_mantle_version = "0.3.1.jenkins176"
-    _ts_tcon_version = "1.8.2.build857"
-    _ts_steelworks_version = "1.0.7"
-
-    _ts_waila_version = "1.5.8a_1.7.10"
-    _ts_ccc_version = "1.0.4.29" // CodeChickenCore
-    _ts_cookie_version = "1.3.0"
-}
-
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'org.ajoberstar:gradle-git:0.10.1'
     }
-}
-
-repositories {
-    maven { // The repo from which to get waila
-        name = "Mobius Repo"
-        url = "http://mobiusstrip.eu/maven"
-    }
-    maven { // the repo from which to get NEI and stuff
-        name = "CB Repo"
-        url = "http://chickenbones.net/maven/"
-    }
-    maven { // repo for TConstruct and Mantle
-        name = "DVS1 Maven FS"
-        url = "http://dvs1.progwml6.com/files/maven"
-    }
-    mavenLocal() // TODO CookieCore does not have a repo
 }
 
 apply plugin: 'forge'
+apply plugin: 'maven-publish'
 
-group = "tsteelworks" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-version = "${_ts_minecraft_version}-${_ts_steelworks_version}" // http://semver.org/
-archivesBaseName = "TSteelworks"
+def build_number = 'CUSTOM'
+
+if (System.getenv('BUILD_NUMBER') != null)
+    build_number = System.getenv('BUILD_NUMBER')
+
+group = package_group
+archivesBaseName = mod_name
+version = "${mc_version}-${mod_version}-${build_number}"
 
 sourceCompatibility = 7
 targetCompatibility = 7
 
-minecraft {
-    version = "${_ts_minecraft_version}-${_ts_forge_version}"
-    assetDir = "eclipse/assets"
+import org.ajoberstar.grgit.Grgit
+
+def gitHash = 'unknown'
+if (new File(projectDir, '.git').exists()) {
+    def repo = Grgit.open(project.file('.'))
+    gitHash = repo.log().find().abbreviatedId
+}
+
+repositories {
+    maven { url = "http://mobiusstrip.eu/maven/" } // Waila
+    maven { url = "http://chickenbones.net/maven/" } // CCC & NEI
+    maven { url = "http://dvs1.progwml6.com/files/maven/" } // TCon and Mantle
+    maven { url = "http://tehnut.info/maven/" } // CookieCore
+	
+	ivy {
+		name "MineTweaker3"
+        artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-[revision].[ext]"
+    }	
 }
 
 dependencies {
-    compile "tconstruct:TConstruct:${_ts_minecraft_version}-${_ts_tcon_version}:deobf"
-    compile "mcp.mobius.waila:Waila:${_ts_waila_version}"
-    compile "codechicken:CodeChickenCore:${_ts_minecraft_version}-${_ts_ccc_version}:dev"
-    compile "nf.fr.ephys.cookiecore:cookiecore:${_ts_cookie_version}"
+    compile "tconstruct:TConstruct:${mc_version}-${tcon_version}:deobf"
+    compile "mcp.mobius.waila:Waila:${WAILA_version}"
+    compile "codechicken:CodeChickenCore:${mc_version}-${ccc_version}:dev"
+    compile "nf.fr.ephys.cookiecore:CookieCore:${mc_version}-${cookie_version}:deobf"
+	compile name: 'MineTweaker3', version: "${minetweaker_version}", ext: 'jar'
+	compile fileTree(dir: 'libs', include: '*.jar')
 }
 
-processResources  {
-    // this will ensure that this task is redone when the versions change.
+minecraft {
+    version = "${mc_version}-${forge_version}"
+    runDir = "run"
+
+    if (project.hasProperty('mappings_version'))
+        mappings = project.mappings_version
+}
+
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        include '**/*.info'
+        include '**/*.properties'
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-
-    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude '**/*.info'
+        exclude '**/*.properties'
+    }
+}
+
+jar {
+    classifier = ''
+    manifest.mainAttributes(
+            "Built-By": System.getProperty('user.name'),
+            "Created-By": "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+            "Implementation-Title": project.name,
+            "Implementation-Version": project.version,
+            "Git-Hash": gitHash
+    )
+}
+
+// add a source jar
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+// add a javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+// because the normal output has been made to be obfuscated
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+tasks.build.dependsOn sourceJar, javadocJar, deobfJar
+
+tasks.withType(JavaCompile) { task ->
+    task.options.encoding = 'UTF-8'
+}
+
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact javadocJar
+            artifact deobfJar
+        }
+    }
+    repositories {
+        if (project.hasProperty('maven_repo')) {
+            maven { url maven_repo }
+        } else {
+            mavenLocal()
+        }
     }
 }
