@@ -56,10 +56,10 @@ mods.tsteelworks.mix.removeAgent(String agent)
 ###Mix recipes
 ```zenscript
 // agents used in here must be registered.
-mods.tsteelworks.mix.addFluidMix(FluidStack input, String oxidizer, String purifier, String reducer, FluidStack output)
-mods.tsteelworks.mix.addSolidMix(FluidStack input, String oxidizer, String purifier, String reducer, ItemStack output)
+mods.tsteelworks.mix.addFluidMix(FluidStack input, String oxidizer, String reducer, String purifier, FluidStack output)
+mods.tsteelworks.mix.addSolidMix(FluidStack input, String oxidizer, String reducer, String purifier, ItemStack output)
 
-mods.tsteelworks.mix.removeMix(FluidStack input, String oxidizer, String purifier, String reducer)
+mods.tsteelworks.mix.removeMix(FluidStack input, String oxidizer, String reducer, String purifier)
 ```
 
 ##Notice

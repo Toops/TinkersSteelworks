@@ -14,18 +14,18 @@ import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.pa
 public class MixWrapper {
 	// Mixs
 	@ZenMethod
-	public static void addFluidMix(ILiquidStack input, String oxidizer, String purifier, String reducer, ILiquidStack output) {
-		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, purifier, reducer, parseLiquid(output)));
+	public static void addFluidMix(ILiquidStack input, String oxidizer, String reducer, String purifier, ILiquidStack output) {
+		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, reducer, purifier, parseLiquid(output)));
 	}
 
 	@ZenMethod
-	public static void addSolidMix(ILiquidStack input, String oxidizer, String purifier, String reducer, IItemStack output) {
-		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, purifier, reducer, parseItem(output)));
+	public static void addSolidMix(ILiquidStack input, String oxidizer, String reducer, String purifier, IItemStack output) {
+		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, reducer, purifier, parseItem(output)));
 	}
 
 	@ZenMethod
-	public static void removeMix(ILiquidStack input, String oxidizer, String purifier, String reducer) {
-		MineTweakerAPI.apply(new MixerHandler.Remove(parseLiquid(input).getFluid(), oxidizer, purifier, reducer));
+	public static void removeMix(ILiquidStack input, String oxidizer, String reducer, String purifier) {
+		MineTweakerAPI.apply(new MixerHandler.Remove(parseLiquid(input).getFluid(), oxidizer, reducer, purifier));
 	}
 
 	// Agents

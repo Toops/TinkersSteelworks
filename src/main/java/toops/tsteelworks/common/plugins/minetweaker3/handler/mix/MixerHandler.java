@@ -9,8 +9,7 @@ import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 class MixerHandler {
 	static class Add extends MinetweakerPlugin.Add<IMixHolder, Object> {
-		// todo: swap purifier & reducer
-		public Add(final Fluid input, final String ox, final String pur, final String red, final Object output) {
+		public Add(final Fluid input, final String ox, final String red, final String pur, final Object output) {
 			super(new MixHolder(ox, red, pur, input), output);
 		}
 		
@@ -41,7 +40,7 @@ class MixerHandler {
 	}
 
 	static class Remove extends MinetweakerPlugin.Remove<IMixHolder, Object> {
-		public Remove(Fluid input, String ox, String pur, String red) {
+		public Remove(Fluid input, String ox, String red, String pur) {
 			super(new MixHolder(ox, red, pur, input));
 		}
 
