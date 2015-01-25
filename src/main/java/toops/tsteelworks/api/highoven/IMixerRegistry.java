@@ -18,9 +18,9 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, Obj
 	 * @param reducer   A valid reducer
 	 * @param purifier  A valid purifier
 	 *
-	 * @return true: registered, false: a mix already exists for this input.
+	 * @return What was previously registered for this mix output, or null if none was
 	 */
-	public boolean registerMix(FluidStack output, Fluid input, String oxidizer, String reducer, String purifier);
+	public Object registerMix(FluidStack output, Fluid input, String oxidizer, String reducer, String purifier);
 
 	/**
 	 * Registers a valid Oxidizer-reducer-purifier mix for an input fluid
@@ -31,9 +31,9 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, Obj
 	 * @param reducer   A valid reducer
 	 * @param purifier  A valid purifier
 	 *
-	 * @return true: registered, false: a mix already exists for this input.
+	 * @return What was previously registered for this mix output, or null if none was
 	 */
-	public boolean registerMix(ItemStack output, Fluid input, String oxidizer, String reducer, String purifier);
+	public Object registerMix(ItemStack output, Fluid input, String oxidizer, String reducer, String purifier);
 
 	/**
 	 * Unregisters an Oxidizer-reducer-purifier mix

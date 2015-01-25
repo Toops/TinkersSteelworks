@@ -21,7 +21,7 @@ public class ScalableTankGUI {
 	private final int height;
 	private GuiContainer owner;
 	private ResourceLocation gauge;
-	private static final double MAX_ZOOM = 10;
+	private static final double MAX_ZOOM = 6;
 	private double zoomRatio = 1;
 	private int scroll;
 
@@ -134,6 +134,7 @@ public class ScalableTankGUI {
 		final int bottomY = guiTop + height;
 
 		float liquidOffset = 0;
+		double scroll = this.scroll;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack stack = tank.getFluid(i);
 			float liquidSize = (float) stack.amount  * height / tank.getCapacity();

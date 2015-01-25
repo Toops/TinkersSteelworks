@@ -15,7 +15,7 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 	private final Map<MixCombo, ItemStack> itemComboList = new HashMap<>();
 
 	@Override
-	public boolean registerMix(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
+	public Object registerMix(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
 		FluidStack oldFluid = fluidComboList.put(mix, fluidout);
@@ -24,11 +24,11 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 
 		dispatchAddEvent(mix, fluidout);
 
-		return true;
+		return oldFluid;
 	}
 
 	@Override
-	public boolean registerMix(ItemStack stackout, Fluid fluidin, String ox, String red, String pur) {
+	public Object registerMix(ItemStack stackout, Fluid fluidin, String ox, String red, String pur) {
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
 		ItemStack oldItem = itemComboList.put(mix, stackout);
@@ -37,7 +37,7 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 
 		dispatchAddEvent(mix, oldItem);
 
-		return true;
+		return oldItem;
 	}
 
 	@Override
