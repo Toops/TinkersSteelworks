@@ -21,8 +21,7 @@ public class ScalableTankGUI {
 	private final int height;
 	private GuiContainer owner;
 	private ResourceLocation gauge;
-	private static final double MAX_ZOOM = 6;
-	private double zoomRatio = 1;
+	private int zoomRatioVal = 10;
 	private int scroll;
 
 	public ScalableTankGUI(int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, GuiContainer owner) {
@@ -35,40 +34,42 @@ public class ScalableTankGUI {
 	}
 	
 	private int maxScroll() {
-		return (int) ((double)height * (zoomRatio - 1));
+		return (int) ((double)height * (getZoomRatio() - 1));
 	}
 
+	public double getZoomRatio() {
+		return zoomRatioVal / 10.0D;
+	}
+	
 	public void scrollUp() {
-		scroll += (int) zoomRatio;
+		scroll += (zoomRatioVal / 10) + 1;
 
 		if (scroll >= maxScroll())
 			scroll = maxScroll();
 	}
 	
 	public void scrollDown() {
-		scroll -= (int) zoomRatio;
+		scroll -= (zoomRatioVal / 10) + 1;
 		
 		if (scroll < 0) scroll = 0;
 	}
 
 	public void zoomIn() {
-		if (zoomRatio >= MAX_ZOOM) return;
-		zoomRatio += 0.1;
+		zoomRatioVal++;
 	}
 
 	public void zoomOut() {
-		if (zoomRatio <= 1) return;
-
-		zoomRatio -= 0.1;
+		if (zoomRatioVal == 10) return;
+		zoomRatioVal--;
 
 		if (scroll >= maxScroll()) scroll = maxScroll();
 	}
 	
 	private void drawScrollbar() {
-		if (zoomRatio == 1) return;
+		if (zoomRatioVal == 10) return;
 
 		final int scrollWidth = 4;
-		final double scrollHeight = height / zoomRatio;
+		final double scrollHeight = height / getZoomRatio();
 
 		final int scrollPosX = guiLeft + width + 9;
 		
@@ -76,7 +77,7 @@ public class ScalableTankGUI {
 		Gui.drawRect(scrollPosX, guiTop, scrollPosX + scrollWidth, guiTop + height, 0xffffffff);
 
 		// scrollbar
-		final double yBottom = guiTop + (height - (scroll / zoomRatio));
+		final double yBottom = guiTop + (height - (scroll / getZoomRatio()));
 		final double yTop = yBottom - scrollHeight;
 		Gui.drawRect(scrollPosX, (int) yBottom, scrollPosX + scrollWidth, (int) yTop, 0xaa0000ff);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -90,10 +91,10 @@ public class ScalableTankGUI {
 		double scroll = this.scroll;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack liquid = tank.getFluid(i);
-			float liquidSize = (float) liquid.amount * height / tank.getCapacity();
+			double liquidSize = (double) liquid.amount * height / tank.getCapacity();
 
 			{ // Handle zoom
-				liquidSize *= zoomRatio;
+				liquidSize *= getZoomRatio();
 				if (scroll > 0) {
 					double toRemove = Math.min(scroll, liquidSize);
 
@@ -102,7 +103,7 @@ public class ScalableTankGUI {
 				}
 
 				// I hope I'll never have to maintain this
-				float sizeLeft = yBottom - guiTop + 16;
+				double sizeLeft = yBottom - guiTop + 16;
 				if (liquidSize > sizeLeft) {
 					liquidSize = sizeLeft;
 				}
@@ -110,7 +111,7 @@ public class ScalableTankGUI {
 
 			IIcon icon = liquid.getFluid().getStillIcon();
 			if (icon != null) {
-				RenderHelper.drawTexturedRect(icon, guiLeft, width, yBottom, liquidSize, zLevel);
+				RenderHelper.drawTexturedRect(icon, guiLeft, width, yBottom, (float) liquidSize, zLevel);
 			}
 
 			yBottom -= liquidSize;
@@ -133,14 +134,14 @@ public class ScalableTankGUI {
 
 		final int bottomY = guiTop + height;
 
-		float liquidOffset = 0;
+		double liquidOffset = 0;
 		double scroll = this.scroll;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack stack = tank.getFluid(i);
-			float liquidSize = (float) stack.amount  * height / tank.getCapacity();
+			double liquidSize = (double) stack.amount  * height / tank.getCapacity();
 
 			{ // Handle zoom
-				liquidSize *= zoomRatio;
+				liquidSize *= getZoomRatio();
 				if (scroll > 0) {
 					double toRemove = Math.min(scroll, liquidSize);
 
@@ -149,7 +150,7 @@ public class ScalableTankGUI {
 				}
 
 				// I hope I'll never have to maintain this
-				float sizeLeft = bottomY - guiTop + 16;
+				double sizeLeft = bottomY - guiTop + 16;
 				if (liquidSize > sizeLeft) {
 					liquidSize = sizeLeft;
 				}
