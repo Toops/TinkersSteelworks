@@ -184,27 +184,27 @@ public class TSContent {
 	public static void registerMixerMaterials() {
 		IMixAgentRegistry registry = IMixAgentRegistry.INSTANCE;
 
-		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXIDIZER, 1, 33);
-		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXIDIZER, 1, 29);
-		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXIDIZER, 1, 62);
-		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 43);
-		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 43);
-		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXIDIZER, 1, 37);
-		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXIDIZER, 1, 37);
+		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXIDIZER, 33);
+		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXIDIZER, 29);
+		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXIDIZER, 62);
+		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXIDIZER, 43);
+		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXIDIZER, 43);
+		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXIDIZER, 37);
+		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXIDIZER, 37);
 
-		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.PURIFIER, 1, 65);
-		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 47);
-		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 51);
-		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
-		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
-		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.PURIFIER, 1, 37);
-		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.PURIFIER, 1, 27);
-		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);
-		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);
+		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.PURIFIER, 65);
+		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.PURIFIER, 47);
+		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.PURIFIER, 51);
+		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.PURIFIER, 60);
+		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.PURIFIER, 60);
+		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.PURIFIER, 37);
+		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.PURIFIER, 27);
+		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.PURIFIER, 30);
+		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.PURIFIER, 30);
 
-		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.REDUCER, 1, 100);
-		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.REDUCER, 1, 73);
-		registry.registerAgent("blockGraveyardDirt", IMixAgentRegistry.AgentType.REDUCER, 1, 59);
+		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.REDUCER, 100);
+		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.REDUCER, 73);
+		registry.registerAgent("blockGraveyardDirt", IMixAgentRegistry.AgentType.REDUCER, 59);
 	}
 
 	/**

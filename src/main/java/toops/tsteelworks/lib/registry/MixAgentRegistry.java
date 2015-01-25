@@ -13,8 +13,8 @@ public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IM
 	private final Map<String, MixAgent> mixItemList = new HashMap<>();
 
 	@Override
-	public IMixAgent registerAgent(String oreName, IMixAgentRegistry.AgentType type, int consume, int chance) {
-		MixAgent newAgent = new MixAgent(type, consume, chance);
+	public IMixAgent registerAgent(String oreName, IMixAgentRegistry.AgentType type, int chance) {
+		MixAgent newAgent = new MixAgent(type, chance);
 		MixAgent oldAgent = mixItemList.put(oreName, newAgent);
 
 		if (oldAgent != null)
@@ -49,23 +49,16 @@ public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IM
 
 	private static class MixAgent implements IMixAgentRegistry.IMixAgent {
 		private final IMixAgentRegistry.AgentType type;
-		private final int consumeAmount;
 		private final int consumeChance;
 
-		public MixAgent(IMixAgentRegistry.AgentType type, int consumeAmount, int consumeChance) {
+		public MixAgent(IMixAgentRegistry.AgentType type, int consumeChance) {
 			this.type = type;
-			this.consumeAmount = consumeAmount;
 			this.consumeChance = consumeChance;
 		}
 
 		@Override
 		public IMixAgentRegistry.AgentType getType() {
 			return type;
-		}
-
-		@Override
-		public int getConsumeAmount() {
-			return consumeAmount;
 		}
 
 		@Override

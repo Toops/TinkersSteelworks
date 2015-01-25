@@ -30,18 +30,18 @@ public class MixWrapper {
 
 	// Agents
 	@ZenMethod
-	public static void addOxidizer(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.OXIDIZER));
+	public static void addOxidizer(String agent, int consumeChance) {
+		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeChance, IMixAgentRegistry.AgentType.OXIDIZER));
 	}
 
 	@ZenMethod
-	public static void addReducer(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.REDUCER));
+	public static void addReducer(String agent, int consumeChance) {
+		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeChance, IMixAgentRegistry.AgentType.REDUCER));
 	}
 
 	@ZenMethod
-	public static void addPurifier(String agent, int consumeChance, int consumeAmount) {
-		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeAmount, consumeChance, IMixAgentRegistry.AgentType.PURIFIER));
+	public static void addPurifier(String agent, int consumeChance) {
+		MineTweakerAPI.apply(new MixAgentHandler.Add(agent, consumeChance, IMixAgentRegistry.AgentType.PURIFIER));
 	}
 
 	@ZenMethod

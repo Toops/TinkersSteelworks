@@ -424,11 +424,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (mixData == null)
 				continue;
 
-			// TODO: remove consumeAmount
 			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
-				if (stack.stackSize >= mixData.getConsumeAmount()) {
-					inventory.decrStackSize(i, mixData.getConsumeAmount());
-				}
+				stack.stackSize--;
 			}
 		}
 	}

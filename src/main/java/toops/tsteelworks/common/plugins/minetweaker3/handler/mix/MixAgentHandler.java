@@ -6,16 +6,11 @@ import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 class MixAgentHandler {
 	static class Add extends MinetweakerPlugin.Add<String, IMixAgent> {
-		public Add(final String agent, final int consumeAmount, final int consumeChance, final IMixAgentRegistry.AgentType agentType) {
+		public Add(final String agent, final int consumeChance, final IMixAgentRegistry.AgentType agentType) {
 			super(agent, new IMixAgent() {
 				@Override
 				public IMixAgentRegistry.AgentType getType() {
 					return agentType;
-				}
-
-				@Override
-				public int getConsumeAmount() {
-					return consumeAmount;
 				}
 
 				@Override
@@ -27,7 +22,7 @@ class MixAgentHandler {
 
 		@Override
 		public void apply() {
-			oldData = IMixAgentRegistry.INSTANCE.registerAgent(key, newData.getType(), newData.getConsumeAmount(), newData.getConsumeChance());
+			oldData = IMixAgentRegistry.INSTANCE.registerAgent(key, newData.getType(), newData.getConsumeChance());
 		}
 
 		@Override
@@ -35,7 +30,7 @@ class MixAgentHandler {
 			if (oldData == null)
 				IMixAgentRegistry.INSTANCE.unregisterAgent(key);
 			else
-				IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeAmount(), oldData.getConsumeChance());
+				IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeChance());
 		}
 
 		@Override
@@ -58,7 +53,7 @@ class MixAgentHandler {
 		public void undo() {
 			if (oldData == null) return;
 			
-			IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeAmount(), oldData.getConsumeChance());
+			IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeChance());
 		}
 
 		@Override
