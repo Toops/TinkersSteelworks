@@ -117,7 +117,7 @@ publishing {
     tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
-            from artifacts.java
+            artifact jar
             artifact sourceJar
             artifact javadocJar
             artifact deobfJar
