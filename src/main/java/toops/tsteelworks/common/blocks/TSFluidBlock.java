@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.Fluid;
 import toops.tsteelworks.lib.TSRepo;
 
 public class TSFluidBlock extends BlockFluidClassic {
-	private String texture;
+	private final String texture;
 	private boolean alpha = false;
 	private IIcon stillIcon;
 	private IIcon flowIcon;
@@ -24,12 +24,6 @@ public class TSFluidBlock extends BlockFluidClassic {
 		this.alpha = alpha;
 	}
 
-	public TSFluidBlock setAlpha(boolean alpha) {
-		this.alpha = alpha;
-
-		return this;
-	}
-
 	@Override
 	public int getRenderBlockPass() {
 		return alpha ? 1 : 0;
@@ -40,7 +34,7 @@ public class TSFluidBlock extends BlockFluidClassic {
 		stillIcon = iconRegister.registerIcon(TSRepo.NAMESPACE + texture);
 		flowIcon = iconRegister.registerIcon(TSRepo.NAMESPACE + texture + "_flow");
 	}
-
+	
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		if (side == 0 || side == 1)

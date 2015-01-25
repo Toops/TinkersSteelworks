@@ -68,7 +68,7 @@ public class ModsData {
 		}
 
 		if (!Fluids.steamFluid.canBePlacedInWorld()) {
-			Fluids.steamBlock = new TSFluidBlock(Fluids.steamFluid, Material.air, "liquid_steam").setBlockName("steam").setLightOpacity(0);
+			Fluids.steamBlock = new TSFluidBlock(Fluids.steamFluid, Material.water, "liquid_steam", true).setBlockName("steam").setLightOpacity(0);
 			GameRegistry.registerBlock(Fluids.steamBlock, "steam");
 		} else {
 			Fluids.steamBlock = Fluids.steamFluid.getBlock();

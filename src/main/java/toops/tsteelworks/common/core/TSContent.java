@@ -68,12 +68,12 @@ public class TSContent {
 	 * Content Constructor
 	 */
 	public static void preInit() {
+		ModsData.registerFluids();
+		
 		registerItems();
 		registerBlocks();
 		setupCreativeTabs();
 		oreRegistry();
-
-		ModsData.registerFluids();
 	}
 	
 	public static void init() {
