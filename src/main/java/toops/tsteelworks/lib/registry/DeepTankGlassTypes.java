@@ -7,8 +7,7 @@ import toops.tsteelworks.common.core.TSLogger;
 
 import java.util.HashMap;
 
-// TODO: cleanup & move to API
-// the item metadata ignore code isn't really working well looking at all the special cases. But it's reducing the hashmap size so much :(
+// TODO: move to API
 public class DeepTankGlassTypes {
 	private static HashMap<GlassType, Integer> glassTypes = new HashMap<>();
 
@@ -19,25 +18,8 @@ public class DeepTankGlassTypes {
 	public static void addGlassType(ItemStack stack, int capacity) {
 		Block block = Block.getBlockFromItem(stack.getItem());
 
-		boolean hasTile = false;
-		if (stack.getItemDamage() == 16) {
-			for (int i = 0; i < 16; i++) {
-				if (block.hasTileEntity(i)) {
-					hasTile = true;
-					break;
-				}
-			}
-		} else {
-			hasTile = block.hasTileEntity(stack.getItemDamage());
-		}
-
-		GlassType glass = new GlassType(stack);
-		if (glass.metadata == null) {
-			stack.setItemDamage(0);
-		}
-
-		if (hasTile) {
-			TSLogger.warning("Failled to register deep tank glass type " + stack.getDisplayName() + ": Block has a tile entity");
+		if (block.hasTileEntity(stack.getItemDamage())) {
+			TSLogger.warning("Failed to register deep tank glass type " + stack.getDisplayName() + ": Block has a tile entity");
 			return;
 		}
 
@@ -69,31 +51,33 @@ public class DeepTankGlassTypes {
 			return;
 		}
 
-		ItemStack stack = RegistryHelper.getItemStack(splitData[0]);
+		ItemStack[] stacks = RegistryHelper.getItemStacks(splitData[0]);
 
-		if (stack == null) {
-			TSLogger.warning("Parsing deep tank glass " + data + ". INVALID FORMAT: block does not exist");
-
+		if (stacks == null) {
+			TSLogger.warning("Parsing deep tank glass " + data + ". Parse error.");
 			return;
 		}
 
-		addGlassType(stack, capacity);
+		if (stacks.length == 0) {
+			TSLogger.warning("Parsing deep tank glass " + data + ". INVALID: no matching itemstack found.");
+		}
+		
+		for (ItemStack stack : stacks)
+			addGlassType(stack, capacity);
 	}
 
 	public static class GlassType {
-		private Integer metadata;
+		private int metadata;
 		private Block block;
 
 		public GlassType(Block block, int metadata) {
 			this.block = block;
-
-			this.metadata = metadata > 15 ? null : metadata;
+			this.metadata = metadata;
 		}
 
 		public GlassType(ItemStack item) {
 			this.block = Block.getBlockFromItem(item.getItem());
-
-			this.metadata = item.getItemDamage() > 15 ? null : item.getItemDamage();
+			this.metadata = item.getItemDamage();
 		}
 
 		public GlassType(GlassType glass) {
@@ -103,7 +87,7 @@ public class DeepTankGlassTypes {
 
 		@Override
 		public String toString() {
-			return block.getLocalizedName() + '#' + (metadata == null ? '*' : metadata);
+			return block.getLocalizedName() + '@' + metadata;
 		}
 
 		@Override
@@ -115,14 +99,7 @@ public class DeepTankGlassTypes {
 
 			GlassType glassType = (GlassType) o;
 
-			if (!block.equals(glassType.block))
-				return false;
-
-			if (metadata != null && glassType.metadata != null && !metadata.equals(glassType.metadata)) {
-				return false;
-			}
-
-			return true;
+			return metadata == glassType.metadata && block.equals(glassType.block);
 		}
 
 		@Override
@@ -130,7 +107,7 @@ public class DeepTankGlassTypes {
 			return block.hashCode();
 		}
 
-		public void setMetadata(Integer metadata) {
+		public void setMetadata(int metadata) {
 			this.metadata = metadata;
 		}
 
