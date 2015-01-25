@@ -9,10 +9,11 @@ import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
 class MixerHandler {
 	static class Add extends MinetweakerPlugin.Add<IMixHolder, Object> {
+		// todo: swap purifier & reducer
 		public Add(final Fluid input, final String ox, final String pur, final String red, final Object output) {
 			super(new MixHolder(ox, red, pur, input), output);
 		}
-
+		
 		@Override
 		public void apply() {
 			if (newData instanceof ItemStack)

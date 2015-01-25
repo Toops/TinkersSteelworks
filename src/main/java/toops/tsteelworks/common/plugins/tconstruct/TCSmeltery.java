@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.TConstruct;
@@ -92,7 +93,8 @@ class TCSmeltery {
 	}
 
 	private void craftPigIron() {
-		IMixerRegistry.INSTANCE.registerMix(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), TinkerSmeltery.moltenIronFluid, "dustSugar", "dyeWhite", "hambone");
+		OreDictionary.registerOre("dustBone", new ItemStack(Items.dye));
+		IMixerRegistry.INSTANCE.registerMix(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), TinkerSmeltery.moltenIronFluid, "dustSugar", "dustBone", "hambone");
 	}
 
 	private void registerCasting() {

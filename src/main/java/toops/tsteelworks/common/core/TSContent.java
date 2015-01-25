@@ -197,7 +197,7 @@ public class TSContent {
 		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.PURIFIER, 1, 51);
 		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
 		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.PURIFIER, 1, 60);
-		registry.registerAgent("dyeWhite", IMixAgentRegistry.AgentType.PURIFIER, 1, 37);
+		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.PURIFIER, 1, 37);
 		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.PURIFIER, 1, 27);
 		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);
 		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.PURIFIER, 1, 30);

@@ -260,7 +260,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			}
 
 			if (this.isBurning()) {
-				this.fuelBurnTime -= 3;
+				this.fuelBurnTime--;
 				this.internalTemp = Math.min(this.internalTemp + this.fuelHeatRate, maxTemp);
 			} else if (structure.isValid()) {
 				this.internalTemp = Math.max(this.internalTemp - INTERNAL_COOLDOWN_RATE, ROOM_TEMP);
@@ -424,6 +424,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 			if (mixData == null)
 				continue;
 
+			// TODO: remove consumeAmount
 			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
 				if (stack.stackSize >= mixData.getConsumeAmount()) {
 					inventory.decrStackSize(i, mixData.getConsumeAmount());

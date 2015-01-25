@@ -18,15 +18,15 @@ public class ThaumcraftPlugin extends ModCompatPlugin {
 
 	@Override
 	public void init() {
-		ItemStack alumentum = RegistryHelper.getItemStack("Thaumcraft:ItemResource@0");
+		ItemStack[] alumentum = RegistryHelper.getItemStacks("Thaumcraft:ItemResource@0");
 
-		if (alumentum == null) {
+		if (alumentum == null || alumentum.length == 0) {
 			if (DebugHelper.debug) throw new RuntimeException("Could not load Alumentum");
 
 			TSLogger.warning("Could not load Alumentum");
+		} else {
+			IFuelRegistry.INSTANCE.addFuel(alumentum[0], 560, 4);
 		}
-
-		IFuelRegistry.INSTANCE.addFuel(alumentum, 420 * 4, 4);
 	}
 
 	@Override

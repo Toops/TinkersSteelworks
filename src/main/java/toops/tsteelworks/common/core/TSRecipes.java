@@ -48,10 +48,10 @@ public class TSRecipes {
 	}
 
 	private static void addHighOvenFuels() {
-		IFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 420, 4);
+		IFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 140, 4);
 
 		for(final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")){
-			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 4200, 7);
+			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 1400, 7);
 		}
 	}
 
