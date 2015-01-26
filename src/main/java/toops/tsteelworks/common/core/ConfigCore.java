@@ -27,12 +27,12 @@ public class ConfigCore {
 	 */
 	private static String[] defaultGlass = {
 			"minecraft:glass|10000",
-			"minecraft:stained_glass@*|10000",
+			"minecraft:stained_glass@[0-15]|10000",
 			"chisel:glass@*|10000",
-			"chisel:stained_glass_white@*|10000",
-			"chisel:stained_glass_yellow@*|10000",
-			"chisel:stained_glass_lightgray@*|10000",
-			"chisel:stained_glass_brown@*|10000",
+			"chisel:stained_glass_white@[0-15]|10000",
+			"chisel:stained_glass_yellow@[0-15]|10000",
+			"chisel:stained_glass_lightgray@[0-15]|10000",
+			"chisel:stained_glass_brown@[0-15]|10000",
 
 			"ExtraUtilities:decorativeBlock2@0|12500", // thickened glass
 			"ExtraUtilities:decorativeBlock2@1|12500",
@@ -47,17 +47,17 @@ public class ConfigCore {
 			"ExtraUtilities:decorativeBlock2@10|30000", // dark glass
 
 			"TConstruct:GlassBlock|12500", // clear glass
-			"TConstruct:GlassBlock.StainedClear@*|12500",
+			"TConstruct:GlassBlock.StainedClear@[0-15]|12500",
 
 			"Botania:elfGlass|17500",
 			"Botania:manaGlass|12500",
-			"Botany:stained@*|10000",
-			"Forestry:stained@*|17500",
-			"Natura:NetherGlass@*|12500",
-			"Railcraft:tile.railcraftglass@*|30000",
-			"MineFactoryReloaded:stainedglass.block@*|12500",
+			"Botany:stained@[0-15]|10000",
+			"Forestry:stained@[0-15]|17500",
+			"Natura:NetherGlass@[0-15]|12500",
+			"Railcraft:tile.railcraftglass@[0-15]|30000",
+			"MineFactoryReloaded:stainedglass.block@[0-15]|12500",
 			"ThermalExpansion:Glass@0|45000",
-			"Ztones:tile.glaxx@*|17500",
+			"Ztones:tile.glaxx@[0-15]|17500",
 			"EnderIO:blockFusedQuartz@0|45000",
 			"EnderIO:blockFusedQuartz@1|10000"
 	};
@@ -83,7 +83,7 @@ public class ConfigCore {
 				"\n18 is ~2 TE4 steam dynamos with 6 layers").getInt(20);
 
 		items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
-				"\nFormat: modname:blockname@metadata|capacity (use * as metadata for every value, capacity is the amount of mB per empty block in the tank). " +
+				"\nFormat: modname:blockname@metadata|capacity (the metadata must either be a serie of numbers and/or ranges (like [1-14]) separated by commas. Capacity is the amount of mB per empty block in the tank). " +
 				"\nex: minecraft:glass@*|2000 (Note: Each entry must be on a seperate line)").getStringList();
 
 		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod (note: requires TConstruct)").getBoolean(false);
