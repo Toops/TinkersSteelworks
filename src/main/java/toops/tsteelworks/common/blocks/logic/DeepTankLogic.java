@@ -21,8 +21,7 @@ import toops.tsteelworks.lib.logic.IFluidTankHolder;
 import toops.tsteelworks.lib.logic.IMasterLogic;
 import toops.tsteelworks.lib.logic.IServantLogic;
 
-public class
-		DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
+public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingLogic, IFluidTank, IMasterLogic, IFluidTankHolder {
 	/**
 	 * The FluidStack listing.
 	 */
@@ -53,12 +52,6 @@ public class
 		this.fluidTank.setCapacity(calcFluidCapacity(structure.getNbLayers() * (structure.getXWidth() - 2) * (structure.getZWidth() - 2)));
 
 		this.markDirty();
-
-		if (structure.isValid()) {
-			MinecraftForge.EVENT_BUS.register(str);
-		} else {
-			MinecraftForge.EVENT_BUS.unregister(str);
-		}
 	}
 
 	@Override
@@ -207,6 +200,13 @@ public class
 	@Override
 	public boolean isValid() {
 		return !tileEntityInvalid && structure.isValid();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+
+		MinecraftForge.EVENT_BUS.unregister(structure);
 	}
 
 	@Override

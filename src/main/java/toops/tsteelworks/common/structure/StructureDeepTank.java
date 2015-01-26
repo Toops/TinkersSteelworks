@@ -6,8 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
-import nf.fr.ephys.cookiecore.helpers.DebugHelper;
 import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
 import toops.tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import toops.tsteelworks.common.core.TSContent;
@@ -36,7 +36,7 @@ public class StructureDeepTank implements IStructure {
 	private int glassCapacity = 0;
 
 	/**
-	 * Used to check is a glass type is valid, so we don't instantiate 50k GlassType
+	 * Used to check is a glass type is valid, so we don't instantiate 50k GlassTypes
 	 */
 	private DeepTankGlassTypes.GlassType glassChecker = new DeepTankGlassTypes.GlassType(null, 0);
 
@@ -56,6 +56,12 @@ public class StructureDeepTank implements IStructure {
 
 		if (!validStructure) {
 			nbLayers = 0;
+		}
+
+		if (validStructure) {
+			MinecraftForge.EVENT_BUS.register(this);
+		} else {
+			MinecraftForge.EVENT_BUS.unregister(this);
 		}
 
 		// don't update if the structure wasn't valid and still is not
@@ -308,7 +314,7 @@ public class StructureDeepTank implements IStructure {
 	}
 
 	/* ============== Structure check ============== */
-
+/*
 	int blockPos = 0;
 
 	public void checkBlock() {
@@ -336,7 +342,7 @@ public class StructureDeepTank implements IStructure {
 				|| (!shouldBeFilled && !logic.getWorldObj().isAirBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))) {
 			invalidate();
 		}
-	}
+	}*/
 
 	@SubscribeEvent
 	public void blockDestroyed(BlockEvent.BreakEvent event) {
