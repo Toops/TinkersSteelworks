@@ -24,7 +24,9 @@ public class CementFluidBlock extends TSFluidBlock {
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
 		if (entity instanceof EntityLivingBase) {
-			entity.setVelocity(0, 0, 0);
+			if (world.isRemote)
+				entity.setVelocity(0, 0, 0);
+			
 			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 30, 3, true));
 		}
 	}
