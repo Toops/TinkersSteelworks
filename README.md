@@ -47,9 +47,9 @@ These are used in mixs (like redstone + gunpowder + sand [+ liquid iron] => liqu
 ```zenscript
 // agents are managed using oredict, you need to pass it as a string (we're weirdos)
 // An agent can only be an oxidizer, a reducer or a purifier, not more than one at a time
-mods.tsteelworks.mix.addOxidizer(String agent, int consumeChance, int consumeAmount)
-mods.tsteelworks.mix.addReducer(String agent, int consumeChance, int consumeAmount)
-mods.tsteelworks.mix.addPurifier(String agent, int consumeChance, int consumeAmount)
+mods.tsteelworks.mix.addOxidizer(String agent, int consumeChance)
+mods.tsteelworks.mix.addReducer(String agent, int consumeChance)
+mods.tsteelworks.mix.addPurifier(String agent, int consumeChance)
 
 mods.tsteelworks.mix.removeAgent(String agent)
 ```
