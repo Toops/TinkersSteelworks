@@ -120,4 +120,11 @@ public class DeepTankGui extends GuiContainer {
 				tankGui.scrollDown();
 		}
 	}
+
+	@Override
+	protected void keyTyped(char key, int p_73869_2_) {
+		super.keyTyped(key, p_73869_2_);
+		
+		tankGui.sshhhdonttellanyoneaboutthis(key);
+	}
 }

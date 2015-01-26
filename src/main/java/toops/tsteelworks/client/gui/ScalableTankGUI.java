@@ -86,6 +86,10 @@ public class ScalableTankGUI {
 	public void renderTank(MultiFluidTank tank, float zLevel) {
 		drawScrollbar();
 		
+		if (index == 4) {
+			GL11.glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+		}
+		
 		RenderHelper.loadBlockMap();
 		float yBottom = guiTop + height - 16;
 		double scroll = this.scroll;
@@ -109,9 +113,20 @@ public class ScalableTankGUI {
 				}
 			} // Zoom done
 
+			if (index == 4) { // easter egg
+				GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+
+				int col = i % LGBT_COLOR.length;
+				GL11.glColor4f(LGBT_COLOR[col][0], LGBT_COLOR[col][1], LGBT_COLOR[col][2], 0xff);
+			}
+
 			IIcon icon = liquid.getFluid().getStillIcon();
 			if (icon != null) {
 				RenderHelper.drawTexturedRect(icon, guiLeft, width, yBottom, (float) liquidSize, zLevel);
+			}
+			
+			if (index == 4) { // easter egg cleanum
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			}
 
 			yBottom -= liquidSize;
@@ -179,5 +194,30 @@ public class ScalableTankGUI {
 		tooltips.add(EnumChatFormatting.LIGHT_PURPLE + StatCollector.translateToLocal("quantity.mb") + ": " + liquid.amount);
 
 		return tooltips;
+	}
+
+	private static final float[][] LGBT_COLOR = {
+			{228/255f, 3/255f, 3/255f},
+			{1, 140/255f, 3/255f},
+			{1, 237/255f, 0},
+			{0, 128/255f, 38/255f},
+			{0, 77/255f,1},
+			{117/255f,7/255f,135/255f}
+	};
+	private char[] keys = {'l', 'g', 'b', 't'};
+	private int index = 0;
+	/**
+	 * this is a stupid easter egg
+	 * @param key a character
+	 */
+	public void sshhhdonttellanyoneaboutthis(char key) {
+		if (index == 4) return;
+		
+		if (key != keys[index]) {
+			index = 0;
+			return;
+		}
+		
+		index++;
 	}
 }
