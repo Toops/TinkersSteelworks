@@ -19,7 +19,7 @@ Please include the following:
 Indentation is 1 tab character. Braces on same line. Braces may be omitted for single-statement conditions and loops, with the statement indented on the next line. [Sun/Oracle guidelines](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html) for everything else.
 
 ### Releases
-Releases follow the <major>.<minor>.<revision>-<build num> scheme.
+Releases follow the major.minor.revision-buildnum scheme.
 For more information, please read http://semver.org/
 
 ##Licenses
