@@ -8,6 +8,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import nf.fr.ephys.cookiecore.helpers.BlockHelper;
@@ -52,6 +53,12 @@ public class
 		this.fluidTank.setCapacity(calcFluidCapacity(structure.getNbLayers() * (structure.getXWidth() - 2) * (structure.getZWidth() - 2)));
 
 		this.markDirty();
+
+		if (structure.isValid()) {
+			MinecraftForge.EVENT_BUS.register(str);
+		} else {
+			MinecraftForge.EVENT_BUS.unregister(str);
+		}
 	}
 
 	@Override
@@ -76,9 +83,9 @@ public class
 	public void updateEntity() {
 		if (worldObj.isRemote) return;
 
-		structure.checkBlock();
+	//	structure.checkBlock();
 
-		if (tick++ == 20) {
+		if (tick++ == 40) {
 			if (!structure.isValid())
 				checkValidPlacement();
 

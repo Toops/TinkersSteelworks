@@ -32,7 +32,7 @@ public class ScalableTankGUI {
 		this.owner = owner;
 		this.gauge = gauge;
 	}
-	
+
 	private int maxScroll() {
 		return (int) ((double)height * (getZoomRatio() - 1));
 	}
@@ -40,17 +40,17 @@ public class ScalableTankGUI {
 	public double getZoomRatio() {
 		return zoomRatioVal / 10.0D;
 	}
-	
+
 	public void scrollUp() {
 		scroll += (zoomRatioVal / 10) + 1;
 
 		if (scroll >= maxScroll())
 			scroll = maxScroll();
 	}
-	
+
 	public void scrollDown() {
 		scroll -= (zoomRatioVal / 10) + 1;
-		
+
 		if (scroll < 0) scroll = 0;
 	}
 
@@ -64,7 +64,7 @@ public class ScalableTankGUI {
 
 		if (scroll >= maxScroll()) scroll = maxScroll();
 	}
-	
+
 	private void drawScrollbar() {
 		if (zoomRatioVal == 10) return;
 
@@ -72,7 +72,7 @@ public class ScalableTankGUI {
 		final double scrollHeight = height / getZoomRatio();
 
 		final int scrollPosX = guiLeft + width + 9;
-		
+
 		// scrollbar background
 		Gui.drawRect(scrollPosX, guiTop, scrollPosX + scrollWidth, guiTop + height, 0xffffffff);
 
@@ -85,11 +85,11 @@ public class ScalableTankGUI {
 
 	public void renderTank(MultiFluidTank tank, float zLevel) {
 		drawScrollbar();
-		
+
 		if (index == 4) {
 			GL11.glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 		}
-		
+
 		RenderHelper.loadBlockMap();
 		float yBottom = guiTop + height - 16;
 		double scroll = this.scroll;
@@ -124,7 +124,7 @@ public class ScalableTankGUI {
 			if (icon != null) {
 				RenderHelper.drawTexturedRect(icon, guiLeft, width, yBottom, (float) liquidSize, zLevel);
 			}
-			
+
 			if (index == 4) { // easter egg cleanum
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			}
@@ -138,7 +138,7 @@ public class ScalableTankGUI {
 		owner.mc.getTextureManager().bindTexture(gauge);
 		owner.drawTexturedModalRect(guiLeft, guiTop + 1, 120, 0, width, height);
 	}
-	
+
 	public FluidStack getFluidAtPos(MultiFluidTank tank, int posX, int posY) {
 		final int leftX = guiLeft;
 
@@ -212,12 +212,12 @@ public class ScalableTankGUI {
 	 */
 	public void sshhhdonttellanyoneaboutthis(char key) {
 		if (index == 4) return;
-		
+
 		if (key != keys[index]) {
 			index = 0;
 			return;
 		}
-		
+
 		index++;
 	}
 }

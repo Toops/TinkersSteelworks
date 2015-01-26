@@ -1,14 +1,17 @@
 package toops.tsteelworks.common.structure;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mantle.world.CoordTuple;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.event.world.BlockEvent;
+import nf.fr.ephys.cookiecore.helpers.DebugHelper;
 import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
 import toops.tsteelworks.common.blocks.logic.TSMultiServantLogic;
-import toops.tsteelworks.lib.registry.DeepTankGlassTypes;
 import toops.tsteelworks.common.core.TSContent;
+import toops.tsteelworks.lib.registry.DeepTankGlassTypes;
 
 public class StructureDeepTank implements IStructure {
 	/**
@@ -333,6 +336,27 @@ public class StructureDeepTank implements IStructure {
 				|| (!shouldBeFilled && !logic.getWorldObj().isAirBlock(borderPos.x + xOffset, borderPos.y + yOffset, borderPos.z + zOffset))) {
 			invalidate();
 		}
+	}
+
+	@SubscribeEvent
+	public void blockDestroyed(BlockEvent.BreakEvent event) {
+		if (event.world.isRemote) return;
+		if (event.isCanceled()) return;
+		if (this.logic == null) return;
+
+		int xMin = borderPos.x;
+		int xMax = borderPos.x + xWidth - 1;
+		if (event.x < xMin || event.x > xMax) return;
+
+		int zMin = borderPos.z;
+		int zMax = borderPos.z + zWidth - 1;
+		if (event.z < zMin || event.z > zMax) return;
+
+		int yMin = borderPos.y;
+		int yMax = borderPos.y + nbLayers + 1;
+		if (event.y < yMin || event.y > yMax) return;
+
+		invalidate();
 	}
 
 	public void invalidate() {
