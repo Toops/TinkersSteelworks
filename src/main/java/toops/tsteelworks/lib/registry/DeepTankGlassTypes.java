@@ -16,13 +16,6 @@ public class DeepTankGlassTypes {
 	}
 
 	public static void addGlassType(ItemStack stack, int capacity) {
-		Block block = Block.getBlockFromItem(stack.getItem());
-
-		if (block.hasTileEntity(stack.getItemDamage())) {
-			TSLogger.warning("Failed to register deep tank glass type " + stack.getDisplayName() + ": Block has a tile entity");
-			return;
-		}
-
 		glassTypes.put(new GlassType(stack), capacity);
 		TSLogger.info("Registered deep tank glass type " + stack.getDisplayName() + " with capacity of " + capacity + "mB");
 	}
@@ -61,7 +54,7 @@ public class DeepTankGlassTypes {
 		if (stacks.length == 0) {
 			TSLogger.warning("Parsing deep tank glass " + data + ". INVALID: no matching itemstack found.");
 		}
-		
+
 		for (ItemStack stack : stacks)
 			addGlassType(stack, capacity);
 	}
