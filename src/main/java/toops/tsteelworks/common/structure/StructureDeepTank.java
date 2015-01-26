@@ -61,7 +61,11 @@ public class StructureDeepTank implements IStructure {
 		if (validStructure) {
 			MinecraftForge.EVENT_BUS.register(this);
 		} else {
-			MinecraftForge.EVENT_BUS.unregister(this);
+			try {
+				MinecraftForge.EVENT_BUS.unregister(this);
+			} catch(Exception ignore) {
+				// I'm so bad at programming
+			}
 		}
 
 		// don't update if the structure wasn't valid and still is not
@@ -131,12 +135,33 @@ public class StructureDeepTank implements IStructure {
 	 * Checks the whole layer is filled with valid bricks
 	 */
 	private boolean scanPlainLayer(int y) {
-		for (int x = 0; x < xWidth; x++) {
-			for (int z = 0; z < zWidth; z++) {
+		// Inner plain layer can be any block you want
+		for (int x = 1; x < xWidth - 1; x++) {
+			for (int z = 1; z < zWidth - 1; z++) {
 				if (!isValidBlock(borderPos.x + x, y, borderPos.z + z)) {
 					return false;
 				}
 			}
+		}
+
+		// Outer plain layer must be scorched bricks
+		for (int x = 0; x < xWidth; x++) {
+			int xPos = borderPos.x + x;
+			Block borderLeft = logic.getWorldObj().getBlock(xPos, y, borderPos.z);
+			Block borderRight = logic.getWorldObj().getBlock(xPos, y, borderPos.z + zWidth - 1);
+
+			if (!borderLeft.equals(TSContent.highoven) || !verifyTile(xPos, y, borderPos.z)) return false;
+			if (!borderRight.equals(TSContent.highoven) || !verifyTile(xPos, y, borderPos.z + zWidth - 1)) return false;
+		}
+
+		for (int z = 1; z < zWidth - 1; z++) {
+			int zPos = borderPos.z + z;
+			Block borderBottom = logic.getWorldObj().getBlock(borderPos.x, y, zPos);
+			Block borderTop = logic.getWorldObj().getBlock(borderPos.x + xWidth - 1, y, zPos);
+
+			if (!borderBottom.equals(TSContent.highoven) || !verifyTile(borderPos.x, y, zPos)) return false;
+			if (!borderTop.equals(TSContent.highoven) || !verifyTile(borderPos.x + xWidth - 1, y, zPos)) return false;
+
 		}
 
 		return true;

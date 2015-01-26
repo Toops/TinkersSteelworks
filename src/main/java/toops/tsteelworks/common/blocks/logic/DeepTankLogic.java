@@ -206,7 +206,11 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public void invalidate() {
 		super.invalidate();
 
-		MinecraftForge.EVENT_BUS.unregister(structure);
+		try {
+			MinecraftForge.EVENT_BUS.unregister(structure);
+		} catch(Exception ignore) {
+			// really reaaaally bad at programming
+		}
 	}
 
 	@Override
