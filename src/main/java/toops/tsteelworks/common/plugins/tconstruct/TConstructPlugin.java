@@ -7,7 +7,6 @@ import tconstruct.tools.TinkerTools;
 import tconstruct.world.TinkerWorld;
 import toops.tsteelworks.TSteelworks;
 import toops.tsteelworks.common.plugins.ModCompatPlugin;
-import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.ModsData.Fluids;
 
 /**

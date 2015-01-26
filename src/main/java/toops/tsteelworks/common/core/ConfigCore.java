@@ -84,7 +84,7 @@ public class ConfigCore {
 
 		items = config.get("Deep Tank", "Additional Glass Blocks", defaultGlass, "Specify blocks for additional Deep Tank walls." +
 				"\nFormat: modname:blockname@metadata|capacity (the metadata must either be a serie of numbers and/or ranges (like [1-14]) separated by commas. Capacity is the amount of mB per empty block in the tank). " +
-				"\nex: minecraft:glass@*|2000 (Note: Each entry must be on a seperate line)").getStringList();
+				"\nex: minecraft:stained_glass@[0-15]|2000 (Note: Each entry must be on a seperate line)").getStringList();
 
 		hardcorePiston = config.get("TConification", "Hardcore Piston", false, "Piston requires tough iron tool rod (note: requires TConstruct)").getBoolean(false);
 		hardcoreFlintAndSteel = config.get("TSteelification", "Hardcore Flint & Steel", false, "Flint & Steel requires steel ingot").getBoolean(false);

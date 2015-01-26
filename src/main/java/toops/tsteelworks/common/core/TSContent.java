@@ -69,15 +69,22 @@ public class TSContent {
 	 */
 	public static void preInit() {
 		ModsData.registerFluids();
-		
+
 		registerItems();
 		registerBlocks();
-		setupCreativeTabs();
 		oreRegistry();
 	}
-	
+
 	public static void init() {
+		if (materialSteel != null) {
+			List<ItemStack> steels = OreDictionary.getOres("ingotSteel");
+			if (steels.size() > 0)
+				materialSteel.customCraftingMaterial = steels.get(0).getItem();
+		}
+
+		setupCreativeTabs();
 	}
+
 
 	public static void postInit() {
 		ModsData.loadModsData();
@@ -98,22 +105,17 @@ public class TSContent {
 		GameRegistry.registerItem(bookManual, "tsteelManual");
 
 		if (ConfigCore.enableSteelArmor) {
-			List<ItemStack> steels = OreDictionary.getOres("ingotSteel");
+			materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[]{3, 7, 5, 3}, 10);
 
-			if (steels.size() > 0) {
-				materialSteel = EnumHelper.addArmorMaterial("STEEL", 25, new int[]{3, 7, 5, 3}, 10);
-				materialSteel.customCraftingMaterial = steels.get(0).getItem();
+			helmetSteel = new TSArmorBasic(materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
+			chestplateSteel = new TSArmorBasic(materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
+			leggingsSteel = new TSArmorBasic(materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
+			bootsSteel = new TSArmorBasic(materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
 
-				helmetSteel = new TSArmorBasic(materialSteel, 0, "steel").setUnlocalizedName("tsteelworks.helmetSteel");
-				chestplateSteel = new TSArmorBasic(materialSteel, 1, "steel").setUnlocalizedName("tsteelworks.chestplateSteel");
-				leggingsSteel = new TSArmorBasic(materialSteel, 2, "steel").setUnlocalizedName("tsteelworks.leggingsSteel");
-				bootsSteel = new TSArmorBasic(materialSteel, 3, "steel").setUnlocalizedName("tsteelworks.bootsSteel");
-
-				GameRegistry.registerItem(helmetSteel, "helmetSteel");
-				GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
-				GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
-				GameRegistry.registerItem(bootsSteel, "bootsSteel");
-			}
+			GameRegistry.registerItem(helmetSteel, "helmetSteel");
+			GameRegistry.registerItem(chestplateSteel, "chestplateSteel");
+			GameRegistry.registerItem(leggingsSteel, "leggingsSteel");
+			GameRegistry.registerItem(bootsSteel, "bootsSteel");
 		}
 	}
 
