@@ -23,19 +23,20 @@ import toops.tsteelworks.lib.logic.IMasterLogic;
 
 import java.util.List;
 
-class HighOvenTankDataProvider implements IWailaDataProvider {
+public class HighOvenTankDataProvider implements IWailaDataProvider {
 	public static void register(IWailaRegistrar registrar) {
 		TSLogger.info("[Waila-Compat] Got registrar: " + registrar);
 
 		// Tanks
-		registrar.registerBodyProvider(new HighOvenTankDataProvider(), DeepTankLogic.class);
-		registrar.registerBodyProvider(new HighOvenTankDataProvider(), HighOvenLogic.class);
+		final HighOvenTankDataProvider provider = new HighOvenTankDataProvider();
+		registrar.registerBodyProvider(provider, DeepTankLogic.class);
+		registrar.registerBodyProvider(provider, HighOvenLogic.class);
 
 		//config
 		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal");
 		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit");
 	}
-	
+
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return null;
