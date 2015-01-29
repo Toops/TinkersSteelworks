@@ -18,20 +18,25 @@ import java.util.List;
  * Hi, I'm code
  */
 public class ScalableTankGUI {
-	private final int guiLeft;
-	private final int guiTop;
+	private int guiLeft;
+	private int guiTop;
 	private final int width;
 	private final int height;
 	private GuiContainer owner;
 	private ResourceLocation gauge;
 
 	public ScalableTankGUI(int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, GuiContainer owner) {
-		this.guiLeft = guiLeft;
-		this.guiTop = guiTop;
 		this.width = width;
 		this.height = height;
 		this.owner = owner;
 		this.gauge = gauge;
+
+		setLocation(guiLeft, guiTop);
+	}
+
+	public void setLocation(int guiLeft, int guiTop) {
+		this.guiLeft = guiLeft;
+		this.guiTop = guiTop;
 	}
 
 	public void renderTank(MultiFluidTank tank, float zLevel) {

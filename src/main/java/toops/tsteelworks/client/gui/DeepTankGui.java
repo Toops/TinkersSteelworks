@@ -18,13 +18,8 @@ import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 import java.util.List;
 
 public class DeepTankGui extends GuiContainer {
-	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
-	private static final int TANK_WIDTH = 104;
-	private static final int TANK_HEIGHT = 104;
-	private static final int TANK_YPOS = 16;
-	private static final int TANK_XPOS = 8;
-
 	private ScalableTankGUI tankGui;
+	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
 
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
 		super(new DeepTankContainer(inventoryplayer, tank));
@@ -50,8 +45,16 @@ public class DeepTankGui extends GuiContainer {
 	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
+		
+		final int TANK_WIDTH = 104;
+		final int TANK_HEIGHT = 104;
+		final int TANK_YPOS = 16;
+		final int TANK_XPOS = 8;
 
-		tankGui = new ScalableTankGUI(guiLeft + TANK_XPOS, guiTop + TANK_YPOS, TANK_WIDTH, TANK_HEIGHT, BACKGROUND, this);
+		if (tankGui == null)
+			tankGui = new ScalableTankGUI(guiLeft + TANK_XPOS, guiTop + TANK_YPOS, TANK_WIDTH, TANK_HEIGHT, BACKGROUND, this);
+		else
+			tankGui.setLocation(guiLeft + TANK_XPOS, guiTop + TANK_YPOS);
 
 		buttonList.add(new GuiButton(0, guiLeft - 20, guiTop + 5, 20, 20, "+"));
 		buttonList.add(new GuiButton(1, guiLeft - 20, guiTop + 25, 20, 20, "-"));
