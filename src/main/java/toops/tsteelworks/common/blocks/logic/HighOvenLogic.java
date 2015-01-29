@@ -302,7 +302,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		boolean hasSmeltable = false;
 		for (int i = 0; i < smeltableInventory.getSizeInventory(); i++) {
-			if (smeltableInventory.getStackInSlot(i) == null || this.meltingTemps[i] <= ROOM_TEMP)
+			if (smeltableInventory.getStackInSlot(i) == null || this.meltingTemps[i] == ROOM_TEMP)
 				continue;
 
 			hasSmeltable = true;
@@ -488,8 +488,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 			if (data == null)
 				meltingTemps[i] = activeTemps[i] = ROOM_TEMP;
-			else
+			else {
 				this.meltingTemps[i] = data.getMeltingPoint();
+			}
 		}
 	}
 

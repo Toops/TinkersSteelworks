@@ -48,9 +48,9 @@ class TCSmeltery {
 				block = ((ItemBlock) stack.getItem()).field_150939_a;
 
 			FluidType fluid = FluidType.getFluidType(meltData.getResult().getFluid());
-			int temp = fluid == null ? 0 : fluid.baseTemperature;
+			int temp = fluid == null ? (meltData.getMeltingPoint() / 2) : fluid.baseTemperature;
 
-			Smeltery.addMelting(stack, block, stack.getItemDamage(), temp != 0 ? temp : meltData.getMeltingPoint() / 2, meltData.getResult());
+			Smeltery.addMelting(stack, block, stack.getItemDamage(), temp, meltData.getResult());
 		}
 	};
 
@@ -96,8 +96,9 @@ class TCSmeltery {
 
 			String fluidName = getFluidName(set.getValue().getFluid());
 			int temp = fluidName == null ? 0 : getFluidTempOverride(fluidName);
+			if (temp == 0) temp = temperatureList.get(set.getKey()) * 2;
 
-			localRegistry.addMeltable(key, isOre, set.getValue().copy(), temp != 0 ? temp : temperatureList.get(set.getKey()) * 2);
+			localRegistry.addMeltable(key, isOre, set.getValue().copy(), temp);
 		}
 	}
 
@@ -199,7 +200,7 @@ class TCSmeltery {
 			case "Gold":
 				return 663;
 			case "Tin":
-				return -163;
+				return 163;
 			case "Copper":
 				return 534;
 			case "Aluminum":
@@ -213,7 +214,7 @@ class TCSmeltery {
 			case "AluminumBrass":
 				return 305;
 			case "Alumite":
-				return -129;
+				return 129;
 			case "Manyullyn":
 				return 534;
 			case "Bronze":
@@ -223,7 +224,7 @@ class TCSmeltery {
 			case "Nickel":
 				return 1053;
 			case "Lead":
-				return -73;
+				return 73;
 			case "Silver":
 				return 563;
 			case "Platinum":
@@ -243,8 +244,8 @@ class TCSmeltery {
 			case "PigIron":
 				return 983;
 			// case "Ender":
-			//	case "Slime":
-			//	case "Glue":
+			// case "Slime":
+			// case "Glue":
 			default:
 				return 0;
 		}

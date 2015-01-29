@@ -5,6 +5,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
+import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,15 +25,15 @@ class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltD
 
 	@Override
 	public IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature) {
-		if (meltTemperature <= 20)
-			meltTemperature = 20;
+		if (meltTemperature == HighOvenLogic.ROOM_TEMP)
+			meltTemperature = HighOvenLogic.ROOM_TEMP + 1; // ugly hack o/
 
 		IMeltData newData = new MeltData(meltTemperature, output, isOre);
 		IMeltData oldData = meltingList.put(new HashedItemStack(input), newData);
 
 		if (oldData != null) dispatchDeleteEvent(input, oldData);
 		dispatchAddEvent(input, newData);
-		
+
 		return oldData;
 	}
 
