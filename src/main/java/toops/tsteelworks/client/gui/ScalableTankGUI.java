@@ -14,6 +14,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Hi, I'm code
+ */
 public class ScalableTankGUI {
 	private final int guiLeft;
 	private final int guiTop;
@@ -21,8 +24,6 @@ public class ScalableTankGUI {
 	private final int height;
 	private GuiContainer owner;
 	private ResourceLocation gauge;
-	private int zoomRatioVal = 10;
-	private int scroll;
 
 	public ScalableTankGUI(int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, GuiContainer owner) {
 		this.guiLeft = guiLeft;
@@ -31,56 +32,6 @@ public class ScalableTankGUI {
 		this.height = height;
 		this.owner = owner;
 		this.gauge = gauge;
-	}
-
-	private int maxScroll() {
-		return (int) ((double)height * (getZoomRatio() - 1));
-	}
-
-	public double getZoomRatio() {
-		return zoomRatioVal / 10.0D;
-	}
-
-	public void scrollUp() {
-		scroll += (zoomRatioVal / 10) + 1;
-
-		if (scroll >= maxScroll())
-			scroll = maxScroll();
-	}
-
-	public void scrollDown() {
-		scroll -= (zoomRatioVal / 10) + 1;
-
-		if (scroll < 0) scroll = 0;
-	}
-
-	public void zoomIn() {
-		zoomRatioVal++;
-	}
-
-	public void zoomOut() {
-		if (zoomRatioVal == 10) return;
-		zoomRatioVal--;
-
-		if (scroll >= maxScroll()) scroll = maxScroll();
-	}
-
-	private void drawScrollbar() {
-		if (zoomRatioVal == 10) return;
-
-		final int scrollWidth = 4;
-		final double scrollHeight = height / getZoomRatio();
-
-		final int scrollPosX = guiLeft + width + 9;
-
-		// scrollbar background
-		Gui.drawRect(scrollPosX, guiTop, scrollPosX + scrollWidth, guiTop + height, 0xffffffff);
-
-		// scrollbar
-		final double yBottom = guiTop + (height - (scroll / getZoomRatio()));
-		final double yTop = yBottom - scrollHeight;
-		Gui.drawRect(scrollPosX, (int) yBottom, scrollPosX + scrollWidth, (int) yTop, 0xaa0000ff);
-		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	public void renderTank(MultiFluidTank tank, float zLevel) {
@@ -219,5 +170,104 @@ public class ScalableTankGUI {
 		}
 
 		index++;
+	}
+
+	/* SCROLLBAR */
+	private int zoomRatioVal = 10;
+	private int scroll;
+	private boolean scrollbarFocus = false;
+
+
+	private int maxScroll() {
+		return (int) ((double)height * (getZoomRatio() - 1));
+	}
+
+	public double getZoomRatio() {
+		return zoomRatioVal / 10.0D;
+	}
+
+	public void scrollUp() {
+		scroll += (zoomRatioVal / 10) + 1;
+
+		if (scroll >= maxScroll())
+			scroll = maxScroll();
+	}
+
+	public void scrollDown() {
+		scroll -= (zoomRatioVal / 10) + 1;
+
+		if (scroll < 0) scroll = 0;
+	}
+
+	public void zoomIn() {
+		zoomRatioVal++;
+	}
+
+	public void zoomOut() {
+		if (zoomRatioVal == 10) return;
+		zoomRatioVal--;
+
+		if (scroll >= maxScroll()) scroll = maxScroll();
+	}
+
+	private void drawScrollbar() {
+		if (zoomRatioVal == 10) return;
+
+		final int scrollWidth = 4;
+		final double scrollHeight = height / getZoomRatio();
+
+		final int scrollPosX = guiLeft + width + 9;
+
+		// scrollbar background
+		Gui.drawRect(scrollPosX, guiTop, scrollPosX + scrollWidth, guiTop + height, 0xffffffff);
+
+		// scrollbar
+		final double yBottom = guiTop + (height - (scroll / getZoomRatio()));
+		final double yTop = yBottom - scrollHeight;
+		Gui.drawRect(scrollPosX, (int) yBottom, scrollPosX + scrollWidth, (int) yTop, 0xaa0000ff);
+		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	/** Mouse move, moves scrollbar if has focus */
+	public void mouseClickMove(int x, int moveToY, int mouseButton, long lastClickTime) {
+		if (!scrollbarFocus) return;
+
+		final double scrollHeight = height / getZoomRatio();
+		final double yBottom = guiTop + height;
+
+		/** vertical distance from the scrollbar bottom */
+		double clickPos = (yBottom - moveToY) - (yBottom - focusY) + (scrollAtFocus / getZoomRatio());
+		System.out.println("(yBottom - moveToY): " + (yBottom - moveToY) + ", (yBottom - focusY)" + (yBottom - focusY) + ", clickPos: " + clickPos);
+		if (clickPos < 0) clickPos = 0;
+		if (clickPos > (height - scrollHeight)) clickPos = height - scrollHeight;
+
+		scroll = (int) (clickPos * getZoomRatio());
+	}
+
+	/** Mouse up, blurs scrollbar */
+	public void mouseMovedOrUp(int x, int y, int type) {
+		scrollbarFocus = false;
+	}
+
+	private int focusY = 0;
+	private int scrollAtFocus = 0;
+	/** Mouse down, checks if scrollbar has focus */
+	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+		if (mouseButton != 0 || zoomRatioVal == 10) return;
+
+		final double scrollHeight = height / getZoomRatio();
+
+		// scrollbar
+		final double yBottom = guiTop + (height - (scroll / getZoomRatio()));
+		final double yTop = yBottom - scrollHeight;
+		final double xLeft = guiLeft + width + 9;
+		final double xRight = xLeft + 4;
+
+		if (mouseX > xRight || mouseX < xLeft) return;
+		if (mouseY > yBottom || mouseY < yTop) return;
+
+		focusY = mouseY;
+		scrollAtFocus = scroll;
+		scrollbarFocus = true;
 	}
 }

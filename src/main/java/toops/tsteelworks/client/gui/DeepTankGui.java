@@ -23,9 +23,9 @@ public class DeepTankGui extends GuiContainer {
 	private static final int TANK_HEIGHT = 104;
 	private static final int TANK_YPOS = 16;
 	private static final int TANK_XPOS = 8;
-	
+
 	private ScalableTankGUI tankGui;
-	
+
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
 		super(new DeepTankContainer(inventoryplayer, tank));
 
@@ -36,7 +36,7 @@ public class DeepTankGui extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		super.actionPerformed(button);
-		
+
 		switch (button.id) {
 			case 0:
 				tankGui.zoomIn();
@@ -59,7 +59,7 @@ public class DeepTankGui extends GuiContainer {
 
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		
+
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 
 		// title
@@ -88,8 +88,24 @@ public class DeepTankGui extends GuiContainer {
 	}
 
 	@Override
+	protected void mouseMovedOrUp(int x, int y, int type) {
+		super.mouseMovedOrUp(x, y, type);
+
+		tankGui.mouseMovedOrUp(x, y, type);
+	}
+
+	@Override
+	protected void mouseClickMove(int x, int y, int mouseButton, long lastClickTime) {
+		super.mouseClickMove(x, y, mouseButton, lastClickTime);
+
+		tankGui.mouseClickMove(x, y, mouseButton, lastClickTime);
+	}
+
+	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+
+		tankGui.mouseClicked(mouseX, mouseY, mouseButton);
 
 		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
 		FluidStack fluid = tankGui.getFluidAtPos(fluidTank, mouseX, mouseY);
@@ -107,7 +123,7 @@ public class DeepTankGui extends GuiContainer {
 
 		int wheelState = Mouse.getEventDWheel();
 		if (wheelState == 0) return;
-		
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
 			if (wheelState > 0)
 				tankGui.zoomIn();
@@ -124,7 +140,7 @@ public class DeepTankGui extends GuiContainer {
 	@Override
 	protected void keyTyped(char key, int p_73869_2_) {
 		super.keyTyped(key, p_73869_2_);
-		
+
 		tankGui.sshhhdonttellanyoneaboutthis(key);
 	}
 }
