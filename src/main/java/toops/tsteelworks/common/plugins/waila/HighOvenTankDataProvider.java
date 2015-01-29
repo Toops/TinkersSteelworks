@@ -18,6 +18,7 @@ import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 import toops.tsteelworks.common.core.TSLogger;
+import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.logic.IFluidTankHolder;
 import toops.tsteelworks.lib.logic.IMasterLogic;
 
@@ -33,8 +34,9 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		registrar.registerBodyProvider(provider, HighOvenLogic.class);
 
 		//config
-		registrar.addConfig("TinkersSteelworks", "tseelworks.showTotal");
-		registrar.addConfig("TinkersSteelworks", "tseelworks.autoUnit");
+		registrar.addConfig(TSRepo.MOD_NAME, "tseelworks.listFluids");
+		registrar.addConfig(TSRepo.MOD_NAME, "tseelworks.showTotal");
+		registrar.addConfig(TSRepo.MOD_NAME, "tseelworks.autoUnit");
 	}
 
 	@Override
@@ -57,7 +59,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		if (accessor.getTileEntity() instanceof IFluidTankHolder) {
 			MultiFluidTank tank = ((IFluidTankHolder) accessor.getTileEntity()).getFluidTank();
 
-			listFluids(currenttip, tank, config.getConfig("tseelworks.autoUnit"), config.getConfig("tseelworks.showTotal"));
+			listFluids(currenttip, tank, config.getConfig("tseelworks.listFluids"), config.getConfig("tseelworks.autoUnit"), config.getConfig("tseelworks.showTotal"));
 		}
 
 		return currenttip;
@@ -73,7 +75,7 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		return null;
 	}
 
-	public static void listFluids(List<String> currenttip, MultiFluidTank tank, boolean autoUnit, boolean showTotal) {
+	public static void listFluids(List<String> currenttip, MultiFluidTank tank, boolean doList, boolean autoUnit, boolean showTotal) {
 		if (tank.getCapacity() == 0) return;
 
 		if (tank.getFluidAmount() == 0) {
@@ -81,15 +83,18 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 			return;
 		}
 
-		for (int i = 0; i < tank.getNbFluids(); i++) {
-			FluidStack stack = tank.getFluid(i);
+		if (doList) {
+			for (int i = 0; i < tank.getNbFluids(); i++) {
+				FluidStack stack = tank.getFluid(i);
 
-			String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
-			currenttip.add(fluidNameHelper(stack) + " (" + textValue + ")");
+				String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
+				currenttip.add(fluidNameHelper(stack) + " (" + textValue + ")");
+			}
 		}
 
 		if (showTotal) {
-			currenttip.add("-----");
+			if (doList) currenttip.add("-----");
+			
 			currenttip.add(ChatHelper.formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
 		}
 	}

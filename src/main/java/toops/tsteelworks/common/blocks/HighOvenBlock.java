@@ -48,7 +48,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 	public static final int META_DUCT = 12;
 	public static final int META_TANK = 13;
 
-	private String texturePrefix = "";
+	private String texturePrefix;
 
 	public HighOvenBlock() {
 		super(Material.rock);
@@ -58,6 +58,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 		setStepSound(soundTypeMetal);
 
 		setCreativeTab(TSContent.creativeTab);
+		texturePrefix = "";
 	}
 
 	public HighOvenBlock(String prefix) {
