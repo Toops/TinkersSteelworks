@@ -194,19 +194,19 @@ public class TSContent {
 		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXIDIZER, 37);
 		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXIDIZER, 37);
 
-		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.PURIFIER, 65);
-		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.PURIFIER, 47);
-		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.PURIFIER, 51);
-		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.PURIFIER, 60);
-		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.PURIFIER, 60);
-		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.PURIFIER, 37);
-		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.PURIFIER, 27);
-		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.PURIFIER, 30);
-		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.PURIFIER, 30);
+		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.REDUCER, 65);
+		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.REDUCER, 47);
+		registry.registerAgent("oreManganese", IMixAgentRegistry.AgentType.REDUCER, 51);
+		registry.registerAgent("dustAluminum", IMixAgentRegistry.AgentType.REDUCER, 60);
+		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.REDUCER, 60);
+		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.REDUCER, 37);
+		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.REDUCER, 27);
+		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.REDUCER, 30);
+		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.REDUCER, 30);
 
-		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.REDUCER, 100);
-		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.REDUCER, 73);
-		registry.registerAgent("blockGraveyardDirt", IMixAgentRegistry.AgentType.REDUCER, 59);
+		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.PURIFIER, 100);
+		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.PURIFIER, 73);
+		registry.registerAgent("blockGraveyardDirt", IMixAgentRegistry.AgentType.PURIFIER, 59);
 	}
 
 	/**

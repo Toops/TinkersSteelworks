@@ -18,4 +18,9 @@ public class TSActiveSlot extends Slot {
 	public void setActive(boolean flag) {
 		active = flag;
 	}
+
+	@Override
+	public int getSlotStackLimit() {
+		return 1;
+	}
 }

@@ -610,9 +610,10 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public void setInventorySlotContents(final int slot, final ItemStack itemstack) {
-		if (isSmeltingSlot(slot))
+		if (isSmeltingSlot(slot)) {
+			//if (itemstack != null && itemstack.stackSize != 0) itemstack.stackSize = 1;
 			smeltableInventory.setInventorySlotContents(slot - SLOT_FIRST_MELTABLE, itemstack);
-		else
+		} else
 			inventory.setInventorySlotContents(slot, itemstack);
 
 		markDirty();
@@ -630,7 +631,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 
 	@Override
 	public boolean isItemValidForSlot(final int slot, final ItemStack itemstack) {
-		return true;
+		return false;
 	}
 
 	@Override
