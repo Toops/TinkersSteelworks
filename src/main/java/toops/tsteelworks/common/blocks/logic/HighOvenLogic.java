@@ -108,8 +108,18 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	 * (yes I'm locking this to 6 slots, sorry it feels better that way
 	 * as the high oven smelts uber quickly)
 	 */
-	private SizeableInventory inventory = new SizeableInventory(4);
-	private SizeableInventory smeltableInventory = new SizeableInventory(0, 1);
+	private SizeableInventory inventory = new SizeableInventory(4) {
+		@Override
+		public void markDirty() {
+			HighOvenLogic.this.markDirty();
+		}
+	};
+	private SizeableInventory smeltableInventory = new SizeableInventory(0, 1) {
+		@Override
+		public void markDirty() {
+			HighOvenLogic.this.markDirty();
+		}
+	};
 
 	/**
 	 * Handles the multiblock structure
@@ -156,6 +166,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	 * The fuel burn time.
 	 */
 	private int fuelBurnTime;
+	private int fuelBurnTimeTotal;
 
 	/**
 	 * The active temperatures of melting items.
@@ -493,7 +504,15 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		return this.fuelBurnTime > 0;
 	}
 
+	public void setFuelBurnTime(int fuelBurnTime) {
+		this.fuelBurnTime = fuelBurnTime;
+	}
+
 	public int getFuelBurnTime() {
+		return this.fuelBurnTime;
+	}
+
+	public int getFuelBurnTimeTotal() {
 		return this.fuelBurnTime;
 	}
 
@@ -515,28 +534,11 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		if (fuelData == null) return;
 
 		this.fuelBurnTime = fuelData.getBurnTime();
+		this.fuelBurnTimeTotal = fuelBurnTime;
 		this.fuelHeatRate = fuelData.getHeatRate();
 
 		inventory.decrStackSize(SLOT_FUEL, 1);
 		markDirty();
-	}
-
-	/**
-	 * Sets the current fuel burn time.
-	 *
-	 * @param value the new fuel burn time
-	 */
-	public void setFuelBurnTime(final int value) {
-		this.fuelBurnTime = value;
-	}
-
-	/**
-	 * Sets the current fuel heat rate.
-	 *
-	 * @param value the new fuel heat rate
-	 */
-	public void setFuelHeatRate(final int value) {
-		this.fuelHeatRate = value;
 	}
 
 	/* ==================== Inventory ==================== */
@@ -650,8 +652,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		isMeltingItems = nbt.getBoolean(TSRepo.NBTNames.IN_USE);
 
 		direction = nbt.getByte(TSRepo.NBTNames.DIRECTION);
-		setFuelBurnTime(nbt.getInteger(TSRepo.NBTNames.USE_TIME));
-		setFuelHeatRate(nbt.getInteger(TSRepo.NBTNames.FUEL_HEAT_RATE));
+		fuelBurnTime = nbt.getInteger(TSRepo.NBTNames.USE_TIME);
+		fuelHeatRate = nbt.getInteger(TSRepo.NBTNames.FUEL_HEAT_RATE);
+		fuelBurnTimeTotal = nbt.getInteger(TSRepo.NBTNames.USE_TIME_TOTAL);
 
 		meltingTemps = nbt.getIntArray(TSRepo.NBTNames.MELTING_TEMPS);
 		activeTemps = nbt.getIntArray(TSRepo.NBTNames.ACTIVE_TEMPS);
@@ -674,6 +677,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		nbt.setByte(TSRepo.NBTNames.DIRECTION, this.direction);
 		nbt.setInteger(TSRepo.NBTNames.USE_TIME, this.fuelBurnTime);
 		nbt.setInteger(TSRepo.NBTNames.FUEL_HEAT_RATE, this.fuelHeatRate);
+		nbt.setInteger(TSRepo.NBTNames.USE_TIME_TOTAL, this.fuelBurnTimeTotal);
 
 		nbt.setIntArray(TSRepo.NBTNames.MELTING_TEMPS, this.meltingTemps);
 		nbt.setIntArray(TSRepo.NBTNames.ACTIVE_TEMPS, this.activeTemps);

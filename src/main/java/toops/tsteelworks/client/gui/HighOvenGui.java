@@ -75,7 +75,13 @@ public class HighOvenGui extends GuiContainer {
 
 		// Burn progress
 		if (logic.isBurning()) {
-			int scale = logic.getFuelBurnTime() / 42;
+			// icon is 42 pixels high
+			int scale;
+			if (logic.getFuelBurnTimeTotal() == 0)
+				scale = 42;
+			else
+				scale = logic.getFuelBurnTime() / logic.getFuelBurnTimeTotal() * 42;
+			
 			drawTexturedModalRect(guiLeft + 127, (guiTop + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
 		}
 

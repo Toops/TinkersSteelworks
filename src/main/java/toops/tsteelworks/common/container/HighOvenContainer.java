@@ -31,9 +31,9 @@ public class HighOvenContainer extends Container {
 			addSlotToContainer(new TSActiveSlot(smeltableInventory, slot, 28, 7 + (slot * 18), slot < 6));
 
 		/* Player inventory */
-		for (int column = 0; column < 3; column++)
-			for (int row = 0; row < 9; row++)
-				addSlotToContainer(new Slot(inventoryplayer, row + (column * 9) + 9, 54 + (row * 18), 84 + (column * 18)));
+		for (int row = 0; row < 3; row++)
+			for (int column = 0; column < 9; column++)
+				addSlotToContainer(new Slot(inventoryplayer, column + (row * 9) + 9, 54 + (column * 18), 84 + (row * 18)));
 
 		/* Player hotbar */
 		for (int column = 0; column < 9; column++)
@@ -43,11 +43,6 @@ public class HighOvenContainer extends Container {
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return logic.isUseableByPlayer(entityplayer);
-	}
-
-	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
 	}
 
 	@Override
@@ -92,26 +87,26 @@ public class HighOvenContainer extends Container {
 
 		// is mixAgent
 		IMixAgent agent = IMixAgentRegistry.INSTANCE.getAgentData(sourceStack);
-		if (agent == null) return merged;
-
-		switch (agent.getType()) {
-			case OXIDIZER:
-				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_OXIDIZER, HighOvenLogic.SLOT_OXIDIZER + 1, false);
-				break;
-			case PURIFIER:
-				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_PURIFIER, HighOvenLogic.SLOT_PURIFIER + 1, false);
-				break;
-			case REDUCER:
-				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_REDUCER, HighOvenLogic.SLOT_REDUCER + 1, false);
+		if (agent != null) {
+			switch (agent.getType()) {
+				case OXIDIZER:
+					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_OXIDIZER, HighOvenLogic.SLOT_OXIDIZER + 1, false) || merged;
+					break;
+				case PURIFIER:
+					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_PURIFIER, HighOvenLogic.SLOT_PURIFIER + 1, false) || merged;
+					break;
+				case REDUCER:
+					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_REDUCER, HighOvenLogic.SLOT_REDUCER + 1, false) || merged;
+			}
 		}
 
 		if (sourceStack.stackSize == 0) return merged;
 
-		if (ISmeltingRegistry.INSTANCE.getMeltable(sourceStack) != null) { // is smeltable
-			merged |= mergeItemStack(sourceStack,
+		if (ISmeltingRegistry.INSTANCE.getMeltable(sourceStack) != null) { // is meltable
+			merged = mergeItemStack(sourceStack,
 					HighOvenLogic.SLOT_FIRST_MELTABLE,
 					HighOvenLogic.SLOT_FIRST_MELTABLE + logic.getSmeltableInventory().getSizeInventory(),
-					false);
+					false) || merged;
 		}
 
 		return merged;

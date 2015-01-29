@@ -17,6 +17,7 @@ public class TSRepo {
 		public static final String INTERNAL_TEMP = "InternalTemp";
 		public static final String IN_USE = "InUse";
 		public static final String USE_TIME = "UseTime";
+		public static final String USE_TIME_TOTAL = "UseTimeTotal";
 		public static final String FUEL_HEAT_RATE = "FuelHeatRate";
 		public static final String MELTING_TEMPS = "MeltingTemps";
 		public static final String ACTIVE_TEMPS = "ActiveTemps";
