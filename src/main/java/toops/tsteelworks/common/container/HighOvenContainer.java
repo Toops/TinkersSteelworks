@@ -3,6 +3,7 @@ package toops.tsteelworks.common.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
@@ -17,15 +18,17 @@ public class HighOvenContainer extends Container {
 	public HighOvenContainer(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
 		logic = highoven;
 
+		IInventory baseInventory = highoven.getInventory();
 		/* HighOven Misc inventory */
-		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_OXIDIZER, 55, 16)); // oxidizer
-		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_REDUCER, 55, 34)); // reducer
-		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_PURIFIER, 55, 52)); // purifier
-		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_FUEL, 126, 52)); // fuel
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_OXIDIZER, 55, 16)); // oxidizer
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_REDUCER, 55, 34)); // reducer
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_PURIFIER, 55, 52)); // purifier
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_FUEL, 126, 52)); // fuel
 
 		/* HighOven Smeltable inventory */
-		for (int y = 0; y < highoven.getSmeltableInventory().getSizeInventory(); y++)
-			addSlotToContainer(new TSActiveSlot(highoven, HighOvenLogic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
+		IInventory smeltableInventory = highoven.getSmeltableInventory();
+		for (int slot = 0; slot < highoven.getSmeltableInventory().getSizeInventory(); slot++)
+			addSlotToContainer(new TSActiveSlot(smeltableInventory, slot, 28, 7 + (slot * 18), slot < 6));
 
 		/* Player inventory */
 		for (int column = 0; column < 3; column++)
@@ -55,8 +58,6 @@ public class HighOvenContainer extends Container {
 	@Override
 	/**
 	 * Transfers stack from sourceSlot to any other
-	 *
-	 * @param
 	 */
 	public ItemStack transferStackInSlot(EntityPlayer player, int sourceSlot) {
 		final Slot slot = (Slot) inventorySlots.get(sourceSlot);

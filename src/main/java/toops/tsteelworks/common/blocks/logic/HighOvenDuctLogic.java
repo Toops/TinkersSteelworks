@@ -143,13 +143,11 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 
 			if (mode == MODE_MELTABLE) {
 				if (InventoryHelper.insertItem(masterInventory.getSmeltableInventory(), copy)) {
-					masterInventory.markDirty();
-
 					decrStackSize(slot, 1);
 					return true;
 				}
 			} else {
-				if (InventoryHelper.insertItem(masterInventory, new int[] { mode }, copy)) {
+				if (InventoryHelper.insertItem(masterInventory.getInventory(), new int[] { mode }, copy)) {
 					decrStackSize(slot, 1);
 					return true;
 				}

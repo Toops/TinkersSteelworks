@@ -40,7 +40,7 @@ import toops.tsteelworks.lib.TSRepo;
 import java.util.Arrays;
 import java.util.List;
 
-public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler {
+public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler {
 	/**
 	 * Oxidizer Slot - Redox agent.
 	 * (gunpowder, sugar, etc)
@@ -109,7 +109,7 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	 * as the high oven smelts uber quickly)
 	 */
 	private SizeableInventory inventory = new SizeableInventory(4);
-	private SizeableInventory smeltableInventory = new SizeableInventory(0);
+	private SizeableInventory smeltableInventory = new SizeableInventory(0, 1);
 
 	/**
 	 * Handles the multiblock structure
@@ -540,17 +540,6 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	}
 
 	/* ==================== Inventory ==================== */
-
-	/**
-	 * Determine is slot is valid for 'ore' processing.
-	 *
-	 * @param slot the slot
-	 * @return true if slot is valid
-	 */
-	public boolean isSmeltingSlot(final int slot) {
-		return slot > SLOT_FUEL;
-	}
-
 	@Override
 	public void markDirty() {
 		super.markDirty();
@@ -560,90 +549,13 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 		worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
 	}
 
-	@Override
-	public int getInventoryStackLimit() {
-		return smeltableInventory.getInventoryStackLimit();
-	}
-
-	@Override
-	public int getSizeInventory() {
-		return smeltableInventory.getSizeInventory() + inventory.getSizeInventory();
-	}
-
-	@Override
-	public ItemStack getStackInSlot(final int slot) {
-		if (isSmeltingSlot(slot))
-			return smeltableInventory.getStackInSlot(slot - SLOT_FIRST_MELTABLE);
-
-		return inventory.getStackInSlot(slot);
-	}
-
-	@Override
-	public ItemStack decrStackSize(final int slot, final int quantity) {
-		ItemStack stack;
-
-		if (isSmeltingSlot(slot))
-			stack = smeltableInventory.decrStackSize(slot - SLOT_FIRST_MELTABLE, quantity);
-		else
-			stack = inventory.decrStackSize(slot, quantity);
-
-		if (stack != null)
-			markDirty();
-
-		return stack;
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(final int slot) {
-		ItemStack stack;
-
-		if (isSmeltingSlot(slot))
-			stack = smeltableInventory.getStackInSlotOnClosing(slot - SLOT_FIRST_MELTABLE);
-		else
-			stack = inventory.getStackInSlotOnClosing(slot);
-
-		if (stack != null)
-			markDirty();
-
-		return stack;
-	}
-
-	@Override
-	public void setInventorySlotContents(final int slot, final ItemStack itemstack) {
-		if (isSmeltingSlot(slot)) {
-			//if (itemstack != null && itemstack.stackSize != 0) itemstack.stackSize = 1;
-			smeltableInventory.setInventorySlotContents(slot - SLOT_FIRST_MELTABLE, itemstack);
-		} else
-			inventory.setInventorySlotContents(slot, itemstack);
-
-		markDirty();
-	}
-
-	@Override
-	public String getInventoryName() {
-		return hasCustomInventoryName() ? this.invName : "crafters.HighOven";
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return invName != null;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(final int slot, final ItemStack itemstack) {
-		return false;
-	}
-
-	@Override
 	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
 		return worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) == this && entityplayer.getDistance(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64D;
 	}
 
-	@Override
-	public void openInventory() {}
-
-	@Override
-	public void closeInventory() {}
+	public int getSizeInventory() {
+		return smeltableInventory.getSizeInventory() + inventory.getSizeInventory();
+	}
 
 	/* ==================== Multiblock ==================== */
 
@@ -844,6 +756,8 @@ public class HighOvenLogic extends TileEntity implements IInventory, IActiveLogi
 	public IInventory getSmeltableInventory() {
 		return smeltableInventory;
 	}
+
+	public IInventory getInventory() { return inventory; }
 
 	@Override
 	public MultiFluidTank getFluidTank() {
