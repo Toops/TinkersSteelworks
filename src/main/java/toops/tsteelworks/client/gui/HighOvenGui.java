@@ -28,7 +28,7 @@ public class HighOvenGui extends GuiContainer {
 
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
-	
+
 	public HighOvenGui(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
 		super(new HighOvenContainer(inventoryplayer, highoven));
 
@@ -80,21 +80,22 @@ public class HighOvenGui extends GuiContainer {
 		}
 
 		// Side inventory
-		int nbSlots = logic.getSmeltableInventory().getSizeInventory();
+		int nbSmeltSlots = logic.getSmeltableInventory().getSizeInventory();
 
-		if (nbSlots > 0) {
+		if (nbSmeltSlots > 0) {
 			// Draw Top
 			drawTexturedModalRect(guiLeft + 16, guiTop, 176, 14, 36, 6);
-			// Iterate one slot at a time and draw it. Each slot is 18 px high.
-			for (int iter = 0; iter < nbSlots; iter++)
-				drawTexturedModalRect(guiLeft + 16, (guiTop + 6) + (iter * 18), 176, 21, 36, 18);//(iter * 18) + 18);
+			// Iterate one slot at a time and draw it. Each slot is 18 px high. (background)
+			for (int iter = 0; iter < nbSmeltSlots; iter++) {
+				drawTexturedModalRect(guiLeft + 16, (guiTop + 6) + (iter * 18), 176, 21, 36, 18);
+			}
 
-			final int dy = nbSlots > 1 ? nbSlots * 18 : 18;
+			final int dy = nbSmeltSlots > 1 ? nbSmeltSlots * 18 : 18;
 			// Draw Bottom
 			drawTexturedModalRect(guiLeft + 16, guiTop + 6 + dy, 176, 39, 36, 7);
 
 			// Temperatures & icons
-			for (int i = 0; i < nbSlots; i++) {
+			for (int i = 0; i < nbSmeltSlots; i++) {
 				int slotTemperature = logic.getTempForSlot(i) - 20;
 				int maxTemperature = logic.getMeltingPointForSlot(i) - 20;
 
@@ -122,7 +123,7 @@ public class HighOvenGui extends GuiContainer {
 		if (logic.getStackInSlot(3) == null)
 			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
 
-		for (int i = 0; i < nbSlots; i++) {
+		for (int i = 0; i < nbSmeltSlots; i++) {
 			if (logic.getSmeltableInventory().getStackInSlot(i) == null) {
 				drawTexturedModalRect(guiLeft + 27, (guiTop + 7) + (i * 18), 4 * 18, 234, 18, 18);
 			}

@@ -16,6 +16,7 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.FluidType;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
@@ -46,7 +47,10 @@ class TCSmeltery {
 			if (stack.getItem() instanceof ItemBlock)
 				block = ((ItemBlock) stack.getItem()).field_150939_a;
 
-			Smeltery.addMelting(stack, block, stack.getItemDamage(), meltData.getMeltingPoint(), meltData.getResult());
+			FluidType fluid = FluidType.getFluidType(meltData.getResult().getFluid());
+			int temp = fluid == null ? 0 : fluid.baseTemperature;
+
+			Smeltery.addMelting(stack, block, stack.getItemDamage(), temp != 0 ? temp : meltData.getMeltingPoint() / 2, meltData.getResult());
 		}
 	};
 
@@ -86,10 +90,26 @@ class TCSmeltery {
 		for (Map.Entry<ItemMetaWrapper, FluidStack> set : smeltingList.entrySet()) {
 			ItemStack key = new ItemStack(set.getKey().item, 1, set.getKey().meta);
 
+			if (localRegistry.getMeltable(key) != null) continue;
+
 			boolean isOre = InventoryHelper.itemIsOre(key);
 
-			localRegistry.addMeltable(key, isOre, set.getValue().copy(), temperatureList.get(set.getKey()));
+			String fluidName = getFluidName(set.getValue().getFluid());
+			int temp = fluidName == null ? 0 : getFluidTempOverride(fluidName);
+
+			localRegistry.addMeltable(key, isOre, set.getValue().copy(), temp != 0 ? temp : temperatureList.get(set.getKey()) * 2);
 		}
+	}
+
+	private String getFluidName(Fluid needle) {
+		for (Object o : FluidType.fluidTypes.entrySet()) {
+			Map.Entry pairs = (Map.Entry) o;
+
+			if (((FluidType) pairs.getValue()).fluid.equals(needle))
+				return (String) pairs.getKey();
+		}
+
+		return null;
 	}
 
 	private void craftPigIron() {
@@ -167,6 +187,66 @@ class TCSmeltery {
 				continue;
 
 			advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.smeltery, 1, meta), false, new FluidStack(fluid, TSRecipes.INGOT_LIQUID_VALUE), 600);
+		}
+	}
+
+	private int getFluidTempOverride(String fluidName) {
+		switch (fluidName) {
+			case "Water":
+				return 10;
+			case "Iron":
+				return 913;
+			case "Gold":
+				return 663;
+			case "Tin":
+				return -163;
+			case "Copper":
+				return 534;
+			case "Aluminum":
+				return 310;
+			case "NaturalAluminum":
+				return 310;
+			case "Cobalt":
+				return 845;
+			case "Ardite":
+				return 910;
+			case "AluminumBrass":
+				return 305;
+			case "Alumite":
+				return -129;
+			case "Manyullyn":
+				return 534;
+			case "Bronze":
+				return 380;
+			case "Steel":
+				return 840;
+			case "Nickel":
+				return 1053;
+			case "Lead":
+				return -73;
+			case "Silver":
+				return 563;
+			case "Platinum":
+				return 1370;
+			case "Invar":
+				return 840;
+			case "Electrum":
+				return 663;
+			case "Obsidian":
+				return 330;
+			case "Glass":
+				return 975;
+			case "Stone":
+				return 600;
+			case "Emerald":
+				return 1025;
+			case "PigIron":
+				return 983;
+			// case "Ender":
+			//	case "Slime":
+			//	case "Glue":
+			default:
+				return 0;
 		}
 	}
 

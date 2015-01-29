@@ -5,6 +5,10 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import toops.tsteelworks.api.highoven.IFuelRegistry;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry;
+import toops.tsteelworks.api.highoven.IMixAgentRegistry.IMixAgent;
+import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 
 public class HighOvenContainer extends Container {
@@ -19,7 +23,7 @@ public class HighOvenContainer extends Container {
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_PURIFIER, 55, 52)); // purifier
 		addSlotToContainer(new Slot(highoven, HighOvenLogic.SLOT_FUEL, 126, 52)); // fuel
 
-		/* HighOven Ore inventory */
+		/* HighOven Smeltable inventory */
 		for (int y = 0; y < highoven.getSmeltableInventory().getSizeInventory(); y++)
 			addSlotToContainer(new TSActiveSlot(highoven, HighOvenLogic.SLOT_FIRST_MELTABLE + y, 28, 7 + (y * 18), y < 6));
 
@@ -44,24 +48,72 @@ public class HighOvenContainer extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slotID) {
-		ItemStack stack = null;
-		final Slot slot = (Slot) inventorySlots.get(slotID);
-		if ((slot != null) && slot.getHasStack()) {
-			final ItemStack slotStack = slot.getStack();
-			stack = slotStack.copy();
+	protected boolean mergeItemStack(ItemStack stack, int slotStart, int slotEnd, boolean startFromEnd) {
+		return super.mergeItemStack(stack, slotStart, slotEnd, startFromEnd);
+	}
 
-			if (slotID < logic.getSizeInventory()) {
-				if (!mergeItemStack(slotStack, logic.getSizeInventory(), inventorySlots.size(), true))
-					return null;
-			} else if (!mergeItemStack(slotStack, 0, logic.getSizeInventory(), false))
+	@Override
+	/**
+	 * Transfers stack from sourceSlot to any other
+	 *
+	 * @param
+	 */
+	public ItemStack transferStackInSlot(EntityPlayer player, int sourceSlot) {
+		final Slot slot = (Slot) inventorySlots.get(sourceSlot);
+		if (slot == null || !slot.getHasStack()) return null;
+
+		ItemStack sourceStack = slot.getStack();
+		final ItemStack stack = sourceStack.copy();
+
+		if (sourceSlot < logic.getSizeInventory()) { // is from TE inventory
+			if (!mergeItemStack(sourceStack, logic.getSizeInventory(), inventorySlots.size(), true))
 				return null;
-			if (slotStack.stackSize == 0)
-				slot.putStack(null);
-			else
-				slot.onSlotChanged();
+		} else { // is from player inventory
+			if (!mergeToTE(sourceStack)) return null;
 		}
+
+		if (sourceStack.stackSize == 0)
+			slot.putStack(null);
+		else
+			slot.onSlotChanged();
+
 		return stack;
+	}
+
+	private boolean mergeToTE(ItemStack sourceStack) {
+		boolean merged = false;
+
+		if (IFuelRegistry.INSTANCE.getFuel(sourceStack) != null) { // is fuel
+			merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_FUEL, HighOvenLogic.SLOT_FUEL + 1, false);
+		}
+
+		if (sourceStack.stackSize == 0) return merged;
+
+		// is mixAgent
+		IMixAgent agent = IMixAgentRegistry.INSTANCE.getAgentData(sourceStack);
+		if (agent == null) return merged;
+
+		switch (agent.getType()) {
+			case OXIDIZER:
+				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_OXIDIZER, HighOvenLogic.SLOT_OXIDIZER + 1, false);
+				break;
+			case PURIFIER:
+				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_PURIFIER, HighOvenLogic.SLOT_PURIFIER + 1, false);
+				break;
+			case REDUCER:
+				merged |= mergeItemStack(sourceStack, HighOvenLogic.SLOT_REDUCER, HighOvenLogic.SLOT_REDUCER + 1, false);
+		}
+
+		if (sourceStack.stackSize == 0) return merged;
+
+		if (ISmeltingRegistry.INSTANCE.getMeltable(sourceStack) != null) { // is smeltable
+			merged |= mergeItemStack(sourceStack,
+					HighOvenLogic.SLOT_FIRST_MELTABLE,
+					HighOvenLogic.SLOT_FIRST_MELTABLE + logic.getSmeltableInventory().getSizeInventory(),
+					false);
+		}
+
+		return merged;
 	}
 
 	@Override
