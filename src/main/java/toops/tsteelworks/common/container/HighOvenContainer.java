@@ -102,11 +102,27 @@ public class HighOvenContainer extends Container {
 
 		if (sourceStack.stackSize == 0) return merged;
 
+		// TODO: replace this by an overwrite of mergeItemStack to respect maxStackSize.
 		if (ISmeltingRegistry.INSTANCE.getMeltable(sourceStack) != null) { // is meltable
-			merged = mergeItemStack(sourceStack,
-					HighOvenLogic.SLOT_FIRST_MELTABLE,
-					HighOvenLogic.SLOT_FIRST_MELTABLE + logic.getSmeltableInventory().getSizeInventory(),
-					false) || merged;
+			IInventory smeltInventory = logic.getSmeltableInventory();
+			for (int i = 0; i < smeltInventory.getSizeInventory(); i++) {
+				if (smeltInventory.getStackInSlot(i) != null) continue;
+
+				ItemStack toInsert = sourceStack.copy();
+				toInsert.stackSize = 1;
+
+				boolean inserted = mergeItemStack(toInsert,
+						HighOvenLogic.SLOT_FIRST_MELTABLE + i,
+						HighOvenLogic.SLOT_FIRST_MELTABLE + i + 1,
+						false);
+
+				if (inserted)
+					sourceStack.stackSize--;
+
+				merged = inserted || merged;
+			}
+
+			if (sourceStack.stackSize == 0) return merged;
 		}
 
 		return merged;
