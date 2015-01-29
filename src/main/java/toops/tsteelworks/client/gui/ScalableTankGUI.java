@@ -242,7 +242,6 @@ public class ScalableTankGUI {
 
 		/** vertical distance from the scrollbar bottom */
 		double clickPos = (yBottom - moveToY) - (yBottom - focusY) + (scrollAtFocus / getZoomRatio());
-		System.out.println("(yBottom - moveToY): " + (yBottom - moveToY) + ", (yBottom - focusY)" + (yBottom - focusY) + ", clickPos: " + clickPos);
 		if (clickPos < 0) clickPos = 0;
 		if (clickPos > (height - scrollHeight)) clickPos = height - scrollHeight;
 
