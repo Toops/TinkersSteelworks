@@ -120,9 +120,8 @@ public class HighOvenContainer extends Container {
 					sourceStack.stackSize--;
 
 				merged = inserted || merged;
+				if (sourceStack.stackSize == 0) return merged;
 			}
-
-			if (sourceStack.stackSize == 0) return merged;
 		}
 
 		return merged;
