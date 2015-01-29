@@ -92,6 +92,20 @@ public class HighOvenBlock extends TSInventoryBlock {
 	}
 
 	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
+		if (meta == META_HIGHOVEN) {
+			TileEntity te = world.getTileEntity(x, y, z);
+
+			if (te instanceof HighOvenLogic) {
+				InventoryHelper.dropContents(((HighOvenLogic) te).getInventory(), world, x, y, z);
+				InventoryHelper.dropContents(((HighOvenLogic) te).getSmeltableInventory(), world, x, y, z);
+			}
+		}
+
+		super.breakBlock(world, x, y, z, block, meta);
+	}
+
+	@Override
 	public int damageDropped(int meta) {
 		return meta == META_STONE ? META_COBBLE : meta;
 	}
