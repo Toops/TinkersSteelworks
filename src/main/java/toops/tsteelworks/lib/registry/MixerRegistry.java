@@ -18,7 +18,7 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 	@Nullable
 	public IMixOutput registerMix(@Nullable FluidStack fluidout, @Nullable ItemStack itemout, Fluid fluidin, String ox, String red, String pur) {
 		if (fluidout == null && itemout == null) throw new IllegalArgumentException("The fluid output & Item output cannot be both null");
-		
+
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
 		MixOutput newMix = new MixOutput(fluidout, itemout);
@@ -43,25 +43,33 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 	}
 
 	@Override
-	public @Nullable IMixOutput getMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
-		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
-		int[] reduIDs = OreDictionary.getOreIDs(reducer);
-		int[] puriIDs = OreDictionary.getOreIDs(purifier);
+	public @Nullable IMixOutput getMix(Fluid input, @Nullable ItemStack oxidizer, @Nullable ItemStack reducer, @Nullable ItemStack purifier) {
+		if (oxidizer == null && reducer == null && purifier == null) return null;
+
+		int[] oxidIDs = oxidizer == null ? new int[]{-1} : OreDictionary.getOreIDs(oxidizer);
+		int[] reduIDs = reducer == null ?  new int[]{-1} : OreDictionary.getOreIDs(reducer);
+		int[] puriIDs = purifier == null ?  new int[]{-1} : OreDictionary.getOreIDs(purifier);
 
 		MixCombo combo = new MixCombo();
 		combo.setFluid(input);
 
 		for (int oxidID : oxidIDs) {
-			String oxiName = OreDictionary.getOreName(oxidID);
-			combo.setOxydizer(oxiName);
+			if (oxidID != -1) {
+				String oxiName = OreDictionary.getOreName(oxidID);
+				combo.setOxydizer(oxiName);
+			}
 
 			for (int reduID : reduIDs) {
-				String reduName = OreDictionary.getOreName(reduID);
-				combo.setReducer(reduName);
+				if (reduID != -1) {
+					String reduName = OreDictionary.getOreName(reduID);
+					combo.setReducer(reduName);
+				}
 
 				for (int puriID : puriIDs) {
-					String puriName = OreDictionary.getOreName(puriID);
-					combo.setPurifier(puriName);
+					if (puriID != -1) {
+						String puriName = OreDictionary.getOreName(puriID);
+						combo.setPurifier(puriName);
+					}
 
 					IMixOutput result = comboList.get(combo);
 					if (result != null) return result;
