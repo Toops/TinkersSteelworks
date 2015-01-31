@@ -332,30 +332,23 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		if (meltData == null) return false;
 
 		FluidStack meltResult = meltData.getResult();
-		final ItemStack itemMix = IMixerRegistry.INSTANCE.getSolidMix(meltResult.getFluid(),
+		final IMixerRegistry.IMixOutput mix = IMixerRegistry.INSTANCE.getMix(meltResult.getFluid(),
 				inventory.getStackInSlot(SLOT_OXIDIZER),
 				inventory.getStackInSlot(SLOT_REDUCER),
 				inventory.getStackInSlot(SLOT_PURIFIER));
 
-		final FluidStack fluidMix = IMixerRegistry.INSTANCE.getFluidMix(meltResult.getFluid(),
-				inventory.getStackInSlot(SLOT_OXIDIZER),
-				inventory.getStackInSlot(SLOT_REDUCER),
-				inventory.getStackInSlot(SLOT_PURIFIER));
-
-		if (fluidMix != null)
-			meltResult = fluidMix;
-
-		if (!this.addFluidToTank(meltResult))
-			return false;
+		if (mix == null && !this.addFluidToTank(meltResult)) return false;
+		if (mix != null && mix.getFluidOutput() != null && !this.addFluidToTank(mix.getFluidOutput())) return false;
 
 		if (meltData.isOre())
 			this.outputTE3Slag();
 
-		if (itemMix != null || fluidMix != null)
-			this.removeMixItems();
+		if (mix != null) {
+			if (mix.getSolidOutput() != null)
+				this.addItem(mix.getSolidOutput());
 
-		if (itemMix != null)
-			this.addItem(itemMix);
+			this.removeMixItems();
+		}
 
 		smeltableInventory.decrStackSize(slot, 1);
 		activeTemps[slot] = ROOM_TEMP;

@@ -9,7 +9,7 @@ Please include the following:
 * Forge version/build
 * Tinkers' Construct version (if available)
 * Tinkers' Steelworks version
-* Versions of any mods potentially related to the issue 
+* Versions of any mods potentially related to the issue
 * Any relevant screenshots are greatly appreciated.
 * For crashes:
     * Steps to reproduce
@@ -59,6 +59,7 @@ mods.tsteelworks.mix.removeAgent(String agent)
 // agents used in here must be registered.
 mods.tsteelworks.mix.addFluidMix(FluidStack input, String oxidizer, String reducer, String purifier, FluidStack output)
 mods.tsteelworks.mix.addSolidMix(FluidStack input, String oxidizer, String reducer, String purifier, ItemStack output)
+mods.tsteelworks.mix.addMix(FluidStack input, String oxidizer, String reducer, String purifier, FluidStack outputLiquid, ItemStack outputSolid)
 
 mods.tsteelworks.mix.removeMix(FluidStack input, String oxidizer, String reducer, String purifier)
 ```

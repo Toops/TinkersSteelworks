@@ -14,13 +14,18 @@ import static toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin.pa
 public class MixWrapper {
 	// Mixs
 	@ZenMethod
+	public static void addMix(ILiquidStack input, String oxidizer, String reducer, String purifier, ILiquidStack outputLiquid, IItemStack outputItem) {
+		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, reducer, purifier, outputLiquid == null ? null : parseLiquid(outputLiquid), outputItem == null ? null : parseItem(outputItem)));
+	}
+
+	@ZenMethod
 	public static void addFluidMix(ILiquidStack input, String oxidizer, String reducer, String purifier, ILiquidStack output) {
-		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, reducer, purifier, parseLiquid(output)));
+		addMix(input, oxidizer, reducer, purifier, output, null);
 	}
 
 	@ZenMethod
 	public static void addSolidMix(ILiquidStack input, String oxidizer, String reducer, String purifier, IItemStack output) {
-		MineTweakerAPI.apply(new MixerHandler.Add(parseLiquid(input).getFluid(), oxidizer, reducer, purifier, parseItem(output)));
+		addMix(input, oxidizer, reducer, purifier, null, output);
 	}
 
 	@ZenMethod

@@ -120,7 +120,7 @@ public class TSRecipes {
 
 			for (final String o : oxidizers)
 				for (final String p : purifiers)
-					IMixerRegistry.INSTANCE.registerMix(itemScorchedBrick, moltenStoneFluid, o, null, p);
+					IMixerRegistry.INSTANCE.registerMix(null, itemScorchedBrick, moltenStoneFluid, o, null, p);
 		}
 	}
 
@@ -143,7 +143,7 @@ public class TSRecipes {
 		Fluid moltenStoneFluid = FluidRegistry.getFluid("stone.molten");
 
 		if (moltenStoneFluid != null)
-			IMixerRegistry.INSTANCE.registerMix(new ItemStack(TSContent.materialsTS, 1, 1), moltenStoneFluid, "dyeLime", null, "blockSand");
+			IMixerRegistry.INSTANCE.registerMix(null, new ItemStack(TSContent.materialsTS, 1, 1), moltenStoneFluid, "dyeLime", null, "blockSand");
 	}
 
 	private static void craftQuartz() {
@@ -151,7 +151,7 @@ public class TSRecipes {
 		if (moltenGlass == null) return;
 
 		final ItemStack netherQuartz = new ItemStack(Items.quartz, 2);
-		IMixerRegistry.INSTANCE.registerMix(netherQuartz, moltenGlass, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
+		IMixerRegistry.INSTANCE.registerMix(null, netherQuartz, moltenGlass, "dustGunpowder", "oreberryEssence", "blockGraveyardDirt");
 	}
 
 	public static void craftStorageBlocks() {
@@ -188,7 +188,7 @@ public class TSRecipes {
 		for (String o : oxidizers)
 			for (String r : reducers)
 				for (String p : purifiers)
-					IMixerRegistry.INSTANCE.registerMix(steel, moltenIron, o, r, p);
+					IMixerRegistry.INSTANCE.registerMix(steel, null, moltenIron, o, r, p);
 	}
 
 	public static void changeAnvil() {

@@ -5,20 +5,32 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.IMixerRegistry.IMixHolder;
+import toops.tsteelworks.api.highoven.IMixerRegistry.IMixOutput;
 import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 
+import javax.annotation.Nullable;
+
 class MixerHandler {
-	static class Add extends MinetweakerPlugin.Add<IMixHolder, Object> {
-		public Add(final Fluid input, final String ox, final String red, final String pur, final Object output) {
-			super(new MixHolder(ox, red, pur, input), output);
+	static class Add extends MinetweakerPlugin.Add<IMixHolder, IMixOutput> {
+		public Add(final Fluid input, final String ox, final String red, final String pur, final FluidStack outputLiquid, final ItemStack outputSolid) {
+			super(new MixHolder(ox, red, pur, input), new IMixOutput() {
+				@Nullable
+				@Override
+				public FluidStack getFluidOutput() {
+					return outputLiquid;
+				}
+
+				@Nullable
+				@Override
+				public ItemStack getSolidOutput() {
+					return outputSolid;
+				}
+			});
 		}
-		
+
 		@Override
 		public void apply() {
-			if (newData instanceof ItemStack)
-				oldData = IMixerRegistry.INSTANCE.registerMix((ItemStack) newData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
-			else
-				oldData = IMixerRegistry.INSTANCE.registerMix((FluidStack) newData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+			oldData = IMixerRegistry.INSTANCE.registerMix(newData.getFluidOutput(), newData.getSolidOutput(), key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 		}
 
 		@Override
@@ -26,10 +38,7 @@ class MixerHandler {
 			if (oldData == null)
 				IMixerRegistry.INSTANCE.removeMix(key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 			else {
-				if (oldData instanceof ItemStack)
-					IMixerRegistry.INSTANCE.registerMix((ItemStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
-				else
-					IMixerRegistry.INSTANCE.registerMix((FluidStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+				IMixerRegistry.INSTANCE.registerMix(oldData.getFluidOutput(), oldData.getSolidOutput(), key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 			}
 		}
 
@@ -39,7 +48,7 @@ class MixerHandler {
 		}
 	}
 
-	static class Remove extends MinetweakerPlugin.Remove<IMixHolder, Object> {
+	static class Remove extends MinetweakerPlugin.Remove<IMixHolder, IMixOutput> {
 		public Remove(Fluid input, String ox, String red, String pur) {
 			super(new MixHolder(ox, red, pur, input));
 		}
@@ -52,11 +61,8 @@ class MixerHandler {
 		@Override
 		public void undo() {
 			if (oldData == null) return;
-			
-			if (oldData instanceof ItemStack)
-				IMixerRegistry.INSTANCE.registerMix((ItemStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
-			else
-				IMixerRegistry.INSTANCE.registerMix((FluidStack) oldData, key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
+
+			IMixerRegistry.INSTANCE.registerMix(oldData.getFluidOutput(), oldData.getSolidOutput(), key.getInputFluid(), key.getOxidizer(), key.getReducer(), key.getPurifier());
 		}
 
 		@Override

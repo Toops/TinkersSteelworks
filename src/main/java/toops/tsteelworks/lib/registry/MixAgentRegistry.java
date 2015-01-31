@@ -7,7 +7,7 @@ import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IMixAgent> implements IMixAgentRegistry {
+class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IMixAgent> implements IMixAgentRegistry {
 	/* ========== IMixAgentRegistry ========== */
 	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
 	private final Map<String, MixAgent> mixItemList = new HashMap<>();
@@ -21,7 +21,7 @@ public class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IM
 			dispatchDeleteEvent(oreName, oldAgent);
 
 		dispatchAddEvent(oreName, newAgent);
-		
+
 		return oldAgent;
 	}
 
