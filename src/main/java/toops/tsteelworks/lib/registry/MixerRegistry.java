@@ -15,7 +15,7 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 	private final Map<MixCombo, ItemStack> itemComboList = new HashMap<>();
 
 	@Override
-	public Object registerMix(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
+	public FluidStack registerMix(FluidStack fluidout, Fluid fluidin, String ox, String red, String pur) {
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
 		FluidStack oldFluid = fluidComboList.put(mix, fluidout);
@@ -28,7 +28,7 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 	}
 
 	@Override
-	public Object registerMix(ItemStack stackout, Fluid fluidin, String ox, String red, String pur) {
+	public ItemStack registerMix(ItemStack stackout, Fluid fluidin, String ox, String red, String pur) {
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
 		ItemStack oldItem = itemComboList.put(mix, stackout);
@@ -42,13 +42,15 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 
 	@Override
 	public Object removeMix(Fluid input, String oxidizer, String reducer, String purifier) {
-		MixCombo mix = new MixCombo(oxidizer, reducer, purifier, input);
+		FluidStack output = removeLiquidMix(input, oxidizer, reducer, purifier);
+		ItemStack output2 = removeSolidMix(input, oxidizer, reducer, purifier);
 
-		FluidStack fs = fluidComboList.remove(mix);
-		if (fs != null) {
-			dispatchDeleteEvent(mix, fs);
-			return fs;
-		}
+		return output == null ? output2 : output;
+	}
+
+	@Override
+	public ItemStack removeSolidMix(Fluid input, String oxidizer, String reducer, String purifier) {
+		MixCombo mix = new MixCombo(oxidizer, reducer, purifier, input);
 
 		ItemStack is = itemComboList.remove(mix);
 		if (is != null) {
@@ -60,13 +62,56 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 	}
 
 	@Override
-	public Object getMix(Fluid fluid, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
+	public FluidStack removeLiquidMix(Fluid input, String oxidizer, String reducer, String purifier) {
+		MixCombo mix = new MixCombo(oxidizer, reducer, purifier, input);
+
+		FluidStack fs = fluidComboList.remove(mix);
+		if (fs != null) {
+			dispatchDeleteEvent(mix, fs);
+		}
+
+		return fs;
+	}
+
+	@Override
+	public ItemStack getSolidMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
 		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
 		int[] reduIDs = OreDictionary.getOreIDs(reducer);
 		int[] puriIDs = OreDictionary.getOreIDs(purifier);
 
 		MixCombo combo = new MixCombo();
-		combo.setFluid(fluid);
+		combo.setFluid(input);
+
+		for (int oxidID : oxidIDs) {
+			String oxiName = OreDictionary.getOreName(oxidID);
+			combo.setOxydizer(oxiName);
+
+			for (int reduID : reduIDs) {
+				String reduName = OreDictionary.getOreName(reduID);
+				combo.setReducer(reduName);
+
+				for (int puriID : puriIDs) {
+					String puriName = OreDictionary.getOreName(puriID);
+					combo.setPurifier(puriName);
+
+					ItemStack resultIS = itemComboList.get(combo);
+					if (resultIS != null)
+						return resultIS.copy();
+				}
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public FluidStack getFluidMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
+		int[] oxidIDs = OreDictionary.getOreIDs(oxidizer);
+		int[] reduIDs = OreDictionary.getOreIDs(reducer);
+		int[] puriIDs = OreDictionary.getOreIDs(purifier);
+
+		MixCombo combo = new MixCombo();
+		combo.setFluid(input);
 
 		for (int oxidID : oxidIDs) {
 			String oxiName = OreDictionary.getOreName(oxidID);
@@ -83,15 +128,20 @@ public class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, Obje
 					FluidStack resultFS = fluidComboList.get(combo);
 					if (resultFS != null)
 						return resultFS.copy();
-
-					ItemStack resultIS = itemComboList.get(combo);
-					if (resultIS != null)
-						return resultIS.copy();
 				}
 			}
 		}
 
 		return null;
+	}
+
+	@Override
+	public Object getMix(Fluid fluid, ItemStack oxidizer, ItemStack reducer, ItemStack purifier) {
+		FluidStack fluidOutput = getFluidMix(fluid, oxidizer, reducer, purifier);
+
+		if (fluidOutput != null) return fluidOutput;
+
+		return getSolidMix(fluid, oxidizer, reducer, purifier);
 	}
 
 	/**

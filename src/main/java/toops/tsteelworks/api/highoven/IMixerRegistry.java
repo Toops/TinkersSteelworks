@@ -18,9 +18,9 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, Obj
 	 * @param reducer   A valid reducer
 	 * @param purifier  A valid purifier
 	 *
-	 * @return What was previously registered for this mix output, or null if none was
+	 * @return What was previously registered for this mix's output, or null if none was
 	 */
-	public Object registerMix(FluidStack output, Fluid input, String oxidizer, String reducer, String purifier);
+	public FluidStack registerMix(FluidStack output, Fluid input, String oxidizer, String reducer, String purifier);
 
 	/**
 	 * Registers a valid Oxidizer-reducer-purifier mix for an input fluid
@@ -31,33 +31,69 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, Obj
 	 * @param reducer   A valid reducer
 	 * @param purifier  A valid purifier
 	 *
-	 * @return What was previously registered for this mix output, or null if none was
+	 * @return What was previously registered for this mix's output, or null if none was
 	 */
-	public Object registerMix(ItemStack output, Fluid input, String oxidizer, String reducer, String purifier);
+	public ItemStack registerMix(ItemStack output, Fluid input, String oxidizer, String reducer, String purifier);
 
 	/**
-	 * Unregisters an Oxidizer-reducer-purifier mix
-	 *
-	 * @param input     The input fluid
-	 * @param oxidizer  The oxidizer used in the mix
-	 * @param reducer   The reducer used in the mix
-	 * @param purifier  The purifier used in the mix
-	 *
-	 * @return the former resulting ItemStack or FluidStack, or null if nothing was removed
+	 * Mixs can now be both solid & liquid at the same time, use removeSolidMix & removeLiquidMix
 	 */
+	@Deprecated
 	public Object removeMix(Fluid input, String oxidizer, String reducer, String purifier);
 
 	/**
-	 * Gets the resulting ItemStack or FluidStack for an Oxidizer-reducer-purifier mix
+	 * Unregisters an Oxidizer-reducer-purifier solid mix
 	 *
 	 * @param input     The input fluid
 	 * @param oxidizer  The oxidizer used in the mix
 	 * @param reducer   The reducer used in the mix
 	 * @param purifier  The purifier used in the mix
 	 *
-	 * @return the resulting ItemStack or FluidStack, or null if the mix is invalid
+	 * @return the previously resulting ItemStack, or null if nothing was removed
 	 */
+	public ItemStack removeSolidMix(Fluid input, String oxidizer, String reducer, String purifier);
+
+	/**
+	 * Unregisters an Oxidizer-reducer-purifier liquid mix
+	 *
+	 * @param input     The input fluid
+	 * @param oxidizer  The oxidizer used in the mix
+	 * @param reducer   The reducer used in the mix
+	 * @param purifier  The purifier used in the mix
+	 *
+	 * @return the previously resulting LiquidStack, or null if nothing was removed
+	 */
+	public FluidStack removeLiquidMix(Fluid input, String oxidizer, String reducer, String purifier);
+
+	/**
+	 * Use getSolidMix & getFluidMix
+	 */
+	@Deprecated
 	public Object getMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier);
+
+	/**
+	 * Gets the resulting ItemStack for an Oxidizer-reducer-purifier mix
+	 *
+	 * @param input     The input fluid
+	 * @param oxidizer  The oxidizer used in the mix
+	 * @param reducer   The reducer used in the mix
+	 * @param purifier  The purifier used in the mix
+	 *
+	 * @return the resulting ItemStack, or null if the mix doesn't have a solid output
+	 */
+	public ItemStack getSolidMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier);
+
+	/**
+	 * Gets the resulting FluidStack for an Oxidizer-reducer-purifier mix
+	 *
+	 * @param input     The input fluid
+	 * @param oxidizer  The oxidizer used in the mix
+	 * @param reducer   The reducer used in the mix
+	 * @param purifier  The purifier used in the mix
+	 *
+	 * @return the resulting FluidStack, or null if the mix doesn't have a liquid output
+	 */
+	public FluidStack getFluidMix(Fluid input, ItemStack oxidizer, ItemStack reducer, ItemStack purifier);
 
 	public static interface IMixHolder {
 		/**
