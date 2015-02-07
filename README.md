@@ -2,6 +2,11 @@
 
 A steel-based expansion for Tinkers' Construct.
 
+##Builds
+""Stable"" releases are found on [github](https://github.com/Ephys/TinkersSteelworks/releases).
+
+Dev builds can be found on [TehNut's Jenkins](http://tehnut.info/jenkins/job/TSteelworks/).
+
 ##Issue reporting
 Please include the following:
 
