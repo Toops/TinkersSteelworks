@@ -19,7 +19,7 @@ public class RailcraftPlugin extends ModCompatPlugin {
 	@Override
 	public void init() {
 		ItemStack[] coalCoke = RegistryHelper.getItemStacks("Railcraft:fuel.coke@0");
-		ItemStack[] cokeBlock = RegistryHelper.getItemStacks("Railcraft:tile.railcraft.cube@0");
+		ItemStack[] cokeBlock = RegistryHelper.getItemStacks("Railcraft:cube@0");
 
 		if (coalCoke == null || cokeBlock == null || coalCoke.length == 0 || cokeBlock.length == 0) {
 			if (DebugHelper.debug) throw new RuntimeException("Could not load Railcraft coke fuel");
