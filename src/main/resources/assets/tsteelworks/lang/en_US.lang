@@ -132,6 +132,10 @@ tconstruct.waila.invalidstructure=Invalid Structure
 tconstruct.waila.empty=Empty
 tconstruct.waila.total=Total
 
+option.tseelworks.listFluids=List fluids
+option.tseelworks.showTotal=Show Total fluid
+option.tseelworks.autoUnit=Adjust bucket units
+
 quantity.emerald=Emeralds
 quantity.block=Blocks
 quantity.panel=Panels

@@ -129,8 +129,11 @@ manual.steelworks.tooltip1=Автор: Общество инженеров
 modifier.tool.vacuous=Пустота
 
 tconstruct.waila.invalidstructure=Неверная структура
-tconstruct.waila.empty=Пустой
-tconstruct.waila.total=Полный
+tconstruct.waila.empty=Пусто
+tconstruct.waila.total=Всего
+
+option.tseelworks.showTotal=Показывать всего
+option.tseelworks.autoUnit=Регулировать единицы вёдер
 
 quantity.emerald=Изумруды
 quantity.block=Блоки
@@ -144,7 +147,7 @@ iron.molten=Расплавленное железо
 gold.molten=Расплавленное золото
 copper.molten=Расплавленная медь
 tin.molten=Расплавленное олово
-aluminum.molten=Расплавленной алюминий
+aluminum.molten=Расплавленный алюминий
 cobalt.molten=Расплавленный кобальт
 ardite.molten=Расплавленный ардит
 bronze.molten=Расплавленная бронза
