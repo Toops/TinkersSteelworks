@@ -57,6 +57,7 @@ public class TSRecipes {
 
 	public static void addHighOvenSmelts() {
 		ISmeltingRegistry.INSTANCE.addDictionaryMeltable("blockLimestone", new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE * 4), 825);
+		ISmeltingRegistry.INSTANCE.addDictionaryMeltable("limestone", new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE * 4), 825);
 
 		FluidStack moltenLimestone = new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE);
 		ISmeltingRegistry.INSTANCE.addMeltable(new ItemStack(TSContent.materialsTS, 1, 1), false, moltenLimestone, 825);

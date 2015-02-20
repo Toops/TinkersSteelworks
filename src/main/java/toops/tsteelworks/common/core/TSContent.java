@@ -177,6 +177,7 @@ public class TSContent {
 
 		for (int i = 0; i < ((LimestoneBlock) limestoneBlock).textureNames.length; i++) {
 			OreDictionary.registerOre("blockLimestone", new ItemStack(limestoneBlock, 1, i));
+			OreDictionary.registerOre("limestone", new ItemStack(limestoneBlock, 1, i));
 		}
 	}
 
