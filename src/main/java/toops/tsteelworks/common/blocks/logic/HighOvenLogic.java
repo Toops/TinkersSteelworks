@@ -406,6 +406,11 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
 				stack.stackSize--;
+				//Dont leave itemstacks of zero size in the slots....
+				if(stack.stackSize == 0) {
+					inventory.setInventorySlotContents(i, null); 
+					this.markDirty();
+				}
 			}
 		}
 	}
