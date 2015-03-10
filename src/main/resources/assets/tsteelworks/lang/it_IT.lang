@@ -132,6 +132,10 @@ tconstruct.waila.invalidstructure=Struttura invalida
 tconstruct.waila.empty=Vuoto
 tconstruct.waila.total=Totale
 
+option.tseelworks.listFluids=Elenca fluidi
+option.tseelworks.showTotal=Mostra totale fluidi
+option.tseelworks.autoUnit=Aggiusta unità di secchio
+
 quantity.emerald=Smeraldi
 quantity.block=Blocchi
 quantity.panel=Pannelli
