@@ -42,9 +42,12 @@ public class HighOvenBlock extends TSInventoryBlock {
 	// the fuck is 3 used for ?
 	public static final int META_STONE = 4;
 	public static final int META_COBBLE = 5;
-	// paver
+	public static final int META_PAVER = 6;
 	public static final int META_CRACKED = 7;
-	// road, fancy, chiseled, creepy
+	public static final int META_ROAD = 8;
+	public static final int META_FANCY = 9;
+	public static final int META_CHISELED = 10;
+	public static final int META_CREEPY = 11;
 	public static final int META_DUCT = 12;
 	public static final int META_TANK = 13;
 

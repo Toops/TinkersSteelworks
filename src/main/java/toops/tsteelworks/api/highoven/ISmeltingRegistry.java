@@ -21,7 +21,7 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 
 	/**
 	 * Adds all Items to the Smeltery based on the oreDictionary Name.
-	 * Beware that entries that begins with "ore" will be considered being world ores.
+	 * Beware that entries beginning with "ore" will be marked as being ores.
 	 *
 	 * @param inputOre          oreDictionary name e.g. oreIron
 	 * @param output            FluidStack to add to the high oven when the ore melts
