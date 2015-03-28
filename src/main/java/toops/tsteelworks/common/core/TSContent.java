@@ -51,13 +51,19 @@ public class TSContent {
 
 	public static Block steamTurbine;
 
-	/** Instance of the fluid we registered, null if we did not */
+	/**
+	 * Instance of the fluid we registered, null if we did not
+	 */
 	public static Fluid steamFluid;
 
-	/** Instance of the fluid we registered, null if we did not */
+	/**
+	 * Instance of the fluid we registered, null if we did not
+	 */
 	public static Fluid moltenLimestoneFluid;
 
-	/** Instance of the fluid we registered, null if we did not */
+	/**
+	 * Instance of the fluid we registered, null if we did not
+	 */
 	public static Fluid liquidCementFluid;
 
 	public static ItemArmor.ArmorMaterial materialSteel;
@@ -153,7 +159,7 @@ public class TSContent {
 		GameRegistry.registerBlock(steamTurbine, steamTurbine.getUnlocalizedName());
 		GameRegistry.registerTileEntity(SteamTurbineLogic.class, steamTurbine.getUnlocalizedName());
 
-		TSContent.tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[] {"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
+		TSContent.tsCharcoalBlock = new TSBaseBlock(Material.rock, 5.0f, new String[]{"charcoal_block"}).setBlockName("tsteelworks.blocks.charcoal");
 		GameRegistry.registerBlock(TSContent.tsCharcoalBlock, "blockCharcoal");
 		Blocks.fire.setFireInfo(TSContent.tsCharcoalBlock, 15, 30);
 		OreDictionary.registerOre("blockCharcoal", TSContent.tsCharcoalBlock);
@@ -211,7 +217,7 @@ public class TSContent {
 	}
 
 	/**
-	 * Initialize the Steelworks creative tab with an icon.
+	 * Initializes the Steelworks creative tab with an icon.
 	 */
 	private static void setupCreativeTabs() {
 		List<ItemStack> steels = OreDictionary.getOres("ingotSteel");
@@ -223,11 +229,12 @@ public class TSContent {
 	}
 
 	public static void createEntities() {
-		EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", 0, TSteelworks.instance, 32, 3, true);
-		EntityRegistry.registerModEntity(EntityLimestoneBrick.class, "LimestoneBrick", 1, TSteelworks.instance, 32, 3, true);
+		int id = 0;
 
-		// TODO: Register with registerModEntity instead. We do this because registerModEntity does not seemingly add a mob spawner egg.
-		EntityRegistry.registerGlobalEntityID(HighGolem.class, "HighGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
-		EntityRegistry.registerGlobalEntityID(SteelGolem.class, "SteelGolem", EntityRegistry.findGlobalUniqueEntityId(), 0x171717, 0x614D3C);
+		EntityRegistry.registerModEntity(EntityScorchedBrick.class, "ScorchedBrick", id++, TSteelworks.instance, 32, 3, true);
+		EntityRegistry.registerModEntity(EntityLimestoneBrick.class, "LimestoneBrick", id++, TSteelworks.instance, 32, 3, true);
+
+		EntityRegistry.registerModEntity(HighGolem.class, "HighGolem", id++, TSteelworks.instance, 80, 3, true); // colors: 0x171717, 0x614D3C
+		EntityRegistry.registerModEntity(SteelGolem.class, "SteelGolem", id++, TSteelworks.instance, 80, 3, true); // colors: 0x171717, 0x614D3C
 	}
 }

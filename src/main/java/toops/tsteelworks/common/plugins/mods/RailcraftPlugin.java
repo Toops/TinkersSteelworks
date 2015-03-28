@@ -8,6 +8,7 @@ import toops.tsteelworks.common.core.TSLogger;
 import toops.tsteelworks.common.plugins.ModCompatPlugin;
 
 public class RailcraftPlugin extends ModCompatPlugin {
+
 	@Override
 	public String getModId() {
 		return "Railcraft";
@@ -22,8 +23,6 @@ public class RailcraftPlugin extends ModCompatPlugin {
 		ItemStack[] cokeBlock = RegistryHelper.getItemStacks("Railcraft:cube@0");
 
 		if (coalCoke == null || cokeBlock == null || coalCoke.length == 0 || cokeBlock.length == 0) {
-			if (DebugHelper.debug) throw new RuntimeException("Could not load Railcraft coke fuel");
-
 			TSLogger.warning("Could not load Railcraft coke fuel");
 		} else {
 			IFuelRegistry.INSTANCE.addFuel(coalCoke[0], 280, 10);

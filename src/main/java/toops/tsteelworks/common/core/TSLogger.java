@@ -1,5 +1,6 @@
 package toops.tsteelworks.common.core;
 
+import nf.fr.ephys.cookiecore.helpers.DebugHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
@@ -36,10 +37,18 @@ public class TSLogger {
 
 	public static void warning(String desc) {
 		logger.warn(desc);
+
+		if (DebugHelper.debug) {
+			throw new RuntimeException(desc);
+		}
 	}
 
 	public static void error(String msg, Throwable thrown) {
 		logger.error(msg, thrown);
+
+		if (DebugHelper.debug) {
+			throw new RuntimeException(msg, thrown);
+		}
 	}
 
 	public static void debug(String msg) {
