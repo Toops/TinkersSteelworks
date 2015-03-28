@@ -37,10 +37,6 @@ public class TSLogger {
 
 	public static void warning(String desc) {
 		logger.warn(desc);
-
-		if (DebugHelper.debug) {
-			throw new RuntimeException(desc);
-		}
 	}
 
 	public static void error(String msg, Throwable thrown) {

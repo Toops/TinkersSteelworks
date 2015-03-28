@@ -52,17 +52,17 @@ public class TSContent {
 	public static Block steamTurbine;
 
 	/**
-	 * Instance of the fluid we registered, null if we did not
+	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid steamFluid;
 
 	/**
-	 * Instance of the fluid we registered, null if we did not
+	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid moltenLimestoneFluid;
 
 	/**
-	 * Instance of the fluid we registered, null if we did not
+	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid liquidCementFluid;
 
