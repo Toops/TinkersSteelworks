@@ -25,7 +25,6 @@ import toops.tsteelworks.api.event.IRegistry;
 import toops.tsteelworks.api.event.IRegistryListener;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
-import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.core.TSRecipes;
 import toops.tsteelworks.lib.ModsData.Fluids;
@@ -78,7 +77,6 @@ class TCSmeltery {
 		TSRecipes.INGOT_LIQUID_VALUE = TConstruct.ingotLiquidValue;
 		TSRecipes.NUGGET_LIQUID_VALUE = TConstruct.nuggetLiquidValue;
 		TSRecipes.BLOCK_LIQUID_VALUE = TConstruct.blockLiquidValue;
-		TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ConfigCore.ingotsPerOre);
 	}
 
 	private void copySmeltingList() {
@@ -98,7 +96,14 @@ class TCSmeltery {
 			int temp = fluidName == null ? 0 : getFluidTempOverride(fluidName);
 			if (temp == 0) temp = temperatureList.get(set.getKey()) * 2;
 
-			localRegistry.addMeltable(key, isOre, set.getValue().copy(), temp);
+			FluidStack output = set.getValue().copy();
+			if (isOre) {
+				// TConstruct registry stores the double output directly in the fluid amount, we compute it right
+				// before outputing it to the high oven, so divide to get back to a neutral value.
+				output.amount /= 2;
+			}
+
+			localRegistry.addMeltable(key, isOre, output, temp);
 		}
 	}
 

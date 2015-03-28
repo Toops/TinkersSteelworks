@@ -331,7 +331,11 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		if (meltData == null) return false;
 
-		FluidStack meltResult = meltData.getResult();
+		FluidStack meltResult = meltData.getResult().copy();
+		if (meltData.isOre()) {
+			meltResult.amount = (int) (meltResult.amount * ConfigCore.ingotsPerOre);
+		}
+
 		final IMixerRegistry.IMixOutput mixResult = IMixerRegistry.INSTANCE.getMix(meltResult.getFluid(),
 				inventory.getStackInSlot(SLOT_OXIDIZER),
 				inventory.getStackInSlot(SLOT_REDUCER),
@@ -342,7 +346,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 				return false;
 			}
 		} else if (mixResult.getFluidOutput() != null) {
-			FluidStack mixedMeltResult = mixResult.getFluidOutput();
+			FluidStack mixedMeltResult = mixResult.getFluidOutput().copy();
 			mixedMeltResult.amount = meltResult.amount;
 
 			if (!this.addFluidToTank(mixedMeltResult)) {
@@ -350,8 +354,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 			}
 		}
 
-		if (meltData.isOre())
+		if (meltData.isOre()) {
 			this.outputTE3Slag();
+		}
 
 		if (mixResult != null) {
 			if (mixResult.getSolidOutput() != null)

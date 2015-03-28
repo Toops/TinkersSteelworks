@@ -71,12 +71,12 @@ public class ConfigCore {
 
 		config.load();
 
-		enableSteelArmor = config.get("Equipables", "Steel Armor Enabler", true, "Enables steel armor").getBoolean(true);
+		enableSteelArmor = config.get("Equipables", "Steel Armor Enabled", true, "Enables steel armor").getBoolean(true);
 
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
 
 		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
-		TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ingotsPerOre);
+		//TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ingotsPerOre);
 
 		teSlagOutputChance = config.get("High Oven", "TE Slag output chance", 10, "1 in <config> chance of getting Thermal Expansion slag when smelting ores, set to -1 to disable. Active only if TE is present").getInt(10);
 		steamProductionRate = config.get("High Oven", "Steam rate", 20, "Steam maximum production rate per tick per layer (in mB). Let's not renderTank railcraft's boilers useless, set to 0 to disable steam production" +

@@ -6,6 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
+import toops.tsteelworks.common.core.ConfigCore;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -35,7 +35,6 @@ public class TSRecipes {
 	public static final String[] PAT_BOOTS = {"# #", "# #"};
 
 	public static int INGOT_LIQUID_VALUE = 144;
-	public static int ORE_LIQUID_VALUE = INGOT_LIQUID_VALUE;
 	public static int BLOCK_LIQUID_VALUE = INGOT_LIQUID_VALUE * 4;
 	public static int NUGGET_LIQUID_VALUE = INGOT_LIQUID_VALUE / 9;
 
