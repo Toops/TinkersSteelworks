@@ -119,7 +119,7 @@ class TCSmeltery {
 	}
 
 	private void craftPigIron() {
-		OreDictionary.registerOre("dustBone", new ItemStack(Items.dye));
+		OreDictionary.registerOre("dustBone", new ItemStack(Items.dye, 1, 15));
 		IMixerRegistry.INSTANCE.registerMix(new FluidStack(TinkerSmeltery.pigIronFluid, 1000), null, TinkerSmeltery.moltenIronFluid, "dustSugar", "dustBone", "hambone");
 	}
 
