@@ -3,36 +3,41 @@ package toops.tsteelworks.common.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import toops.tsteelworks.common.core.TSContent;
 
 import java.util.List;
 
 public class TSBaseSlab extends Block {
-	private Block modelBlock;
-	private int startingMeta;
-	private int totalSize;
+	private final Block modelBlock;
+	private final int metaStart;
+	private final int metaEnd;
 
-	public TSBaseSlab(Material material) {
-		super(material);
-		this.setCreativeTab(TSContent.creativeTab);
-	}
-
-	public TSBaseSlab(Material material, Block model, int meta, int totalSize) {
-		this(material);
+	/**
+	 * Creates a new slab by copying properties from an existing block.
+	 *
+	 * @param model The base block for which a slab should be created.
+	 * @param metaStart The start of the metadata range of the model (included).
+	 * @param metaEnd The end of the metadata range of the model (included).
+	 */
+	public TSBaseSlab(Block model, int metaStart, int metaEnd) {
+		super(model.getMaterial());
 
 		this.modelBlock = model;
-		this.startingMeta = meta;
-		this.totalSize = totalSize;
+		this.metaStart = metaStart;
+		this.metaEnd = metaEnd;
+
+		if (getBlockAmount() > 8) {
+			throw new IllegalArgumentException("Can only define a range of 8 metadata per slabs, the other 8 are used for the upper slabs.");
+		}
 	}
 
 	@Override
@@ -81,16 +86,22 @@ public class TSBaseSlab extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
-		meta = meta % 8 + startingMeta;
+		meta = meta % 8 + metaStart;
 
 		return modelBlock.getIcon(side, meta);
+	}
+
+	private int getBlockAmount() {
+		return metaEnd - metaStart + 1;
 	}
 
 	@Override
 	@SuppressWarnings({"unchecked"})
 	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
-		for (int iter = 0; iter < totalSize; iter++) {
-			list.add(new ItemStack(id, 1, iter));
+		int nbBlocks = getBlockAmount();
+
+		for (int i = 0; i < nbBlocks; i++) {
+			list.add(new ItemStack(id, 1, i));
 		}
 	}
 

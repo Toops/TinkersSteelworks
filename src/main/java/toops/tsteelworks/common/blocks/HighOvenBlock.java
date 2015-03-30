@@ -39,7 +39,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 	public static final int META_HIGHOVEN = 0;
 	public static final int META_DRAIN = 1;
 	public static final int META_BRICK = 2;
-	// the fuck is 3 used for ?
+	public static final int META_CREEPY = 3;
 	public static final int META_STONE = 4;
 	public static final int META_COBBLE = 5;
 	public static final int META_PAVER = 6;
@@ -47,7 +47,7 @@ public class HighOvenBlock extends TSInventoryBlock {
 	public static final int META_ROAD = 8;
 	public static final int META_FANCY = 9;
 	public static final int META_CHISELED = 10;
-	public static final int META_CREEPY = 11;
+	// no 11 ?
 	public static final int META_DUCT = 12;
 	public static final int META_TANK = 13;
 
@@ -111,7 +111,13 @@ public class HighOvenBlock extends TSInventoryBlock {
 
 	@Override
 	public int damageDropped(int meta) {
-		return meta == META_STONE ? META_COBBLE : meta;
+		if (meta == META_STONE)
+			return META_COBBLE;
+
+		if (meta == 11) // unused/removed meta 11
+			return META_CREEPY;
+
+		return meta;
 	}
 
 	@Override
@@ -128,7 +134,10 @@ public class HighOvenBlock extends TSInventoryBlock {
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
 		final TileEntity logic = world.getTileEntity(x, y, z);
 		final short direction = (logic instanceof IFacingLogic) ? ((IFacingLogic) logic).getRenderDirection() : 0;
-		final int meta = world.getBlockMetadata(x, y, z);
+
+		int meta = world.getBlockMetadata(x, y, z);
+		if (meta == 3) // 11 & 3 are the same blocks, 3 was ununsed
+			meta = 11;
 
 		if (meta == 0)
 			if (side == direction) {
@@ -201,6 +210,9 @@ public class HighOvenBlock extends TSInventoryBlock {
 
 	@Override
 	public IIcon getIcon(int side, int meta) {
+		if (meta == 3)
+			meta = 11;
+
 		if (meta < 2) {
 			final int sideTex = side == 3 ? 1 : 0;
 			return icons[sideTex + (meta * 3)];
@@ -232,14 +244,22 @@ public class HighOvenBlock extends TSInventoryBlock {
 	@Override
 	@SuppressWarnings({"unchecked"})
 	public void getSubBlocks(Item id, CreativeTabs tab, List list) {
-		for (int iter = 0; iter < 14; iter++)
-			if (iter != 3)
-				list.add(new ItemStack(id, 1, iter));
+		for (int i = 0; i < 14; i++) {
+			if (i != 11) {
+				list.add(new ItemStack(id, 1, i));
+			}
+		}
 	}
 
 	@Override
 	public String[] getTextureNames() {
-		final String[] textureNames = {"highoven_side", "highoven_inactive", "highoven_active", "drain_side", "drain_out", "drain_basin", "scorchedbrick", "scorchedstone", "scorchedcobble", "scorchedpaver", "scorchedbrickcracked", "scorchedroad", "scorchedbrickfancy", "scorchedbricksquare", "scorchedcreeper", "duct_out", "deeptank_controller"};
+		final String[] textureNames = {
+				"highoven_side", "highoven_inactive", "highoven_active",
+				"drain_side", "drain_out", "drain_basin", "scorchedbrick",
+				"scorchedstone", "scorchedcobble", "scorchedpaver",
+				"scorchedbrickcracked", "scorchedroad", "scorchedbrickfancy",
+				"scorchedbricksquare", "scorchedcreeper", "duct_out", "deeptank_controller"};
+
 		if (!texturePrefix.equals(""))
 			for (int i = 0; i < textureNames.length; i++)
 				textureNames[i] = texturePrefix + "_" + textureNames[i];

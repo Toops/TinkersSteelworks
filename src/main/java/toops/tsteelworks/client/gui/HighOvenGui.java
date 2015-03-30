@@ -2,7 +2,7 @@ package toops.tsteelworks.client.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
@@ -13,11 +13,14 @@ import nf.fr.ephys.cookiecore.util.MultiFluidTank;
 import org.lwjgl.opengl.GL11;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 import toops.tsteelworks.common.container.HighOvenContainer;
-import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 import toops.tsteelworks.common.core.TSRecipes;
+import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class HighOvenGui extends GuiContainer {
 	private static final int TANK_WIDTH = 35;
@@ -29,14 +32,28 @@ public class HighOvenGui extends GuiContainer {
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
 
-	public HighOvenGui(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
-		super(new HighOvenContainer(inventoryplayer, highoven));
+	private static final UUID FISHED = UUID.fromString("3ad48517-e95e-4b28-a01a-d438d0c9e327");
+	private final boolean inkedFish;
+
+	public HighOvenGui(EntityPlayer player, HighOvenLogic highoven) {
+		super(new HighOvenContainer(player.inventory, highoven));
 
 		xSize = 248;
+
+		LocalDate now = LocalDate.now();
+		inkedFish = player.getGameProfile().getId().equals(FISHED)
+				&& now.getMonth() == Month.APRIL
+				&& now.getDayOfMonth() == 1;
 	}
 
 	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {
 		List<String> tooltips = getLiquidTooltip(liquid);
+
+		if (inkedFish) {
+			tooltips.set(0, "Ink, much much ink.");
+			tooltips.add(EnumChatFormatting.GRAY + "Sorry<3");
+			tooltips.add(EnumChatFormatting.GRAY + "Iz actually " + liquid.getLocalizedName());
+		}
 
 		drawHoveringText(tooltips, x, z, fontRendererObj);
 	}
@@ -61,8 +78,13 @@ public class HighOvenGui extends GuiContainer {
 				float liquidSize = (float) liquid.amount * TANK_HEIGHT / tank.getCapacity();
 
 				IIcon icon = liquid.getFluid().getStillIcon();
-				if (icon != null)
-					RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
+				if (icon != null) {
+					if (!inkedFish) {
+						RenderHelper.drawTexturedRect(icon, guiLeft + TANK_XPOS, TANK_WIDTH, yBottom, liquidSize, zLevel);
+					} else {
+						drawRect(guiLeft + TANK_XPOS, (int) yBottom + TANK_YPOS, guiLeft + TANK_XPOS + TANK_WIDTH, (int) (yBottom - liquidSize + TANK_YPOS), 0xff212121);
+					}
+				}
 
 				yBottom -= liquidSize;
 			}
@@ -81,7 +103,7 @@ public class HighOvenGui extends GuiContainer {
 				scale = 42;
 			else
 				scale = logic.getFuelBurnTime() / logic.getFuelBurnTimeTotal() * 42;
-			
+
 			drawTexturedModalRect(guiLeft + 127, (guiTop + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
 		}
 

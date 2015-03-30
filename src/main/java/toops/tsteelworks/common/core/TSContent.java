@@ -139,9 +139,15 @@ public class TSContent {
 		GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
 
 		/* Slabs */
-		scorchedSlab = new ScorchedSlab().setBlockName("ScorchedSlab");
-		scorchedSlab.stepSound = Block.soundTypeStone;
-		GameRegistry.registerBlock(scorchedSlab, ScorchedSlabItemBlock.class, "ScorchedSlab");
+		scorchedSlab = new TSBaseSlab(TSContent.highoven, 2, 9)
+				.setBlockName("ScorchedSlab")
+				.setCreativeTab(TSContent.creativeTab)
+				.setHardness(12F)
+				.setStepSound(Block.soundTypeStone);
+		GameRegistry.registerBlock(scorchedSlab, TsSlabItemBlock.class, "ScorchedSlab", new Object[] {
+				"block.scorchedstone.slab",
+				new String[] {"brick", "creeper", "stone", "cobble", "paver", "cracked", "road", "square"}
+		});
 
 		dustStorageBlock = new DustStorageBlock().setBlockName("tsteelworks.dustblock");
 		GameRegistry.registerBlock(dustStorageBlock, DustStorageItemBlock.class, "dustStorage");
@@ -149,8 +155,15 @@ public class TSContent {
 		limestoneBlock = new LimestoneBlock().setBlockName("Limestone");
 		GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
 
-		limestoneSlab = new LimestoneSlab().setBlockName("LimestoneSlab").setStepSound(Block.soundTypeStone);
-		GameRegistry.registerBlock(limestoneSlab, LimestoneSlabItemBlock.class, "LimestoneSlab");
+		limestoneSlab = new TSBaseSlab(TSContent.limestoneBlock, 0, 7)
+				.setBlockName("LimestoneSlab")
+				.setCreativeTab(TSContent.creativeTab)
+				.setHardness(12F)
+				.setStepSound(Block.soundTypeStone);
+		GameRegistry.registerBlock(limestoneSlab, TsSlabItemBlock.class, "LimestoneSlab", new Object[] {
+				"block.limestone.slab",
+				new String[] {"stone", "cobble", "brick", "paver", "road", "fancy", "square", "creeper"}
+		});
 
 		cementBlock = new CementBlock().setBlockName("tsteelworks.cement").setStepSound(Block.soundTypeStone);
 		GameRegistry.registerBlock(cementBlock, CementItemBlock.class, "Cement");

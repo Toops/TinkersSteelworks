@@ -26,7 +26,7 @@ public class GuiHandler implements IGuiHandler {
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		switch (ID) {
 			case HIGHOVEN_GUI_ID:
-				return new HighOvenGui(player.inventory, (HighOvenLogic) world.getTileEntity(x, y, z));
+				return new HighOvenGui(player, (HighOvenLogic) world.getTileEntity(x, y, z));
 			case HIGHOVEN_DUCT_GUI_ID:
 				return new HighOvenDuctGui(player.inventory, (HighOvenDuctLogic) world.getTileEntity(x, y, z));
 			case DEEPTANK_GUI_ID:

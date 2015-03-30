@@ -12,7 +12,7 @@ import net.minecraft.util.StatCollector;
 import java.util.List;
 
 public class HighOvenItemBlock extends ItemBlock {
-	public static final String blockType[] = {"Controller", "Drain", "Brick", "Furnace", "Stone", "Cobblestone", "Paver", "Brick.Cracked", "Road", "Brick.Fancy", "Brick.Square", "Brick.Creeper", "Duct", "TankController"};
+	public static final String blockType[] = {"Controller", "Drain", "Brick", "Brick.Creeper", "Stone", "Cobblestone", "Paver", "Brick.Cracked", "Road", "Brick.Fancy", "Brick.Square", "Furnace", "Duct", "TankController"};
 
 	public HighOvenItemBlock(Block block) {
 		super(block);
