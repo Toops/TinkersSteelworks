@@ -9,6 +9,8 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.RenderHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -22,14 +24,33 @@ public class ScalableTankGUI {
 	private int guiTop;
 	private final int width;
 	private final int height;
-	private GuiContainer owner;
-	private ResourceLocation gauge;
 
-	public ScalableTankGUI(int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, GuiContainer owner) {
+	private final GuiContainer owner;
+	private final ResourceLocation gauge;
+	private final int gaugeX;
+	private final int gaugeY;
+
+	// LGBT easter egg data
+	private static final char[] keys = "lgbt".toCharArray();
+	private static final float[][] LGBT_COLOR = {
+			{228/255f, 3/255f, 3/255f},
+			{1, 140/255f, 3/255f},
+			{1, 237/255f, 0},
+			{0, 128/255f, 38/255f},
+			{0, 77/255f,1},
+			{117/255f,7/255f,135/255f}
+	};
+	private int index = 0;
+	// end of easter egg data
+
+	public ScalableTankGUI(GuiContainer owner, int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, int gaugeX, int gaugeY) {
 		this.width = width;
 		this.height = height;
 		this.owner = owner;
+
 		this.gauge = gauge;
+		this.gaugeX = gaugeX;
+		this.gaugeY = gaugeY;
 
 		setLocation(guiLeft, guiTop);
 	}
@@ -92,7 +113,7 @@ public class ScalableTankGUI {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		owner.mc.getTextureManager().bindTexture(gauge);
-		owner.drawTexturedModalRect(guiLeft, guiTop + 1, 120, 0, width, height);
+		owner.drawTexturedModalRect(guiLeft, guiTop + 1, gaugeX, gaugeY, width, height);
 	}
 
 	public FluidStack getFluidAtPos(MultiFluidTank tank, int posX, int posY) {
@@ -152,16 +173,6 @@ public class ScalableTankGUI {
 		return tooltips;
 	}
 
-	private static final float[][] LGBT_COLOR = {
-			{228/255f, 3/255f, 3/255f},
-			{1, 140/255f, 3/255f},
-			{1, 237/255f, 0},
-			{0, 128/255f, 38/255f},
-			{0, 77/255f,1},
-			{117/255f,7/255f,135/255f}
-	};
-	private char[] keys = {'l', 'g', 'b', 't'};
-	private int index = 0;
 	/**
 	 * this is a stupid easter egg
 	 * @param key a character
@@ -181,7 +192,6 @@ public class ScalableTankGUI {
 	private int zoomRatioVal = 10;
 	private int scroll;
 	private boolean scrollbarFocus = false;
-
 
 	private int maxScroll() {
 		return (int) ((double)height * (getZoomRatio() - 1));
@@ -231,6 +241,23 @@ public class ScalableTankGUI {
 		final double yTop = yBottom - scrollHeight;
 		Gui.drawRect(scrollPosX, (int) yBottom, scrollPosX + scrollWidth, (int) yTop, 0xaa0000ff);
 		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	public void handleMouseInput() {
+		int wheelState = Mouse.getEventDWheel();
+		if (wheelState == 0) return;
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
+			if (wheelState > 0)
+				zoomIn();
+			else
+				zoomOut();
+		} else {
+			if (wheelState > 0)
+				scrollUp();
+			else
+				scrollDown();
+		}
 	}
 
 	/** Mouse move, moves scrollbar if has focus */

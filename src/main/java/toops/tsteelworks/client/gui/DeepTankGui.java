@@ -8,8 +8,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.helpers.ChatHelper;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
 import toops.tsteelworks.common.container.DeepTankContainer;
@@ -18,14 +16,20 @@ import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 import java.util.List;
 
 public class DeepTankGui extends GuiContainer {
-	private ScalableTankGUI tankGui;
+	private final ScalableTankGUI tankGui;
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
+	private final DeepTankLogic tank;
 
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {
 		super(new DeepTankContainer(inventoryplayer, tank));
+		this.tank = tank;
 
 		xSize = 120;
 		ySize = 137;
+
+		final int TANK_WIDTH = 104;
+		final int TANK_HEIGHT = 104;
+		tankGui = new ScalableTankGUI(this, 0, 0, TANK_WIDTH, TANK_HEIGHT, BACKGROUND, 120, 0);
 	}
 
 	@Override
@@ -45,16 +49,10 @@ public class DeepTankGui extends GuiContainer {
 	@SuppressWarnings("unchecked")
 	public void initGui() {
 		super.initGui();
-		
-		final int TANK_WIDTH = 104;
-		final int TANK_HEIGHT = 104;
+
 		final int TANK_YPOS = 16;
 		final int TANK_XPOS = 8;
-
-		if (tankGui == null)
-			tankGui = new ScalableTankGUI(guiLeft + TANK_XPOS, guiTop + TANK_YPOS, TANK_WIDTH, TANK_HEIGHT, BACKGROUND, this);
-		else
-			tankGui.setLocation(guiLeft + TANK_XPOS, guiTop + TANK_YPOS);
+		tankGui.setLocation(guiLeft + TANK_XPOS, guiTop + TANK_YPOS);
 
 		buttonList.add(new GuiButton(0, guiLeft - 20, guiTop + 5, 20, 20, "+"));
 		buttonList.add(new GuiButton(1, guiLeft - 20, guiTop + 25, 20, 20, "-"));
@@ -63,7 +61,7 @@ public class DeepTankGui extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
+		MultiFluidTank fluidTank = tank.getFluidTank();
 
 		// title
 		final String title = StatCollector.translateToLocal("tank.DeepTank");
@@ -86,8 +84,7 @@ public class DeepTankGui extends GuiContainer {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 120, ySize);
 
 		//Liquids
-		MultiFluidTank tank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
-		tankGui.renderTank(tank, zLevel);
+		tankGui.renderTank(tank.getFluidTank(), zLevel);
 	}
 
 	@Override
@@ -110,34 +107,18 @@ public class DeepTankGui extends GuiContainer {
 
 		tankGui.mouseClicked(mouseX, mouseY, mouseButton);
 
-		MultiFluidTank fluidTank = ((DeepTankContainer) inventorySlots).getLogic().getFluidTank();
-		FluidStack fluid = tankGui.getFluidAtPos(fluidTank, mouseX, mouseY);
+		FluidStack fluid = tankGui.getFluidAtPos(tank.getFluidTank(), mouseX, mouseY);
 
 		if (fluid == null) return;
 
-		DeepTankLogic logic = ((DeepTankContainer) inventorySlots).getLogic();
-
-		PacketMoveFluidHandler.moveFluidGUI(logic, fluid);
+		PacketMoveFluidHandler.moveFluidGUI(tank, fluid);
 	}
 
 	@Override
 	public void handleMouseInput() {
 		super.handleMouseInput();
 
-		int wheelState = Mouse.getEventDWheel();
-		if (wheelState == 0) return;
-
-		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)) {
-			if (wheelState > 0)
-				tankGui.zoomIn();
-			else
-				tankGui.zoomOut();
-		} else {
-			if (wheelState > 0)
-				tankGui.scrollUp();
-			else
-				tankGui.scrollDown();
-		}
+		tankGui.handleMouseInput();
 	}
 
 	@Override

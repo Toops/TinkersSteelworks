@@ -18,8 +18,4 @@ public class DeepTankContainer extends Container {
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
 		return true;
 	}
-
-	public DeepTankLogic getLogic() {
-		return logic;
-	}
 }

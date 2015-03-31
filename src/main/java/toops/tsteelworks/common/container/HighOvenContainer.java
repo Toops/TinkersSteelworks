@@ -127,8 +127,4 @@ public class HighOvenContainer extends Container {
 		if (id == 0)
 			logic.setFuelBurnTime(value / 12);
 	}
-
-	public HighOvenLogic getLogic() {
-		return logic;
-	}
 }
