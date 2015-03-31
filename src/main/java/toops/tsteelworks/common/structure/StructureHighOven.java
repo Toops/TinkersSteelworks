@@ -2,12 +2,12 @@ package toops.tsteelworks.common.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
-import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
-import toops.tsteelworks.lib.logic.IServantLogic;
 import toops.tsteelworks.common.blocks.HighOvenBlock;
 import toops.tsteelworks.common.blocks.logic.HighOvenDuctLogic;
+import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 import toops.tsteelworks.common.blocks.logic.TSMultiServantLogic;
 import toops.tsteelworks.common.core.TSContent;
+import toops.tsteelworks.lib.logic.IServantLogic;
 
 import java.util.ArrayList;
 import java.util.List;

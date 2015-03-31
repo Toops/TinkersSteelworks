@@ -14,9 +14,9 @@ import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
 import nf.fr.ephys.cookiecore.helpers.NBTHelper;
 import nf.fr.ephys.cookiecore.util.SizeableInventory;
 import toops.tsteelworks.common.core.ConfigCore;
-import toops.tsteelworks.lib.logic.IRedstonePowered;
 import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.logic.IMasterLogic;
+import toops.tsteelworks.lib.logic.IRedstonePowered;
 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, IRedstonePowered, IHopper {
 	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER;

@@ -30,12 +30,12 @@ import toops.tsteelworks.api.highoven.IFuelRegistry.IFuelData;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
-import toops.tsteelworks.lib.logic.*;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.structure.IStructure;
 import toops.tsteelworks.common.structure.StructureHighOven;
 import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.TSRepo;
+import toops.tsteelworks.lib.logic.*;
 
 import java.util.Arrays;
 import java.util.List;

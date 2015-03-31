@@ -5,16 +5,16 @@ import mantle.client.gui.GuiManual;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
-import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
-import toops.tsteelworks.common.container.HighOvenContainer;
-import toops.tsteelworks.common.container.HighOvenDuctContainer;
 import toops.tsteelworks.client.core.TSClientProxy;
 import toops.tsteelworks.client.gui.DeepTankGui;
 import toops.tsteelworks.client.gui.HighOvenDuctGui;
 import toops.tsteelworks.client.gui.HighOvenGui;
+import toops.tsteelworks.common.blocks.logic.DeepTankLogic;
 import toops.tsteelworks.common.blocks.logic.HighOvenDuctLogic;
+import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 import toops.tsteelworks.common.container.DeepTankContainer;
+import toops.tsteelworks.common.container.HighOvenContainer;
+import toops.tsteelworks.common.container.HighOvenDuctContainer;
 
 public class GuiHandler implements IGuiHandler {
 	public static final int MANUAL_GUI_ID = -1;

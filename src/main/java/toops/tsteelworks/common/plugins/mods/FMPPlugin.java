@@ -4,7 +4,6 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import net.minecraft.item.ItemStack;
 import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.plugins.ModCompatPlugin;
-import toops.tsteelworks.lib.ModsData;
 
 public class FMPPlugin extends ModCompatPlugin {
 	@Override

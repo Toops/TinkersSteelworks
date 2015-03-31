@@ -7,8 +7,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import toops.tsteelworks.lib.logic.IServantLogic;
 import toops.tsteelworks.lib.logic.IMasterLogic;
+import toops.tsteelworks.lib.logic.IServantLogic;
 
 public class TSMultiServantLogic extends TileEntity implements IServantLogic {
 	private IMasterLogic master;

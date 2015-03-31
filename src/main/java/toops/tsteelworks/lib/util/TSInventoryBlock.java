@@ -15,10 +15,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
-import toops.tsteelworks.lib.logic.IRedstonePowered;
-import toops.tsteelworks.lib.logic.IServantLogic;
 import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.logic.INamable;
+import toops.tsteelworks.lib.logic.IRedstonePowered;
+import toops.tsteelworks.lib.logic.IServantLogic;
 
 public abstract class TSInventoryBlock extends BlockContainer {
 	protected IIcon[] icons;

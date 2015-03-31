@@ -14,7 +14,6 @@ import tconstruct.library.crafting.Detailing;
 import tconstruct.library.crafting.ModifyBuilder;
 import tconstruct.modifiers.tools.ModInteger;
 import tconstruct.tools.TinkerTools;
-import toops.tsteelworks.TSteelworks;
 import toops.tsteelworks.common.core.ConfigCore;
 import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.modifier.TSActiveOmniMod;

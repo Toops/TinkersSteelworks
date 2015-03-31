@@ -11,15 +11,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
-import toops.tsteelworks.TSteelworks;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.HighOvenBlock;
 import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.lib.ModsData;
-
-import java.util.Set;
 
 public class TSRecipes {
 	/**

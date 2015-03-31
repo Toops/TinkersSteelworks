@@ -1,7 +1,6 @@
 package toops.tsteelworks.common.plugins.mods;
 
 import net.minecraft.item.ItemStack;
-import nf.fr.ephys.cookiecore.helpers.DebugHelper;
 import nf.fr.ephys.cookiecore.helpers.RegistryHelper;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 import toops.tsteelworks.common.core.TSLogger;

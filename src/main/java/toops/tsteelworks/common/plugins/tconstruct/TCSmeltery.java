@@ -182,8 +182,6 @@ class TCSmeltery {
 	private void registerAlloysDiffer() {
 		for (Alloy alloy : alloys) {
 			Smeltery.addAlloyMixing(alloy.output, alloy.f1, alloy.f2);
-
-			System.out.println("registering " + alloy);
 		}
 
 		alloys = null;

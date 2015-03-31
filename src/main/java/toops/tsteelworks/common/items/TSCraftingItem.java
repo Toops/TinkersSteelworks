@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.common.core.TSContent;
+import toops.tsteelworks.lib.TSRepo;
 
 import java.util.List;
 
