@@ -16,8 +16,6 @@ import toops.tsteelworks.common.container.HighOvenContainer;
 import toops.tsteelworks.common.core.TSRecipes;
 import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.*;
 
 public class HighOvenGui extends GuiContainer {
