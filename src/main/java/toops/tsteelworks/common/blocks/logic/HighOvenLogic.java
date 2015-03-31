@@ -259,6 +259,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	public void updateEntity() {
 		this.tick++;
 
+		if (!worldObj.isRemote) {
+		}
+
 		if (this.tick % 4 == 0) {
 			this.heatItems();
 		}
