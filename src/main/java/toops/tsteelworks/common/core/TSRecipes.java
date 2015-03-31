@@ -19,6 +19,8 @@ import toops.tsteelworks.common.blocks.HighOvenBlock;
 import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.lib.ModsData;
 
+import java.util.Set;
+
 public class TSRecipes {
 	/**
 	 * Common craft patterns
@@ -64,12 +66,10 @@ public class TSRecipes {
 	}
 
 	public static void createAlloys() {
-		if (!TSteelworks.Plugins.TConstruct.isSmelteryLoaded()) return;
-
 		TConstructPlugin.registerAlloy(
-				new FluidStack(TSContent.liquidCementFluid, 1),
-				FluidRegistry.getFluidStack("stone.molten", 1),
-				new FluidStack(TSContent.moltenLimestoneFluid, 1)
+				FluidRegistry.getFluidStack("stone.seared", 1),
+				new FluidStack(TSContent.moltenLimestoneFluid, 1),
+				new FluidStack(TSContent.liquidCementFluid, 1)
 		);
 	}
 

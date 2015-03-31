@@ -23,7 +23,7 @@ public class TSCommonProxy {
 	public void init() {
 		PacketMoveFluidHandler.register(0);
 		PacketSetDuctModeHandler.register(1);
-		
+
 		TSContent.init();
 	}
 

@@ -6,7 +6,7 @@ import toops.tsteelworks.api.event.IRegistryListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class BasicRegistry<Key, Value> implements IRegistry<Key, Value> {
+abstract class BasicRegistry<Key, Value> implements IRegistry<Key, Value> {
 	private List<IRegistryListener<Key, Value>> listeners = new ArrayList<>();
 
 	@Override
@@ -32,7 +32,7 @@ class BasicRegistry<Key, Value> implements IRegistry<Key, Value> {
 	protected void dispatchDeleteEvent(Key item, Value data) {
 		if (listeners.size() == 0) return;
 
-		IRegistryEvent<Key, Value> event = new BasicRegistryEvent<>(IRegistryEvent.TYPE.ADD, data, item);
+		IRegistryEvent<Key, Value> event = new BasicRegistryEvent<>(IRegistryEvent.TYPE.DELETE, data, item);
 
 		for (IRegistryListener<Key, Value> l : listeners) {
 			l.onRegistryChange(event);

@@ -33,11 +33,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static toops.tsteelworks.api.event.IRegistry.IRegistryEvent.TYPE.DELETE;
+
 class TCSmeltery {
 	private List<Alloy> alloys = new ArrayList<>();
 	private IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData> smeltListener = new IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData>() {
 		@Override
 		public void onRegistryChange(IRegistry.IRegistryEvent<ItemStack, ISmeltingRegistry.IMeltData> event) {
+			if (event.getType() == DELETE) {
+				return; // TiC smeltery doesn't support removing meltings.
+			}
+
 			ItemStack stack = event.getItem();
 			ISmeltingRegistry.IMeltData meltData = event.getData();
 
@@ -60,7 +66,6 @@ class TCSmeltery {
 	}
 
 	public void init() {
-		registerAlloysDiffer();
 		craftPigIron();
 		craftManual();
 		registerCasting();
@@ -68,6 +73,8 @@ class TCSmeltery {
 	}
 
 	public void postInit() {
+		registerAlloysDiffer();
+
 		ISmeltingRegistry.INSTANCE.removeEventListener(smeltListener);
 		// copy smeltery smelting list to high oven smelting list
 		copySmeltingList();
@@ -161,13 +168,25 @@ class TCSmeltery {
 	}
 
 	public void registerAlloy(FluidStack input1, FluidStack input2, FluidStack output) {
+		if (input1 == null) throw new IllegalArgumentException("Alloy fluid 1 cannot be null");
+		if (input2 == null) throw new IllegalArgumentException("Alloy fluid 2 cannot be null");
+		if (output == null) throw new IllegalArgumentException("Alloy output cannot be null");
+
+		if (alloys == null) {
+			throw new IllegalStateException("Alloys should be registered before postinit is called on the TConstruct compat plugin.");
+		}
+
 		alloys.add(new Alloy(input1, input2, output));
 	}
 
 	private void registerAlloysDiffer() {
 		for (Alloy alloy : alloys) {
 			Smeltery.addAlloyMixing(alloy.output, alloy.f1, alloy.f2);
+
+			System.out.println("registering " + alloy);
 		}
+
+		alloys = null;
 	}
 
 	private void meltSeared() {
@@ -188,10 +207,7 @@ class TCSmeltery {
 			));
 		}
 
-		for (int meta = 2; meta <= 11; meta ++) {
-			if (meta == 3)
-				continue;
-
+		for (int meta = 2; meta <= 11; meta++) {
 			advancedSmelting.addMeltable(new ItemStack(TinkerSmeltery.smeltery, 1, meta), false, new FluidStack(fluid, TSRecipes.INGOT_LIQUID_VALUE), 600);
 		}
 	}
@@ -261,10 +277,19 @@ class TCSmeltery {
 		private FluidStack f2;
 		private FluidStack output;
 
-		public Alloy(FluidStack f1, FluidStack f2, FluidStack f3) {
+		public Alloy(FluidStack f1, FluidStack f2, FluidStack output) {
 			this.f1 = f1;
 			this.f2 = f2;
-			this.output = f3;
+			this.output = output;
+		}
+
+		@Override
+		public String toString() {
+			return "Alloy{" +
+					"f1=" + f1.getLocalizedName() +
+					", f2=" + f2.getLocalizedName() +
+					", output=" + output.getLocalizedName() +
+					'}';
 		}
 	}
 }

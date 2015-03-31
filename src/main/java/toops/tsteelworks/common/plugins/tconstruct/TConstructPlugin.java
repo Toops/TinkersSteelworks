@@ -72,7 +72,7 @@ public class TConstructPlugin extends ModCompatPlugin {
 	public static boolean registerAlloy(FluidStack input1, FluidStack input2, FluidStack output) {
 		TConstructPlugin self = TSteelworks.Plugins.TConstruct;
 
-		if (!self.isSmelteryLoaded()) return false;
+		if (!self.mayLoad() || !self.isSmelteryLoaded()) return false;
 
 		self.smelteryPlugin.registerAlloy(input1, input2, output);
 
