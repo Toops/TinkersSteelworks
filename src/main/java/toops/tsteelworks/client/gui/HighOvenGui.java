@@ -18,9 +18,7 @@ import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class HighOvenGui extends GuiContainer {
 	private static final int TANK_WIDTH = 35;
@@ -40,10 +38,13 @@ public class HighOvenGui extends GuiContainer {
 
 		xSize = 248;
 
-		LocalDate now = LocalDate.now();
+		GregorianCalendar now = new GregorianCalendar();
+		//LocalDate now = LocalDate.now();
 		inkedFish = player.getGameProfile().getId().equals(FISHED)
-				&& now.getMonth() == Month.APRIL
-				&& now.getDayOfMonth() == 1;
+				&& now.get(Calendar.MONTH) == Calendar.APRIL
+				&& now.get(Calendar.DAY_OF_YEAR) == 1;
+				//&& now.getMonth() == Month.APRIL
+				//&& now.getDayOfMonth() == 1;
 	}
 
 	protected void drawFluidStackTooltip(FluidStack liquid, int x, int z) {

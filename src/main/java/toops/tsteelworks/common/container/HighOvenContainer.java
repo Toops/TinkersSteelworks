@@ -13,7 +13,7 @@ import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 
 public class HighOvenContainer extends Container {
-	private HighOvenLogic logic;
+	private final HighOvenLogic logic;
 
 	public HighOvenContainer(InventoryPlayer inventoryplayer, HighOvenLogic highoven) {
 		logic = highoven;
@@ -43,11 +43,6 @@ public class HighOvenContainer extends Container {
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return logic.isUseableByPlayer(entityplayer);
-	}
-
-	@Override
-	protected boolean mergeItemStack(ItemStack stack, int slotStart, int slotEnd, boolean startFromEnd) {
-		return super.mergeItemStack(stack, slotStart, slotEnd, startFromEnd);
 	}
 
 	@Override
