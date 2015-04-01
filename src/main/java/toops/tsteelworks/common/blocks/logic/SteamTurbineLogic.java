@@ -39,15 +39,15 @@ public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 
 		int toProcess = Math.min(input.amount, 100);
 
-		FluidStack[] stacks = AlloyInfo.deAlloy(new FluidStack(input, toProcess));
+		FluidStack[] outputStacks = AlloyInfo.deAlloy(new FluidStack(input, toProcess));
 
 		int requiredSpace = 0;
-		for (FluidStack stack : stacks) {
+		for (FluidStack stack : outputStacks) {
 			requiredSpace += stack.amount;
 		}
 
 		if (output.getCapacity() - output.getFluidAmount() >= requiredSpace) {
-			for (FluidStack stack : stacks) {
+			for (FluidStack stack : outputStacks) {
 				output.fill(stack, true);
 			}
 

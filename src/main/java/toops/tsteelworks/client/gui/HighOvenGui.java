@@ -7,8 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 import nf.fr.ephys.cookiecore.util.MultiFluidTank;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 import toops.tsteelworks.common.container.HighOvenContainer;
@@ -18,13 +16,11 @@ import java.util.List;
 
 public class HighOvenGui extends GuiContainer {
 
-	private final int TANK_YPOS = 16;
-
-	private final ScalableTankGUI tankGui;
-
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/highoven.png");
 	public static final ResourceLocation ICONS = new ResourceLocation("tsteelworks", "textures/gui/icons.png");
+	private static final int TANK_YPOS = 16;
 
+	private final ScalableTankGUI tankGui;
 	private final HighOvenLogic highoven;
 
 	public HighOvenGui(EntityPlayer player, HighOvenLogic highoven) {
@@ -33,9 +29,7 @@ public class HighOvenGui extends GuiContainer {
 
 		xSize = 248;
 
-		int TANK_WIDTH = 35;
-		int TANK_HEIGHT = 52;
-		tankGui = new ScalableTankGUI(this, 0, 0, TANK_WIDTH, TANK_HEIGHT, BACKGROUND, 176, 76);
+		tankGui = new ScalableTankGUI(this, 0, 0, 35, 52, BACKGROUND, 176, 76);
 	}
 
 	@Override
