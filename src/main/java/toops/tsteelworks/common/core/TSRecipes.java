@@ -110,14 +110,16 @@ public class TSRecipes {
 		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 11));
 
 		// Recipes to obtain bricks from high oven
-		final Fluid moltenStoneFluid = FluidRegistry.getFluid("stone.molten");
+		final Fluid moltenStoneFluid = FluidRegistry.getFluid("stone.seared");
 		if (moltenStoneFluid != null) {
 			final String[] oxidizers = {"fuelCoal", "coal", "dustCoal"};
 			final String[] purifiers = {"blockSand", "Sandblock", "sand"};
 
-			for (final String o : oxidizers)
-				for (final String p : purifiers)
-					IMixerRegistry.INSTANCE.registerMix(null, itemScorchedBrick, moltenStoneFluid, o, null, p);
+			for (final String oxidizer : oxidizers) {
+				for (final String purifier : purifiers) {
+					IMixerRegistry.INSTANCE.registerMix(null, itemScorchedBrick, moltenStoneFluid, oxidizer, null, purifier);
+				}
+			}
 		}
 	}
 
