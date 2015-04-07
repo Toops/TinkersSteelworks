@@ -1,5 +1,6 @@
 package toops.tsteelworks.common.plugins.tconstruct;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.library.crafting.FluidType;
 import tconstruct.smeltery.TinkerSmeltery;
@@ -69,12 +70,31 @@ public class TConstructPlugin extends ModCompatPlugin {
 			smelteryPlugin.postInit();
 	}
 
+	/**
+	 * Adds an alloy to the TConstruct registry.
+	 * The alloys will be registered to their registry during post-init but must be registered to this plugin before.
+	 *
+	 * @param input1 One of the fluid to mix.
+	 * @param input2 The other fluid to mix.
+	 * @param output The result of the mix.
+	 * @return false: the smeltery or mod is not loaded. True: the alloy /will/ be registered.
+	 */
 	public static boolean registerAlloy(FluidStack input1, FluidStack input2, FluidStack output) {
 		TConstructPlugin self = TSteelworks.Plugins.TConstruct;
 
 		if (!self.mayLoad() || !self.isSmelteryLoaded()) return false;
 
 		self.smelteryPlugin.registerAlloy(input1, input2, output);
+
+		return true;
+	}
+
+	public static boolean registerSmelteryItemRenderer(ItemStack toRender, ItemStack renderAs) {
+		TConstructPlugin self = TSteelworks.Plugins.TConstruct;
+
+		if (!self.mayLoad() || !self.isSmelteryLoaded()) return false;
+
+		self.smelteryPlugin.registerItemRenderer(toRender, renderAs);
 
 		return true;
 	}

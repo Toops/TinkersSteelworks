@@ -14,6 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import nf.fr.ephys.cookiecore.helpers.InventoryHelper;
+import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.FluidType;
@@ -26,17 +27,21 @@ import toops.tsteelworks.api.event.IRegistryListener;
 import toops.tsteelworks.api.highoven.IMixerRegistry;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.core.TSContent;
+import toops.tsteelworks.common.core.TSLogger;
 import toops.tsteelworks.common.core.TSRecipes;
 import toops.tsteelworks.lib.ModsData.Fluids;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static toops.tsteelworks.api.event.IRegistry.IRegistryEvent.TYPE.DELETE;
 
 class TCSmeltery {
-	private List<Alloy> alloys = new ArrayList<>();
+	private final List<Alloy> alloys = new ArrayList<>();
+	private final Map<HashedItemStack, ItemStack> itemRenderList = new HashMap<>();
+
 	private IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData> smeltListener = new IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData>() {
 		@Override
 		public void onRegistryChange(IRegistry.IRegistryEvent<ItemStack, ISmeltingRegistry.IMeltData> event) {
@@ -44,18 +49,28 @@ class TCSmeltery {
 				return; // TiC smeltery doesn't support removing meltings.
 			}
 
-			ItemStack stack = event.getItem();
+			ItemStack toMelt = event.getItem();
 			ISmeltingRegistry.IMeltData meltData = event.getData();
 
- 			// todo: internal (non API as it is only used for this plugin) registry to change from Item ItemStack -> Block ItemStack (like ironIngot -> ironBlock)
-			Block block = Blocks.iron_ore;
-			if (stack.getItem() instanceof ItemBlock)
-				block = ((ItemBlock) stack.getItem()).field_150939_a;
+			ItemStack renderAs;
+			if (toMelt.getItem() instanceof ItemBlock) {
+				renderAs = toMelt;
+			} else {
+				renderAs = itemRenderList.get(new HashedItemStack(toMelt));
+
+				if (renderAs == null) {
+					TSLogger.error("item " + toMelt.getDisplayName() + " does not have a registered renderer.");
+					renderAs = new ItemStack(Blocks.iron_block);
+				}
+			}
+
+			Block renderAsBlock = ((ItemBlock) renderAs.getItem()).field_150939_a;
+			int renderAsMetadata = renderAs.getItemDamage();
 
 			FluidType fluid = FluidType.getFluidType(meltData.getResult().getFluid());
 			int temp = fluid == null ? (meltData.getMeltingPoint() / 2) : fluid.baseTemperature;
 
-			Smeltery.addMelting(stack, block, stack.getItemDamage(), temp, meltData.getResult());
+			Smeltery.addMelting(toMelt, renderAsBlock, renderAsMetadata, temp, meltData.getResult());
 		}
 	};
 
@@ -76,6 +91,8 @@ class TCSmeltery {
 		registerAlloysDiffer();
 
 		ISmeltingRegistry.INSTANCE.removeEventListener(smeltListener);
+		itemRenderList.clear();
+
 		// copy smeltery smelting list to high oven smelting list
 		copySmeltingList();
 	}
@@ -184,14 +201,17 @@ class TCSmeltery {
 			Smeltery.addAlloyMixing(alloy.output, alloy.f1, alloy.f2);
 		}
 
-		alloys = null;
+		alloys.clear();
 	}
 
 	private void meltSeared() {
 		final Fluid fluid = TinkerSmeltery.moltenStoneFluid;
 		final ISmeltingRegistry advancedSmelting = ISmeltingRegistry.INSTANCE;
 
-		advancedSmelting.addMeltable(new ItemStack(TinkerTools.materials, 1, 2), false, new FluidStack(fluid, TSRecipes.INGOT_LIQUID_VALUE), 600);
+		final ItemStack searedBrickItem = new ItemStack(TinkerTools.materials, 1, 2);
+		final ItemStack searedBrickBlock = new ItemStack(TinkerSmeltery.searedBlock, 1, 2);
+		TConstructPlugin.registerSmelteryItemRenderer(searedBrickItem, searedBrickBlock);
+		advancedSmelting.addMeltable(searedBrickItem, false, new FluidStack(fluid, TSRecipes.INGOT_LIQUID_VALUE), 600);
 
 		final String[] dyes = new String[] { "dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack" };
 
@@ -267,6 +287,25 @@ class TCSmeltery {
 			// case "Glue":
 			default:
 				return 0;
+		}
+	}
+
+	public void registerItemRenderer(ItemStack toRender, ItemStack renderAs) {
+		if (toRender == null) {
+			throw new IllegalArgumentException("toRender cannot be null");
+		}
+
+		if (toRender.getItem() instanceof ItemBlock) {
+			throw new IllegalArgumentException("toRender should not be an ItemBlock");
+		}
+
+		if (renderAs == null || !(renderAs.getItem() instanceof ItemBlock)) {
+			throw new IllegalArgumentException("renderAs should be an ItemBlock");
+		}
+
+		ItemStack out = itemRenderList.put(new HashedItemStack(toRender), renderAs);
+		if (out != null) {
+			throw new IllegalStateException("Item " + toRender.getDisplayName() + " was already registered with renderer " + out.getDisplayName());
 		}
 	}
 

@@ -47,6 +47,14 @@ public class TSLogger {
 		}
 	}
 
+	public static void error(String msg) {
+		logger.error(msg);
+
+		if (DebugHelper.debug) {
+			throw new RuntimeException(msg);
+		}
+	}
+
 	public static void debug(String msg) {
 		if (TSteelworks.DEBUG_MODE)
 			logger.debug(msg);

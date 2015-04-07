@@ -57,9 +57,16 @@ public class TSRecipes {
 		ISmeltingRegistry.INSTANCE.addDictionaryMeltable("blockLimestone", new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE * 4), 825);
 		ISmeltingRegistry.INSTANCE.addDictionaryMeltable("limestone", new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE * 4), 825);
 
-		FluidStack moltenLimestone = new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE);
-		ISmeltingRegistry.INSTANCE.addMeltable(new ItemStack(TSContent.materialsTS, 1, 1), false, moltenLimestone, 825);
-		ISmeltingRegistry.INSTANCE.addMeltable(new ItemStack(TSContent.materialsTS, 1, 2), false, moltenLimestone, 825);
+		final FluidStack moltenLimestone = new FluidStack(ModsData.Fluids.moltenLimestoneFluid, INGOT_LIQUID_VALUE);
+		final ItemStack limestoneBlock = new ItemStack(TSContent.limestoneBlock, 1, 0);
+		final ItemStack limestoneBrickItem = new ItemStack(TSContent.materialsTS, 1, 1);
+		final ItemStack limestoneDustItem = new ItemStack(TSContent.materialsTS, 1, 2);
+
+		TConstructPlugin.registerSmelteryItemRenderer(limestoneBrickItem, limestoneBlock);
+		ISmeltingRegistry.INSTANCE.addMeltable(limestoneBrickItem, false, moltenLimestone, 825);
+
+		TConstructPlugin.registerSmelteryItemRenderer(limestoneDustItem, limestoneBlock);
+		ISmeltingRegistry.INSTANCE.addMeltable(limestoneDustItem, false, moltenLimestone, 825);
 	}
 
 	public static void createAlloys() {
