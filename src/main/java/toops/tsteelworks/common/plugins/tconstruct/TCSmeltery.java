@@ -39,8 +39,8 @@ import java.util.Map;
 import static toops.tsteelworks.api.event.IRegistry.IRegistryEvent.TYPE.DELETE;
 
 class TCSmeltery {
-	private final List<Alloy> alloys = new ArrayList<>();
-	private final Map<HashedItemStack, ItemStack> itemRenderList = new HashMap<>();
+	private List<Alloy> alloys = new ArrayList<>();
+	private Map<HashedItemStack, ItemStack> itemRenderList = new HashMap<>();
 
 	private IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData> smeltListener = new IRegistryListener<ItemStack, ISmeltingRegistry.IMeltData>() {
 		@Override
@@ -91,7 +91,7 @@ class TCSmeltery {
 		registerAlloysDiffer();
 
 		ISmeltingRegistry.INSTANCE.removeEventListener(smeltListener);
-		itemRenderList.clear();
+		itemRenderList = null;
 
 		// copy smeltery smelting list to high oven smelting list
 		copySmeltingList();
@@ -201,7 +201,7 @@ class TCSmeltery {
 			Smeltery.addAlloyMixing(alloy.output, alloy.f1, alloy.f2);
 		}
 
-		alloys.clear();
+		alloys = null;
 	}
 
 	private void meltSeared() {
@@ -291,6 +291,10 @@ class TCSmeltery {
 	}
 
 	public void registerItemRenderer(ItemStack toRender, ItemStack renderAs) {
+		if (itemRenderList == null) {
+			throw new IllegalStateException("Renderers must be registered before postinit.");
+		}
+
 		if (toRender == null) {
 			throw new IllegalArgumentException("toRender cannot be null");
 		}
