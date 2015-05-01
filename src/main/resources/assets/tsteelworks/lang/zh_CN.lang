@@ -34,6 +34,7 @@ block.scorchedstone.slab.road.name=焦褐铺路石台阶
 block.scorchedstone.slab.fancy.name=平滑焦褐台阶
 block.scorchedstone.slab.square.name=錾制焦褐台阶
 block.scorchedstone.slab.creeper.name=爬行者焦褐台阶
+block.scorchedstone.slab.cracked.name=裂纹焦褐砖台阶
 
 block.limestone.slab.brick.name=石灰砖台阶
 block.limestone.slab.stone.name=石灰台阶
@@ -131,6 +132,10 @@ modifier.tool.vacuous=虚空
 tconstruct.waila.invalidstructure=无效的结构
 tconstruct.waila.empty=空
 tconstruct.waila.total=最高
+
+option.tseelworks.listFluids=液体列表
+option.tseelworks.showTotal=显示所有液体
+option.tseelworks.autoUnit=调整桶的单位
 
 quantity.emerald=绿宝石
 quantity.block=方块
