@@ -1,7 +1,7 @@
 itemGroup.TSteelworks=TSteelworks
 
-crafters.HighOven=Forno alto
-container.HighOvenDuct=Condotto del forno alto
+crafters.HighOven=Altoforno
+container.HighOvenDuct=Condotto dell'altoforno
 tank.DeepTank=Serbatoio profondo
 gui.button.next=>
 gui.button.prev=<
@@ -34,6 +34,7 @@ block.scorchedstone.slab.road.name=Lastra di strada in pietra cotta
 block.scorchedstone.slab.fancy.name=Lastra di pietra cotta concia decorativa
 block.scorchedstone.slab.square.name=Lastra di pietra cotta concia cesellata
 block.scorchedstone.slab.creeper.name=Lastra di pietra cotta concia cesellata
+block.scorchedstone.slab.cracked.name=Lastra di pietra cotta concia incrinata
 
 block.limestone.slab.brick.name=Lastra di calcare concio
 block.limestone.slab.stone.name=Lastra di calcare
@@ -54,11 +55,11 @@ steam=Vapore
 limestone.molten=Calcare fuso
 cement.liquid=Cemento fresco
 
-HighOven.Controller.name=Pannello di controllo del forno alto
-HighOven.TankController.name=Pannello di controllo del serbatoio profondo
-HighOven.Drain.name=Scarico del forno alto
-HighOven.Duct.name=Condotto del forno alto
-HighOven.Valve.name=Valvola del forno alto
+HighOven.Controller.name=Regolatore dell'altoforno
+HighOven.TankController.name=Regolatore del serbatoio profondo
+HighOven.Drain.name=Scarico dell'altoforno
+HighOven.Duct.name=Condotto dell'altoforno
+HighOven.Valve.name=Valvola dell'altoforno
 HighOven.Analyzer.name=Analizzatore di pietra cotta
 HighOven.Brick.name=Pietra cotta concia
 HighOven.Stone.name=Roccia cotta
@@ -99,19 +100,19 @@ Cement.green.name=Cemento verde
 Cement.red.name=Cemento rosso
 Cement.black.name=Cemento nero
 
-highoven.controller.tooltip1=Il componente principale del Forno alto
+highoven.controller.tooltip1=Il componente principale dell'Altoforno
 highoven.controller.tooltip2=(Attenzione: contenuto sotto pressione)
 highoven.tankcontroller.tooltip1=Il componente principale del Serbatoio profondo
 highoven.tankcontroller.tooltip2=(Alta capacità!)
-highoven.drain.tooltip1=Entrata/uscita per fluidi nel Forno alto/Serbatoio profondo
+highoven.drain.tooltip1=Entrata/uscita per fluidi nell'Altoforno/Serbatoio profondo
 highoven.drain.tooltip2=(Da usare con rubinetti e tubi)
-highoven.duct.tooltip1=Entrata/uscita per oggetti nel Forno alto
+highoven.duct.tooltip1=Entrata/uscita per oggetti nell'Altoforno
 highoven.duct.tooltip2=(Da usare con tramoggie, bauli o tubi)
-highoven.valve.tooltip1=Entrata/uscita per fluidi nel Forno alto/Serbatoio profondo
+highoven.valve.tooltip1=Entrata/uscita per fluidi nell'Altoforno/Serbatoio profondo
 highoven.valve.tooltip2=(Eietta fluidi nel mondo! Li risucchia dentro!)
-highoven.analyzer.tooltip1=Uscita di pietrarossa nel Forno alto/Serbatoio profondo
+highoven.analyzer.tooltip1=Uscita di pietrarossa nell'Altoforno/Serbatoio profondo
 highoven.analyzer.tooltip2=(W.I.P.)
-highoven.brick.tooltip1=Blocco per il forno alto
+highoven.brick.tooltip1=Blocco per l'Altoforno
 highoven.brick.tooltip2=(Usabile anche come decorazione)
 
 limestone.tooltip1=Sedimentario
