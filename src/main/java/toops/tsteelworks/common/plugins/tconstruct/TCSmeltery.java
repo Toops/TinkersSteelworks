@@ -153,8 +153,8 @@ class TCSmeltery {
 
 		final ItemStack itemScorchedBrick = new ItemStack(TSContent.materialsTS, 1, 0);
 		final ItemStack blockScorchedBrick = new ItemStack(TSContent.highoven, 1, 2);
-		tableCasting.addCastingRecipe(itemScorchedBrick, new FluidStack(TinkerSmeltery.moltenStoneFluid, 8), new ItemStack(Items.brick), true, 50);
-		basinCasting.addCastingRecipe(blockScorchedBrick, new FluidStack(TinkerSmeltery.moltenStoneFluid, 32), new ItemStack(Blocks.brick_block), true, 100);
+		tableCasting.addCastingRecipe(itemScorchedBrick, new FluidStack(TinkerSmeltery.moltenStoneFluid, 9), new ItemStack(Items.brick), true, 50);
+		basinCasting.addCastingRecipe(blockScorchedBrick, new FluidStack(TinkerSmeltery.moltenStoneFluid, 36), new ItemStack(Blocks.brick_block), true, 100);
 
 		final Fluid limestoneFluid = TSContent.moltenLimestoneFluid;
 		tableCasting.addCastingRecipe(new ItemStack(TSContent.materialsTS, 1, 1), new FluidStack(limestoneFluid, TSRecipes.INGOT_LIQUID_VALUE), new ItemStack(TinkerSmeltery.metalPattern), false, 25);
