@@ -6,5 +6,5 @@ package toops.tsteelworks.api.event;
  * @param <Value> the data type associated with Key
  */
 public interface IRegistryListener<Key, Value> {
-	public void onRegistryChange(IRegistry.IRegistryEvent<Key, Value> event);
+	void onRegistryChange(IRegistry.IRegistryEvent<Key, Value> event);
 }

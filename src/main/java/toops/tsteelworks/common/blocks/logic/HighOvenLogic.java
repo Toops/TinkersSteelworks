@@ -523,12 +523,17 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		if (fuelData == null) return;
 
-		this.fuelBurnTime = fuelData.getBurnTime();
+		this.fuelBurnTime = fuelData.getBurnTime(fuel);
 		this.fuelBurnTimeTotal = fuelBurnTime;
-		this.fuelHeatRate = fuelData.getHeatRate();
+		this.fuelHeatRate = fuelData.getHeatRate(fuel);
 
-		inventory.decrStackSize(SLOT_FUEL, 1);
-		markDirty();
+		fuelData.onStartBurning(fuel);
+
+		if (fuel.stackSize <= 0) {
+			inventory.setInventorySlotContents(SLOT_FUEL, null);
+		} else {
+			markDirty();
+		}
 	}
 
 	/* ==================== Inventory ==================== */

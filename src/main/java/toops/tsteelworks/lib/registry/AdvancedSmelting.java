@@ -7,11 +7,12 @@ import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltData> implements ISmeltingRegistry {
-/* ========== ISmeltingRegistry  ========== */
 	/** list of meltables items & blocks mapped to their result (fluidstack, melting point, etc) */
 	private final Map<HashedItemStack, IMeltData> meltingList = new HashMap<>();
 
@@ -49,6 +50,26 @@ class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltD
 		if (oldData != null) dispatchDeleteEvent(stack, oldData);
 
 		return oldData;
+	}
+
+	@Override
+	public Iterator<Map.Entry<ItemStack, IMeltData>> iterator() {
+		return new Iterator<Map.Entry<ItemStack, IMeltData>>() {
+			private Iterator<HashedItemStack> keys = meltingList.keySet().iterator();
+
+			@Override
+			public boolean hasNext() {
+				return keys.hasNext();
+			}
+
+			@Override
+			public Map.Entry<ItemStack, IMeltData> next() {
+				HashedItemStack key = keys.next();
+				IMeltData output = meltingList.get(key);
+
+				return new AbstractMap.SimpleImmutableEntry<>(key.getItemStack(), output);
+			}
+		};
 	}
 
 	private static final class MeltData implements IMeltData {

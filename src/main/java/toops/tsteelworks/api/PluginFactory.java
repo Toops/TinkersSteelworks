@@ -14,7 +14,7 @@ import java.util.Properties;
  * Handles fetching the instances for TSteelworks api interfaces
  */
 public class PluginFactory {
-	public static final String apiVersion = "1.1";
+	public static final String apiVersion = "1.2";
 	private static final String apiFile = "assets/tsteelworks/api.properties";
 
 	private static Properties props = new Properties();

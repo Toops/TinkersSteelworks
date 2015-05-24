@@ -5,9 +5,9 @@ import toops.tsteelworks.api.PluginFactory;
 import toops.tsteelworks.api.event.IRegistry;
 
 public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.IMixAgent> {
-	public static final IMixAgentRegistry INSTANCE = (IMixAgentRegistry) PluginFactory.getInstance(IMixAgentRegistry.class);
+	IMixAgentRegistry INSTANCE = (IMixAgentRegistry) PluginFactory.getInstance(IMixAgentRegistry.class);
 
-	public static enum AgentType {
+	enum AgentType {
 		OXIDIZER, REDUCER, PURIFIER
 	}
 
@@ -19,7 +19,7 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	 * @param consumeChance Chance that an item will be consumed
 	 * @return The previously registered information for this oreName or null if it wasn't already registered.
 	 */
-	public IMixAgent registerAgent(String oreName, AgentType type, int consumeChance);
+	IMixAgent registerAgent(String oreName, AgentType type, int consumeChance);
 
 	/**
 	 * Removes an ItemStack as valid Agent
@@ -27,7 +27,7 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	 * @param oreName   The oredict entry to unregister
 	 * @return the agent data, or null if it did not exist
 	 */
-	public IMixAgent unregisterAgent(String oreName);
+	IMixAgent unregisterAgent(String oreName);
 
 	/**
 	 * Gets informations about an agent
@@ -35,14 +35,14 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	 * @param itemStack     The agent itemstack
 	 * @return the informations on the agent, or null if it does not exist
 	 */
-	public IMixAgent getAgentData(ItemStack itemStack);
+	IMixAgent getAgentData(ItemStack itemStack);
 
 	/**
 	 * Hold information (mixer type, consume amount &amp; consume chance) for a mix agent
 	 */
-	public interface IMixAgent {
-		public AgentType getType();
+	interface IMixAgent {
+		AgentType getType();
 
-		public int getConsumeChance();
+		int getConsumeChance();
 	}
 }
