@@ -69,6 +69,11 @@ class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltD
 
 				return new AbstractMap.SimpleImmutableEntry<>(key.getItemStack(), output);
 			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
 		};
 	}
 

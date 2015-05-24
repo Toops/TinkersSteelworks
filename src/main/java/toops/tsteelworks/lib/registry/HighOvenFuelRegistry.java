@@ -55,6 +55,11 @@ class HighOvenFuelRegistry extends BasicRegistry<ItemStack, IFuelRegistry.IFuelD
 
 				return new AbstractMap.SimpleImmutableEntry<>(key.getItemStack(), output);
 			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
 		};
 	}
 
