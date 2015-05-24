@@ -1,7 +1,8 @@
-#ant stuff
+# ant stuff
 /bin/
 /download/
-#Remove OS generated garbage
+
+# Remove OS generated garbage
 */.DS_Store
 .DS_Store
 .DS_Store?
@@ -10,23 +11,29 @@
 Icon?
 ehthumbs.db
 Thumbs.db
-#gradle stuff
+
+# gradle stuff
 /.gradle
 /build/
 /run/
-#eclipse stuff
+
+# eclipse stuff
 /.settings
 /bin
 .project
 .classpath
 
-eclipse/
-libs/
+# idea stuff
+*.iml
+*.ipr
+*.iws
 
+# forge stuff
+eclipse/
 CREDITS-fml.txt
 forge*
 Forge*
 MinecraftForge*
 README.txt
 LICENSE-fml.txt
-
+logs/

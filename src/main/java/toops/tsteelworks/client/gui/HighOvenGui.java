@@ -110,7 +110,7 @@ public class HighOvenGui extends GuiContainer {
 				drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
 		}
 
-		if (!inventorySlots.getSlot(HighOvenLogic.SLOT_FUEL).getHasStack())
+		if (!inventorySlots.getSlot(HighOvenLogic.SLOT.FUEL.ordinal()).getHasStack())
 			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
 
 		for (int i = 0; i < nbSmeltSlots; i++) {
