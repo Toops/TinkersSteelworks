@@ -57,7 +57,7 @@ dependencies {
 }
 
 minecraft {
-    version = "${mc_version}-${forge_version}"
+    version = "${forge_version}-${mc_version}"
     runDir = "run"
 
     if (project.hasProperty('mappings_version'))
