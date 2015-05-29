@@ -474,7 +474,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	}
 
 	public int getFuelBurnTimeTotal() {
-		return this.fuelBurnTime;
+		return this.fuelBurnTimeTotal;
 	}
 
 	/**
@@ -804,8 +804,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 	@Override
 	public void boostBurnTime() {
-		fuelBurnTime = 140;
-		fuelBurnTimeTotal = 140;
+		fuelBurnTime = 17;
+		fuelBurnTimeTotal = 17;
 		fuelHeatRate = 2;
 	}
 

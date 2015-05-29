@@ -48,11 +48,13 @@ repositories {
 
 dependencies {
     compile "tconstruct:TConstruct:${mc_version}-${tcon_version}:deobf"
-    compile "mcp.mobius.waila:Waila:${WAILA_version}"
+    compile "mcp.mobius.waila:Waila:${WAILA_version}_${mc_version}"
+    compile "codechicken:CodeChickenLib:${mc_version}-${ccl_version}:dev"
     compile "codechicken:CodeChickenCore:${mc_version}-${ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${mc_version}-${nei_version}:dev"
     compile "nf.fr.ephys.cookiecore:CookieCore:${mc_version}-${cookie_version}:deobf"
     //compile "com.cricketcraft.chisel:Chisel2:${chisel_version}:deobf"
-	compile name: 'MineTweaker3', version: "${minetweaker_version}", ext: 'jar'
+	compile name: 'MineTweaker3', version: "Dev-${mc_version}-${minetweaker_version}", ext: 'jar'
 	compile fileTree(dir: 'libs', include: '*.jar')
 }
 

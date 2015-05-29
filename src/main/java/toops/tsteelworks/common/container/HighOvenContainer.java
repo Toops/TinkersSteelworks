@@ -25,7 +25,7 @@ public class HighOvenContainer extends Container {
 		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.OXIDIZER.ordinal(), 55, 16)); // oxidizer
 		addSlotToContainer(new Slot(baseInventory, REDUCER.ordinal(), 55, 34)); // reducer
 		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.PURIFIER.ordinal(), 55, 52)); // purifier
-		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.PURIFIER.ordinal(), 126, 52)); // fuel
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.FUEL.ordinal(), 126, 52)); // fuel
 
 		/* HighOven Smeltable inventory */
 		IInventory smeltableInventory = highoven.getSmeltableInventory();
