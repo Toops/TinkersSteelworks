@@ -6,18 +6,18 @@ import toops.tsteelworks.api.PluginFactory;
 import toops.tsteelworks.api.event.IRegistry;
 
 public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistry.IMeltData> {
-	public static final ISmeltingRegistry INSTANCE = (ISmeltingRegistry) PluginFactory.getInstance(ISmeltingRegistry.class);
+	ISmeltingRegistry INSTANCE = (ISmeltingRegistry) PluginFactory.getInstance(ISmeltingRegistry.class);
 
 	/**
 	 * Adds mappings between an input and its liquid.
 	 *
-	 * @param input             The item to liquify
+	 * @param input             The item to liquefy
 	 * @param isOre             The itemstack is an ore
 	 * @param output            The result of the process
-	 * @param meltTemperature   How hot the block should be before liquifying
+	 * @param meltTemperature   How hot the block should be before liquefying
 	 * @return The previously registered information for this input or null if it wasn't already registered.
 	 */
-	public IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
+	IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
 
 	/**
 	 * Adds all Items to the Smeltery based on the oreDictionary Name.
@@ -25,32 +25,32 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 	 *
 	 * @param inputOre          oreDictionary name e.g. oreIron
 	 * @param output            FluidStack to add to the high oven when the ore melts
-	 * @param meltTemperature   How hot the ItemStacks should be before liquifying
+	 * @param meltTemperature   How hot the ItemStacks should be before liquefying
 	 */
-	public void addDictionaryMeltable(String inputOre, FluidStack output, int meltTemperature);
+	void addDictionaryMeltable(String inputOre, FluidStack output, int meltTemperature);
 
 	/**
-	 * Returns melt informations about an itemstack
+	 * Returns melt information about an itemstack
 	 *
 	 * @param stack The ItemStack to melt
 	 * @return The melt information instance, or null if does not melt
 	 */
-	public IMeltData getMeltable(ItemStack stack);
+	IMeltData getMeltable(ItemStack stack);
 
 	/**
 	 * Sets an itemstack as non meltable.
 	 *
 	 * @param stack the itemstack to remove
-	 * @return the previously registered melting informations
+	 * @return the previously registered melting information
 	 */
-	public IMeltData removeMeltable(ItemStack stack);
+	IMeltData removeMeltable(ItemStack stack);
 
 	/**
-	 * Hold information about a smeltable ItemStack
+	 * Hold information about a meltable ItemStack
 	 */
-	public static interface IMeltData {
-		public int getMeltingPoint();
-		public FluidStack getResult();
-		public boolean isOre();
+	interface IMeltData {
+		int getMeltingPoint();
+		FluidStack getResult();
+		boolean isOre();
 	}
 }

@@ -9,7 +9,7 @@ import toops.tsteelworks.api.event.IRegistry;
 import javax.annotation.Nullable;
 
 public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, IMixerRegistry.IMixOutput> {
-	public static final IMixerRegistry INSTANCE = (IMixerRegistry) PluginFactory.getInstance(IMixerRegistry.class);
+	IMixerRegistry INSTANCE = (IMixerRegistry) PluginFactory.getInstance(IMixerRegistry.class);
 
 	/**
 	 * Registers a valid Oxidizer-reducer-purifier mix for an input fluid
@@ -23,7 +23,7 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, IMi
 	 *
 	 * @return What was previously registered for this mix's output, or null if none was
 	 */
-	public @Nullable IMixOutput registerMix(@Nullable FluidStack fluidOutput, @Nullable ItemStack solidOutput, Fluid input, @Nullable String oxidizer, @Nullable String reducer, @Nullable String purifier);
+	@Nullable IMixOutput registerMix(@Nullable FluidStack fluidOutput, @Nullable ItemStack solidOutput, Fluid input, @Nullable String oxidizer, @Nullable String reducer, @Nullable String purifier);
 
 	/**
 	 * Unregisters an Oxidizer-reducer-purifier mix
@@ -35,7 +35,7 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, IMi
 	 *
 	 * @return the previously resulting ItemStack&FluidStack, or null if nothing was removed
 	 */
-	public @Nullable IMixOutput removeMix(Fluid input, @Nullable String oxidizer, @Nullable String reducer, @Nullable String purifier);
+	@Nullable IMixOutput removeMix(Fluid input, @Nullable String oxidizer, @Nullable String reducer, @Nullable String purifier);
 
 	/**
 	 * Gets the resulting ItemStack & FluidStack for an Oxidizer-reducer-purifier mix
@@ -47,45 +47,45 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, IMi
 	 *
 	 * @return the resulting mix output
 	 */
-	public @Nullable IMixOutput getMix(Fluid input, @Nullable ItemStack oxidizer, @Nullable ItemStack reducer, @Nullable ItemStack purifier);
+	@Nullable IMixOutput getMix(Fluid input, @Nullable ItemStack oxidizer, @Nullable ItemStack reducer, @Nullable ItemStack purifier);
 
 	/**
 	 * Holder for mix inputs
 	 */
-	public static interface IMixHolder {
+	interface IMixHolder {
 		/**
 		 * @return Oredict name for oxidizer
 		 */
-		public String getOxidizer();
+		String getOxidizer();
 
 		/**
 		 * @return Oredict name for reducer
 		 */
-		public String getReducer();
+		String getReducer();
 
 		/**
 		 * @return Oredict name for purifier
 		 */
-		public String getPurifier();
+		String getPurifier();
 
 		/**
 		 * @return input fluid
 		 */
-		public Fluid getInputFluid();
+		Fluid getInputFluid();
 	}
 
 	/**
 	 * Holder for mix results
 	 */
-	public static interface IMixOutput {
+	interface IMixOutput {
 		/**
 		 * @return resulting fluid
 		 */
-		public @Nullable FluidStack getFluidOutput();
+		@Nullable FluidStack getFluidOutput();
 
 		/**
 		 * @return resulting itemstack
 		 */
-		public @Nullable ItemStack getSolidOutput();
+		@Nullable ItemStack getSolidOutput();
 	}
 }

@@ -1,5 +1,6 @@
 package toops.tsteelworks.common.blocks.logic;
 
+import cpw.mods.fml.common.Optional;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.world.CoordTuple;
@@ -36,39 +37,14 @@ import toops.tsteelworks.common.structure.StructureHighOven;
 import toops.tsteelworks.lib.ModsData;
 import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.logic.*;
+import vazkii.botania.api.item.IExoflameHeatable;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler {
-	/**
-	 * Oxidizer Slot - Redox agent.
-	 * (gunpowder, sugar, etc)
-	 */
-	public static final int SLOT_OXIDIZER = 0;
-
-	/**
-	 * Reducer Slot - redox agent.
-	 * (redstone dust, aluminum dust, etc)
-	 */
-	public static final int SLOT_REDUCER = 1;
-
-	/**
-	 * Purifier Slot - purifying agent.
-	 * (sand, graveyard soil, etc)
-	 */
-	public static final int SLOT_PURIFIER = 2;
-
-	/**
-	 * Fuel Slot - cook things.
-	 * (charcoal, charcoal block, etc)
-	 */
-	public static final int SLOT_FUEL = 3;
-
-	/**
-	 * Smeltables (4 -&gt; 10)
-	 */
-	public static final int SLOT_FIRST_MELTABLE = 4;
+@Optional.Interface(iface = "vazkii.botania.api.item.IExoflameHeatable", modid = "Botania")
+public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler, IExoflameHeatable {
+	public enum SLOT { OXIDIZER, REDUCER, PURIFIER, FUEL, FIRST_MELTABLE }
 
 	/**
 	 * The amount of fluid the tank may gain per layer - multiplier.
@@ -153,11 +129,6 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	private int fuelHeatRate = 3;
 
 	/**
-	 * Tick tock, tick tock.
-	 */
-	private int tick;
-
-	/**
 	 * The max temperature.
 	 */
 	private int maxTemp = BASE_MAX_TEMP;
@@ -166,6 +137,10 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	 * The fuel burn time.
 	 */
 	private int fuelBurnTime;
+
+	/**
+	 * The current burnable item burn time.
+	 */
 	private int fuelBurnTimeTotal;
 
 	/**
@@ -257,14 +232,14 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 	@Override
 	public void updateEntity() {
-		this.tick++;
+		final long tick = getWorldObj().getWorldTime();
 
-		if (this.tick % 4 == 0) {
+		if (tick % 4 == 0) {
 			this.heatItems();
 		}
 
 		// structural checks and fuel gauge updates
-		if (this.tick % 20 == 0) {
+		if (tick % 20 == 0) {
 			if (!worldObj.isRemote && !structure.isValid() || forceCheck) {
 				forceCheck = false;
 				this.checkValidPlacement();
@@ -285,12 +260,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 			}
 		}
 
-		if (this.tick == 40)
+		if (tick % 40 == 0)
 			this.heatFluids();
-
-		// reset tick to 0, back to the beginning we go~
-		if (this.tick == 60)
-			this.tick = 0;
 	}
 
 	/**
@@ -337,9 +308,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		}
 
 		final IMixerRegistry.IMixOutput mixResult = IMixerRegistry.INSTANCE.getMix(meltResult.getFluid(),
-				inventory.getStackInSlot(SLOT_OXIDIZER),
-				inventory.getStackInSlot(SLOT_REDUCER),
-				inventory.getStackInSlot(SLOT_PURIFIER));
+				inventory.getStackInSlot(SLOT.OXIDIZER.ordinal()),
+				inventory.getStackInSlot(SLOT.REDUCER.ordinal()),
+				inventory.getStackInSlot(SLOT.PURIFIER.ordinal()));
 
 		if (mixResult == null) {
 			if (!this.addFluidToTank(meltResult)) {
@@ -409,7 +380,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	 * Remove additive materials by preset vs random chance and amount.
 	 */
 	private void removeMixItems() {
-		for (int i = SLOT_OXIDIZER; i < SLOT_FUEL; i++) {
+		for (int i = SLOT.OXIDIZER.ordinal(); i < SLOT.FUEL.ordinal(); i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
 			if (stack == null)
 				continue;
@@ -503,7 +474,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	}
 
 	public int getFuelBurnTimeTotal() {
-		return this.fuelBurnTime;
+		return this.fuelBurnTimeTotal;
 	}
 
 	/**
@@ -513,7 +484,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		if (this.isBurning() || this.getRSmode())
 			return;
 
-		ItemStack fuel = inventory.getStackInSlot(SLOT_FUEL);
+		ItemStack fuel = inventory.getStackInSlot(SLOT.FUEL.ordinal());
 		if (fuel == null) {
 			this.fuelBurnTime = 0;
 			return;
@@ -523,12 +494,17 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		if (fuelData == null) return;
 
-		this.fuelBurnTime = fuelData.getBurnTime();
+		this.fuelBurnTime = fuelData.getBurnTime(fuel);
 		this.fuelBurnTimeTotal = fuelBurnTime;
-		this.fuelHeatRate = fuelData.getHeatRate();
+		this.fuelHeatRate = fuelData.getHeatRate(fuel);
 
-		inventory.decrStackSize(SLOT_FUEL, 1);
-		markDirty();
+		fuelData.onStartBurning(fuel);
+
+		if (fuel.stackSize <= 0) {
+			inventory.setInventorySlotContents(SLOT.FUEL.ordinal(), null);
+		} else {
+			markDirty();
+		}
 	}
 
 	/* ==================== Inventory ==================== */
@@ -812,5 +788,33 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		return tank.getTankInfo(from);
+	}
+
+	@Override
+	public boolean canSmelt() {
+		// if there is physical fuel, make it burn faster.
+		// otherwise, make it burn like charcoal (with a lower heat rate).
+		return ConfigCore.botaniaExoflame && getInventory().getStackInSlot(SLOT.FUEL.ordinal()) == null;
+	}
+
+	@Override
+	public int getBurnTime() {
+		return fuelBurnTime;
+	}
+
+	@Override
+	public void boostBurnTime() {
+		fuelBurnTime = 17;
+		fuelBurnTimeTotal = 17;
+		fuelHeatRate = 2;
+	}
+
+	@Override
+	public void boostCookTime() {
+		if (getInventory().getStackInSlot(SLOT.FUEL.ordinal()) == null) return;
+
+		if (getWorldObj().getWorldTime() % 20 != 0) return;
+
+		fuelHeatRate += fuelHeatRate;
 	}
 }

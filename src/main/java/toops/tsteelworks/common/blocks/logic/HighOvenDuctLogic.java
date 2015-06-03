@@ -19,12 +19,12 @@ import toops.tsteelworks.lib.logic.IMasterLogic;
 import toops.tsteelworks.lib.logic.IRedstonePowered;
 
 public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLogic, IRedstonePowered, IHopper {
-	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT_OXIDIZER;
-	public static final int MODE_REDUCER = HighOvenLogic.SLOT_REDUCER;
-	public static final int MODE_PURIFIER = HighOvenLogic.SLOT_PURIFIER;
-	public static final int MODE_FUEL = HighOvenLogic.SLOT_FUEL;
-	public static final int MODE_MELTABLE = HighOvenLogic.SLOT_FIRST_MELTABLE;
-	public static final int MODE_OUTPUT = 5;
+	public static final int MODE_OXIDIZER = HighOvenLogic.SLOT.OXIDIZER.ordinal();
+	public static final int MODE_REDUCER = HighOvenLogic.SLOT.REDUCER.ordinal();
+	public static final int MODE_PURIFIER = HighOvenLogic.SLOT.PURIFIER.ordinal();
+	public static final int MODE_FUEL = HighOvenLogic.SLOT.FUEL.ordinal();
+	public static final int MODE_MELTABLE = HighOvenLogic.SLOT.FIRST_MELTABLE.ordinal();
+	public static final int MODE_OUTPUT = MODE_MELTABLE + 1;
 
 	private byte direction = 0;
 

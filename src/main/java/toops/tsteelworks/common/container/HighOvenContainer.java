@@ -12,6 +12,8 @@ import toops.tsteelworks.api.highoven.IMixAgentRegistry.IMixAgent;
 import toops.tsteelworks.api.highoven.ISmeltingRegistry;
 import toops.tsteelworks.common.blocks.logic.HighOvenLogic;
 
+import static toops.tsteelworks.common.blocks.logic.HighOvenLogic.SLOT.REDUCER;
+
 public class HighOvenContainer extends Container {
 	private final HighOvenLogic logic;
 
@@ -20,10 +22,10 @@ public class HighOvenContainer extends Container {
 
 		IInventory baseInventory = highoven.getInventory();
 		/* HighOven Misc inventory */
-		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_OXIDIZER, 55, 16)); // oxidizer
-		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_REDUCER, 55, 34)); // reducer
-		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_PURIFIER, 55, 52)); // purifier
-		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT_FUEL, 126, 52)); // fuel
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.OXIDIZER.ordinal(), 55, 16)); // oxidizer
+		addSlotToContainer(new Slot(baseInventory, REDUCER.ordinal(), 55, 34)); // reducer
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.PURIFIER.ordinal(), 55, 52)); // purifier
+		addSlotToContainer(new Slot(baseInventory, HighOvenLogic.SLOT.FUEL.ordinal(), 126, 52)); // fuel
 
 		/* HighOven Smeltable inventory */
 		IInventory smeltableInventory = highoven.getSmeltableInventory();
@@ -75,7 +77,7 @@ public class HighOvenContainer extends Container {
 		boolean merged = false;
 
 		if (IFuelRegistry.INSTANCE.getFuel(sourceStack) != null) { // is fuel
-			merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_FUEL, HighOvenLogic.SLOT_FUEL + 1, false);
+			merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT.FUEL.ordinal(), HighOvenLogic.SLOT.FUEL.ordinal() + 1, false);
 		}
 
 		if (sourceStack.stackSize == 0) return merged;
@@ -85,13 +87,13 @@ public class HighOvenContainer extends Container {
 		if (agent != null) {
 			switch (agent.getType()) {
 				case OXIDIZER:
-					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_OXIDIZER, HighOvenLogic.SLOT_OXIDIZER + 1, false) || merged;
+					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT.OXIDIZER.ordinal(), HighOvenLogic.SLOT.OXIDIZER.ordinal() + 1, false) || merged;
 					break;
 				case PURIFIER:
-					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_PURIFIER, HighOvenLogic.SLOT_PURIFIER + 1, false) || merged;
+					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT.PURIFIER.ordinal(), HighOvenLogic.SLOT.PURIFIER.ordinal() + 1, false) || merged;
 					break;
 				case REDUCER:
-					merged = mergeItemStack(sourceStack, HighOvenLogic.SLOT_REDUCER, HighOvenLogic.SLOT_REDUCER + 1, false) || merged;
+					merged = mergeItemStack(sourceStack, REDUCER.ordinal(), REDUCER.ordinal() + 1, false) || merged;
 			}
 		}
 
@@ -107,8 +109,8 @@ public class HighOvenContainer extends Container {
 				toInsert.stackSize = 1;
 
 				boolean inserted = mergeItemStack(toInsert,
-						HighOvenLogic.SLOT_FIRST_MELTABLE + i,
-						HighOvenLogic.SLOT_FIRST_MELTABLE + i + 1,
+						HighOvenLogic.SLOT.FIRST_MELTABLE.ordinal() + i,
+						HighOvenLogic.SLOT.FIRST_MELTABLE.ordinal() + i + 1,
 						false);
 
 				if (inserted)

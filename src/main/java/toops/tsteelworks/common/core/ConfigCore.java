@@ -15,7 +15,10 @@ public class ConfigCore {
 	public static boolean hardcoreAnvil;
 	public static boolean enableDuctVacuum;
 	public static int teSlagOutputChance;
+
+	// --- high oven
 	public static double ingotsPerOre;
+	public static boolean botaniaExoflame;
 
 	public static int steamProductionRate;
 	public static String[] blacklistedAlloys;
@@ -76,7 +79,7 @@ public class ConfigCore {
 		enableDuctVacuum = config.get("High Oven", "Enable Duct Vacuum", false, "Enables High Oven Ducts to suck in items like a hopper").getBoolean(false);
 
 		ingotsPerOre = config.get("High Oven", "Ingots per ore", 2.0, "Number of ingots returned from smelting ores in the High Oven").getDouble(2.0);
-		//TSRecipes.ORE_LIQUID_VALUE = (int) Math.round(TSRecipes.INGOT_LIQUID_VALUE * ingotsPerOre);
+		botaniaExoflame = config.get("High Oven", "Enable botania Exoflame support", false, "Allows the exoflame to boost the High Oven burn time/rate").getBoolean(false);
 
 		teSlagOutputChance = config.get("High Oven", "TE Slag output chance", 10, "1 in <config> chance of getting Thermal Expansion slag when smelting ores, set to -1 to disable. Active only if TE is present").getInt(10);
 		steamProductionRate = config.get("High Oven", "Steam rate", 20, "Steam maximum production rate per tick per layer (in mB). Let's not renderTank railcraft's boilers useless, set to 0 to disable steam production" +

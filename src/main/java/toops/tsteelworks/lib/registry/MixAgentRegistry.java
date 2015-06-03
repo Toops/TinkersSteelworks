@@ -5,17 +5,18 @@ import net.minecraftforge.oredict.OreDictionary;
 import toops.tsteelworks.api.highoven.IMixAgentRegistry;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IMixAgent> implements IMixAgentRegistry {
 	/* ========== IMixAgentRegistry ========== */
 	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
-	private final Map<String, MixAgent> mixItemList = new HashMap<>();
+	private final Map<String, IMixAgent> mixItemList = new HashMap<>();
 
 	@Override
 	public IMixAgent registerAgent(String oreName, IMixAgentRegistry.AgentType type, int chance) {
-		MixAgent newAgent = new MixAgent(type, chance);
-		MixAgent oldAgent = mixItemList.put(oreName, newAgent);
+		IMixAgent newAgent = new MixAgent(type, chance);
+		IMixAgent oldAgent = mixItemList.put(oreName, newAgent);
 
 		if (oldAgent != null)
 			dispatchDeleteEvent(oreName, oldAgent);
@@ -40,11 +41,16 @@ class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IMixAgent
 
 	@Override
 	public IMixAgentRegistry.IMixAgent unregisterAgent(String oreName) {
-		MixAgent oldAgent = mixItemList.remove(oreName);
+		IMixAgent oldAgent = mixItemList.remove(oreName);
 
 		if (oldAgent != null) dispatchDeleteEvent(oreName, oldAgent);
 
 		return oldAgent;
+	}
+
+	@Override
+	public Iterator<Map.Entry<String, IMixAgent>> iterator() {
+		return mixItemList.entrySet().iterator();
 	}
 
 	private static class MixAgent implements IMixAgentRegistry.IMixAgent {

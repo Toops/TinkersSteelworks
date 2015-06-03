@@ -18,12 +18,25 @@ class FuelHandler {
 				public int getHeatRate() {
 					return heatRate;
 				}
+
+				@Override
+				public int getBurnTime(ItemStack item) {
+					return getBurnTime();
+				}
+
+				@Override
+				public int getHeatRate(ItemStack item) {
+					return getHeatRate();
+				}
+
+				@Override
+				public void onStartBurning(ItemStack item) {}
 			});
 		}
 
 		@Override
 		public void apply() {
-			oldData = IFuelRegistry.INSTANCE.addFuel(key, newData.getBurnTime(), newData.getHeatRate());
+			oldData = IFuelRegistry.INSTANCE.addFuel(key, newData.getBurnTime(key), newData.getHeatRate(key));
 		}
 
 		@Override
@@ -31,8 +44,8 @@ class FuelHandler {
 			if (oldData == null)
 				IFuelRegistry.INSTANCE.removeFuel(key);
 			else
-				IFuelRegistry.INSTANCE.addFuel(key, oldData.getBurnTime(), oldData.getHeatRate());
-			
+				IFuelRegistry.INSTANCE.addFuel(key, oldData.getBurnTime(key), oldData.getHeatRate(key));
+
 			oldData = null;
 		}
 
@@ -55,8 +68,8 @@ class FuelHandler {
 		@Override
 		public void undo() {
 			if (oldData == null) return;
-			
-			IFuelRegistry.INSTANCE.addFuel(key, oldData.getBurnTime(), oldData.getHeatRate());
+
+			IFuelRegistry.INSTANCE.addFuel(key, oldData.getBurnTime(key), oldData.getHeatRate(key));
 		}
 
 		@Override

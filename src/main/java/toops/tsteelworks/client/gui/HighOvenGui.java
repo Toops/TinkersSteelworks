@@ -57,12 +57,11 @@ public class HighOvenGui extends GuiContainer {
 
 		// Burn progress
 		if (highoven.isBurning()) {
-			// icon is 42 pixels high
 			int scale;
 			if (highoven.getFuelBurnTimeTotal() == 0) {
-				scale = 42;
+				scale = 12;
 			} else {
-				scale = highoven.getFuelBurnTime() / highoven.getFuelBurnTimeTotal() * 42;
+				scale = (int) ((float)highoven.getFuelBurnTime() / highoven.getFuelBurnTimeTotal() * 12);
 			}
 
 			drawTexturedModalRect(guiLeft + 127, (guiTop + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);
@@ -110,7 +109,7 @@ public class HighOvenGui extends GuiContainer {
 				drawTexturedModalRect(slotX, slotY + (i * 18), i * 18, 234, 18, 18);
 		}
 
-		if (!inventorySlots.getSlot(HighOvenLogic.SLOT_FUEL).getHasStack())
+		if (!inventorySlots.getSlot(HighOvenLogic.SLOT.FUEL.ordinal()).getHasStack())
 			drawTexturedModalRect(slotX + 71, slotY + (2 * 18), 3 * 18, 234, 18, 18);
 
 		for (int i = 0; i < nbSmeltSlots; i++) {

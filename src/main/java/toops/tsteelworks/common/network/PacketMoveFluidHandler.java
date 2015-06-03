@@ -26,7 +26,7 @@ public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHa
 				(short) tank.yCoord,
 				tank.zCoord,
 				tank.getWorldObj().provider.dimensionId,
-				fluid.fluidID,
+				fluid.getFluidID(),
 				GuiScreen.isShiftKeyDown());
 
 		TSteelworks.getNetHandler().sendToServer(packet);

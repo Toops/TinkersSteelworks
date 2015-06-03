@@ -5,7 +5,7 @@ import toops.tsteelworks.api.PluginFactory;
 import toops.tsteelworks.api.event.IRegistry;
 
 public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelData> {
-	public static final IFuelRegistry INSTANCE = (IFuelRegistry) PluginFactory.getInstance(IFuelRegistry.class);
+	IFuelRegistry INSTANCE = (IFuelRegistry) PluginFactory.getInstance(IFuelRegistry.class);
 
 	/**
 	 * Gets the FuelData instance registered for a given ItemStack
@@ -13,17 +13,26 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 	 * @param fuel The ItemStack
 	 * @return the instance of FuelData registered for this ItemStack or null if none has been registered.
 	 */
-	public IFuelData getFuel(ItemStack fuel);
+	IFuelData getFuel(ItemStack fuel);
 
 	/**
-	 * Registers an itemstack as valid fuel. FuelData is replaced if already existing.
+	 * Registers an itemstack as a valid consumable fuel. FuelData is replaced if already existing.
 	 *
 	 * @param fuel The ItemStack used as fuel
 	 * @param burnTime The amount of time in ticks that this fuel is going to last
 	 * @param heatRate The amount of heat this is going to provide at each burn
 	 * @return the previously registered fueldata or null if none were registered.
 	 */
-	public IFuelData addFuel(ItemStack fuel, int burnTime, int heatRate);
+	IFuelData addFuel(ItemStack fuel, int burnTime, int heatRate);
+
+	/**
+	 * Same as {@link IFuelRegistry#addFuel(ItemStack, int, int)} but allowing you to customise your {@link IFuelData}
+	 *
+	 * @param fuel The ItemStack used as fuel.
+	 * @param fuelData A custom fuel data handler.
+	 * @return the previously registered fueldata or null if none were registered.
+	 */
+	IFuelData addFuel(ItemStack fuel, IFuelData fuelData);
 
 	/**
 	 * Unregisters an ItemStack as valid fuel
@@ -31,13 +40,38 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 	 * @param fuel the itemstack to unregister
 	 * @return the FuelData that was registered, or null if none were registered
 	 */
-	public IFuelData removeFuel(ItemStack fuel);
+	IFuelData removeFuel(ItemStack fuel);
 
 	/**
 	 * Wrapper interface for fuel time and heat rate
 	 */
-	public static interface IFuelData {
-		public int getBurnTime();
-		public int getHeatRate();
+	interface IFuelData {
+		@Deprecated
+		int getBurnTime();
+
+		@Deprecated
+		int getHeatRate();
+
+		/**
+		 * Returns the amount of time in ticks that this fuel is going to last.
+		 *
+		 * @param item The item about to start burning.
+		 */
+		int getBurnTime(ItemStack item);
+
+		/**
+		 * Returns the amount of degrees to add to the high oven at every burn tick (once every 20 ticks)
+		 *
+		 * @param item The item about to start burning.
+		 */
+		int getHeatRate(ItemStack item);
+
+		/**
+		 * Called when the high oven starts burning the item.
+		 * Default behavior would be to decrement the item's stacksize. Externalized for addons.
+		 *
+		 * @param item The item supposed to burn.
+		 */
+		void onStartBurning(ItemStack item);
 	}
 }

@@ -8,11 +8,12 @@ import toops.tsteelworks.api.highoven.IMixerRegistry;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegistry.IMixOutput> implements IMixerRegistry {
 	/* ========== IMixerRegistry ========== */
-	private final Map<MixCombo, MixOutput> comboList = new HashMap<>();
+	private final Map<IMixHolder, IMixOutput> comboList = new HashMap<>();
 
 	@Override
 	@Nullable
@@ -78,6 +79,11 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 		}
 
 		return null;
+	}
+
+	@Override
+	public Iterator<Map.Entry<IMixHolder, IMixOutput>> iterator() {
+		return comboList.entrySet().iterator();
 	}
 
 	private static class MixOutput implements IMixOutput {
