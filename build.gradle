@@ -11,6 +11,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 apply plugin: 'maven-publish'
 
 def build_number = 'CUSTOM'
@@ -134,4 +135,16 @@ publishing {
             mavenLocal()
         }
     }
+}
+
+curse {
+    projectId = '233076'
+    apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ''
+    releaseType = 'release'
+
+    displayName = "${mod_name} ${version}"
+    changelog = 'https://github.com/Ephys/TinkersSteelworks/commits/master'
+    addGameVersion '1.7.10'
+
+    additionalArtifact deobfJar
 }
