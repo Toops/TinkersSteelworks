@@ -137,6 +137,12 @@ publishing {
     }
 }
 
+def apiKey = ''
+if (project.hasProperty('curseForgeApiKey'))
+    apiKey = project.curseForgeApiKey
+else if (System.hasProperty('curseForgeApiKey'))
+    apiKey = System.getProperty('curseForgeApiKey')
+
 curse {
     projectId = '233076'
     apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ''
