@@ -10,8 +10,10 @@ buildscript {
     }
 }
 
+
+
 apply plugin: 'forge'
-apply plugin: 'curseforge'
+//apply plugin: 'curseforge'
 apply plugin: 'maven-publish'
 
 def build_number = 'CUSTOM'
@@ -137,15 +139,17 @@ publishing {
     }
 }
 
-def apiKey_ = ''
-if (project.hasProperty('curseForgeApiKey'))
-    apiKey_ = project.curseForgeApiKey
-else if (System.hasProperty('curseForgeApiKey'))
-    apiKey_ = System.getProperty('curseForgeApiKey')
-
 curse {
-    projectId = '233076'
+    def apiKey_ = ''
+    if (project.hasProperty('curseForgeApiKey')) {
+        apiKey_ = project.curseForgeApiKey
+    } else if (System.hasProperty('curseForgeApiKey')) {
+        apiKey_ = System.getProperty('curseForgeApiKey')
+    }
+
     apiKey = apiKey_
+
+    projectId = '233076'
     releaseType = 'release'
 
     displayName = "${mod_name} ${version}"
