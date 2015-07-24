@@ -137,15 +137,15 @@ publishing {
     }
 }
 
-def apiKey = ''
+def apiKey_ = ''
 if (project.hasProperty('curseForgeApiKey'))
-    apiKey = project.curseForgeApiKey
+    apiKey_ = project.curseForgeApiKey
 else if (System.hasProperty('curseForgeApiKey'))
-    apiKey = System.getProperty('curseForgeApiKey')
+    apiKey_ = System.getProperty('curseForgeApiKey')
 
 curse {
     projectId = '233076'
-    apiKey = project.hasProperty('curseForgeApiKey') ? project.curseForgeApiKey : ''
+    apiKey = apiKey_
     releaseType = 'release'
 
     displayName = "${mod_name} ${version}"
