@@ -208,6 +208,7 @@ public class TSContent {
 
 		registry.registerAgent("dustGunpowder", IMixAgentRegistry.AgentType.OXIDIZER, 33);
 		registry.registerAgent("dustSulphur", IMixAgentRegistry.AgentType.OXIDIZER, 29);
+		registry.registerAgent("dustSulfur", IMixAgentRegistry.AgentType.OXIDIZER, 29);
 		registry.registerAgent("dustSugar", IMixAgentRegistry.AgentType.OXIDIZER, 62);
 		registry.registerAgent("fuelCoal", IMixAgentRegistry.AgentType.OXIDIZER, 43);
 		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXIDIZER, 43);

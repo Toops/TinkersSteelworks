@@ -157,4 +157,7 @@ curse {
     addGameVersion '1.7.10'
 
     additionalArtifact deobfJar
+
+    relatedProject 'cookiecore': 'requiredLibrary'
+    relatedProject 'tinkers-construct': 'requiredLibrary'
 }
