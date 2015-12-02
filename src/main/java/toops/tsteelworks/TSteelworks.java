@@ -16,7 +16,6 @@ import toops.tsteelworks.common.plugins.PluginController;
 import toops.tsteelworks.common.plugins.chisel.ChiselPlugin;
 import toops.tsteelworks.common.plugins.minetweaker3.MinetweakerPlugin;
 import toops.tsteelworks.common.plugins.mods.FMPPlugin;
-import toops.tsteelworks.common.plugins.mods.RailcraftPlugin;
 import toops.tsteelworks.common.plugins.mods.ThaumcraftPlugin;
 import toops.tsteelworks.common.plugins.tconstruct.TConstructPlugin;
 import toops.tsteelworks.common.plugins.waila.WailaPlugin;
@@ -48,7 +47,7 @@ public class TSteelworks {
 
 		pluginController.registerPlugin(new FMPPlugin());
 		pluginController.registerPlugin(new WailaPlugin());
-		pluginController.registerPlugin(new RailcraftPlugin());
+		//pluginController.registerPlugin(new RailcraftPlugin());
 		pluginController.registerPlugin(new ThaumcraftPlugin());
 		pluginController.registerPlugin(Plugins.TConstruct);
 		pluginController.registerPlugin(new MinetweakerPlugin());
