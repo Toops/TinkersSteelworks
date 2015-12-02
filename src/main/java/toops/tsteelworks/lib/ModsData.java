@@ -18,32 +18,6 @@ import toops.tsteelworks.common.core.TSContent;
 import toops.tsteelworks.common.core.TSLogger;
 
 public class ModsData {
-	/**
-	 * Anything fluid
-	 */
-	public static class Fluids {
-		public static Fluid steamFluid;
-		public static ItemStack bucketSteam;
-		public static Block steamBlock;
-
-		public static Fluid moltenLimestoneFluid;
-		public static ItemStack bucketLimestone;
-		public static Block moltenLimestone;
-
-		public static Fluid liquidCementFluid;
-		public static ItemStack bucketCement;
-		public static Block liquidCement;
-	}
-
-	/**
-	 * Anything added by TE
-	 */
-	public static class ThermalExpansion {
-		public static boolean isLoaded;
-
-		public static ItemStack slag;
-	}
-
 	public static void loadModsData() {
 		ThermalExpansion.isLoaded = Loader.isModLoaded("ThermalExpansion");
 		if (ThermalExpansion.isLoaded) {
@@ -140,5 +114,31 @@ public class ModsData {
 		}
 
 		Fluids.bucketCement = filledBucket;
+	}
+
+	/**
+	 * Anything fluid
+	 */
+	public static class Fluids {
+		public static Fluid steamFluid;
+		public static ItemStack bucketSteam;
+		public static Block steamBlock;
+
+		public static Fluid moltenLimestoneFluid;
+		public static ItemStack bucketLimestone;
+		public static Block moltenLimestone;
+
+		public static Fluid liquidCementFluid;
+		public static ItemStack bucketCement;
+		public static Block liquidCement;
+	}
+
+	/**
+	 * Anything added by TE
+	 */
+	public static class ThermalExpansion {
+		public static boolean isLoaded;
+
+		public static ItemStack slag;
 	}
 }

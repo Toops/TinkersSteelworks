@@ -117,8 +117,8 @@ public class HighGolem extends EntityGolem implements IRangedAttackMob {
 
 	/**
 	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player.
-	 * @param
-	 * par2 - Level of Looting used to kill this mob.
+	 *
+	 * @param par2 - Level of Looting used to kill this mob.
 	 */
 	@Override
 	protected void dropFewItems(boolean par1, int par2) {

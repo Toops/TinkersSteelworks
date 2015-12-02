@@ -24,7 +24,7 @@ class TCTools {
 		ItemStack enderpearl = new ItemStack(Items.ender_pearl);
 		String modifierName = StatCollector.translateToLocal("modifier.tool.vacuous");
 
-		ModifyBuilder.registerModifier(new ModInteger(new ItemStack[] { hopper, enderpearl }, 50, "Vacuous", 5, EnumChatFormatting.GREEN.toString(), modifierName));
+		ModifyBuilder.registerModifier(new ModInteger(new ItemStack[]{hopper, enderpearl}, 50, "Vacuous", 5, EnumChatFormatting.GREEN.toString(), modifierName));
 
 		TConstructRegistry.registerActiveToolMod(new TSActiveOmniMod());
 

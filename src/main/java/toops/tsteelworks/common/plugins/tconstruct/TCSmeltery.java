@@ -213,7 +213,7 @@ class TCSmeltery {
 		TConstructPlugin.registerSmelteryItemRenderer(searedBrickItem, searedBrickBlock);
 		advancedSmelting.addMeltable(searedBrickItem, false, new FluidStack(fluid, TSRecipes.INGOT_LIQUID_VALUE), 600);
 
-		final String[] dyes = new String[] { "dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack" };
+		final String[] dyes = new String[]{"dyeWhite", "dyeOrange", "dyeMagenta", "dyeLightBlue", "dyeYellow", "dyeLime", "dyePink", "dyeGray", "dyeLightGray", "dyeCyan", "dyePurple", "dyeBlue", "dyeBrown", "dyeGreen", "dyeRed", "dyeBlack"};
 
 		for (int i = 0; i < dyes.length; i++) {
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(TSContent.cementBlock, 8, i),

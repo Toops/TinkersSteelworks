@@ -58,7 +58,8 @@ public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHa
 		private int fluidID;
 		private boolean isShiftKeyDown;
 
-		public PacketMoveFluid() {}
+		public PacketMoveFluid() {
+		}
 
 		public PacketMoveFluid(int x, short y, int z, int worldId, int fluidID, boolean isShiftKeyDown) {
 			this.x = x;
@@ -83,12 +84,12 @@ public class PacketMoveFluidHandler implements IMessageHandler<PacketMoveFluidHa
 		@Override
 		public void toBytes(ByteBuf buffer) {
 			buffer.writeInt(x)
-				.writeShort(y)
-				.writeInt(z)
+					.writeShort(y)
+					.writeInt(z)
 
-				.writeInt(worldId)
-				.writeInt(fluidID)
-				.writeBoolean(isShiftKeyDown);
+					.writeInt(worldId)
+					.writeInt(fluidID)
+					.writeBoolean(isShiftKeyDown);
 		}
 	}
 }

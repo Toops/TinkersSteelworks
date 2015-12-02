@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class TSBaseSlab extends Block {
+public class TsBaseSlab extends Block {
 	private final Block modelBlock;
 	private final int metaStart;
 	private final int metaEnd;
@@ -23,11 +23,11 @@ public class TSBaseSlab extends Block {
 	/**
 	 * Creates a new slab by copying properties from an existing block.
 	 *
-	 * @param model The base block for which a slab should be created.
+	 * @param model     The base block for which a slab should be created.
 	 * @param metaStart The start of the metadata range of the model (included).
-	 * @param metaEnd The end of the metadata range of the model (included).
+	 * @param metaEnd   The end of the metadata range of the model (included).
 	 */
-	public TSBaseSlab(Block model, int metaStart, int metaEnd) {
+	public TsBaseSlab(Block model, int metaStart, int metaEnd) {
 		super(model.getMaterial());
 
 		this.modelBlock = model;
@@ -80,7 +80,8 @@ public class TSBaseSlab extends Block {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {}
+	public void registerBlockIcons(IIconRegister iconRegister) {
+	}
 
 	@Override
 	@SideOnly(Side.CLIENT)

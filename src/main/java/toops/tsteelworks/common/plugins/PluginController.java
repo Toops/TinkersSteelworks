@@ -6,10 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PluginController {
-	private enum Phase {
-		PRELAUNCH, PREINIT, INIT, POSTINIT, DONE
-	}
-
 	private List<ICompatPlugin> plugins = new ArrayList<>();
 	private Phase currPhase = Phase.PRELAUNCH;
 
@@ -41,5 +37,9 @@ public class PluginController {
 			if (currPhase != Phase.PRELAUNCH)
 				throw new IllegalStateException("Compat plugins must be registered before preinit");
 		}
+	}
+
+	private enum Phase {
+		PRELAUNCH, PREINIT, INIT, POSTINIT, DONE
 	}
 }

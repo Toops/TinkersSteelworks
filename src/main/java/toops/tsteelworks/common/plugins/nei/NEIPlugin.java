@@ -9,7 +9,8 @@ public class NEIPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void init() {}
+	public void init() {
+	}
 
 	@Override
 	public void postInit() {
@@ -17,5 +18,6 @@ public class NEIPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void preInit() {}
+	public void preInit() {
+	}
 }

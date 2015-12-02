@@ -13,8 +13,8 @@ import toops.tsteelworks.common.core.GuiHandler;
 import java.util.List;
 
 public class TSManual extends TSCraftingItem {
-	static String[] name = new String[] {"highoven"};
-	static String[] textureName = new String[] {"tinkerbook_highoven"};
+	static String[] name = new String[]{"highoven"};
+	static String[] textureName = new String[]{"tinkerbook_highoven"};
 
 	public TSManual() {
 		super(name, textureName, "");

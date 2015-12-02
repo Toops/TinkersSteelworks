@@ -16,8 +16,8 @@ import toops.tsteelworks.common.network.PacketMoveFluidHandler;
 import java.util.List;
 
 public class DeepTankGui extends GuiContainer {
-	private final ScalableTankGUI tankGui;
 	public static final ResourceLocation BACKGROUND = new ResourceLocation("tsteelworks", "textures/gui/deeptank.png");
+	private final ScalableTankGUI tankGui;
 	private final DeepTankLogic tank;
 
 	public DeepTankGui(InventoryPlayer inventoryplayer, DeepTankLogic tank) {

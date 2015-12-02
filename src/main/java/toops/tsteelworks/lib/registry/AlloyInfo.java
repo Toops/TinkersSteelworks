@@ -30,7 +30,7 @@ public final class AlloyInfo {
 				FluidStack[] output = new FluidStack[components.size()];
 
 				for (int i = 0; i < output.length; i++) {
-					float ratio = (float)  components.get(i).amount / alloy.result.amount;
+					float ratio = (float) components.get(i).amount / alloy.result.amount;
 
 					output[i] = new FluidStack(components.get(i), (int) (input.amount * ratio));
 				}

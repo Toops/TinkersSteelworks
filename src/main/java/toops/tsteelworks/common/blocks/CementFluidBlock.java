@@ -26,7 +26,7 @@ public class CementFluidBlock extends TSFluidBlock {
 		if (entity instanceof EntityLivingBase) {
 			if (world.isRemote)
 				entity.setVelocity(0, 0, 0);
-			
+
 			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.digSlowdown.getId(), 30, 3, true));
 		}
 	}
@@ -39,7 +39,7 @@ public class CementFluidBlock extends TSFluidBlock {
 	}
 
 	public void checkForHarden(World world, int x, int y, int z) {
-		if (world.getBlockMetadata(x, y, z) == quantaPerBlock -1 ||
+		if (world.getBlockMetadata(x, y, z) == quantaPerBlock - 1 ||
 				isFlowingVertically(world, x, y, z) ||
 				validHardenCoords(world, x, y, z - 1) ||
 				validHardenCoords(world, x, y, z + 1) ||

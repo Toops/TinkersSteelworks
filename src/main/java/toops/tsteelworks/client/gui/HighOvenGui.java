@@ -61,7 +61,7 @@ public class HighOvenGui extends GuiContainer {
 			if (highoven.getFuelBurnTimeTotal() == 0) {
 				scale = 12;
 			} else {
-				scale = (int) ((float)highoven.getFuelBurnTime() / highoven.getFuelBurnTimeTotal() * 12);
+				scale = (int) ((float) highoven.getFuelBurnTime() / highoven.getFuelBurnTimeTotal() * 12);
 			}
 
 			drawTexturedModalRect(guiLeft + 127, (guiTop + 36 + 12) - scale, 176, 12 - scale, 14, scale + 2);

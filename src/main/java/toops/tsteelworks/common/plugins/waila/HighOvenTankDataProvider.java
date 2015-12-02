@@ -39,6 +39,34 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 		registrar.addConfig(TSRepo.MOD_NAME, "tseelworks.autoUnit");
 	}
 
+	public static void listFluids(List<String> currenttip, MultiFluidTank tank, boolean doList, boolean autoUnit, boolean showTotal) {
+		if (tank.getCapacity() == 0) return;
+
+		if (tank.getFluidAmount() == 0) {
+			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty"));
+			return;
+		}
+
+		if (doList) {
+			for (int i = 0; i < tank.getNbFluids(); i++) {
+				FluidStack stack = tank.getFluid(i);
+
+				String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
+				currenttip.add(fluidNameHelper(stack) + " (" + textValue + ")");
+			}
+		}
+
+		if (showTotal) {
+			if (doList) currenttip.add("-----");
+
+			currenttip.add(ChatHelper.formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
+		}
+	}
+
+	private static String fluidNameHelper(FluidStack f) {
+		return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
+	}
+
 	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return null;
@@ -73,33 +101,5 @@ public class HighOvenTankDataProvider implements IWailaDataProvider {
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
 		return null;
-	}
-
-	public static void listFluids(List<String> currenttip, MultiFluidTank tank, boolean doList, boolean autoUnit, boolean showTotal) {
-		if (tank.getCapacity() == 0) return;
-
-		if (tank.getFluidAmount() == 0) {
-			currenttip.add(EnumChatFormatting.ITALIC + StatCollector.translateToLocal("tconstruct.waila.empty"));
-			return;
-		}
-
-		if (doList) {
-			for (int i = 0; i < tank.getNbFluids(); i++) {
-				FluidStack stack = tank.getFluid(i);
-
-				String textValue = ChatHelper.formatFluidValue(autoUnit, stack.amount);
-				currenttip.add(fluidNameHelper(stack) + " (" + textValue + ")");
-			}
-		}
-
-		if (showTotal) {
-			if (doList) currenttip.add("-----");
-			
-			currenttip.add(ChatHelper.formatFluidValue(autoUnit, tank.getFluidAmount()) + " / " + ChatHelper.formatFluidValue(autoUnit, tank.getCapacity()) + " " + StatCollector.translateToLocal("tconstruct.waila.total"));
-		}
-	}
-
-	private static String fluidNameHelper(FluidStack f) {
-		return StatCollector.translateToLocal(FluidRegistry.getFluidName(f));
 	}
 }

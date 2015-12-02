@@ -4,13 +4,10 @@
         <text><!-- Yes, spacing /does/ count -->
 
 
-
-
-
             Steelworking and You
-      A beginner's guide to Steelcraft
+            A beginner's guide to Steelcraft
 
-         - By The Tinkers' Society
+            - By The Tinkers' Society
         </text>
     </page>
     <page type="contents">
@@ -53,36 +50,54 @@
     </page>
     <page type="text">
         <text>-Foreword-
-To preserve the sacred art of steelwork, we have written this book in a special invisible ink which is activated on a factor of time. This will help ensure that the people of the age have reached a level of social and technological maturity, so that they may harmoniously benefit from the knowledge contained herein.
+            To preserve the sacred art of steelwork, we have written this book in a special invisible ink which is
+            activated on a factor of time. This will help ensure that the people of the age have reached a level of
+            social and technological maturity, so that they may harmoniously benefit from the knowledge contained
+            herein.
 
-The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive cave dweller. Heed my words dear reader: attentive caution must exercised in its production. </text>
+            The discovery of steel opens doors to a vast and brave new world of marvels inconceivable by the primitive
+            cave dweller. Heed my words dear reader: attentive caution must exercised in its production.
+        </text>
     </page>
 
     <page type="text">
         <text>Steelworking is an art and a hallmark of the master tinker. Be your intentions noble and hands deft!
 
-    -Slags O'Molten
-    Scribemaster of the Tinkers' Society
+            -Slags O'Molten
+            Scribemaster of the Tinkers' Society
 
-Welcome to the world of steelwork. Within these pages you will be presented the secrets of processing metals and non-metal materials into refined substances with much more substantial traits over their mundane predecessors. Just remember: experimentation is key!
+            Welcome to the world of steelwork. Within these pages you will be presented the secrets of processing metals
+            and non-metal materials into refined substances with much more substantial traits over their mundane
+            predecessors. Just remember: experimentation is key!
 
-The High Oven will be your threshold into this process. It is smaller than the Smeltery you are accustomed to, yet, both the method for its construction and general operation are very similar.</text>
+            The High Oven will be your threshold into this process. It is smaller than the Smeltery you are accustomed
+            to, yet, both the method for its construction and general operation are very similar.
+        </text>
     </page>
 
     <page type="text">
         <text>Here are a few tips working with the High Oven:
 
-* Like the Smeltery, the High Oven functions as a liquid tank. It is capable of melting metals and more. Unlike the Smeltery, it cannot contain multiple liquids or mix metals into alloys.
+            * Like the Smeltery, the High Oven functions as a liquid tank. It is capable of melting metals and more.
+            Unlike the Smeltery, it cannot contain multiple liquids or mix metals into alloys.
 
-* Mixing materials is key! As time goes on, you will become familiar with oxidizers, reducers, and purifiers. These are properties of materials which may lead to robust crystalline structures within your metalworking.
+            * Mixing materials is key! As time goes on, you will become familiar with oxidizers, reducers, and
+            purifiers. These are properties of materials which may lead to robust crystalline structures within your
+            metalworking.
 
-* The High Oven can be as small as three blocks high, or as high as eight. For each layer between the top and bottom layers,</text>
+            * The High Oven can be as small as three blocks high, or as high as eight. For each layer between the top
+            and bottom layers,
+        </text>
     </page>
     <page type="text">
-        <text>more space will be available to cook items within. Additionally, the taller the structure, the hotter it gets!</text>
+        <text>more space will be available to cook items within. Additionally, the taller the structure, the hotter it
+            gets!
+        </text>
     </page>
     <page type="sidebar">
-        <text>The High Oven is a multi-block structure. You will need a Smeltery and the following materials to get started.</text>
+        <text>The High Oven is a multi-block structure. You will need a Smeltery and the following materials to get
+            started.
+        </text>
         <item>
             <text>1 High Oven Controller</text>
             <icon>highoven</icon>
@@ -105,35 +120,49 @@ The High Oven will be your threshold into this process. It is smaller than the S
         </item>
     </page>
     <page type="text">
-        <text>To begin, lay a 3x3 bed of scorched bricks. Continue laying bricks in a similar fashion upward, but leave the center hollow. Cap it off with one additional 3x3 layer, just like the bottom. While there are no vertical limits to the size of your High Oven, it is pointless to build it beyond eight blocks in height.
+        <text>To begin, lay a 3x3 bed of scorched bricks. Continue laying bricks in a similar fashion upward, but leave
+            the center hollow. Cap it off with one additional 3x3 layer, just like the bottom. While there are no
+            vertical limits to the size of your High Oven, it is pointless to build it beyond eight blocks in height.
 
-Place the Controller in the middle of any layer you desire. You may place drains anywhere within the structure.</text>
+            Place the Controller in the middle of any layer you desire. You may place drains anywhere within the
+            structure.
+        </text>
     </page>
     <page type="picture2">
         <text>A Working High Oven</text>
         <location>tsteelworks:manuals/highovensmall.png</location>
     </page>
     <page type="picture2">
-        <text>The High Oven should only be fuelled with charcoal or other specialized purified fuels which do not create unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature must meet or exceed the melting point of the metal.
+        <text>The High Oven should only be fuelled with charcoal or other specialized purified fuels which do not create
+            unwanted residue within the chamber. To begin burning the charcoal, flip the lever. The High Oven's internal
+            temperature will gradually increase with time as long as fuel is burning. Otherwise, the internal
+            temperature will rapidly decrease. To melt metals into liquid form, the High Oven's internal temperature
+            must meet or exceed the melting point of the metal.
 
-The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce entirely different structural formations within the base metal.</text>
+            The High Oven may be used to process any normal metal as the Smeltery. It cannot be used to create alloys in
+            the traditional sense. Instead, raw component materials may be mixed into the metals as they melt to produce
+            entirely different structural formations within the base metal.
+        </text>
         <location>tsteelworks:manuals/highovenbackground.png</location>
     </page>
     <page type="picture2">
-        <text>Crystalline structures may be formed within your metals when compound agents are mixed into the metal, causing fascinating chemical reactions! These raw materials may or may not be entirely consumed on a basis of their dissipation property. In the coming pages, we will cover a few of these compound agents known as oxidizers, reducers, and purifiers.
+        <text>Crystalline structures may be formed within your metals when compound agents are mixed into the metal,
+            causing fascinating chemical reactions! These raw materials may or may not be entirely consumed on a basis
+            of their dissipation property. In the coming pages, we will cover a few of these compound agents known as
+            oxidizers, reducers, and purifiers.
 
-Oxidizers provide oxidation to the chemical compound.
+            Oxidizers provide oxidation to the chemical compound.
 
-Reducers bond with oxidizers to create an entirely new chemical compound.
+            Reducers bond with oxidizers to create an entirely new chemical compound.
 
-Purifiers filter unwanted leftover materials.
+            Purifiers filter unwanted leftover materials.
         </text>
         <location>tsteelworks:manuals/compound.png</location>
     </page>
     <page type="sidebar">
         <text>Known Oxidizers include:</text>
         <item>
-            <text>Gunpowder - 33% Dissipation </text>
+            <text>Gunpowder - 33% Dissipation</text>
             <icon>gunpowderdust</icon>
         </item>
         <item>
@@ -185,7 +214,10 @@ Purifiers filter unwanted leftover materials.
     <page type="text">
         <text>-Cast Steel
 
-Steel is what you've came here for, undoubtedly, so let's get to it! The materials represent only a portion of potential materials to create steel. Materials like sulphur, manganese, and even coal dust may also be used. With time, all secrets will be unveiled.</text>
+            Steel is what you've came here for, undoubtedly, so let's get to it! The materials represent only a portion
+            of potential materials to create steel. Materials like sulphur, manganese, and even coal dust may also be
+            used. With time, all secrets will be unveiled.
+        </text>
     </page>
 
     <page type="highoven">
@@ -196,7 +228,9 @@ Steel is what you've came here for, undoubtedly, so let's get to it! The materia
     <page type="text">
         <text>-Pig Iron
 
-Pig Iron is a very strange substance. It is said to have been formulated in the Nether by a tribe of intelligent pig people, but such fables adorn whimsical children's' books.</text>
+            Pig Iron is a very strange substance. It is said to have been formulated in the Nether by a tribe of
+            intelligent pig people, but such fables adorn whimsical children's' books.
+        </text>
     </page>
 
     <page type="highoven">
@@ -257,9 +291,16 @@ Pig Iron is a very strange substance. It is said to have been formulated in the 
     </page>
 
     <page type="text">
-        <text>Scorched ducts provide an easy way to route items directly into the High Oven by material type. To utilize these, one simply places the duct within the structure as they do with a scorched drain. Upon inspection of the duct, you will find space to place items within, and a means to change where those items are routed to through some very familiar iconography. Ducts will automatically pull items out of adjacent inventories, such as chests, and they will also suck items in from directly in front of them. To stop a duct completely, simply apply a redstone signal.
+        <text>Scorched ducts provide an easy way to route items directly into the High Oven by material type. To utilize
+            these, one simply places the duct within the structure as they do with a scorched drain. Upon inspection of
+            the duct, you will find space to place items within, and a means to change where those items are routed to
+            through some very familiar iconography. Ducts will automatically pull items out of adjacent inventories,
+            such as chests, and they will also suck items in from directly in front of them. To stop a duct completely,
+            simply apply a redstone signal.
 
-            You may also notice the last of its routing options may look unfamiliar. This option is for solid item output, just as a drain pours liquids. As always, don't fear the tinker!</text>
+            You may also notice the last of its routing options may look unfamiliar. This option is for solid item
+            output, just as a drain pours liquids. As always, don't fear the tinker!
+        </text>
     </page>
 
     <page type="crafting">
@@ -295,20 +336,26 @@ Pig Iron is a very strange substance. It is said to have been formulated in the 
     </page>
 
     <page type="text">
-        <text> -Chapter 2: Deep Tank
-"Molten metal. It is as beautiful as any natural river. Its glimmer sparks insight; its flow is the harmony of man's industrial opus."
+        <text>-Chapter 2: Deep Tank
+            "Molten metal. It is as beautiful as any natural river. Its glimmer sparks insight; its flow is the harmony
+            of man's industrial opus."
 
 
-
-    -Brog Irontoe
-    Poet, Philosopher, Slime Farmer
+            -Brog Irontoe
+            Poet, Philosopher, Slime Farmer
         </text>
     </page>
 
     <page type="text">
-        <text>Deep Tanks are a a handy way of storing large amounts of molten metals or other liquids. Like the High Oven and Smeltery before it, the Deep Tank is a multi-block structure, and like the Smeltery, it may contain multiple liquids. The similarities end there, however, as the Deep Tank does not mix metals into alloys or melt anything at all.
+        <text>Deep Tanks are a a handy way of storing large amounts of molten metals or other liquids. Like the High
+            Oven and Smeltery before it, the Deep Tank is a multi-block structure, and like the Smeltery, it may contain
+            multiple liquids. The similarities end there, however, as the Deep Tank does not mix metals into alloys or
+            melt anything at all.
 
-Deep Tanks may be constructed in square or rectangle shapes, and its size may be scaled to fit the needs of the tinker, as long as it is hollow. It can be built as tall, as long and as wide as the heart desires. The smallest possible Deep Tank is 3x3x3. The overall size of the Deep Tank directly correlates to its capacity, naturally! Also, a more resistant glass might hold more fluid.
+            Deep Tanks may be constructed in square or rectangle shapes, and its size may be scaled to fit the needs of
+            the tinker, as long as it is hollow. It can be built as tall, as long and as wide as the heart desires. The
+            smallest possible Deep Tank is 3x3x3. The overall size of the Deep Tank directly correlates to its capacity,
+            naturally! Also, a more resistant glass might hold more fluid.
         </text>
     </page>
 
@@ -319,7 +366,7 @@ Deep Tanks may be constructed in square or rectangle shapes, and its size may be
             <icon>deeptank</icon>
         </item>
         <item>
-            <text>Scorched Bricks </text>
+            <text>Scorched Bricks</text>
             <icon>scorchedbrick</icon>
         </item>
         <item>
@@ -337,9 +384,12 @@ Deep Tanks may be constructed in square or rectangle shapes, and its size may be
     </page>
 
     <page type="text">
-        <text>In this tutorial, we will assume the desired size is that of the Smeltery. To begin, lay a 3x3 bed of glass (clear glass, stained glass, or seared glass also work, excepting glass panels). Surround that with scorched bricks, drains, and ensure the Deep Tank Controller is placed in the center of any side of this rim.
+        <text>In this tutorial, we will assume the desired size is that of the Smeltery. To begin, lay a 3x3 bed of
+            glass (clear glass, stained glass, or seared glass also work, excepting glass panels). Surround that with
+            scorched bricks, drains, and ensure the Deep Tank Controller is placed in the center of any side of this
+            rim.
 
-Also note that the Deep Tank Controller may be placed on either the top or bottom layers.
+            Also note that the Deep Tank Controller may be placed on either the top or bottom layers.
         </text>
     </page>
 
@@ -359,7 +409,8 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
     </page>
 
     <page type="text">
-        <text>When you're satisfied with the height, cap it off with an inner layer of glass and an outer rim of scorched bricks or drains. Don't forget to add upward-facing drains to pour liquids into!
+        <text>When you're satisfied with the height, cap it off with an inner layer of glass and an outer rim of
+            scorched bricks or drains. Don't forget to add upward-facing drains to pour liquids into!
         </text>
     </page>
 
@@ -369,7 +420,8 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
     </page>
 
     <page type="text">
-        <text>The Deep Tank is a perfect companion for Smelteries and High Ovens. Build them below, on top, or beside these structures for convenient liquid storage and transport.
+        <text>The Deep Tank is a perfect companion for Smelteries and High Ovens. Build them below, on top, or beside
+            these structures for convenient liquid storage and transport.
         </text>
     </page>
 
@@ -380,13 +432,15 @@ Also note that the Deep Tank Controller may be placed on either the top or botto
 
     <page type="sectionpage">
         <title>Vacuous</title>
-        <text>Strangely, attaching an ender pearl onto the base of a hopper and fastening it to a tool or weapon causes nearby items to gather toward you!
+        <text>Strangely, attaching an ender pearl onto the base of a hopper and fastening it to a tool or weapon causes
+            nearby items to gather toward you!
 
-Effects:
-- Pulls in nearby items
+            Effects:
+            - Pulls in nearby items
 
-Type: Single-use
-Stackable: Yes</text>
+            Type: Single-use
+            Stackable: Yes
+        </text>
     </page>
 
     <page type="modifier">

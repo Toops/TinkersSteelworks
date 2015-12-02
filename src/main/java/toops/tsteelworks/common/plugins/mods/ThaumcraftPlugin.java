@@ -14,7 +14,8 @@ public class ThaumcraftPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void preInit() {}
+	public void preInit() {
+	}
 
 	@Override
 	public void init() {
@@ -30,5 +31,6 @@ public class ThaumcraftPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void postInit() {}
+	public void postInit() {
+	}
 }

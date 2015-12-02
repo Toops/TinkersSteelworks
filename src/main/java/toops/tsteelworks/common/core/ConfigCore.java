@@ -22,10 +22,11 @@ public class ConfigCore {
 
 	public static int steamProductionRate;
 	public static String[] blacklistedAlloys;
-
+	// --- Worldgen
+	public static boolean enableLimestoneWorldgen;
 	/**
 	 * valid tank glass types with their capacity in mB
-	 *
+	 * <p/>
 	 * modName:blockName@metadata|capacity
 	 */
 	private static String[] defaultGlass = {
@@ -64,9 +65,6 @@ public class ConfigCore {
 			"EnderIO:blockFusedQuartz@0|45000",
 			"EnderIO:blockFusedQuartz@1|10000"
 	};
-
-	// --- Worldgen
-	public static boolean enableLimestoneWorldgen;
 	private static String[] items;
 
 	public static void preInit(File configFile) {

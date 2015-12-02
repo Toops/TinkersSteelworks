@@ -44,39 +44,82 @@ import java.util.List;
 
 @Optional.Interface(iface = "vazkii.botania.api.item.IExoflameHeatable", modid = "Botania")
 public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLogic, IMasterLogic, IRedstonePowered, INamable, IFluidTankHolder, IFluidHandler, IExoflameHeatable {
-	public enum SLOT { OXIDIZER, REDUCER, PURIFIER, FUEL, FIRST_MELTABLE }
-
 	/**
 	 * The amount of fluid the tank may gain per layer - multiplier.
 	 */
 	public static final int FLUID_AMOUNT_PER_LAYER = 20000;
 	public static final int TEMP_PER_LAYER = 500;
-
 	/**
 	 * The max temperature of the smallest High Oven structure.
 	 */
 	public static final int BASE_MAX_TEMP = 2000;
-
 	/**
 	 * Temperature the High Oven defaults to when not cooking.
 	 */
 	public static final int ROOM_TEMP = 20;
-
 	/**
 	 * Temperature decrease rate when the High Oven is not burning fuel.
 	 */
 	public static final int INTERNAL_COOLDOWN_RATE = 10;
-
 	/**
 	 * The dispense behavior.
 	 */
 	private final IRegistry dispenseBehavior = new RegistryDefaulted(new BehaviorDefaultDispenseItem());
-
 	/**
 	 * The molten metal.
 	 */
 	private MultiFluidTank tank = new MultiFluidTank(FLUID_AMOUNT_PER_LAYER);
-
+	/**
+	 * Handles the multiblock structure
+	 */
+	private StructureHighOven structure = new StructureHighOven(this);
+	/**
+	 * Used to determine if the controller is being supplied with a redstone
+	 * signal.
+	 */
+	private boolean redstoneActivated = false;
+	/**
+	 * Used to determine if the controller is melting items.
+	 */
+	private boolean isMeltingItems;
+	/**
+	 * Used to determine the controller's facing direction.
+	 */
+	private byte direction;
+	/**
+	 * The internal temperature.
+	 */
+	private int internalTemp;
+	/**
+	 * The current fuel heat rate (gain).
+	 */
+	private int fuelHeatRate = 3;
+	/**
+	 * The max temperature.
+	 */
+	private int maxTemp = BASE_MAX_TEMP;
+	/**
+	 * The fuel burn time.
+	 */
+	private int fuelBurnTime;
+	/**
+	 * The current burnable item burn time.
+	 */
+	private int fuelBurnTimeTotal;
+	/**
+	 * The active temperatures of melting items.
+	 */
+	private int[] activeTemps = new int[0];
+	/**
+	 * The melting point temperatures if melting items.
+	 */
+	private int[] meltingTemps = new int[0];
+	private SizeableInventory smeltableInventory = new SizeableInventory(0, 1) {
+		@Override
+		public void markDirty() {
+			HighOvenLogic.this.markDirty();
+		}
+	};
 	/**
 	 * The inventory
 	 * 4 first slots are for oxidizer, reducer, purifier and fuel
@@ -90,74 +133,10 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 			HighOvenLogic.this.markDirty();
 		}
 	};
-	private SizeableInventory smeltableInventory = new SizeableInventory(0, 1) {
-		@Override
-		public void markDirty() {
-			HighOvenLogic.this.markDirty();
-		}
-	};
-
-	/**
-	 * Handles the multiblock structure
-	 */
-	private StructureHighOven structure = new StructureHighOven(this);
-
-	/**
-	 * Used to determine if the controller is being supplied with a redstone
-	 * signal.
-	 */
-	private boolean redstoneActivated = false;
-
-	/**
-	 * Used to determine if the controller is melting items.
-	 */
-	private boolean isMeltingItems;
-
-	/**
-	 * Used to determine the controller's facing direction.
-	 */
-	private byte direction;
-
-	/**
-	 * The internal temperature.
-	 */
-	private int internalTemp;
-
-	/**
-	 * The current fuel heat rate (gain).
-	 */
-	private int fuelHeatRate = 3;
-
-	/**
-	 * The max temperature.
-	 */
-	private int maxTemp = BASE_MAX_TEMP;
-
-	/**
-	 * The fuel burn time.
-	 */
-	private int fuelBurnTime;
-
-	/**
-	 * The current burnable item burn time.
-	 */
-	private int fuelBurnTimeTotal;
-
-	/**
-	 * The active temperatures of melting items.
-	 */
-	private int[] activeTemps = new int[0];
-
-	/**
-	 * The melting point temperatures if melting items.
-	 */
-	private int[] meltingTemps = new int[0];
-
 	/**
 	 * Used to randomize things.
 	 */
 	private String invName;
-
 	private boolean forceCheck = true;
 
 	/**
@@ -174,12 +153,12 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		return true;
 	}
 
-	/* ==================== Facing Logic ==================== */
-
 	@Override
 	public byte getRenderDirection() {
 		return this.direction;
 	}
+
+	/* ==================== Facing Logic ==================== */
 
 	@Override
 	public ForgeDirection getForgeDirection() {
@@ -187,24 +166,24 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	}
 
 	@Override
-	public void setDirection(final int side) {}
+	public void setDirection(final int side) {
+	}
 
 	@Override
 	public void setDirection(final float yaw, final float pitch, final EntityLivingBase player) {
 		this.direction = (byte) BlockHelper.orientationToMetadataXZ(player.rotationYaw);
 	}
 
-	/* ==================== Active Logic ==================== */
-
 	@Override
 	public boolean getActive() {
 		return this.structure.isValid() && this.isBurning();
 	}
 
-	@Override
-	public void setActive(final boolean flag) {}
+	/* ==================== Active Logic ==================== */
 
-	/* ==================== IRedstonePowered ==================== */
+	@Override
+	public void setActive(final boolean flag) {
+	}
 
 	/**
 	 * Get the current state of redstone-connected power.
@@ -215,6 +194,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	public boolean getRSmode() {
 		return this.redstoneActivated;
 	}
+
+	/* ==================== IRedstonePowered ==================== */
 
 	/**
 	 * Set the redstone powered state.
@@ -227,8 +208,6 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		this.setActive(true);
 	}
-
-	/* ==================== Smelting Logic ==================== */
 
 	@Override
 	public void updateEntity() {
@@ -263,6 +242,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		if (tick % 40 == 0)
 			this.heatFluids();
 	}
+
+	/* ==================== Smelting Logic ==================== */
 
 	/**
 	 * Process item heating and liquifying.
@@ -393,15 +374,13 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 			if (MathHelper.random.nextInt(100) <= mixData.getConsumeChance()) {
 				stack.stackSize--;
 				//Dont leave itemstacks of zero size in the slots....
-				if(stack.stackSize == 0) {
+				if (stack.stackSize == 0) {
 					inventory.setInventorySlotContents(i, null);
 					this.markDirty();
 				}
 			}
 		}
 	}
-
-	/* ==================== Temperatures ==================== */
 
 	/**
 	 * Get internal temperature for smelting.
@@ -411,6 +390,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	public int getInternalTemperature() {
 		return this.internalTemp;
 	}
+
+	/* ==================== Temperatures ==================== */
 
 	/**
 	 * Get current temperature for slot.
@@ -436,7 +417,7 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	 * Update melting temperatures for items.
 	 */
 	private void updateTemperatures() {
-		for (int i = 0; i < smeltableInventory.getSizeInventory(); i ++) {
+		for (int i = 0; i < smeltableInventory.getSizeInventory(); i++) {
 			ItemStack stack = smeltableInventory.getStackInSlot(i);
 
 			if (stack == null) {
@@ -454,8 +435,6 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		}
 	}
 
-	/* ==================== Fuel Handling ==================== */
-
 	/**
 	 * Checks if controller is burning fuel.
 	 *
@@ -465,12 +444,14 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		return this.fuelBurnTime > 0;
 	}
 
-	public void setFuelBurnTime(int fuelBurnTime) {
-		this.fuelBurnTime = fuelBurnTime;
-	}
+	/* ==================== Fuel Handling ==================== */
 
 	public int getFuelBurnTime() {
 		return this.fuelBurnTime;
+	}
+
+	public void setFuelBurnTime(int fuelBurnTime) {
+		this.fuelBurnTime = fuelBurnTime;
 	}
 
 	public int getFuelBurnTimeTotal() {
@@ -525,12 +506,12 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		return smeltableInventory.getSizeInventory() + inventory.getSizeInventory();
 	}
 
-	/* ==================== Multiblock ==================== */
-
 	@Override
 	public void notifyChange(final IServantLogic servant, final int x, final int y, final int z) {
 		forceCheck = true;
 	}
+
+	/* ==================== Multiblock ==================== */
 
 	/**
 	 * Check placement validation by facing direction.
@@ -541,8 +522,6 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		structure.validateStructure(centerBlock[0], centerBlock[1], centerBlock[2]);
 	}
-
-	/* ==================== Fluid Handling ==================== */
 
 	/**
 	 * Add molen metal fluidstack.
@@ -563,6 +542,8 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		return true;
 	}
+
+	/* ==================== Fluid Handling ==================== */
 
 	private boolean canFluidsBeTogether(FluidStack f1, FluidStack f2) {
 		return f1.isFluidEqual(f2) ||
@@ -710,13 +691,13 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 	}
 
 	@Override
-	public void setCustomName(String name) {
-		this.invName = name;
+	public String getCustomName() {
+		return invName;
 	}
 
 	@Override
-	public String getCustomName() {
-		return invName;
+	public void setCustomName(String name) {
+		this.invName = name;
 	}
 
 	public IStructure getStructure() {
@@ -727,7 +708,9 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 		return smeltableInventory;
 	}
 
-	public IInventory getInventory() { return inventory; }
+	public IInventory getInventory() {
+		return inventory;
+	}
 
 	@Override
 	public MultiFluidTank getFluidTank() {
@@ -817,4 +800,6 @@ public class HighOvenLogic extends TileEntity implements IActiveLogic, IFacingLo
 
 		fuelHeatRate += fuelHeatRate;
 	}
+
+	public enum SLOT {OXIDIZER, REDUCER, PURIFIER, FUEL, FIRST_MELTABLE}
 }

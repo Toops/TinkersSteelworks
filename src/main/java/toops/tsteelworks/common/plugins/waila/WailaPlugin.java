@@ -11,7 +11,8 @@ public class WailaPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void preInit() {}
+	public void preInit() {
+	}
 
 	@Override
 	public void init() {
@@ -20,5 +21,6 @@ public class WailaPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void postInit() {}
+	public void postInit() {
+	}
 }

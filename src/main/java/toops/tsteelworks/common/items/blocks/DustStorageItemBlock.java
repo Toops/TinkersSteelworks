@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Random;
 
 public class DustStorageItemBlock extends ItemBlock {
-	private static final Random rand = new Random();
 	public static final String blockType[] = {"gunpowder", "sugar"};
+	private static final Random rand = new Random();
 
 	public DustStorageItemBlock(Block block) {
 		super(block);

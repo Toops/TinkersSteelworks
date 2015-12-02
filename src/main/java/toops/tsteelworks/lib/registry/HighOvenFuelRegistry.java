@@ -5,7 +5,10 @@ import net.minecraft.item.ItemStack;
 import nf.fr.ephys.cookiecore.util.HashedItemStack;
 import toops.tsteelworks.api.highoven.IFuelRegistry;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 class HighOvenFuelRegistry extends BasicRegistry<ItemStack, IFuelRegistry.IFuelData> implements IFuelRegistry {
 	private HashedItemStack proxy = new HashedItemStack(new ItemStack(Blocks.stone));

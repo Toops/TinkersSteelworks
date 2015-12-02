@@ -110,9 +110,9 @@ public class StructureHighOven implements IStructure {
 	/**
 	 * Determine if layer is a valid plain layer.
 	 *
-	 * @param x     coordinate of the center of the layer
-	 * @param y     coordinate of the layer
-	 * @param z     coordinate of the center of the layer
+	 * @param x coordinate of the center of the layer
+	 * @param y coordinate of the layer
+	 * @param z coordinate of the center of the layer
 	 * @return the layer is valid
 	 */
 	public boolean checkPlainLayer(final int x, final int y, final int z) {
@@ -129,9 +129,9 @@ public class StructureHighOven implements IStructure {
 	/**
 	 * Scan up the structure for valid components.
 	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
+	 * @param x coordinate from center
+	 * @param y coordinate from center
+	 * @param z coordinate from center
 	 * @return the upper part of the structure is valid
 	 */
 	public boolean recurseStructureUp(final int x, final int y, final int z) {
@@ -146,9 +146,9 @@ public class StructureHighOven implements IStructure {
 	/**
 	 * Scan down the structure for valid components.
 	 *
-	 * @param x     coordinate from center
-	 * @param y     coordinate from center
-	 * @param z     coordinate from center
+	 * @param x coordinate from center
+	 * @param y coordinate from center
+	 * @param z coordinate from center
 	 * @return the lower part of the structure is valid
 	 */
 	public boolean recurseStructureDown(final int x, final int y, final int z) {

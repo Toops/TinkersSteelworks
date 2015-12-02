@@ -48,7 +48,7 @@ public class TSRecipes {
 	private static void addHighOvenFuels() {
 		IFuelRegistry.INSTANCE.addFuel(new ItemStack(Items.coal, 1, 1), 140, 4);
 
-		for(final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")){
+		for (final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")) {
 			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 1400, 7);
 		}
 	}
@@ -107,14 +107,14 @@ public class TSRecipes {
 		GameRegistry.addSmelting(new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_BRICK), new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_CRACKED), 2);
 
 		// Slabs
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 2));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 4));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 2), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 5));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 3), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 6));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 4), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 8));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 5), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 9));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 10));
-		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, 11));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 0), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_BRICK));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 1), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_CREEPY));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 2), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_STONE));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 3), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_COBBLE));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 4), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_PAVER));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 5), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_CRACKED));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 6), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_ROAD));
+		GameRegistry.addRecipe(new ItemStack(TSContent.scorchedSlab, 6, 7), PAT_SLAB, '#', new ItemStack(TSContent.highoven, 1, HighOvenBlock.META_CHISELED));
 
 		// Recipes to obtain bricks from high oven
 		final Fluid moltenStoneFluid = FluidRegistry.getFluid("stone.seared");

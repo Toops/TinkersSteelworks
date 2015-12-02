@@ -30,7 +30,8 @@ class FuelHandler {
 				}
 
 				@Override
-				public void onStartBurning(ItemStack item) {}
+				public void onStartBurning(ItemStack item) {
+				}
 			});
 		}
 

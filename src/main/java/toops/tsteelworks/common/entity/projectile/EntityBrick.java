@@ -15,7 +15,7 @@ import nf.fr.ephys.cookiecore.client.ParticleRegistry;
 import tconstruct.smeltery.TinkerSmeltery;
 
 public class EntityBrick extends EntityThrowable {
-	public static final Block[] BREAKABLE_DEFAULT = new Block[] {
+	public static final Block[] BREAKABLE_DEFAULT = new Block[]{
 			Blocks.glass, Blocks.glass_pane, Blocks.stained_glass, Blocks.stained_glass_pane, Blocks.glowstone,
 			TinkerSmeltery.glassPane, TinkerSmeltery.clearGlass, TinkerSmeltery.stainedGlassClear, TinkerSmeltery.stainedGlassClearPane
 	};

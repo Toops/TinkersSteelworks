@@ -33,14 +33,13 @@ import toops.tsteelworks.lib.TSRepo;
 import java.util.List;
 
 public class TSContent {
+	public static final TabTools creativeTab = new TabTools(TSRepo.MOD_ID);
 	public static Item materialsTS;
-
 	public static Item bookManual;
 	public static Item helmetSteel;
 	public static Item chestplateSteel;
 	public static Item leggingsSteel;
 	public static Item bootsSteel;
-
 	public static Block cementBlock;
 	public static Block highoven;
 	public static Block scorchedSlab;
@@ -48,27 +47,20 @@ public class TSContent {
 	public static Block limestoneSlab;
 	public static Block tsCharcoalBlock;
 	public static Block dustStorageBlock;
-
 	public static Block steamTurbine;
-
 	/**
 	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid steamFluid;
-
 	/**
 	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid moltenLimestoneFluid;
-
 	/**
 	 * Instance of the fluid we registered, null if we did not.
 	 */
 	public static Fluid liquidCementFluid;
-
 	public static ItemArmor.ArmorMaterial materialSteel;
-
-	public static final TabTools creativeTab = new TabTools(TSRepo.MOD_ID);
 
 	/**
 	 * Content Constructor
@@ -139,14 +131,14 @@ public class TSContent {
 		GameRegistry.registerTileEntity(TSMultiServantLogic.class, "TSteelworks.Servants");
 
 		/* Slabs */
-		scorchedSlab = new TSBaseSlab(TSContent.highoven, 2, 9)
+		scorchedSlab = new TsBaseSlab(TSContent.highoven, 2, 9)
 				.setBlockName("ScorchedSlab")
 				.setCreativeTab(TSContent.creativeTab)
 				.setHardness(12F)
 				.setStepSound(Block.soundTypeStone);
-		GameRegistry.registerBlock(scorchedSlab, TsSlabItemBlock.class, "ScorchedSlab", new Object[] {
+		GameRegistry.registerBlock(scorchedSlab, TsSlabItemBlock.class, "ScorchedSlab", new Object[]{
 				"block.scorchedstone.slab",
-				new String[] {"brick", "creeper", "stone", "cobble", "paver", "cracked", "road", "square"}
+				new String[]{"brick", "creeper", "stone", "cobble", "paver", "cracked", "road", "fancy"} // missing: square
 		});
 
 		dustStorageBlock = new DustStorageBlock().setBlockName("tsteelworks.dustblock");
@@ -155,14 +147,14 @@ public class TSContent {
 		limestoneBlock = new LimestoneBlock().setBlockName("Limestone");
 		GameRegistry.registerBlock(limestoneBlock, LimestoneItemBlock.class, "Limestone");
 
-		limestoneSlab = new TSBaseSlab(TSContent.limestoneBlock, 0, 7)
+		limestoneSlab = new TsBaseSlab(TSContent.limestoneBlock, 0, 7)
 				.setBlockName("LimestoneSlab")
 				.setCreativeTab(TSContent.creativeTab)
 				.setHardness(12F)
 				.setStepSound(Block.soundTypeStone);
-		GameRegistry.registerBlock(limestoneSlab, TsSlabItemBlock.class, "LimestoneSlab", new Object[] {
+		GameRegistry.registerBlock(limestoneSlab, TsSlabItemBlock.class, "LimestoneSlab", new Object[]{
 				"block.limestone.slab",
-				new String[] {"stone", "cobble", "brick", "paver", "road", "fancy", "square", "creeper"}
+				new String[]{"stone", "cobble", "brick", "cracked", "paver", "road", "fancy", "square"} // missing: creeper
 		});
 
 		cementBlock = new CementBlock().setBlockName("tsteelworks.cement").setStepSound(Block.soundTypeStone);

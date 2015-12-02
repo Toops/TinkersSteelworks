@@ -18,7 +18,8 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 	@Override
 	@Nullable
 	public IMixOutput registerMix(@Nullable FluidStack fluidout, @Nullable ItemStack itemout, Fluid fluidin, String ox, String red, String pur) {
-		if (fluidout == null && itemout == null) throw new IllegalArgumentException("The fluid output & Item output cannot be both null");
+		if (fluidout == null && itemout == null)
+			throw new IllegalArgumentException("The fluid output & Item output cannot be both null");
 
 		MixCombo mix = new MixCombo(ox, red, pur, fluidin);
 
@@ -44,12 +45,14 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 	}
 
 	@Override
-	public @Nullable IMixOutput getMix(Fluid input, @Nullable ItemStack oxidizer, @Nullable ItemStack reducer, @Nullable ItemStack purifier) {
+	public
+	@Nullable
+	IMixOutput getMix(Fluid input, @Nullable ItemStack oxidizer, @Nullable ItemStack reducer, @Nullable ItemStack purifier) {
 		if (oxidizer == null && reducer == null && purifier == null) return null;
 
 		int[] oxidIDs = oxidizer == null ? new int[]{-1} : OreDictionary.getOreIDs(oxidizer);
-		int[] reduIDs = reducer == null ?  new int[]{-1} : OreDictionary.getOreIDs(reducer);
-		int[] puriIDs = purifier == null ?  new int[]{-1} : OreDictionary.getOreIDs(purifier);
+		int[] reduIDs = reducer == null ? new int[]{-1} : OreDictionary.getOreIDs(reducer);
+		int[] puriIDs = purifier == null ? new int[]{-1} : OreDictionary.getOreIDs(purifier);
 
 		MixCombo combo = new MixCombo();
 		combo.setFluid(input);
@@ -121,18 +124,11 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 			this.fluid = fluid;
 		}
 
-		private MixCombo() {}
+		private MixCombo() {
+		}
 
 		private void setFluid(Fluid fluid) {
 			this.fluid = fluid;
-		}
-
-		private void setPurifier(String purifier) {
-			this.purifier = purifier;
-		}
-
-		private void setReducer(String reducer) {
-			this.reducer = reducer;
 		}
 
 		private void setOxydizer(String oxydizer) {
@@ -179,9 +175,17 @@ class MixerRegistry extends BasicRegistry<IMixerRegistry.IMixHolder, IMixerRegis
 			return reducer;
 		}
 
+		private void setReducer(String reducer) {
+			this.reducer = reducer;
+		}
+
 		@Override
 		public String getPurifier() {
 			return purifier;
+		}
+
+		private void setPurifier(String purifier) {
+			this.purifier = purifier;
 		}
 
 		@Override

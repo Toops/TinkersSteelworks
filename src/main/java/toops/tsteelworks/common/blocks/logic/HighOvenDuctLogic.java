@@ -32,7 +32,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	 * The mode is used to determine if the duct is used
 	 * to import item from the outer world to the high oven for modes between 0 and 4
 	 * or to export item from the high oven to the outer world for mode 5.
-	 *
+	 * <p/>
 	 * In case of import, the mode is also used to choose the destination slot of the items in high oven as follow:
 	 * See class constants for values (MODE_)
 	 */
@@ -147,7 +147,7 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 					return true;
 				}
 			} else {
-				if (InventoryHelper.insertItem(masterInventory.getInventory(), new int[] { mode }, copy)) {
+				if (InventoryHelper.insertItem(masterInventory.getInventory(), new int[]{mode}, copy)) {
 					decrStackSize(slot, 1);
 					return true;
 				}
@@ -250,10 +250,12 @@ public class HighOvenDuctLogic extends TSMultiServantLogic implements IFacingLog
 	}
 
 	@Override
-	public void openInventory() {}
+	public void openInventory() {
+	}
 
 	@Override
-	public void closeInventory() {}
+	public void closeInventory() {
+	}
 
 	@Override
 	public int getInventoryStackLimit() {

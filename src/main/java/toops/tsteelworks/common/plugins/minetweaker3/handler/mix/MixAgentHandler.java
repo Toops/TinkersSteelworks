@@ -52,7 +52,7 @@ class MixAgentHandler {
 		@Override
 		public void undo() {
 			if (oldData == null) return;
-			
+
 			IMixAgentRegistry.INSTANCE.registerAgent(key, oldData.getType(), oldData.getConsumeChance());
 		}
 

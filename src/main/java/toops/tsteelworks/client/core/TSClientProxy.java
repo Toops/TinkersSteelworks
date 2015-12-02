@@ -33,8 +33,29 @@ import toops.tsteelworks.lib.TSRepo;
 import toops.tsteelworks.lib.registry.TSClientRegistry;
 
 public class TSClientProxy extends TSCommonProxy {
-	public static BookData highOvenBook;
 	public static final TSParticle PARTICLE_HANDLER = new TSParticle();
+	public static BookData highOvenBook;
+
+	public static BookData getManualFromStack(ItemStack stack) {
+		switch (stack.getItemDamage()) {
+			case 0:
+				return highOvenBook;
+		}
+
+		return null;
+	}
+
+	public static void readManuals() {
+		String currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+
+		highOvenBook = toops.tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/" + currentLanguage + "/highoven.xml");
+		if (highOvenBook == null)
+			highOvenBook = toops.tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/en_US/highoven.xml");
+
+		highOvenBook.unlocalizedName = "high_oven_manual";
+		highOvenBook.font = TProxyClient.smallFontRenderer;
+		highOvenBook.modID = TSRepo.MOD_ID;
+	}
 
 	@Override
 	public void preInit() {
@@ -59,15 +80,6 @@ public class TSClientProxy extends TSCommonProxy {
 		initManualPages();
 
 		MinecraftForge.EVENT_BUS.register(new TSEventHandler());
-	}
-
-	public static BookData getManualFromStack(ItemStack stack) {
-		switch (stack.getItemDamage()) {
-			case 0:
-				return highOvenBook;
-		}
-
-		return null;
 	}
 
 	private void initManualIcons() {
@@ -174,25 +186,13 @@ public class TSClientProxy extends TSCommonProxy {
 	}
 
 	private void addRenderMappings() {
-		String[] effectTypes = { "hopper" };
+		String[] effectTypes = {"hopper"};
 
 		for (ToolCore tool : TConstructRegistry.getToolMapping()) {
 			for (int i = 0; i < effectTypes.length; i++) {
 				TConstructClientRegistry.addEffectRenderMapping(tool, i + 50, "tsteelworks", effectTypes[i], true);
 			}
 		}
-	}
-
-	public static void readManuals() {
-		String currentLanguage = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
-
-		highOvenBook = toops.tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/" + currentLanguage + "/highoven.xml");
-		if (highOvenBook == null)
-			highOvenBook = toops.tsteelworks.lib.util.BookData.newInstance("/assets/tsteelworks/manuals/en_US/highoven.xml");
-
-		highOvenBook.unlocalizedName = "high_oven_manual";
-		highOvenBook.font = TProxyClient.smallFontRenderer;
-		highOvenBook.modID = TSRepo.MOD_ID;
 	}
 
 	private void registerRenderer() {

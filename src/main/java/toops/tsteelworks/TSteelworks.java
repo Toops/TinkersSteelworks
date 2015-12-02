@@ -25,7 +25,7 @@ import toops.tsteelworks.lib.TSRepo;
 /**
  * Tinkers' Construct Expansion: Tinkers' Steelworks
  * Based heavily on preestablished code by SlimeKnights (https://github.com/SlimeKnights)
- *
+ * <p/>
  * TSteelworks
  *
  * @author Toops
@@ -41,14 +41,6 @@ public class TSteelworks {
 	public static TSCommonProxy proxy;
 
 	private SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel(TSRepo.MOD_ID);
-
-	/**
-	 * Stores the plugins that are actually useful elsewhere in the code
-	 */
-	public static class Plugins {
-		public static final TConstructPlugin TConstruct = new TConstructPlugin();
-	}
-
 	private PluginController pluginController = new PluginController();
 
 	public TSteelworks() {
@@ -61,6 +53,10 @@ public class TSteelworks {
 		pluginController.registerPlugin(Plugins.TConstruct);
 		pluginController.registerPlugin(new MinetweakerPlugin());
 		pluginController.registerPlugin(new ChiselPlugin());
+	}
+
+	public static SimpleNetworkWrapper getNetHandler() {
+		return instance.netHandler;
 	}
 
 	@EventHandler
@@ -91,7 +87,10 @@ public class TSteelworks {
 		pluginController = null;
 	}
 
-	public static SimpleNetworkWrapper getNetHandler() {
-		return instance.netHandler;
+	/**
+	 * Stores the plugins that are actually useful elsewhere in the code
+	 */
+	public static class Plugins {
+		public static final TConstructPlugin TConstruct = new TConstructPlugin();
 	}
 }

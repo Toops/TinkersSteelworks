@@ -14,7 +14,7 @@ import toops.tsteelworks.lib.TSRepo;
 import java.util.List;
 
 public class DustStorageBlock extends BlockFalling {
-	public static final String[] TEXTURE_NAMES = new String[] {"gunpowder", "sugar"};
+	public static final String[] TEXTURE_NAMES = new String[]{"gunpowder", "sugar"};
 	public IIcon[] icons;
 
 	public DustStorageBlock() {

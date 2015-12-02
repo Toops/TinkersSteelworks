@@ -13,6 +13,21 @@ import toops.tsteelworks.lib.logic.IServantLogic;
 public class TSMultiServantLogic extends TileEntity implements IServantLogic {
 	private IMasterLogic master;
 
+	public static TSMultiServantLogic newInstance(World world, int x, int y, int z) {
+		TSMultiServantLogic tile = new TSMultiServantLogic();
+
+		tile.worldObj = world;
+		tile.xCoord = x;
+		tile.yCoord = y;
+		tile.zCoord = z;
+
+		tile.validate();
+
+		world.setTileEntity(x, y, z, tile);
+
+		return tile;
+	}
+
 	@Override
 	public boolean canUpdate() {
 		return false;
@@ -63,8 +78,11 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic {
 		readCustomNBT(p_145839_1_);
 	}
 
-	protected void writeCustomNBT(NBTTagCompound tags) {}
-	protected void readCustomNBT(NBTTagCompound tags) {}
+	protected void writeCustomNBT(NBTTagCompound tags) {
+	}
+
+	protected void readCustomNBT(NBTTagCompound tags) {
+	}
 
 	/* Packets */
 	@Override
@@ -90,24 +108,9 @@ public class TSMultiServantLogic extends TileEntity implements IServantLogic {
 
 		if (master != null) {
 			CoordTuple coords = master.getCoord();
-			tags.setIntArray("master", new int[] { coords.x, coords.y, coords.z });
+			tags.setIntArray("master", new int[]{coords.x, coords.y, coords.z});
 		}
 
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tags);
-	}
-
-	public static TSMultiServantLogic newInstance(World world, int x, int y, int z) {
-		TSMultiServantLogic tile = new TSMultiServantLogic();
-
-		tile.worldObj = world;
-		tile.xCoord = x;
-		tile.yCoord = y;
-		tile.zCoord = z;
-
-		tile.validate();
-
-		world.setTileEntity(x, y, z, tile);
-
-		return tile;
 	}
 }

@@ -134,7 +134,7 @@ public class SteamTurbineLogic extends TileEntity implements IFluidHandler {
 			return output.getTankInfo(from);
 
 		if (from == ForgeDirection.DOWN || from.ordinal() == BlockHelper.getOppositeSide(getBlockMetadata()))
-			return new FluidTankInfo[] { new FluidTankInfo(steam, MAX_STEAM), new FluidTankInfo(input, MAX_INPUT) };
+			return new FluidTankInfo[]{new FluidTankInfo(steam, MAX_STEAM), new FluidTankInfo(input, MAX_INPUT)};
 
 		return null;
 	}

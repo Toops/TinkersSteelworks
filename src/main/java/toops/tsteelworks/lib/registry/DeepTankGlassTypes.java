@@ -39,7 +39,7 @@ public class DeepTankGlassTypes {
 		int capacity;
 		try {
 			capacity = Integer.parseInt(splitData[1]);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			TSLogger.warning("Parsing deep tank glass " + data + ". INVALID FORMAT: capacity is not an integer");
 			return;
 		}

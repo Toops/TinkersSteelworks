@@ -13,7 +13,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 class AdvancedSmelting extends BasicRegistry<ItemStack, ISmeltingRegistry.IMeltData> implements ISmeltingRegistry {
-	/** list of meltables items & blocks mapped to their result (fluidstack, melting point, etc) */
+	/**
+	 * list of meltables items & blocks mapped to their result (fluidstack, melting point, etc)
+	 */
 	private final Map<HashedItemStack, IMeltData> meltingList = new HashMap<>();
 
 	@Override

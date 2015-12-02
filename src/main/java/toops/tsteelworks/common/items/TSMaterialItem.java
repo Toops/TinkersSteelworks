@@ -12,9 +12,13 @@ import toops.tsteelworks.common.entity.projectile.EntityScorchedBrick;
 import java.util.List;
 
 public class TSMaterialItem extends TSCraftingItem {
-	static String[] materialNames = new String[] {"ScorchedBrick", "LimestoneBrick", "LimestoneDust"};
+	static String[] materialNames = new String[]{"ScorchedBrick", "LimestoneBrick", "LimestoneDust"};
 
-	static String[] craftingTextures = new String[] {"scorchedbrick", "limestonebrick", "limestonedust"};
+	static String[] craftingTextures = new String[]{"scorchedbrick", "limestonebrick", "limestonedust"};
+
+	public TSMaterialItem() {
+		super(materialNames, getTextures(), "materials/");
+	}
 
 	private static String[] getTextures() {
 		final String[] names = new String[craftingTextures.length];
@@ -25,10 +29,6 @@ public class TSMaterialItem extends TSCraftingItem {
 				names[i] = "material_" + craftingTextures[i];
 
 		return names;
-	}
-
-	public TSMaterialItem() {
-		super(materialNames, getTextures(), "materials/");
 	}
 
 	@Override

@@ -23,7 +23,7 @@ public class TSArmorBasic extends ItemArmor {
 
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister) {
-		final String[] armorTypes = { "helmet", "chestplate", "leggings", "boots" };
+		final String[] armorTypes = {"helmet", "chestplate", "leggings", "boots"};
 		itemIcon = par1IconRegister.registerIcon(TSRepo.NAMESPACE + "armor/" + textureName + "_" + armorTypes[armorType]);
 	}
 }

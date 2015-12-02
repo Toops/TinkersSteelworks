@@ -12,13 +12,22 @@ import toops.tsteelworks.common.plugins.minetweaker3.handler.highoven.HighOvenWr
 import toops.tsteelworks.common.plugins.minetweaker3.handler.mix.MixWrapper;
 
 public class MinetweakerPlugin extends ModCompatPlugin {
+	public static FluidStack parseLiquid(ILiquidStack ls) {
+		return FluidRegistry.getFluidStack(ls.getName(), ls.getAmount());
+	}
+
+	public static ItemStack parseItem(IItemStack is) {
+		return (ItemStack) is.getInternal();
+	}
+
 	@Override
 	public String getModId() {
 		return "MineTweaker3";
 	}
 
 	@Override
-	public void preInit() {}
+	public void preInit() {
+	}
 
 	@Override
 	public void init() {
@@ -27,16 +36,9 @@ public class MinetweakerPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void postInit() {}
-
-	public static FluidStack parseLiquid(ILiquidStack ls) {
-		return FluidRegistry.getFluidStack(ls.getName(), ls.getAmount());
+	public void postInit() {
 	}
 
-	public static ItemStack parseItem(IItemStack is) {
-		return (ItemStack) is.getInternal();
-	}
-	
 	public static abstract class Remove<Key, Value> implements IUndoableAction {
 		protected final Key key;
 		protected Value oldData;
@@ -60,7 +62,7 @@ public class MinetweakerPlugin extends ModCompatPlugin {
 			return null;
 		}
 	}
-	
+
 	public static abstract class Add<Key, Value> implements IUndoableAction {
 		protected final Key key;
 		protected Value newData;

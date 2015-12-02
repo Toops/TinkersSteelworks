@@ -65,7 +65,8 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	}
 
 	@Override
-	public void setDirection(final int side) {}
+	public void setDirection(final int side) {
+	}
 
 	@Override
 	public void setDirection(final float yaw, final float pitch, final EntityLivingBase player) {
@@ -76,7 +77,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 	public void updateEntity() {
 		if (worldObj.isRemote) return;
 
-	//	structure.checkBlock();
+		//	structure.checkBlock();
 
 		if (tick++ == 40) {
 			if (!structure.isValid())
@@ -208,7 +209,7 @@ public class DeepTankLogic extends TileEntity implements IFluidHandler, IFacingL
 
 		try {
 			MinecraftForge.EVENT_BUS.unregister(structure);
-		} catch(Exception ignore) {
+		} catch (Exception ignore) {
 			// really reaaaally bad at programming
 		}
 	}

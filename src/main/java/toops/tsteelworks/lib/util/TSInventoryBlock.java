@@ -27,6 +27,12 @@ public abstract class TSInventoryBlock extends BlockContainer {
 		super(material);
 	}
 
+	public static boolean isActive(IBlockAccess world, int x, int y, int z) {
+		final TileEntity logic = world.getTileEntity(x, y, z);
+
+		return logic instanceof IActiveLogic && ((IActiveLogic) logic).getActive();
+	}
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
 		final TileEntity te = world.getTileEntity(x, y, z);
@@ -103,11 +109,5 @@ public abstract class TSInventoryBlock extends BlockContainer {
 
 		for (int i = 0; i < icons.length; ++i)
 			icons[i] = iconRegister.registerIcon(TSRepo.NAMESPACE + textureNames[i]);
-	}
-
-	public static boolean isActive(IBlockAccess world, int x, int y, int z) {
-		final TileEntity logic = world.getTileEntity(x, y, z);
-
-		return logic instanceof IActiveLogic && ((IActiveLogic) logic).getActive();
 	}
 }

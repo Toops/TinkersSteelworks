@@ -38,7 +38,8 @@ public class HighOvenDrainLogic extends TSMultiServantLogic implements IFluidHan
 	}
 
 	@Override
-	public void setDirection(int side) {}
+	public void setDirection(int side) {
+	}
 
 	@Override
 	public void setDirection(float yaw, float pitch, EntityLivingBase player) {

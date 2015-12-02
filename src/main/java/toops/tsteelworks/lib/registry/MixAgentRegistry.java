@@ -10,7 +10,9 @@ import java.util.Map;
 
 class MixAgentRegistry extends BasicRegistry<String, IMixAgentRegistry.IMixAgent> implements IMixAgentRegistry {
 	/* ========== IMixAgentRegistry ========== */
-	/** list of mix information, oredict itemstack to mix info (mix type, consume amount & chance) */
+	/**
+	 * list of mix information, oredict itemstack to mix info (mix type, consume amount & chance)
+	 */
 	private final Map<String, IMixAgent> mixItemList = new HashMap<>();
 
 	@Override

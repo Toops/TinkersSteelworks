@@ -12,13 +12,11 @@ import org.w3c.dom.NodeList;
 import toops.tsteelworks.lib.registry.TSClientRegistry;
 
 public class TSHighOvenPage extends BookPage {
-	private static final int[] ICONS_OFFSET_X = new int[] { 120, 52, 6, 6, 6 };
-	private static final int[] ICONS_OFFSET_Y = new int[] { 72, 36, 36, 74, 112 };
-
+	private static final int[] ICONS_OFFSET_X = new int[]{120, 52, 6, 6, 6};
+	private static final int[] ICONS_OFFSET_Y = new int[]{72, 36, 36, 74, 112};
+	private static final ResourceLocation background = new ResourceLocation("tsteelworks", "textures/gui/bookhighoven.png");
 	private String text;
 	private ItemStack[] icons;
-
-	private static final ResourceLocation background = new ResourceLocation("tsteelworks", "textures/gui/bookhighoven.png");
 
 	@Override
 	public void readPageFromXML(Element element) {

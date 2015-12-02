@@ -11,10 +11,10 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 	/**
 	 * Adds mappings between an input and its liquid.
 	 *
-	 * @param input             The item to liquefy
-	 * @param isOre             The itemstack is an ore
-	 * @param output            The result of the process
-	 * @param meltTemperature   How hot the block should be before liquefying
+	 * @param input           The item to liquefy
+	 * @param isOre           The itemstack is an ore
+	 * @param output          The result of the process
+	 * @param meltTemperature How hot the block should be before liquefying
 	 * @return The previously registered information for this input or null if it wasn't already registered.
 	 */
 	IMeltData addMeltable(ItemStack input, boolean isOre, FluidStack output, int meltTemperature);
@@ -23,9 +23,9 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 	 * Adds all Items to the Smeltery based on the oreDictionary Name.
 	 * Beware that entries beginning with "ore" will be marked as being ores.
 	 *
-	 * @param inputOre          oreDictionary name e.g. oreIron
-	 * @param output            FluidStack to add to the high oven when the ore melts
-	 * @param meltTemperature   How hot the ItemStacks should be before liquefying
+	 * @param inputOre        oreDictionary name e.g. oreIron
+	 * @param output          FluidStack to add to the high oven when the ore melts
+	 * @param meltTemperature How hot the ItemStacks should be before liquefying
 	 */
 	void addDictionaryMeltable(String inputOre, FluidStack output, int meltTemperature);
 
@@ -50,7 +50,9 @@ public interface ISmeltingRegistry extends IRegistry<ItemStack, ISmeltingRegistr
 	 */
 	interface IMeltData {
 		int getMeltingPoint();
+
 		FluidStack getResult();
+
 		boolean isOre();
 	}
 }

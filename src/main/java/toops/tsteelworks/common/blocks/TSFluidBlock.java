@@ -34,7 +34,7 @@ public class TSFluidBlock extends BlockFluidClassic {
 		stillIcon = iconRegister.registerIcon(TSRepo.NAMESPACE + texture);
 		flowIcon = iconRegister.registerIcon(TSRepo.NAMESPACE + texture + "_flow");
 	}
-	
+
 	@Override
 	public IIcon getIcon(int side, int meta) {
 		if (side == 0 || side == 1)

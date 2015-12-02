@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class LimestoneBlock extends TSBaseBlock {
 	public LimestoneBlock() {
-		super(Material.rock, 3F, new String[] {
+		super(Material.rock, 3F, new String[]{
 				"limestone",
 				"limestonecobble",
 				"limestonebrick",

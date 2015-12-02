@@ -20,8 +20,16 @@ import java.util.List;
  * Hi, I'm code
  */
 public class ScalableTankGUI {
-	private int guiLeft;
-	private int guiTop;
+	// LGBT easter egg data
+	private static final char[] keys = "lgbt".toCharArray();
+	private static final float[][] LGBT_COLOR = {
+			{228 / 255f, 3 / 255f, 3 / 255f},
+			{1, 140 / 255f, 3 / 255f},
+			{1, 237 / 255f, 0},
+			{0, 128 / 255f, 38 / 255f},
+			{0, 77 / 255f, 1},
+			{117 / 255f, 7 / 255f, 135 / 255f}
+	};
 	private final int width;
 	private final int height;
 
@@ -29,19 +37,16 @@ public class ScalableTankGUI {
 	private final ResourceLocation gauge;
 	private final int gaugeX;
 	private final int gaugeY;
-
-	// LGBT easter egg data
-	private static final char[] keys = "lgbt".toCharArray();
-	private static final float[][] LGBT_COLOR = {
-			{228/255f, 3/255f, 3/255f},
-			{1, 140/255f, 3/255f},
-			{1, 237/255f, 0},
-			{0, 128/255f, 38/255f},
-			{0, 77/255f,1},
-			{117/255f,7/255f,135/255f}
-	};
+	private int guiLeft;
+	private int guiTop;
 	private int index = 0;
 	// end of easter egg data
+	/* SCROLLBAR */
+	private int zoomRatioVal = 10;
+	private int scroll;
+	private boolean scrollbarFocus = false;
+	private int focusY = 0;
+	private int scrollAtFocus = 0;
 
 	public ScalableTankGUI(GuiContainer owner, int guiLeft, int guiTop, int width, int height, ResourceLocation gauge, int gaugeX, int gaugeY) {
 		this.width = width;
@@ -130,7 +135,7 @@ public class ScalableTankGUI {
 		double scroll = this.scroll;
 		for (int i = 0; i < tank.getNbFluids(); i++) {
 			FluidStack stack = tank.getFluid(i);
-			double liquidSize = (double) stack.amount  * height / tank.getCapacity();
+			double liquidSize = (double) stack.amount * height / tank.getCapacity();
 
 			{ // Handle zoom
 				liquidSize *= getZoomRatio();
@@ -175,6 +180,7 @@ public class ScalableTankGUI {
 
 	/**
 	 * this is a stupid easter egg
+	 *
 	 * @param key a character
 	 */
 	public void sshhhdonttellanyoneaboutthis(char key) {
@@ -188,13 +194,8 @@ public class ScalableTankGUI {
 		index++;
 	}
 
-	/* SCROLLBAR */
-	private int zoomRatioVal = 10;
-	private int scroll;
-	private boolean scrollbarFocus = false;
-
 	private int maxScroll() {
-		return (int) ((double)height * (getZoomRatio() - 1));
+		return (int) ((double) height * (getZoomRatio() - 1));
 	}
 
 	public double getZoomRatio() {
@@ -260,7 +261,9 @@ public class ScalableTankGUI {
 		}
 	}
 
-	/** Mouse move, moves scrollbar if has focus */
+	/**
+	 * Mouse move, moves scrollbar if has focus
+	 */
 	public void mouseClickMove(int x, int moveToY, int mouseButton, long lastClickTime) {
 		if (!scrollbarFocus) return;
 
@@ -275,14 +278,16 @@ public class ScalableTankGUI {
 		scroll = (int) (clickPos * getZoomRatio());
 	}
 
-	/** Mouse up, blurs scrollbar */
+	/**
+	 * Mouse up, blurs scrollbar
+	 */
 	public void mouseMovedOrUp(int x, int y, int type) {
 		scrollbarFocus = false;
 	}
 
-	private int focusY = 0;
-	private int scrollAtFocus = 0;
-	/** Mouse down, checks if scrollbar has focus */
+	/**
+	 * Mouse down, checks if scrollbar has focus
+	 */
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (mouseButton != 0 || zoomRatioVal == 10) return;
 

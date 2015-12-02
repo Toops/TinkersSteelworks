@@ -59,7 +59,7 @@ class MeltingHandler {
 		@Override
 		public void undo() {
 			if (oldData == null) return;
-			
+
 			ISmeltingRegistry.INSTANCE.addMeltable(key, oldData.isOre(), oldData.getResult(), oldData.getMeltingPoint());
 		}
 

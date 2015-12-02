@@ -33,7 +33,8 @@ public class PluginFactory {
 			if (stream != null) {
 				try {
 					stream.close();
-				} catch (IOException ignore) {}
+				} catch (IOException ignore) {
+				}
 			}
 		}
 	}

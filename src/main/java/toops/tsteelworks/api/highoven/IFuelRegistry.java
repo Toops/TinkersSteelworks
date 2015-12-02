@@ -18,7 +18,7 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 	/**
 	 * Registers an itemstack as a valid consumable fuel. FuelData is replaced if already existing.
 	 *
-	 * @param fuel The ItemStack used as fuel
+	 * @param fuel     The ItemStack used as fuel
 	 * @param burnTime The amount of time in ticks that this fuel is going to last
 	 * @param heatRate The amount of heat this is going to provide at each burn
 	 * @return the previously registered fueldata or null if none were registered.
@@ -28,7 +28,7 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 	/**
 	 * Same as {@link IFuelRegistry#addFuel(ItemStack, int, int)} but allowing you to customise your {@link IFuelData}
 	 *
-	 * @param fuel The ItemStack used as fuel.
+	 * @param fuel     The ItemStack used as fuel.
 	 * @param fuelData A custom fuel data handler.
 	 * @return the previously registered fueldata or null if none were registered.
 	 */

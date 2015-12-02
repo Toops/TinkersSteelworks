@@ -7,10 +7,6 @@ import toops.tsteelworks.api.event.IRegistry;
 public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.IMixAgent> {
 	IMixAgentRegistry INSTANCE = (IMixAgentRegistry) PluginFactory.getInstance(IMixAgentRegistry.class);
 
-	enum AgentType {
-		OXIDIZER, REDUCER, PURIFIER
-	}
-
 	/**
 	 * Adds every ItemStack registered as oreName in the oredictionnary as valid Agents
 	 *
@@ -24,7 +20,7 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	/**
 	 * Removes an ItemStack as valid Agent
 	 *
-	 * @param oreName   The oredict entry to unregister
+	 * @param oreName The oredict entry to unregister
 	 * @return the agent data, or null if it did not exist
 	 */
 	IMixAgent unregisterAgent(String oreName);
@@ -32,10 +28,14 @@ public interface IMixAgentRegistry extends IRegistry<String, IMixAgentRegistry.I
 	/**
 	 * Gets informations about an agent
 	 *
-	 * @param itemStack     The agent itemstack
+	 * @param itemStack The agent itemstack
 	 * @return the informations on the agent, or null if it does not exist
 	 */
 	IMixAgent getAgentData(ItemStack itemStack);
+
+	enum AgentType {
+		OXIDIZER, REDUCER, PURIFIER
+	}
 
 	/**
 	 * Hold information (mixer type, consume amount &amp; consume chance) for a mix agent

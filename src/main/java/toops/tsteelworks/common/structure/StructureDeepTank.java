@@ -63,7 +63,7 @@ public class StructureDeepTank implements IStructure {
 		} else {
 			try {
 				MinecraftForge.EVENT_BUS.unregister(this);
-			} catch(Exception ignore) {
+			} catch (Exception ignore) {
 				// I'm so bad at programming
 			}
 		}
@@ -222,7 +222,7 @@ public class StructureDeepTank implements IStructure {
 	 * Used to get the structure width (x & z) and the position of the bottom left corner.
 	 *
 	 * @param x1 controller x coordinate
-	 * @param y layer y pos
+	 * @param y  layer y pos
 	 * @param z1 controller z coordinate
 	 */
 	private void scanControllerLayer(int x1, int y, int z1) {
@@ -234,7 +234,7 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			x2++;
-		} while(isValidBlock(x2, y, z1));
+		} while (isValidBlock(x2, y, z1));
 		x2--; // this block is invalid, rollback
 
 		xWidth += x2 - x1;
@@ -242,7 +242,7 @@ public class StructureDeepTank implements IStructure {
 		x2 = x1;
 		do {
 			x2--;
-		} while(isValidBlock(x2, y, z1));
+		} while (isValidBlock(x2, y, z1));
 		x2++; // this block is invalid, rollback
 
 		xWidth += x1 - x2;
@@ -256,7 +256,7 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			z2++;
-		} while(isValidBlock(x1, y, z2));
+		} while (isValidBlock(x1, y, z2));
 		z2--;
 
 		zWidth += z2 - z1;
@@ -264,7 +264,7 @@ public class StructureDeepTank implements IStructure {
 
 		do {
 			z2--;
-		} while(isValidBlock(x1, y, z2));
+		} while (isValidBlock(x1, y, z2));
 		z2++;
 
 		zWidth += z1 - z2;

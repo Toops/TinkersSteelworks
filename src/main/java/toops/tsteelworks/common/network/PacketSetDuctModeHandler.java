@@ -47,7 +47,8 @@ public class PacketSetDuctModeHandler implements IMessageHandler<PacketSetDuctMo
 		private int dim;
 		private byte mode;
 
-		public PacketSetDuctMode() {}
+		public PacketSetDuctMode() {
+		}
 
 		public PacketSetDuctMode(int x, short y, int z, int dim, byte mode) {
 			this.x = x;

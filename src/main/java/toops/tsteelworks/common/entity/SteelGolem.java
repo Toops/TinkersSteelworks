@@ -24,11 +24,11 @@ import net.minecraft.world.World;
 import tconstruct.tools.TinkerTools;
 
 public class SteelGolem extends EntityGolem {
+	Village villageObj;
 	/**
 	 * deincrements, and a distance-to-home check is done at 0
 	 */
 	private int homeCheckTimer;
-	Village villageObj;
 	private int attackTimer;
 	private int holdRoseTick;
 
@@ -222,8 +222,8 @@ public class SteelGolem extends EntityGolem {
 
 	/**
 	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player.
-	 * @param
-	 * par2 - Level of Looting used to kill this mob.
+	 *
+	 * @param par2 - Level of Looting used to kill this mob.
 	 */
 	@Override
 	protected void dropFewItems(boolean par1, int par2) {

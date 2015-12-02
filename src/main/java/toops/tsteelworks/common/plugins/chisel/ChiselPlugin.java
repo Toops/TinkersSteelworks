@@ -14,7 +14,8 @@ public class ChiselPlugin extends ModCompatPlugin {
 	}
 
 	@Override
-	public void preInit() {}
+	public void preInit() {
+	}
 
 	@Override
 	public void init() {
