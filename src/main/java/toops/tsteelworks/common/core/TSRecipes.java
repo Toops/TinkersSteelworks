@@ -51,6 +51,14 @@ public class TSRecipes {
 		for (final ItemStack charcoalBlock : OreDictionary.getOres("blockCharcoal")) {
 			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 1400, 7);
 		}
+
+		for (final ItemStack coalCokeBlock : OreDictionary.getOres("blockCoke")) {
+			IFuelRegistry.INSTANCE.addFuel(coalCokeBlock, 2800, 15);
+		}
+
+		for (final ItemStack coalCoke : OreDictionary.getOres("fuelCoke")) {
+			IFuelRegistry.INSTANCE.addFuel(coalCoke, 280, 10);
+		}
 	}
 
 	public static void addHighOvenSmelts() {
