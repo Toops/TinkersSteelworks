@@ -61,6 +61,12 @@ public abstract class TSInventoryBlock extends BlockContainer {
 
 	/**
 	 * @return the GUI id or -1 if the gui does not exist, -2 if it exists but we should not open it
+	 *
+	 * @param world The world in which this block is located.
+	 * @param x The x coordinate of this block.
+	 * @param y The y coordinate of this block.
+	 * @param z The z coordinate of this block.
+	 * @param entityplayer The player opening the GUI.
 	 */
 	public abstract int getGui(World world, int x, int y, int z, EntityPlayer entityplayer);
 

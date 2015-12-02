@@ -32,13 +32,13 @@ public interface IMixerRegistry extends IRegistry<IMixerRegistry.IMixHolder, IMi
 	 * @param oxidizer The oxidizer used in the mix
 	 * @param reducer  The reducer used in the mix
 	 * @param purifier The purifier used in the mix
-	 * @return the previously resulting ItemStack&FluidStack, or null if nothing was removed
+	 * @return the previously resulting ItemStack &amp; FluidStack, or null if nothing was removed
 	 */
 	@Nullable
 	IMixOutput removeMix(Fluid input, @Nullable String oxidizer, @Nullable String reducer, @Nullable String purifier);
 
 	/**
-	 * Gets the resulting ItemStack & FluidStack for an Oxidizer-reducer-purifier mix
+	 * Gets the resulting ItemStack &amp; FluidStack for an Oxidizer-reducer-purifier mix
 	 *
 	 * @param input    The input fluid
 	 * @param oxidizer The oxidizer used in the mix

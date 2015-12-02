@@ -3,26 +3,28 @@ package toops.tsteelworks.lib.logic;
 import net.minecraft.world.World;
 
 public interface IServantLogic {
-	public boolean hasMaster();
+	boolean hasMaster();
 
 	/**
 	 * The block should already have a valid master
 	 */
-	public void notifyMasterOfChange();
+	void notifyMasterOfChange();
 
 	/**
 	 * Checks if this block can be tied to this master
 	 *
-	 * @param master the master to be tied to
-	 * @return whether  the servant can be tied to this master
+	 * @param master The master to be tied to.
+	 * @param world  The world the master is in.
+	 * @return whether the servant can be tied to this master
 	 */
-	public boolean setPotentialMaster(IMasterLogic master, World world);
+	boolean setPotentialMaster(IMasterLogic master, World world);
 
 	/**
 	 * Used to verify that this is the block's master
 	 *
-	 * @param master the master
+	 * @param master The master to verify.
+	 * @param world  The world the master is in.
 	 * @return is this block tied to this master ?
 	 */
-	public boolean verifyMaster(IMasterLogic master, World world);
+	boolean verifyMaster(IMasterLogic master, World world);
 }

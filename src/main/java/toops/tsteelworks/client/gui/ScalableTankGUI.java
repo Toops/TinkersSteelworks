@@ -263,6 +263,11 @@ public class ScalableTankGUI {
 
 	/**
 	 * Mouse move, moves scrollbar if has focus
+	 *
+	 * @param x             The x position of the mouse.
+	 * @param moveToY       The y position of the mouse.
+	 * @param mouseButton   The id of the clicked mouse button.
+	 * @param lastClickTime Duration during which the button was hold down ?
 	 */
 	public void mouseClickMove(int x, int moveToY, int mouseButton, long lastClickTime) {
 		if (!scrollbarFocus) return;
@@ -280,13 +285,21 @@ public class ScalableTankGUI {
 
 	/**
 	 * Mouse up, blurs scrollbar
+	 *
+	 * @param x    The x pos of the mouse.
+	 * @param y    The y pos of the mouse.
+	 * @param type -1: mouse was moved. 0, 1: mouseUp
 	 */
 	public void mouseMovedOrUp(int x, int y, int type) {
 		scrollbarFocus = false;
 	}
 
 	/**
-	 * Mouse down, checks if scrollbar has focus
+	 * Mouse down, checks if scrollbar has focus.
+	 *
+	 * @param mouseX      The x pos of the mouse.
+	 * @param mouseY      The y pos of the mouse.
+	 * @param mouseButton The id of the clicked mouse button.
 	 */
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		if (mouseButton != 0 || zoomRatioVal == 10) return;

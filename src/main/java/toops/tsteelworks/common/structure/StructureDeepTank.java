@@ -298,7 +298,8 @@ public class StructureDeepTank implements IStructure {
 	}
 
 	/**
-	 * Used to sync with clients
+	 * Used to sync with clients.
+	 * @param nbt The NamedBinaryTag to which the data will be written.
 	 */
 	public void writeToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("layers", nbLayers);
@@ -316,7 +317,8 @@ public class StructureDeepTank implements IStructure {
 	}
 
 	/**
-	 * Used to sync with clients
+	 * Used to sync with clients.
+	 * @param nbt The Named Binary Tag from which the data will be read.
 	 */
 	public void readFromNBT(NBTTagCompound nbt) {
 		nbLayers = nbt.getInteger("layers");

@@ -10,7 +10,7 @@ import toops.tsteelworks.lib.TSRepo;
 public class TSLogger {
 	public static Logger logger = LogManager.getLogger(TSRepo.MOD_ID);
 
-	public static void introMessage() {
+	public static void printIntroMessage() {
 		TConstruct.logger.info("TSteelworks, are you pondering what I'm pondering?");
 		logger.info("I think so, TConstruct, but where are we going to find a duck and a hose at this hour?");
 	}

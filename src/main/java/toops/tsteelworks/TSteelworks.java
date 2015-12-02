@@ -22,10 +22,8 @@ import toops.tsteelworks.common.plugins.waila.WailaPlugin;
 import toops.tsteelworks.lib.TSRepo;
 
 /**
- * Tinkers' Construct Expansion: Tinkers' Steelworks
- * Based heavily on preestablished code by SlimeKnights (https://github.com/SlimeKnights)
- * <p/>
- * TSteelworks
+ * <p>Tinkers' Construct Expansion: Tinkers' Steelworks.</p>
+ * <p>Based heavily on preestablished code by SlimeKnights (https://github.com/SlimeKnights).</p>
  *
  * @author Toops
  */
@@ -43,7 +41,7 @@ public class TSteelworks {
 	private PluginController pluginController = new PluginController();
 
 	public TSteelworks() {
-		TSLogger.introMessage();
+		TSLogger.printIntroMessage();
 
 		pluginController.registerPlugin(new FMPPlugin());
 		pluginController.registerPlugin(new WailaPlugin());

@@ -56,6 +56,7 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 		 * Returns the amount of time in ticks that this fuel is going to last.
 		 *
 		 * @param item The item about to start burning.
+		 * @return The burn time of the item.
 		 */
 		int getBurnTime(ItemStack item);
 
@@ -63,6 +64,7 @@ public interface IFuelRegistry extends IRegistry<ItemStack, IFuelRegistry.IFuelD
 		 * Returns the amount of degrees to add to the high oven at every burn tick (once every 20 ticks)
 		 *
 		 * @param item The item about to start burning.
+		 * @return The heat rate of the item.
 		 */
 		int getHeatRate(ItemStack item);
 
