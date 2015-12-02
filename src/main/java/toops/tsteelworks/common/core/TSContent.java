@@ -214,6 +214,8 @@ public class TSContent {
 		registry.registerAgent("coal", IMixAgentRegistry.AgentType.OXIDIZER, 43);
 		registry.registerAgent("dustCoal", IMixAgentRegistry.AgentType.OXIDIZER, 37);
 		registry.registerAgent("dyeLime", IMixAgentRegistry.AgentType.OXIDIZER, 37);
+		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.OXIDIZER, 30);
+		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.OXIDIZER, 30);
 
 		registry.registerAgent("dustRedstone", IMixAgentRegistry.AgentType.REDUCER, 65);
 		registry.registerAgent("dustManganese", IMixAgentRegistry.AgentType.REDUCER, 47);
@@ -222,8 +224,6 @@ public class TSContent {
 		registry.registerAgent("dustAluminium", IMixAgentRegistry.AgentType.REDUCER, 60);
 		registry.registerAgent("dustBone", IMixAgentRegistry.AgentType.REDUCER, 37);
 		registry.registerAgent("oreberryEssence", IMixAgentRegistry.AgentType.REDUCER, 27);
-		registry.registerAgent("dustSaltpeter", IMixAgentRegistry.AgentType.REDUCER, 30);
-		registry.registerAgent("dustSaltpetre", IMixAgentRegistry.AgentType.REDUCER, 30);
 
 		registry.registerAgent("blockSand", IMixAgentRegistry.AgentType.PURIFIER, 100);
 		registry.registerAgent("hambone", IMixAgentRegistry.AgentType.PURIFIER, 73);
