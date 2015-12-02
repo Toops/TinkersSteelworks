@@ -57,7 +57,7 @@ public class ConfigCore {
 			"Botany:stained@[0-15]|10000",
 			"Forestry:stained@[0-15]|17500",
 			"Natura:NetherGlass@[0-15]|12500",
-			"Railcraft:tile.railcraftglass@[0-15]|30000",
+			"Railcraft:glass@[0-15]|30000",
 			"MineFactoryReloaded:stainedglass.block@[0-15]|12500",
 			"ThermalExpansion:Glass@0|45000",
 			"Ztones:tile.glaxx@[0-15]|17500",
