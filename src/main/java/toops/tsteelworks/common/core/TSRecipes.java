@@ -52,7 +52,7 @@ public class TSRecipes {
 			IFuelRegistry.INSTANCE.addFuel(charcoalBlock, 1400, 7);
 		}
 
-		for (final ItemStack coalCokeBlock : OreDictionary.getOres("blockCoke")) {
+		for (final ItemStack coalCokeBlock : OreDictionary.getOres("blockFuelCoke")) {
 			IFuelRegistry.INSTANCE.addFuel(coalCokeBlock, 2800, 15);
 		}
 
