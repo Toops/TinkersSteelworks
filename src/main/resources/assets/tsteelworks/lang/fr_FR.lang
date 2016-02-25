@@ -1,0 +1,174 @@
+itemGroup.TSteelworks=TSteelworks
+
+crafters.HighOven=Haut Fourneau
+container.HighOvenDuct=Conduit de haut Fourneau
+tank.DeepTank=Réservoir profond
+gui.button.next=>
+gui.button.prev=<
+
+item.tsteelworks.Materials.ScorchedBrick.name=Briques roussies
+item.tsteelworks.Materials.LimestoneBrick.name=Briques de calcaire
+item.tsteelworks.Materials.LimestoneDust.name=Poussière de calcaire
+item.tsteelworks.manual.highoven.name=La sidérurgie et vous
+item.tsteelworks.helmetSteel.name=Casque en acier
+item.tsteelworks.chestplateSteel.name=Plastron en acier
+item.tsteelworks.leggingsSteel.name=Jambières en acier
+item.tsteelworks.bootsSteel.name=Bottes en acier
+
+item.tsteelworks.bucket.Steam.name=Seau de vapeur
+item.tsteelworks.bucket.Limestone.name=Seau de calcaire fondu
+item.tsteelworks.bucket.Cement.name=Seau de ciment frais
+
+entity.HighGolem.name=Grand golem
+entity.SteelGolem.name=Golem d'acier
+
+tile.tsteelworks.blocks.charcoal.name=Bloc de charbon de bois
+block.storage.dust.gunpowder.name=Bloc de poudre à canon
+block.storage.dust.sugar.name=Cube de sucre
+
+block.scorchedstone.slab.brick.name=Dalles de brique roussie
+block.scorchedstone.slab.stone.name=Dalles roussies
+block.scorchedstone.slab.cobble.name=Dalles de pierre roussie
+block.scorchedstone.slab.paver.name=Dalles de pavé roussi
+block.scorchedstone.slab.road.name=Dalles de route roussie
+block.scorchedstone.slab.fancy.name=Dalles roussies décoratives
+block.scorchedstone.slab.square.name=Dalles roussies sculptées
+block.scorchedstone.slab.creeper.name=Dalles roussies effrayantes
+block.scorchedstone.slab.cracked.name=Dalles de brique craquelée roussie
+
+block.limestone.slab.brick.name=Dalles de brique de calcaire
+block.limestone.slab.stone.name=Dalles de calcaire
+block.limestone.slab.cobble.name=Dalles de pierre calcaire
+block.limestone.slab.paver.name=Dalles de pavé de calcaire
+block.limestone.slab.road.name=Dalles de route de calcaire
+block.limestone.slab.fancy.name=Dalles de calcaire décoratives
+block.limestone.slab.square.name=Dalles de calcaire sculptées
+block.limestone.slab.creeper.name=Dalles de calcaire effrayantes
+
+tile.steam.name=Vapeur
+tile.molten.limestone.name=Calcaire fondu
+tile.liquid.cement.name=Ciment frais
+fluid.steam=Vapeur
+fluid.limestone.molten=Calcaire fondu
+fluid.cement.liquid=Ciment frais
+steam=Vapeur
+limestone.molten=Calcaire fondu
+cement.liquid=Ciment frais
+
+HighOven.Controller.name=Contrôleur du haut fourneau
+HighOven.TankController.name=Contrôleur du réservoir profond
+HighOven.Drain.name=Drain roussi
+HighOven.Duct.name=Conduit roussi
+HighOven.Valve.name=Valve roussie
+HighOven.Analyzer.name=Analyseur roussi
+HighOven.Brick.name=Briques roussies
+HighOven.Stone.name=Roche roussie
+HighOven.Cobblestone.name=Pierre roussie
+HighOven.Paver.name=Pavé roussi
+HighOven.Brick.Cracked.name=Briques craquelées roussies
+HighOven.Road.name=Route roussie
+HighOven.Brick.Fancy.name=Briques roussies décoratives
+HighOven.Brick.Square.name=Briques roussies sculptées
+HighOven.Brick.Creeper.name=Briques roussies effrayantes
+
+Machine.Turbine.name=Turbine à vapeur
+
+Limestone.Stone.name=Calcaire
+Limestone.Cobblestone.name=Pierre calcaire
+Limestone.Brick.name=Briques de calcaire
+Limestone.Brick.Cracked.name=Briques de calcaire craquelées
+Limestone.Paver.name=Pavé de calcaire
+Limestone.Road.name=Route de calcaire
+Limestone.Brick.Fancy.name=Briques de calcaire décoratives
+Limestone.Brick.Square.name=Briques de calcaire sculptées
+Limestone.Brick.Creeper.name=Briques de calcaire effrayantes
+
+Cement.white.name=Ciment blanc
+Cement.orange.name=Ciment orange
+Cement.magenta.name=Ciment magenta
+Cement.lightblue.name=Ciment bleu clair
+Cement.yellow.name=Ciment jaune
+Cement.lime.name=Ciment vert clair
+Cement.pink.name=Ciment rose
+Cement.gray.name=Ciment gris
+Cement.lightgray.name=Ciment gris clair
+Cement.cyan.name=Ciment cyan
+Cement.purple.name=Ciment violet
+Cement.blue.name=Ciment bleu
+Cement.brown.name=Ciment marron
+Cement.green.name=Ciment vert
+Cement.red.name=Ciment rouge
+Cement.black.name=Ciment noir
+
+highoven.controller.tooltip1=Le composant principal du haut fourneau
+highoven.controller.tooltip2=(Attention: Contenu sous pression !)
+highoven.tankcontroller.tooltip1=Le composant principal du réservoir profond
+highoven.tankcontroller.tooltip2=(Haute capacité !)
+highoven.drain.tooltip1=Entrée/Sortie pour les fluides du haut fourneau/réservoir profond
+highoven.drain.tooltip2=(A utiliser avec des robinets ou des tuyaux)
+highoven.duct.tooltip1=Entrée/Sortie pour les éléments du haut fourneau
+highoven.duct.tooltip2=(A utiliser avec des entonnoirs/coffres/tuyaux)
+highoven.valve.tooltip1=Entrée/Sortie pour les fluides du haut fourneau/réservoir profond
+highoven.valve.tooltip2=(Ejecte dans le monde! Aspirez-les!)
+highoven.analyzer.tooltip1=Sortie de Redstone pour le haut fourneau/réservoir profond
+highoven.analyzer.tooltip2=En Construction
+highoven.brick.tooltip1=Bloc de structure du haut fourneau
+highoven.brick.tooltip2=(Bien pour la décoration)
+
+limestone.tooltip1=Sédimentaire
+cement.tooltip1=Où se mêle l'utile à l'agréable !
+
+dustblock.gunpowder.tooltip=Mise à feu !
+dustblock.sugar.tooltip=Quelle douceur !
+machine.turbine.tooltip1=Rotation rapide à vapeur
+machine.turbine.tooltip2=(A attacher aux canalisations d'un réservoir profond)
+material.scorchedbrick.tooltip1=Utile pour la fabrication, ou pour lancer !
+material.limestonebrick.tooltip1=La pierre avec une touche de chaux
+
+manual.steelworks.tooltip1=Par: La Société des Bricoleurs
+
+modifier.tool.vacuous=Vide
+
+tconstruct.waila.invalidstructure=Structure invalide
+tconstruct.waila.empty=Vide
+tconstruct.waila.total=Total
+
+option.tseelworks.listFluids=Liste les fluides
+option.tseelworks.showTotal=Montre le total de fluide
+option.tseelworks.autoUnit=Ajuste les unités de seau
+
+quantity.emerald=Émeraudes
+quantity.block=Blocs
+quantity.panel=Panneaux
+quantity.mb=mB
+quantity.ingot=Lingots
+quantity.nugget=Pépites
+
+fluid.water=Eau
+iron.molten=Fer fondu
+gold.molten=Or fondu
+copper.molten=Cuivre fondu
+tin.molten=Étain fondu
+aluminum.molten=Aluminum fondu
+cobalt.molten=Cobalt fondu
+ardite.molten=Ardite fondue
+bronze.molten=Bronze fondu
+aluminumbrass.molten=Laiton d'aluminium fondu
+manyullyn.molten=Manyullyn fondu
+alumite.molten=Alumite fondue
+obsidian.molten=Obsidienne fondue
+steel.molten=Acier fondu
+glass.molten=Verre fondu
+stone.seared=Pierre déséchée
+emerald.liquid=Émeraude liquéfiée
+blood=Sang
+nickel.molten=Nickel fondu
+silver.molten=Argent fondu
+lead.molten=Plomb fondu
+shiny.molten=Platine fondu
+invar.molten=Invar fondu
+electrum.molten=Électrum fondu
+ender=Néant liquéfié
+slime.blue=Gluant liquéfié
+glue=Colle
+pigiron.molten=Fonte fondue

@@ -1,0 +1,413 @@
+<?xml version="1.0"?>
+<book>
+    <page type="intro">
+        <text><!-- Yes, spacing /does/ count -->
+
+
+            炼钢工艺与你
+            新手的炼钢指南
+
+            - 来自工匠协会
+        </text>
+    </page>
+    <page type="contents">
+        <text>目录</text>
+        <link>
+            <text>前言</text>
+            <icon>highovenbook</icon>
+            <jump>3</jump>
+        </link>
+        <link>
+            <text>建造</text>
+            <icon>scorchedbrick</icon>
+            <jump>6</jump>
+        </link>
+        <link>
+            <text>使用</text>
+            <icon>highoven</icon>
+            <jump>8</jump>
+        </link>
+        <link>
+            <text>熔炼</text>
+            <icon>gunpowderdust</icon>
+            <jump>10</jump>
+        </link>
+        <link>
+            <text>合成</text>
+            <icon>workbench</icon>
+            <jump>14</jump>
+        </link>
+        <link>
+            <text>深渊储罐</text>
+            <icon>deeptank</icon>
+            <jump>6</jump>
+        </link>
+        <link>
+            <text>改造</text>
+            <icon>lavacrystal</icon>
+            <jump>4</jump>
+        </link>
+    </page>
+    <page type="text">
+        <text>-前言-
+            为了保留炼钢这项神圣的艺术,我们使用特殊的隐形墨水写下了这本书,书中文字会随着时间的流逝而慢慢显现出来.这是为了保证那个时代的社会与技术已经发展成熟,这样他们就能够顺利的运用本书中的知识获益.
+
+            对于原始的穴居人来说,钢铁的发现为他们打开了一扇通往广大而奇妙的新世界的大门.亲爱的读者们:请你们在炼制的过程中务必小心谨慎.
+
+            炼钢是一门艺术,也是成为工匠大师的证明.为了崇高的理想而努力吧!
+
+            -Slags O'Molten
+            工匠协会秘书长
+        </text>
+    </page>
+
+    <page type="text">
+        <text>
+            欢迎来到炼钢的世界. 通过本书,你将了解到如何将金属与非金属结合并制作性能更加出色的优质材料.请记住:不断实验才是关键!
+
+            搭建高炉将是你学习过程的开始.它比你熟悉的冶炼炉要小一些, 但两者的搭建方式及用法都十分相似.
+        </text>
+    </page>
+
+    <page type="text">
+        <text>下面是使用高炉时的一些建议:
+
+            * 和冶炼炉一样,高炉的作用和液体储存槽相似.它可以熔炼金属或其他东西.与冶炼炉不同的是,它无法同时储存多种金属或将不同金属混合为合金.
+
+            * 混合金属极为关键!随着时间进步,你会逐渐的熟悉氧化剂,还原剂,和净化剂.通过使用这些材料能让你制作出晶体结构更为牢固的材料.
+
+            * 高炉的最低高度为三格, 最高为八格.层数越多,可用的物品熔炼空间就越大
+        </text>
+    </page>
+    <page type="text">
+        <text>还有,高炉的层数越多,温度也会越高</text>
+    </page>
+    <page type="sidebar">
+        <text>高炉是一个多方块结构.你必须要有一个冶炼炉和以下材料才能开始.</text>
+        <item>
+            <text>1 高炉控制器</text>
+            <icon>highoven</icon>
+        </item>
+        <item>
+            <text>24个任意形态的焦褐砖...</text>
+            <icon>scorchedbrick</icon>
+        </item>
+        <item>
+            <text>...或是高炉排液口</text>
+            <icon>highovendrain</icon>
+        </item>
+        <item>
+            <text>...或是高炉填料口</text>
+            <icon>highovenduct</icon>
+        </item>
+        <item>
+            <text>1 浇注口</text>
+            <icon>faucet</icon>
+        </item>
+    </page>
+    <page type="text">
+        <text>一开始先在底层铺一层3x3的焦褐砖.之后按照同样形式向上搭建,但是中间要留空.最后再用3x3的焦褐砖封顶.高炉的高度是没有实际限制的,但建到八层往上就没有任何意义了.
+
+            将高炉控制器放到任意一层的中间.你可以在接口的任意位置放置排液口.
+        </text>
+    </page>
+    <page type="picture2">
+        <text>工作中的高炉</text>
+        <location>tsteelworks:manuals/highovensmall.png</location>
+    </page>
+    <page type="picture2">
+        <text>高炉只会接收木炭或其他在燃烧室燃烧后不产生废料的纯净燃料.拨动拉杆可以停止木炭的燃烧.当高炉内有燃料燃烧时,其内部温度会持续上升.停止燃烧后,内部温度会迅速下降.
+            想要将金属熔炼成液态,高炉内部温度必须达到或超过金属的熔点.
+
+            高炉可以像冶炼炉一样处理各种金属.它不能够使用不同方法来制造合金. 取而代之的是,通过向普通金属中加入各种原料,可以制作出完全不同的新型材料.
+        </text>
+        <location>tsteelworks:manuals/highovenbackground.png</location>
+    </page>
+    <page type="picture2">
+        <text>当化合剂与金属结合并发生奇妙的化学反应后,金属的晶体结构就会发生改变! 这些原料不一定会被完全消耗掉,这主要取决于它的损耗程度.在下一页中,我们将会介绍这些化学物品,也就是氧化剂,还原剂和净化剂.
+
+            氧化剂会与化合物发生氧化反应.
+
+            还原剂与氧化剂相结合会产生全新的化合物.
+
+            净化机会去除多余的杂质.
+        </text>
+        <location>tsteelworks:manuals/compound.png</location>
+    </page>
+    <page type="sidebar">
+        <text>已知的氧化剂包括:</text>
+        <item>
+            <text>火药 - 33% 损耗率</text>
+            <icon>gunpowderdust</icon>
+        </item>
+        <item>
+            <text>糖 - 62% 损耗率</text>
+            <icon>sugardust</icon>
+        </item>
+        <item>
+            <text>煤炭 - 43% 损耗率</text>
+            <icon>coal</icon>
+        </item>
+    </page>
+
+    <page type="sidebar">
+        <text>Known Reducers include:</text>
+        <item>
+            <text>红石 - 65% 损耗率</text>
+            <icon>redstonedust</icon>
+        </item>
+        <item>
+            <text>铝粉 - 60% 损耗率</text>
+            <icon>aluminumdust</icon>
+        </item>
+        <item>
+            <text>骨粉 - 37% 损耗率</text>
+            <icon>bonemeal</icon>
+        </item>
+        <item>
+            <text>精华莓 - 27% 损耗率</text>
+            <icon>essenceberry</icon>
+        </item>
+    </page>
+
+    <page type="sidebar">
+        <text>已知的净化剂包括:</text>
+        <item>
+            <text>沙子 - 100% 损耗率</text>
+            <icon>sandblock</icon>
+        </item>
+        <item>
+            <text>砂砾 Soil - 59% 损耗率</text>
+            <icon>graveyardsoil</icon>
+        </item>
+        <item>
+            <text>火腿块 - 73% 损耗率</text>
+            <icon>hambone</icon>
+        </item>
+    </page>
+
+    <page type="text">
+        <text>-钢
+
+            很显然,钢材就是你想要获得的东西,那就让我们开工吧!这里只列出部分能够用于制造钢的材料.像硫磺,锰,甚至煤粉都有可能被用到.随着时间的进展,一切秘密都将被揭晓.
+        </text>
+    </page>
+
+    <page type="highoven">
+        <text>钢</text>
+        <recipe>steelsmelting</recipe>
+    </page>
+
+    <page type="text">
+        <text>-猪铁
+
+            猪铁是一种非常奇妙的材料.据说在很久以前,是下届的一个智慧的僵尸猪人部落发明的,但这种虚构的传说也只存在于儿童故事书中.
+        </text>
+    </page>
+
+    <page type="highoven">
+        <text>猪铁</text>
+        <recipe>pigironsmelting</recipe>
+    </page>
+
+    <page type="highoven">
+        <text>焦褐砖</text>
+        <recipe>scorchedbricksmelting</recipe>
+    </page>
+
+    <page type="highoven">
+        <text>下届石英</text>
+        <recipe>netherquartzsmelting</recipe>
+    </page>
+
+    <page type="blockcast">
+        <text>焦褐砖</text>
+        <recipe>scorchedbrickcasting</recipe>
+    </page>
+
+    <page type="blockcast">
+        <text>焦褐砖</text>
+        <recipe>scorchedbrickblockcasting</recipe>
+    </page>
+
+    <page type="crafting">
+        <text>焦褐砖</text>
+        <recipe>
+            <name>scorchedbrickblock</name>
+            <size>two</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>高炉控制器</text>
+        <recipe>
+            <name>highovencontroller</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>高炉排液口</text>
+        <recipe>
+            <name>highovenydrain</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>高炉填料口</text>
+        <recipe>
+            <name>highovenyduct</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="text">
+        <text>高炉填料口能够让你根据物品的类别,轻松地将物品添加进高炉内.想要使用它,只需简单地像排液口那样将它放进高炉结构中.
+            接着打开填料口GUI,你会看到能够放置物品的地方,还可以通过切换图是来轻松地改变输入物品的类别.填料口会自动的抽取旁边容器中的物品,比如箱子,它们同样会从正前方抽取物品.如果想要完全关闭填料口,只需提供一个红石信号.
+
+            你可能会注意到最后一个选项你并不熟悉.这个选项是用于固态物品输出的,就像排液口那样.一如往常,不要担心!
+        </text>
+    </page>
+
+    <page type="crafting">
+        <text>深渊储罐</text>
+        <recipe>
+            <name>deeptank</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>木炭块</text>
+        <recipe>
+            <name>charcoalblock</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>火药块</text>
+        <recipe>
+            <name>gunpowderblock</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="crafting">
+        <text>方糖</text>
+        <recipe>
+            <name>sugarcube</name>
+            <size>three</size>
+        </recipe>
+    </page>
+
+    <page type="text">
+        <text>-第二章: 深渊储罐
+            "熔融金属
+            美丽如大自然的溪流
+            它散发出闪耀的光芒
+            它的流动是人类工匠的杰作."
+
+
+            -Brog Irontoe
+            诗人,哲学家,史莱姆猎人
+        </text>
+    </page>
+
+    <page type="text">
+        <text>深渊储罐是储存大量熔融金属或其他液体的好方法.如同之前的冶炼炉和高炉,深渊储罐也是一个多方块结构,和冶炼炉相似的是,它也可以同时储存多种液体.但相同点也仅限于此,因为深渊储罐不能用于制作合金或烧炼任何东西.
+
+            深渊储罐可以被建成长方形或正方形,只要边长为单数即可,它的大小也可以根据工匠的需要而量身订做.高度同样也是没有限制.最小的深渊储罐为 3x3x3.
+            当然,深渊储罐的整体大小决定了它的内部容量!当然更牢固的玻璃可以盛装更多的液体.
+        </text>
+    </page>
+
+    <page type="sidebar">
+        <text>同高炉一样,你需要一个冶炼炉以及下列材料进行建造.</text>
+        <item>
+            <text>1 深渊储罐控制器</text>
+            <icon>deeptank</icon>
+        </item>
+        <item>
+            <text>焦褐砖</text>
+            <icon>scorchedbrick</icon>
+        </item>
+        <item>
+            <text>高炉排液口</text>
+            <icon>highovendrain</icon>
+        </item>
+        <item>
+            <text>玻璃</text>
+            <icon>glassBlock</icon>
+        </item>
+        <item>
+            <text>...或彩色玻璃等</text>
+            <icon>clearGlassBlock</icon>
+        </item>
+    </page>
+
+    <page type="text">
+        <text>在教学过程中,我们假设需求的容积大小和冶炼炉相匹配.首先,放一层3x3的玻璃(通透玻璃,彩色玻璃或冶炼炉玻璃均可,玻璃板除外).周围放置一圈焦褐砖或排液口,并确保控制器被放置在了某一边中间.
+
+            需要注意的是深渊储罐控制器只能放置在地层或顶层.
+        </text>
+    </page>
+
+    <page type="picture2">
+        <text>第一层</text>
+        <location>tsteelworks:manuals/deeptankbuild1.png</location>
+    </page>
+
+    <page type="text">
+        <text>继续使用你想要的玻璃向上搭建.高度由你决定.
+        </text>
+    </page>
+
+    <page type="picture2">
+        <text>玻璃围墙</text>
+        <location>tsteelworks:manuals/deeptankbuild2.png</location>
+    </page>
+
+    <page type="text">
+        <text>当你觉得高度很满意的时候,在中间放置一层玻璃,外围防止一圈焦褐砖封顶.别忘记防止面朝上的排液口以方便输入液体!
+        </text>
+    </page>
+
+    <page type="picture2">
+        <text>封顶!</text>
+        <location>tsteelworks:manuals/deeptankbuild3.png</location>
+    </page>
+
+    <page type="text">
+        <text>深渊储罐和冶炼炉还有高炉简直是绝配.将它们建在炉子的下面,上面,或旁边来方便液体的传送与储存.
+        </text>
+    </page>
+
+    <page type="picture2">
+        <text>当高炉遇上深渊储罐</text>
+        <location>tsteelworks:manuals/deeptankbuild4.png</location>
+    </page>
+
+    <page type="sectionpage">
+        <title>真空</title>
+        <text>奇怪,将末影珍珠装在漏斗上,再将它固定到一把工具或武器上,就能够将附近的物品都吸过来!
+
+            效果:
+            - 吸引附近物品
+
+            类型: 单次使用
+            可否堆叠: 是
+        </text>
+    </page>
+
+    <page type="modifier">
+        <tooltype>tool</tooltype>
+        <recipe>vacuousmod</recipe>
+    </page>
+
+    <page type="picture2">
+        <text>...</text>
+        <location>tsteelworks:manuals/highgolembackground.png</location>
+    </page>
+</book>
